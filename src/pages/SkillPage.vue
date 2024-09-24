@@ -1,7 +1,14 @@
 <template>
   <q-page padding>
-    <div class="flex">
-      <q-input outlined clearable v-model="search" label="Search" class="col">
+    <div class="flex" style="height: 40px">
+      <q-input
+        outlined
+        clearable
+        v-model="search"
+        label="Search"
+        class="col"
+        dense
+      >
         <template #prepend>
           <q-icon name="search"></q-icon>
         </template>

@@ -29,7 +29,7 @@
               </q-item>
               <q-item>
                 <q-item-section>
-                  <q-item-label>v.0.0.1</q-item-label>
+                  <q-item-label>v.0.0.5</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -38,7 +38,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="250">
       <q-list>
         <q-item-label header> Menu </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
@@ -79,8 +79,8 @@ const linksList: LinkProps[] = [
     link: '/subjects',
   },
   {
-    title: 'Skill-mapping',
-    caption: 'Skill-mapping',
+    title: 'Skill Mapping',
+    caption: 'Main feature',
     icon: 'computer',
     link: '/skill-mapping',
   },
