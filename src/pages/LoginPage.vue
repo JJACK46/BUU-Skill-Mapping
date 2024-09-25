@@ -2,18 +2,33 @@
   <q-page class="flex flex-center bg-custom">
     <q-card class="q-pa-md">
       <p class="text-center text-h5 q-mt-md">Skill Mapping</p>
-      <q-card-section class="q-gutter-md">
-        <q-input v-model="refForm.username" filled label="Username"></q-input>
+      <q-card-section class="q-gutter-md q-mx-auto">
         <q-input
+          class="full-width q-ma-none"
+          v-model="refForm.username"
+          outlined
+          label="Username"
+        ></q-input>
+        <q-input
+          class="full-width"
           v-model="refForm.password"
-          filled
+          outlined
           label="Password"
           type="password"
         ></q-input>
       </q-card-section>
-      <q-card-actions class="flex justify-center">
-        <q-btn class="block" outline style="width: 100%" @click="handleLogin()">
+      <q-card-actions class="q-gutter-md q-mx-auto">
+        <q-btn flat class="full-width bg-accent" @click="handleLogin()">
           Login
+        </q-btn>
+        <q-btn outline class="full-width">
+          <img
+            src="~assets/google-logo.svg"
+            width="24"
+            class="q-mr-sm"
+            alt=""
+          />
+          Sign in with Google
         </q-btn>
       </q-card-actions>
     </q-card>
