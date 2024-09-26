@@ -1,6 +1,6 @@
 {
   "name": "skill-mapping",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Skill Mapping Project",
   "productName": "Skill Mapping",
   "author": "Aphidech Mahakoat <jjack46.flowsick@gmail.com>",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
+    "axios": "^1.7.7",
     "pinia": "^2.2.2",
     "quasar": "^2.16.0",
     "vue": "^3.4.18",

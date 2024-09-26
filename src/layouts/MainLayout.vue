@@ -27,11 +27,6 @@
                   <q-item-label>Logout</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item>
-                <q-item-section>
-                  <q-item-label>v.0.0.5</q-item-label>
-                </q-item-section>
-              </q-item>
             </q-list>
           </q-menu>
         </q-avatar>
@@ -42,6 +37,14 @@
       <q-list>
         <q-item-label header> Menu </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
+      </q-list>
+      <q-space />
+      <q-separator class="q-my-sm" />
+      <q-list class="flex justify-between q-px-md">
+        <div class="cursor-pointer">
+          <q-icon name="dark_mode"></q-icon>
+        </div>
+        <div>{{ __APP_VERSION }}</div>
       </q-list>
     </q-drawer>
 
@@ -54,6 +57,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import MenuLink, { LinkProps } from 'components/MenuLink.vue';
+import { __APP_VERSION } from 'src/utils';
 
 defineOptions({
   name: 'MainLayout',
