@@ -67,3 +67,31 @@ useMeta({
   },
 });
 </script>
+
+<style lang="scss">
+.main-style-table {
+  height: calc(100vh - 220px);
+  /* height or max-height is important */
+
+  tr {
+    max-height: 20px !important;
+  }
+
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th {
+    background-color: $primary;
+    color: white;
+    /* bg color is important for th; just specify one */
+  }
+
+  thead tr th {
+    position: sticky;
+    z-index: 1;
+  }
+
+  thead tr:first-child th {
+    top: 0;
+  }
+}
+</style>

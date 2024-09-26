@@ -102,10 +102,6 @@ const options = <QTreeProps['nodes']>[
   },
 ];
 
-// const handleSaveSub = (children: QTreeProps['nodes']) => [
-//   children.concat(selectedSub.value),
-// ];
-
 const formatToNodes = (skills: Skill[]): QTreeProps['nodes'] => {
   return skills.map((skill) => {
     let node = {
@@ -132,9 +128,3 @@ watch(
   }
 );
 </script>
-
-<style scoped>
-.btn-sub :hover {
-  color: #ff69b4;
-}
-</style>

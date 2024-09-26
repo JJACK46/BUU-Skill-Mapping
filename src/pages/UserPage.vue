@@ -17,7 +17,13 @@
       </q-input>
       <q-btn @click="dialogState = true" color="secondary">Add</q-btn>
     </div>
-    <q-table :rows="users" row-key="name" :loading="loading"> </q-table>
+    <q-table
+      class="main-style-table"
+      :rows="users"
+      row-key="name"
+      :loading="loading"
+    >
+    </q-table>
     <q-dialog v-model="dialogState">
       <q-card>
         <div class="q-pa-md text-h5">New User</div>

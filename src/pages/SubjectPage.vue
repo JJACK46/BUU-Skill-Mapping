@@ -22,12 +22,11 @@
     </div>
 
     <q-table
-      class="q-mt-md"
-      title="Subjects"
+      class="q-mt-md main-style-table"
       :rows="mockRows"
       :columns="mockColumns"
       row-key="name"
-      style="height: calc(100vh - 220px)"
+      :pagination="{ rowsPerPage: 15 }"
     >
       <template v-slot:body="props">
         <q-tr :props="props">

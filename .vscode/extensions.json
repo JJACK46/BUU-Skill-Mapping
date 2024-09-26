@@ -4,7 +4,8 @@
     "esbenp.prettier-vscode",
     "editorconfig.editorconfig",
     "vue.volar",
-    "wayou.vscode-todo-highlight"
+    "simonhe.common-intellisense",
+    "hossaini.quasar-intellisense"
   ],
   "unwantedRecommendations": [
     "octref.vetur",
