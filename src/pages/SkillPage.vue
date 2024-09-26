@@ -52,7 +52,8 @@ import { reactive, ref } from 'vue';
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { Skill } from 'src/types/skill';
+import { Skill, SkillType } from 'src/types/skill';
+import { SkillDomain } from 'src/types/skill_mapping';
 
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -87,8 +88,8 @@ const options = <Skill[]>[
 const insSkill = reactive<Skill>({
   name: '',
   description: '',
-  domain: 'Ability',
-  type: 'Specific',
+  domain: SkillDomain.Ability,
+  type: SkillType.Specific,
 });
 
 const save = () => {
@@ -99,20 +100,20 @@ const existSkills = ref<Skill[]>([
   {
     name: 'AI Domain Expert',
     description: '',
-    domain: 'Ability',
-    type: 'Specific',
+    domain: SkillDomain.Ability,
+    type: SkillType.Specific,
     children: [
       {
         name: 'Domain Expert',
         description: '',
-        domain: 'Ability',
-        type: 'Specific',
+        domain: SkillDomain.Ability,
+        type: SkillType.Specific,
       },
       {
         name: 'Training Model',
         description: '',
-        domain: 'Ability',
-        type: 'Specific',
+        domain: SkillDomain.Ability,
+        type: SkillType.Specific,
       },
     ],
   },

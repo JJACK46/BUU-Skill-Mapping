@@ -179,10 +179,10 @@ defineExpose({
   <div class="flex q-my-md">
     <div class="q-mx-auto" v-if="!currSheet">
       <p class="text-h6">
-        Auto skill mapping by upload file .csv | .xlsx | .xlsb
+        AI skill mapping by upload file .csv | .xlsx | .xlsb
       </p>
       <label
-        for="file-upload"
+        for="upload"
         class="q-pa-sm cursor-pointer rounded-borders bg-cyan text-white q-mx-auto flex flex-center"
         style="width: 100px"
       >
@@ -190,7 +190,7 @@ defineExpose({
         <span class="text-weight-medium">UPLOAD</span>
       </label>
       <input
-        id="file-upload"
+        id="upload"
         class="hidden"
         type="file"
         @change="importFile"

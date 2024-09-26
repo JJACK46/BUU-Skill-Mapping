@@ -41,7 +41,9 @@
       </q-card>
     </q-dialog>
     <TableSheetJS ref="sheet" />
-    {{ sheet?.items }}
+    <!-- {{ sheet?.items }} -->
+    <q-btn v-if="items" label="process" @click="handleProcess"></q-btn>
+    {{ skills }}
   </q-page>
 </template>
 
@@ -51,8 +53,11 @@ import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { reactive, ref } from 'vue';
+import { ExpectedMean, SkillMapping } from 'src/types/skill_mapping';
 
 const sheet = ref();
+const items = computed(() => sheet.value?.items);
+const skills = ref<SkillMapping[]>([]);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 useMeta({
@@ -65,4 +70,31 @@ const refForm = reactive({
   subject: '',
   skill: '',
 });
+
+const convertToSkill = (items: {
+  map: (
+    arg0: (
+      /// <reference types=".vue-global-types/vue_3.5_false.d.ts" />
+      item: {
+        Subject_ID: string;
+        Skill_ID: string;
+        Expected_Level: string;
+        Expected_Mean: string;
+      }
+    ) => object
+  ) => SkillMapping[];
+}): SkillMapping[] => {
+  return items.map((item) => {
+    return {
+      subject: item.Subject_ID,
+      skill: item.Skill_ID,
+      expectedLevel: item.Expected_Level as unknown as number,
+      expectedMean: item.Expected_Mean as ExpectedMean,
+    };
+  });
+};
+
+const handleProcess = () => {
+  skills.value = convertToSkill(items.value);
+};
 </script>
