@@ -1,6 +1,8 @@
 <template>
   <q-page padding>
-    <div class="flex" style="height: 40px">
+    <div class="text-h6">{{ title }}</div>
+    <q-separator class="q-my-md" />
+    <div class="flex flex-center q-gutter-sm">
       <q-input
         outlined
         clearable
@@ -14,12 +16,9 @@
         </template>
       </q-input>
       <q-space />
-      <q-btn
-        class="q-ml-md text-black"
-        @click="isDialogOpen = true"
-        color="accent"
-        >Add Skill</q-btn
-      >
+      <div>
+        <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
+      </div>
     </div>
     <q-dialog v-model="isDialogOpen">
       <q-card>
@@ -55,6 +54,15 @@
 <script lang="ts" setup>
 import SkillTree, { SkillNode } from 'src/components/SkillTree.vue';
 import { reactive, ref } from 'vue';
+import { useMeta } from 'quasar';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const title = computed(() => route.matched[0].name as string);
+useMeta({
+  title: title.value,
+});
 
 const search = ref('');
 const isDialogOpen = ref();

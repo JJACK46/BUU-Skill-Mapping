@@ -235,5 +235,3 @@ defineExpose({
   >
   </q-table>
 </template>
-
-<style scoped></style>

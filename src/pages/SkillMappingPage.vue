@@ -1,8 +1,24 @@
 <template>
   <q-page padding>
-    <div class="text-h6">Skill Mapping</div>
-    <div class="flex justify-end q-gutter-md">
-      <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
+    <div class="text-h6">{{ title }}</div>
+    <q-separator class="q-my-md" />
+    <div class="flex flex-center q-gutter-sm">
+      <q-input
+        outlined
+        clearable
+        v-model="search"
+        label="Search"
+        class="col"
+        dense
+      >
+        <template #prepend>
+          <q-icon name="search"></q-icon>
+        </template>
+      </q-input>
+      <q-space />
+      <div>
+        <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
+      </div>
     </div>
     <q-dialog v-model="isDialogOpen">
       <q-card>
@@ -30,10 +46,18 @@
 
 <script lang="ts" setup>
 import TableSheetJS from 'src/components/TableSheetJS.vue';
-
+import { useMeta } from 'quasar';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { reactive, ref } from 'vue';
-const isDialogOpen = ref(false);
 
+const route = useRoute();
+const title = computed(() => route.matched[0].name as string);
+useMeta({
+  title: title.value,
+});
+const isDialogOpen = ref(false);
+const search = ref();
 const refForm = reactive({
   id: 0,
   subject: '',

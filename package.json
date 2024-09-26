@@ -1,8 +1,8 @@
 {
   "name": "skill-mapping",
   "version": "0.0.5",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "description": "Skill Mapping Project",
+  "productName": "Skill Mapping",
   "author": "Aphidech Mahakoat <jjack46.flowsick@gmail.com>",
   "private": true,
   "scripts": {

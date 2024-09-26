@@ -11,7 +11,7 @@ import { useMeta } from 'quasar';
 
 useMeta({
   // sets document title
-  title: 'Some Page',
+  title: '',
   // optional; sets final title as "Index Page - My Website", useful for multiple level meta
   titleTemplate: (title) => `${title} - Skill Mapping`,
 

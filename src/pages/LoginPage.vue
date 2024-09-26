@@ -36,10 +36,17 @@
 </template>
 
 <script lang="ts" setup>
+import { useMeta } from 'quasar';
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
 
+const route = useRoute();
 const router = useRouter();
+const title = computed(() => route.matched[0].name as string);
+useMeta({
+  title: title.value,
+});
 const refForm = reactive({
   username: '',
   password: '',

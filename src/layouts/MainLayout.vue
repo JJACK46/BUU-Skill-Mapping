@@ -63,7 +63,7 @@ const linksList: LinkProps[] = [
   {
     title: 'Dashboard',
     caption: 'overall',
-    icon: 'school',
+    icon: 'home',
     link: '/',
   },
   {
@@ -81,13 +81,31 @@ const linksList: LinkProps[] = [
   {
     title: 'Skill Mapping',
     caption: 'Main feature',
-    icon: 'computer',
+    icon: 'engineering',
     link: '/skill-mapping',
+  },
+  {
+    title: 'Curriculums',
+    caption: 'All of curriculum',
+    icon: 'collections_bookmark',
+    link: '/curriculums',
+  },
+  {
+    title: 'Courses',
+    caption: 'All of courses',
+    icon: 'play_lesson',
+    link: '/courses',
+  },
+  {
+    title: 'User',
+    caption: 'students',
+    icon: 'manage_accounts',
+    link: '/users',
   },
   {
     title: 'Teachers',
     caption: 'students',
-    icon: 'man',
+    icon: 'group',
     link: '/teachers',
   },
   {
