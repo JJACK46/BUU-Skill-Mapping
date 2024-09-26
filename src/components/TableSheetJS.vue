@@ -2,7 +2,7 @@ a
 <script setup lang="ts">
 import { QTableColumn } from 'quasar';
 import { ref } from 'vue';
-import { read, utils, type WorkSheet, writeFile } from 'xlsx';
+import { read, utils, type WorkSheet } from 'xlsx';
 
 type DataSet = { [index: string]: WorkSheet };
 type Row = unknown[];
@@ -20,14 +20,14 @@ const loading = ref<boolean>(true);
 const paging = ref<boolean>(true);
 
 const items = ref();
-const headerItems = ref<HeaderItem[]>([]);
+// const headerItems = ref<HeaderItem[]>([]);
 
-export type HeaderItem = Readonly<{
-  title: string;
-  key: object | string;
-  value?: string;
-  sortable?: boolean;
-}>;
+// export type HeaderItem = Readonly<{
+//   title: string;
+//   key: object | string;
+//   value?: string;
+//   sortable?: boolean;
+// }>;
 
 function buildHeaderItems(): QTableColumn[] {
   try {
@@ -48,7 +48,7 @@ function buildHeaderItems(): QTableColumn[] {
     return [];
   }
 }
-const exportTypes: string[] = ['xlsx', 'xlsb', 'csv', 'html'];
+// const exportTypes: string[] = ['xlsx', 'xlsb', 'csv', 'html'];
 
 let cell = 0;
 
@@ -136,15 +136,15 @@ async function importFile(ev: Event): Promise<void> {
   await importAB(await file.arrayBuffer(), file.name);
 }
 
-function exportFile(type: string): void {
-  const wb = utils.book_new();
+// function exportFile(type: string): void {
+//   const wb = utils.book_new();
 
-  sheets.value.forEach((sheet) => {
-    utils.book_append_sheet(wb, workBook.value[sheet], sheet);
-  });
+//   sheets.value.forEach((sheet) => {
+//     utils.book_append_sheet(wb, workBook.value[sheet], sheet);
+//   });
 
-  writeFile(wb, `sheet.${type}`);
-}
+//   writeFile(wb, `sheet.${type}`);
+// }
 
 function selectSheet(sheet: string): void {
   const { rows: newRows, cols: newCols } = getRowsCols(workBook.value, sheet);
@@ -172,13 +172,12 @@ function dropBlankRow(rows: Row[]): Row[] {
 
 defineExpose({
   items,
-  headerItems,
 });
 </script>
 
 <template>
   <div class="flex q-my-md">
-    <div class="q-mx-auto">
+    <div class="q-mx-auto" v-if="!currSheet">
       <p class="text-h6">
         Auto skill mapping by upload file .csv | .xlsx | .xlsb
       </p>
@@ -198,6 +197,23 @@ defineExpose({
         accept=".csv,.xlsx,.xlsb"
       />
     </div>
+    <!-- <div v-else class="q-mx-auto">
+      <q-btn-dropdown color="secondary" label="Export" v-if="currFileName">
+        <q-list>
+          <q-item
+            v-for="(type, idx) in exportTypes"
+            :key="idx"
+            clickable
+            v-close-popup
+            @click="exportFile(type)"
+          >
+            <q-item-label>
+              <q-item-label>{{ `.${type}` }}</q-item-label>
+            </q-item-label>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
+    </div> -->
   </div>
 
   <div class="q-gutter-md flex flex-center">
@@ -211,23 +227,9 @@ defineExpose({
     >
       {{ sheet }}
     </q-btn>
-    <q-btn-dropdown color="secondary" label="Export" v-if="currFileName">
-      <q-list>
-        <q-item
-          v-for="(type, idx) in exportTypes"
-          :key="idx"
-          clickable
-          v-close-popup
-          @click="exportFile(type)"
-        >
-          <q-item-label>
-            <q-item-label>{{ `.${type}` }}</q-item-label>
-          </q-item-label>
-        </q-item>
-      </q-list>
-    </q-btn-dropdown>
   </div>
   <q-table
+    v-if="currSheet"
     class="q-mt-xl"
     :rows="rows.slice(1)"
     :columns="buildHeaderItems()"

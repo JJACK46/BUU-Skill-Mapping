@@ -55,7 +55,7 @@ import { useRoute } from 'vue-router';
 import { Skill } from 'src/types/skill';
 
 const route = useRoute();
-const title = computed(() => route.matched[0].name as string);
+const title = computed(() => route.matched[1].name as string);
 useMeta({
   title: title.value,
 });
@@ -65,13 +65,22 @@ const isDialogOpen = ref();
 
 const options = <Skill[]>[
   {
-    name: 'Google Cloud Platform',
+    name: 'Azure Cloud Platform',
+    description: '',
+    type: 'Specific',
+    domain: 'Ability',
   },
   {
     name: 'AWS Cloud Platform',
+    description: '',
+    type: 'Specific',
+    domain: 'Ability',
   },
   {
     name: 'Cloudflare ',
+    description: '',
+    type: 'Specific',
+    domain: 'Ability',
   },
 ];
 

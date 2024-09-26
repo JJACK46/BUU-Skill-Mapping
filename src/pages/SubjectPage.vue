@@ -95,7 +95,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const title = computed(() => route.matched[0].name as string);
+const title = computed(() => route.matched[1].name as string);
 const isDialogOpen = ref(false);
 const search = ref('');
 useMeta({

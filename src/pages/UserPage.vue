@@ -41,7 +41,7 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 const dialogState = ref(false);
 const route = useRoute();
-const title = computed(() => route.matched[0].name as string);
+const title = computed(() => route.matched[1].name as string);
 const search = ref();
 const formUser = reactive<User>({
   id: 0,

@@ -40,7 +40,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <TableSheetJS />
+    <TableSheetJS ref="sheet" />
+    {{ sheet?.items }}
   </q-page>
 </template>
 
@@ -51,8 +52,9 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { reactive, ref } from 'vue';
 
+const sheet = ref();
 const route = useRoute();
-const title = computed(() => route.matched[0].name as string);
+const title = computed(() => route.matched[1].name as string);
 useMeta({
   title: title.value,
 });

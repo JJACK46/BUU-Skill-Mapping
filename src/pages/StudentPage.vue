@@ -45,7 +45,7 @@ import { computed, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 const isDialogOpen = ref(false);
 const route = useRoute();
-const title = computed(() => route.matched[0].name as string);
+const title = computed(() => route.matched[1].name as string);
 const search = ref();
 const form = reactive({
   email: '',

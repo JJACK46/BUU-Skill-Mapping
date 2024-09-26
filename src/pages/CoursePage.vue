@@ -36,7 +36,7 @@ import { useRoute } from 'vue-router';
 const isDialogOpen = ref(false);
 const search = ref();
 const route = useRoute();
-const title = computed(() => route.matched[0].name as string);
+const title = computed(() => route.matched[1].name as string);
 useMeta({
   title: title.value,
 });
