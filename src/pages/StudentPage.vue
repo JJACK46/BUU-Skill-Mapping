@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="text-h6">{{ title }}</div>
     <q-separator class="q-my-md" />
-    <div class="flex justify-end q-gutter-md q-mb-md">
+    <div class="flex flex-center q-gutter-sm">
       <q-input
         outlined
         clearable
@@ -17,7 +17,12 @@
       </q-input>
       <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
     </div>
-    <q-table :rows="mockRows" :columns="mockColumns" row-key="name"></q-table>
+    <q-table
+      class="q-mt-md"
+      :rows="mockRows"
+      :columns="mockColumns"
+      row-key="name"
+    ></q-table>
     <q-dialog v-model="isDialogOpen">
       <q-card>
         <div class="q-pa-md text-h5">New User</div>

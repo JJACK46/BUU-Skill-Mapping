@@ -24,12 +24,7 @@
       <q-card>
         <div class="q-pa-md text-h5">New Skill</div>
         <q-card-section class="flex q-gutter-md">
-          <q-input outlined v-model="insSkill.label" label="Name"></q-input>
-          <q-input
-            outlined
-            v-model="insSkill.avatar"
-            label="Avatar (optional)"
-          ></q-input>
+          <q-input outlined v-model="insSkill.name" label="Name"></q-input>
           <q-select
             outlined
             v-model="insSkill.children"
@@ -47,16 +42,17 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <SkillTree :nodes="simple" />
+    <SkillTree :skills="existSkills" />
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import SkillTree, { SkillNode } from 'src/components/SkillTree.vue';
+import SkillTree from 'src/components/SkillTree.vue';
 import { reactive, ref } from 'vue';
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { Skill } from 'src/types/skill';
 
 const route = useRoute();
 const title = computed(() => route.matched[0].name as string);
@@ -67,37 +63,47 @@ useMeta({
 const search = ref('');
 const isDialogOpen = ref();
 
-const options = <SkillNode[]>[
+const options = <Skill[]>[
   {
-    label: 'Google Cloud Platform',
+    name: 'Google Cloud Platform',
   },
   {
-    label: 'AWS Cloud Platform',
+    name: 'AWS Cloud Platform',
   },
   {
-    label: 'Cloudflare ',
+    name: 'Cloudflare ',
   },
 ];
 
-const insSkill = reactive<SkillNode>({
-  children: [],
-  label: '',
+const insSkill = reactive<Skill>({
+  name: '',
+  description: '',
+  domain: 'Ability',
+  type: 'Specific',
 });
 
 const save = () => {
-  simple.value.push({ ...insSkill });
+  existSkills.value.push({ ...insSkill });
 };
 
-const simple = ref<SkillNode[]>([
+const existSkills = ref<Skill[]>([
   {
-    label: 'AI Domain Expertise',
-    avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+    name: 'AI Domain Expert',
+    description: '',
+    domain: 'Ability',
+    type: 'Specific',
     children: [
       {
-        label: 'Domain Expertise',
+        name: 'Domain Expert',
+        description: '',
+        domain: 'Ability',
+        type: 'Specific',
       },
       {
-        label: 'Machine Learning',
+        name: 'Training Model',
+        description: '',
+        domain: 'Ability',
+        type: 'Specific',
       },
     ],
   },

@@ -16,9 +16,7 @@
         </template>
       </q-input>
       <q-space />
-      <div>
-        <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
-      </div>
+      <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
     </div>
     <q-table
       class="q-mt-md"
