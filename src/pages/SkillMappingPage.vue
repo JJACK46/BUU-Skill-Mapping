@@ -30,7 +30,9 @@
             v-model="refForm.subject"
             label="Subject"
           ></q-select>
-          <q-select outlined v-model="refForm.skill" label="Skill"></q-select>
+          <q-select outlined v-model="refForm.skill" label="Skill">
+            <template #label></template>
+          </q-select>
         </q-card-section>
         <q-card-actions class="justify-end">
           <q-btn flat @click="isDialogOpen = false"> cancel </q-btn>
@@ -40,16 +42,27 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <TableSheetJS ref="sheet" />
+    <q-card v-if="skillMaps.length <= 0" class="q-pa-lg q-mt-lg">
+      <TableSheetJS ref="sheet" />
+    </q-card>
     <!-- {{ sheet?.items }} -->
-    <q-btn v-if="items" label="process" @click="handleProcess"></q-btn>
-    {{ skills }}
+    <div class="flex flex-center q-mt-lg">
+      <q-btn
+        v-if="items"
+        label="confirm"
+        color="primary"
+        @click="handleProcess"
+      ></q-btn>
+    </div>
+    <div v-if="nodes">
+      <q-tree :nodes="nodes" node-key="label" default-expand-all></q-tree>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts" setup>
 import TableSheetJS from 'src/components/TableSheetJS.vue';
-import { useMeta } from 'quasar';
+import { QTreeNode, useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { reactive, ref } from 'vue';
@@ -57,9 +70,10 @@ import { ExpectedMean, SkillMapping } from 'src/types/skill_mapping';
 
 const sheet = ref();
 const items = computed(() => sheet.value?.items);
-const skills = ref<SkillMapping[]>([]);
+const skillMaps = ref<SkillMapping[]>([]);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
+const nodes = ref<QTreeNode[]>([]);
 useMeta({
   title: title.value,
 });
@@ -86,15 +100,41 @@ const convertToSkill = (items: {
 }): SkillMapping[] => {
   return items.map((item) => {
     return {
-      subject: item.Subject_ID,
-      skill: item.Skill_ID,
+      subjectId: item.Subject_ID,
+      skillId: item.Skill_ID,
       expectedLevel: item.Expected_Level as unknown as number,
       expectedMean: item.Expected_Mean as ExpectedMean,
     };
   });
 };
 
+const convertToNodes = (items: SkillMapping[]): QTreeNode[] => {
+  const groupedBySubject: { [subjectId: string]: SkillMapping[] } =
+    items.reduce((acc, item) => {
+      if (!acc[item.subjectId]) {
+        acc[item.subjectId] = [];
+      }
+      acc[item.subjectId].push(item);
+      return acc;
+    }, {} as { [subjectId: string]: SkillMapping[] });
+
+  return Object.entries(groupedBySubject).map(([subjectId, skillMappings]) => {
+    return {
+      label: `Subject ID: ${subjectId}`,
+      children: skillMappings.map((item) => ({
+        label: `Skill ID: ${item.skillId}`,
+        children: [
+          {
+            label: `Expected Level: ${item.expectedMean}`,
+          },
+        ],
+      })),
+    };
+  });
+};
+
 const handleProcess = () => {
-  skills.value = convertToSkill(items.value);
+  skillMaps.value = convertToSkill(items.value);
+  nodes.value = convertToNodes(skillMaps.value);
 };
 </script>

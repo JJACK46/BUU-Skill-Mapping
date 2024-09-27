@@ -216,8 +216,16 @@ defineExpose({
     </div> -->
   </div>
 
-  <div class="q-gutter-md flex flex-center">
-    <q-btn
+  <div class="flex flex-center" v-if="currSheet.length > 0">
+    <q-select
+      v-model="currSheet"
+      :options="sheets"
+      outlined
+      @update:model-value="selectSheet"
+      label="Select Sheet"
+      style="width: 300px"
+    ></q-select>
+    <!-- <q-btn
       outlined
       class="cursor-pointer no-shadow"
       v-for="(sheet, idx) in sheets"
@@ -226,14 +234,18 @@ defineExpose({
       :class="[currSheet === sheet ? 'selected' : '']"
     >
       {{ sheet }}
-    </q-btn>
+    </q-btn> -->
   </div>
   <q-table
     v-if="currSheet"
-    class="q-mt-xl"
+    class="q-mt-sm"
     :rows="rows.slice(1)"
     :columns="buildHeaderItems()"
     row-key="id"
+    hide-bottom
   >
+    <template #top>
+      <div class="text-h6">Preview : {{ currSheet }}</div>
+    </template>
   </q-table>
 </template>

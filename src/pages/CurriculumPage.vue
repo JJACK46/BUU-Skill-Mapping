@@ -20,17 +20,36 @@
         <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
       </div>
     </div>
-    <q-table
-      class="q-mt-md main-style-table"
-      :rows="mockRows"
-      :columns="mockColumns"
-      row-key="name"
-    ></q-table>
+    <section class="q-mt-md">
+      <q-card class="q-pa-md">
+        <div class="row justify-between">
+          <span class="text-h6">
+            Name
+            <p class="text-caption">Eng Name</p>
+          </span>
+          <q-btn icon="edit" flat></q-btn>
+        </div>
+        <div>description</div>
+        <q-card-section class="text-body1">
+          <q-expansion-item label="List of subjects">
+            <q-list>
+              <q-item v-for="sub in 10" :key="sub">
+                <q-item-label>
+                  <span
+                    >{{ sub }}
+                    <p class="text-caption">{{ sub }}</p>
+                  </span></q-item-label
+                >
+              </q-item>
+            </q-list>
+          </q-expansion-item>
+        </q-card-section>
+      </q-card>
+    </section>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { mockColumns, mockRows } from 'src/mock/DataTable';
 import { useMeta } from 'quasar';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
