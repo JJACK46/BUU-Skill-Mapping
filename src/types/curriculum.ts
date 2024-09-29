@@ -1,17 +1,17 @@
 import { Branch } from './branch';
 import { Subject } from './subject';
 import { Teacher } from './teacher';
-
 export interface Curriculum {
-  id?: number;
-  name: string;
-  engName?: string;
-  degree: string;
-  engDegree?: string;
-  branch: Branch[];
+  id: string;
+  thaiName: string;
+  engName: string;
+  thaiDegreeName: string;
+  engDegreeName: string;
   description: string;
-  period: string;
+  period: number;
   minimumGrade: number;
   coordinators: Teacher[];
+  // plos: any[];
   subjects: Subject[];
+  branch: Branch;
 }

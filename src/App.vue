@@ -3,11 +3,26 @@
 </template>
 
 <script setup lang="ts">
+import { useMeta } from 'quasar';
+import { ref, watchEffect } from 'vue';
+
+const token = ref();
+
+const handleToken = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  token.value = urlParams.get('token');
+  if (token.value) {
+    localStorage.setItem('token', token.value ?? '');
+  }
+};
+
+watchEffect(() => {
+  handleToken();
+});
+
 defineOptions({
   name: 'Skill-Mapping',
 });
-
-import { useMeta } from 'quasar';
 
 useMeta({
   // sets document title

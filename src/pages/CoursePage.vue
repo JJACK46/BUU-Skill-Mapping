@@ -31,17 +31,8 @@
           {{ data.description }}
         </div>
         <q-card-section class="text-body1">
-          <q-expansion-item label="List of subjects">
-            <q-list>
-              <q-item v-for="sub in data.subjects" :key="sub.id">
-                <q-item-label>
-                  <span
-                    >{{ sub.name }}
-                    <p class="text-caption">{{ sub.engName }}</p>
-                  </span></q-item-label
-                >
-              </q-item>
-            </q-list>
+          <q-expansion-item label="Enrolled students">
+            <q-list> </q-list>
           </q-expansion-item>
         </q-card-section>
       </q-card>

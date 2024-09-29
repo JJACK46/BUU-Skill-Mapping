@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center bg-custom">
-    <q-card class="q-pa-md">
+    <q-card class="q-pa-md q-animate--fade">
       <p class="text-center text-h5 q-mt-md">Skill Mapping</p>
       <q-card-section class="q-gutter-md q-mx-auto">
         <q-input
@@ -8,20 +8,27 @@
           v-model="refForm.username"
           outlined
           label="Username"
-        ></q-input>
+        >
+          <template #prepend>
+            <q-icon name="person"></q-icon>
+          </template>
+          <template #hint></template>
+        </q-input>
         <q-input
           class="full-width"
           v-model="refForm.password"
           outlined
           label="Password"
           type="password"
-        ></q-input>
+        >
+          <template #prepend>
+            <q-icon name="lock"></q-icon>
+          </template>
+        </q-input>
       </q-card-section>
       <q-card-actions class="q-gutter-md q-mx-auto">
-        <q-btn flat class="full-width bg-accent" @click="handleLogin()">
-          Login
-        </q-btn>
-        <q-btn outline class="full-width">
+        <q-btn flat class="full-width bg-accent"> Login </q-btn>
+        <q-btn outline class="full-width" @click="AuthService.loginGoogle()">
           <img
             src="~assets/google-logo.svg"
             width="24"
@@ -38,11 +45,12 @@
 <script lang="ts" setup>
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { reactive } from 'vue';
+import AuthService from 'src/services/auth';
 
 const route = useRoute();
-const router = useRouter();
+// const router = useRouter();
 const title = computed(() => route.matched[0].name as string);
 useMeta({
   title: title.value,
@@ -52,13 +60,15 @@ const refForm = reactive({
   password: '',
 });
 
-const handleLogin = () => {
-  router.push('/');
-};
+// const handleLogin = () => {
+//   router.push('/');
+// };
 </script>
 
 <style scoped>
 .bg-custom {
-  background: linear-gradient(to bottom right, #ffd700, #ffa07a, #ff69b4);
+  position: relative;
+  background: linear-gradient(to bottom right, rgb(0, 0, 0), #303030, #000000);
+  overflow: hidden;
 }
 </style>

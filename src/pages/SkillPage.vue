@@ -42,18 +42,19 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <SkillTree :skills="existSkills" />
+    <SkillTree :skills="skills ?? []" />
   </q-page>
 </template>
 
 <script lang="ts" setup>
 import SkillTree from 'src/components/SkillTree.vue';
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { Skill, SkillType } from 'src/types/skill';
 import { SkillDomain } from 'src/types/skill_mapping';
+import { SkillService } from 'src/services/skill';
 
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -63,6 +64,7 @@ useMeta({
 
 const search = ref('');
 const isDialogOpen = ref();
+const skills = ref<Skill[]>();
 
 const options = <Skill[]>[
   {
@@ -93,29 +95,33 @@ const insSkill = reactive<Skill>({
 });
 
 const save = () => {
-  existSkills.value.push({ ...insSkill });
+  skills.value?.push({ ...insSkill });
 };
 
-const existSkills = ref<Skill[]>([
-  {
-    name: 'AI Domain Expert',
-    description: '',
-    domain: SkillDomain.Ability,
-    type: SkillType.Specific,
-    children: [
-      {
-        name: 'Domain Expert',
-        description: '',
-        domain: SkillDomain.Ability,
-        type: SkillType.Specific,
-      },
-      {
-        name: 'Training Model',
-        description: '',
-        domain: SkillDomain.Ability,
-        type: SkillType.Specific,
-      },
-    ],
-  },
-]);
+// const existSkills = ref<Skill[]>([
+//   {
+//     name: 'AI Domain Expert',
+//     description: '',
+//     domain: SkillDomain.Ability,
+//     type: SkillType.Specific,
+//     children: [
+//       {
+//         name: 'Domain Expert',
+//         description: '',
+//         domain: SkillDomain.Ability,
+//         type: SkillType.Specific,
+//       },
+//       {
+//         name: 'Training Model',
+//         description: '',
+//         domain: SkillDomain.Ability,
+//         type: SkillType.Specific,
+//       },
+//     ],
+//   },
+// ]);
+
+onMounted(async () => {
+  skills.value = await SkillService.fetchAll();
+});
 </script>

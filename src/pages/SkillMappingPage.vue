@@ -67,6 +67,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { reactive, ref } from 'vue';
 import { ExpectedMean, SkillMapping } from 'src/types/skill_mapping';
+import { SkillService } from 'src/services/skill';
 
 const sheet = ref();
 const items = computed(() => sheet.value?.items);
@@ -136,5 +137,6 @@ const convertToNodes = (items: SkillMapping[]): QTreeNode[] => {
 const handleProcess = () => {
   skillMaps.value = convertToSkill(items.value);
   nodes.value = convertToNodes(skillMaps.value);
+  SkillService.mapping(skillMaps.value);
 };
 </script>

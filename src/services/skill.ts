@@ -4,9 +4,7 @@ import { SkillMapping } from 'src/types/skill_mapping';
 
 export class SkillService {
   static async fetchAll() {
-    const response = await http.get(
-      'https://jsonplaceholder.typicode.com/users'
-    );
+    const response = await http.get('skills');
     return response.data;
   }
 
@@ -20,8 +18,8 @@ export class SkillService {
     return response.data;
   }
 
-  static async mapping(s: SkillMapping) {
-    const response = await http.post('skill-mapping', { ...s });
+  static async mapping(s: SkillMapping[]) {
+    const response = await http.post('skillMappings', { ...s });
     return response.data;
   }
 }

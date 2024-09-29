@@ -22,76 +22,24 @@
     </div>
 
     <q-table
+      v-if="filteredSubjects"
       class="q-mt-md main-style-table"
-      :rows="mockRows"
-      :columns="mockColumns"
-      row-key="name"
-      :pagination="{ rowsPerPage: 15 }"
+      :rows="filteredSubjects"
+      :columns="columns"
+      row-key="id"
+      wrap-cells
     >
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="name" :props="props">
-            {{ props.row.name }}
-            <q-popup-edit v-model="props.row.name" v-slot="scope">
-              <q-input
-                v-model="scope.value"
-                dense
-                autofocus
-                counter
-                @keyup.enter="scope.set"
-              />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="calories" :props="props">
-            {{ props.row.calories }}
-            <q-popup-edit
-              v-model="props.row.calories"
-              title="Update calories"
-              buttons
-              v-slot="scope"
-            >
-              <q-input type="number" v-model="scope.value" dense autofocus />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="fat" :props="props">
-            <div class="text-pre-wrap">{{ props.row.fat }}</div>
-            <q-popup-edit v-model="props.row.fat" v-slot="scope">
-              <q-input type="textarea" v-model="scope.value" dense autofocus />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="carbs" :props="props">
-            {{ props.row.carbs }}
-            <q-popup-edit
-              v-model="props.row.carbs"
-              title="Update carbs"
-              buttons
-              persistent
-              v-slot="scope"
-            >
-              <q-input
-                type="number"
-                v-model="scope.value"
-                dense
-                autofocus
-                hint="Use buttons to close"
-              />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
-          <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
-          <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
-          <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
-        </q-tr>
-      </template>
     </q-table>
+    {{ subjects }}
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { mockColumns, mockRows } from 'src/mock/DataTable';
-import { useMeta } from 'quasar';
-import { computed, ref } from 'vue';
+import { QTableColumn, useMeta } from 'quasar';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { SubjectService } from 'src/services/subject';
+import { Subject } from 'src/types/subject';
 
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -99,5 +47,33 @@ const isDialogOpen = ref(false);
 const search = ref('');
 useMeta({
   title: title.value,
+});
+
+const columns: QTableColumn[] = [
+  { name: 'name', label: 'Name', field: 'thaiName', align: 'left' },
+  { name: 'engname', label: 'Eng Name', field: 'engName', align: 'left' },
+  {
+    name: 'description',
+    label: 'Description',
+    field: 'description',
+    align: 'left',
+  },
+  { name: 'type', label: 'Type', field: 'type', align: 'left' },
+  { name: 'credit', label: 'Credit', field: 'credit', align: 'left' },
+];
+
+const subjects = ref<Subject[]>([]);
+
+const filteredSubjects = computed(() => {
+  if (search.value.trim()) {
+    return subjects.value.filter((subject) =>
+      subject.name.toLowerCase().includes(search.value.toLowerCase())
+    );
+  }
+  return subjects.value;
+});
+
+onMounted(async () => {
+  subjects.value = await SubjectService.fetchAll();
 });
 </script>

@@ -1,6 +1,11 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <q-tree :nodes="nodes" node-key="label" default-expand-all>
+    <q-tree
+      v-if="skills.length > 0"
+      :nodes="nodes"
+      node-key="label"
+      default-expand-all
+    >
       <template #default-body="{ node }">
         <q-btn
           v-if="node.children && node.children.length > 0"
@@ -66,6 +71,7 @@
         </q-popup-edit>
       </template>
     </q-tree>
+    <q-linear-progress v-else indeterminate></q-linear-progress>
   </div>
 </template>
 
