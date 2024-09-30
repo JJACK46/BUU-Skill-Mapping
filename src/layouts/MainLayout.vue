@@ -14,7 +14,11 @@
         <q-toolbar-title> Skill Mapping App </q-toolbar-title>
 
         <q-avatar class="cursor-pointer">
-          <img src="https://cdn.quasar.dev/img/avatar.png" />
+          <img
+            :src="`${
+              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
+            } `"
+          />
           <q-menu>
             <q-list>
               <q-item clickable v-close-popup>
@@ -24,7 +28,7 @@
               </q-item>
               <q-item clickable v-close-popup>
                 <q-item-section>
-                  <q-item-label>Logout</q-item-label>
+                  <q-item-label @click="store.logout">Logout</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -55,9 +59,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import MenuLink, { LinkProps } from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils';
+import { Payload } from 'src/types/payload';
+import { useUserStore } from 'src/stores/user';
+
+const store = useUserStore();
+const profile = ref<Payload | null>(null);
+
+onMounted(async () => {
+  profile.value = await store.getProfile();
+});
 
 defineOptions({
   name: 'MainLayout',

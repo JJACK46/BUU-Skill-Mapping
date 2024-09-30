@@ -1,13 +1,10 @@
-import { useRouter } from 'vue-router';
 import http from './index';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { Payload } from 'src/types/payload';
 
 class AuthService {
-  private static router = useRouter();
   static async login(email: string, password: string): Promise<AxiosResponse> {
     const res = await http.post('/auth/login', { email, password });
-    this.router.push('/');
     return res.data;
   }
 
@@ -24,7 +21,7 @@ class AuthService {
     try {
       const res = await http.post('/auth/logout', { withCredentials: true });
       localStorage.removeItem('token');
-      window.location.reload();
+      window.location.replace('/login');
       return res.data;
     } catch (error) {
       console.error(error);
@@ -32,18 +29,14 @@ class AuthService {
     }
   }
 
-  static async profile(): Promise<Payload | null> {
+  static async fetchProfile(): Promise<Payload | null> {
     try {
       const res = await http.get<Payload>('auth/profile');
-      if (res.status === 401) {
-        this.router.replace('login');
+      if (!res.data) {
         return null;
       }
       return res.data;
-    } catch (err: AxiosError | unknown) {
-      if (err instanceof AxiosError && err.response?.status === 401) {
-        this.router.replace('/login');
-      }
+    } catch (err) {
       console.error(err);
       return null;
     }

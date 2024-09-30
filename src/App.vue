@@ -13,6 +13,7 @@ const handleToken = () => {
   token.value = urlParams.get('token');
   if (token.value) {
     localStorage.setItem('token', token.value ?? '');
+    window.location.replace('/');
   }
 };
 
