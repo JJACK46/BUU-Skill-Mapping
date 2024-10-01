@@ -13,8 +13,9 @@
 
         <q-toolbar-title> Skill Mapping App </q-toolbar-title>
 
-        <q-avatar class="cursor-pointer">
+        <q-avatar class="cursor-pointer" @click="() => router.push('/account')">
           <img
+            draggable="false"
             :src="`${
               profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
             } `"
@@ -65,9 +66,11 @@ import { __APP_VERSION } from 'src/utils';
 import { Payload } from 'src/types/payload';
 import { useUserStore } from 'src/stores/user';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 
 const themeIcon = computed(() => (dark.isActive ? 'dark_mode' : 'light_mode'));
 
+const router = useRouter();
 const { dark } = useQuasar();
 const store = useUserStore();
 const profile = ref<Payload | null>(null);

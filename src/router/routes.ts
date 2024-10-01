@@ -115,6 +115,17 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/account',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Account',
+        component: () => import('pages/AccountPage.vue'),
+      },
+    ],
+  },
 
   {
     path: '/about',
