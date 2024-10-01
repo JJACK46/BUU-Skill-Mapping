@@ -46,7 +46,7 @@
       <q-separator class="q-my-sm" />
       <q-list class="flex justify-between q-px-md">
         <div class="cursor-pointer">
-          <q-icon name="dark_mode"></q-icon>
+          <q-icon :name="themeIcon" @click="dark.toggle"></q-icon>
         </div>
         <div>{{ __APP_VERSION }}</div>
       </q-list>
@@ -59,12 +59,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import MenuLink, { LinkProps } from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils';
 import { Payload } from 'src/types/payload';
 import { useUserStore } from 'src/stores/user';
+import { useQuasar } from 'quasar';
 
+const themeIcon = computed(() => (dark.isActive ? 'dark_mode' : 'light_mode'));
+
+const { dark } = useQuasar();
 const store = useUserStore();
 const profile = ref<Payload | null>(null);
 
