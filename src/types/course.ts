@@ -1,16 +1,14 @@
 import { Curriculum } from './curriculum';
+import { Student } from './student';
 import { Subject } from './subject';
 import { Teacher } from './teacher';
 
 export interface Course {
   id?: number;
-  name: string;
-  engName: string;
-  description: string;
-  engDescription?: string;
+  subject: Subject;
   curriculumId: number;
   curriculum?: Curriculum;
   teacherId: number;
   teacher?: Teacher;
-  subjects: Partial<Subject>[];
+  students: Student[];
 }

@@ -17,20 +17,25 @@
       </q-input>
       <q-space />
       <div>
-        <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
+        <q-btn @click="isDialogOpen = true" color="secondary" label="add">
+          <q-dialog v-model="isDialogOpen">
+            <q-card>
+              <q-card-section>Subject some</q-card-section>
+            </q-card>
+          </q-dialog>
+        </q-btn>
       </div>
     </div>
 
     <q-table
       v-if="filteredSubjects"
-      class="q-mt-md main-style-table"
+      class="q-mt-md"
       :rows="filteredSubjects"
       :columns="columns"
       row-key="id"
       wrap-cells
     >
     </q-table>
-    {{ subjects }}
   </q-page>
 </template>
 

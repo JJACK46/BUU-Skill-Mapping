@@ -14,5 +14,5 @@ export interface SkillCollection {
   id?: number;
   skillMapping: SkillMapping;
   acquiredLevel: number;
-  pass: boolean;
+  passed: boolean;
 }

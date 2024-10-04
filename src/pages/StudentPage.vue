@@ -18,7 +18,7 @@
       <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
     </div>
     <q-table
-      class="q-mt-md main-style-table"
+      class="q-mt-md"
       :rows="mockRows"
       :columns="mockColumns"
       row-key="name"

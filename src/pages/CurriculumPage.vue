@@ -47,7 +47,6 @@
           </q-expansion-item>
         </q-card-section>
       </q-card>
-      {{ curriculums }}
     </section>
   </q-page>
 </template>

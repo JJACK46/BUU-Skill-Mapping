@@ -86,20 +86,13 @@ useMeta({
 
 <style lang="scss">
 .body--light {
-  .main-style-table {
-    height: calc(100vh - 220px);
-    /* height or max-height is important */
-
-    tr {
-      max-height: 20px !important;
-    }
+  .q-table {
+    height: calc(100vh - 280px);
 
     .q-table__top,
-    .q-table__bottom,
     thead tr:first-child th {
       background-color: $primary;
       color: white;
-      /* bg color is important for th; just specify one */
     }
 
     thead tr th {
@@ -111,6 +104,16 @@ useMeta({
       top: 0;
     }
   }
+
+  .q-table__bottom {
+    background-color: $primary;
+    color: white;
+  }
+
+  .q-table__control .q-field__native,
+  .q-table__control .q-field__append {
+    color: white;
+  }
 }
 
 .body--dark {
@@ -118,15 +121,10 @@ useMeta({
     background-color: $primary-dark;
   }
 
-  .main-style-table {
-    height: calc(100vh - 220px);
-
-    tr {
-      max-height: 20px !important;
-    }
+  .q-table {
+    height: calc(100vh - 280px);
 
     .q-table__top,
-    .q-table__bottom,
     thead tr:first-child th {
       background-color: $primary-dark;
       color: white;
@@ -140,6 +138,16 @@ useMeta({
     thead tr:first-child th {
       top: 0;
     }
+  }
+
+  .q-table__bottom {
+    background-color: $primary-dark;
+    color: white;
+  }
+
+  .q-table__control .q-field__native,
+  .q-table__control .q-field__append {
+    color: white;
   }
 }
 </style>

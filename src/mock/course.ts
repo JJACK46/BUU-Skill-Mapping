@@ -1,30 +1,41 @@
 import { Course } from 'src/types/course';
+import { ExpectedMean } from 'src/types/skill_mapping';
 import { CourseCredit, SubjectType } from 'src/types/subject';
 
 export const mockCourse: Course[] = [
   {
     id: 1,
-    name: 'เส้นทางสู่นักพัฒนา',
-    engName: 'The road to Developer',
-    description: 'some thing about this course',
-    curriculumId: 1,
-    teacherId: 1,
-    subjects: [
+    subject: {
+      id: 1,
+      name: 'การพัฒนาหน้าบ้าน',
+      engName: 'Frontend Development',
+      description: 'วิธีการพัฒนาหน้าบ้าน',
+      engDescription: 'Some detail ...Frontend Development',
+      credit: CourseCredit.Two,
+      type: SubjectType.Compulsory,
+    },
+    curriculumId: 0,
+    teacherId: 0,
+    students: [
       {
-        name: 'การพัฒนาหน้าบ้าน',
-        engName: 'Frontend Developer',
-        description: '',
-        engDescription: '',
-        credit: CourseCredit.Three,
-        type: SubjectType.Compulsory,
-      },
-      {
-        name: 'การพัฒนาหลังบ้าน',
-        engName: 'Backend Developer',
-        description: '',
-        engDescription: '',
-        credit: CourseCredit.Three,
-        type: SubjectType.Compulsory,
+        id: 65160666,
+        name: 'สมชาย ใจดี',
+        engName: 'Somchai Jaidee',
+        gpa: 4.0,
+        phone: '0940000000',
+        startDate: new Date(),
+        skillCollection: [
+          {
+            skillMapping: {
+              subjectId: 0,
+              skillId: 0,
+              expectedLevel: 1,
+              expectedMean: ExpectedMean.The1Basic,
+            },
+            acquiredLevel: 0,
+            passed: false,
+          },
+        ],
       },
     ],
   },
