@@ -87,7 +87,7 @@ useMeta({
 <style lang="scss">
 .body--light {
   .q-table {
-    height: calc(100vh - 280px);
+    // height: calc(100vh - 280px);
 
     .q-table__top,
     thead tr:first-child th {
@@ -122,8 +122,6 @@ useMeta({
   }
 
   .q-table {
-    height: calc(100vh - 280px);
-
     .q-table__top,
     thead tr:first-child th {
       background-color: $primary-dark;

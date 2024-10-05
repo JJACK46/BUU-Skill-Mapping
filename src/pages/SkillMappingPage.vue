@@ -43,7 +43,7 @@
       </q-card>
     </q-dialog>
     <q-card v-if="skillMaps.length <= 0" class="q-pa-lg q-mt-lg">
-      <TableSheetJS ref="sheet" />
+      <TableSheetJS ref="sheet" text="Skill Mapping" />
     </q-card>
     <!-- {{ sheet?.items }} -->
     <div class="flex flex-center q-mt-lg">

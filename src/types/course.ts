@@ -10,5 +10,5 @@ export interface Course {
   curriculum?: Curriculum;
   teacherId: number;
   teacher?: Teacher;
-  students: Student[];
+  students: Partial<Student>[];
 }
