@@ -1,4 +1,3 @@
-a
 <script setup lang="ts">
 import { QTableColumn } from 'quasar';
 import { ref } from 'vue';
@@ -173,14 +172,16 @@ function dropBlankRow(rows: Row[]): Row[] {
 defineExpose({
   items,
 });
+
+defineProps<{
+  text: string;
+}>();
 </script>
 
 <template>
   <div class="flex q-my-md">
     <div class="q-mx-auto" v-if="!currSheet">
-      <p class="text-h6">
-        AI skill mapping by upload file .csv | .xlsx | .xlsb
-      </p>
+      <p class="text-h6">{{ text }} by upload file .csv | .xlsx | .xlsb</p>
       <label
         for="upload"
         class="q-pa-sm cursor-pointer rounded-borders bg-cyan text-white q-mx-auto flex flex-center"
@@ -243,6 +244,7 @@ defineExpose({
     :columns="buildHeaderItems()"
     row-key="id"
     hide-bottom
+    flat
   >
     <template #top>
       <div class="text-h6">Preview : {{ currSheet }}</div>

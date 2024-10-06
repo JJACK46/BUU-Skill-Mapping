@@ -1,8 +1,9 @@
 import { Course } from 'src/types/course';
 import { ExpectedMean } from 'src/types/skill_mapping';
 import { CourseCredit, SubjectType } from 'src/types/subject';
+import { ref } from 'vue';
 
-export const mockCourse: Course[] = [
+export const mockCourse = ref<Course[]>([
   {
     id: 1,
     subject: {
@@ -39,4 +40,4 @@ export const mockCourse: Course[] = [
       },
     ],
   },
-];
+]);

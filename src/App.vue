@@ -87,7 +87,7 @@ useMeta({
 <style lang="scss">
 .body--light {
   .q-table {
-    height: calc(100vh - 280px);
+    // height: calc(100vh - 280px);
 
     .q-table__top,
     thead tr:first-child th {
@@ -105,13 +105,10 @@ useMeta({
     }
   }
 
-  .q-table__bottom {
+  .q-table__bottom,
+  .q-table__bottom .q-table__control .q-field__native,
+  .q-table__bottom .q-table__control .q-field__append {
     background-color: $primary;
-    color: white;
-  }
-
-  .q-table__control .q-field__native,
-  .q-table__control .q-field__append {
     color: white;
   }
 }
@@ -122,8 +119,6 @@ useMeta({
   }
 
   .q-table {
-    height: calc(100vh - 280px);
-
     .q-table__top,
     thead tr:first-child th {
       background-color: $primary-dark;
@@ -145,9 +140,8 @@ useMeta({
     color: white;
   }
 
-  .q-table__control .q-field__native,
-  .q-table__control .q-field__append {
-    color: white;
+  .q-field__control {
+    color: $accent;
   }
 }
 </style>
