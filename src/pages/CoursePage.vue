@@ -6,7 +6,7 @@
       <q-input
         outlined
         clearable
-        v-model="search"
+        v-model="filterCourse"
         label="Search"
         class="col"
         dense
@@ -68,7 +68,21 @@
               row-key="name"
               style="max-height: 400px"
               flat
+              :filter="filterStudent"
             >
+              <template #top-right>
+                <q-input
+                  outlined
+                  dense
+                  debounce="200"
+                  v-model="filterStudent"
+                  placeholder="Search"
+                >
+                  <template #append>
+                    <q-icon name="search" />
+                  </template>
+                </q-input>
+              </template>
               <template #body-cell-skillCollection="props">
                 <q-td :props="props">
                   <q-btn flat icon="info" @click="skillDialog = true"> </q-btn>
@@ -109,7 +123,8 @@ import { computed, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 const sheet = ref();
 const isDialogOpen = ref(false);
-const search = ref();
+const filterCourse = ref();
+const filterStudent = ref();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const skillDialog = ref<boolean>(false);

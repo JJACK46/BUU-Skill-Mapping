@@ -105,13 +105,10 @@ useMeta({
     }
   }
 
-  .q-table__bottom {
+  .q-table__bottom,
+  .q-table__bottom .q-table__control .q-field__native,
+  .q-table__bottom .q-table__control .q-field__append {
     background-color: $primary;
-    color: white;
-  }
-
-  .q-table__control .q-field__native,
-  .q-table__control .q-field__append {
     color: white;
   }
 }
@@ -143,9 +140,8 @@ useMeta({
     color: white;
   }
 
-  .q-table__control .q-field__native,
-  .q-table__control .q-field__append {
-    color: white;
+  .q-field__control {
+    color: $accent;
   }
 }
 </style>
