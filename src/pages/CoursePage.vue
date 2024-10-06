@@ -66,9 +66,28 @@
               :columns="columnsTable"
               :rows="data.students"
               row-key="name"
-              style="height: 340px"
+              style="max-height: 400px"
               flat
             >
+              <template #body-cell-skillCollection="props">
+                <q-td :props="props">
+                  <q-btn flat icon="info" @click="skillDialog = true"> </q-btn>
+                  <q-popup-edit v-model="skillDialog" buttons>
+                    {{ props?.value }}
+                  </q-popup-edit>
+                </q-td>
+              </template>
+              <template #body-cell-result="props">
+                <q-td :props="props">
+                  <span v-if="props">
+                    {{
+                      (props.value as string)
+                        .split(', ')
+                        .find((s) => s === 'Failed') ?? 'Passed'
+                    }}
+                  </span>
+                </q-td>
+              </template>
             </q-table>
           </q-expansion-item>
         </q-card-section>
@@ -85,6 +104,7 @@ import { SubjectService } from 'src/services/subject';
 import { Course } from 'src/types/course';
 import { SkillCollection, Student } from 'src/types/student';
 import { Subject } from 'src/types/subject';
+import { groupBy } from 'src/utils/sheet2object';
 import { computed, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 const sheet = ref();
@@ -92,34 +112,22 @@ const isDialogOpen = ref(false);
 const search = ref();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-
+const skillDialog = ref<boolean>(false);
 const optionSubjects = ref<Subject[]>([]);
 const sheetItems = computed(() => sheet.value?.items);
 
 const handleSave = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const groupedByStudentID: { [student_id: string]: any[] } =
-    sheetItems.value.reduce(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (acc: { [x: string]: any[] }, item: { student_id: string | number }) => {
-        if (!acc[item.student_id]) {
-          acc[item.student_id] = [];
-        }
-        acc[item.student_id].push(item);
-        return acc;
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      {} as { [student_id: string]: any[] }
-    );
+  const groupedByStudentID = groupBy(sheetItems.value, 'student_id');
 
   formCourse.students = Object.entries(groupedByStudentID).map(
     ([student_id, items]): Partial<Student> => {
       return {
         id: Number(student_id),
-        skillCollection: items.map((item) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        skillCollection: items.map((item: any) => ({
           skillMapping: {
             skillId: item.skill_id,
-            subjectId: 0,
+            subjectId: formCourse.subject.id ?? 0,
             expectedLevel: 1,
             expectedMean: item.gain_level,
           },
@@ -165,8 +173,9 @@ const columnsTable: QTableColumn[] = [
   },
   {
     name: 'skillCollection',
-    label: 'Skill ID',
+    label: 'Skills',
     field: 'skillCollection',
+    align: 'center',
     format(val) {
       return val
         .map((skill: SkillCollection) => {
@@ -176,25 +185,15 @@ const columnsTable: QTableColumn[] = [
     },
   },
   {
-    name: 'expectedLevel',
-    label: 'Expected Level',
-    field: 'skillCollection',
-    format(val) {
-      return val
-        .map((skill: SkillCollection) => {
-          return skill.acquiredLevel;
-        })
-        .join(', ');
-    },
-  },
-  {
     name: 'result',
     label: 'Result',
     field: 'skillCollection',
+    align: 'left',
+
     format(val) {
       return val
         ?.map((skill: SkillCollection) => {
-          return skill.passed ? 'Pass' : 'Fail';
+          return skill.passed ? 'Passed' : 'Failed';
         })
         .join(', ');
     },
