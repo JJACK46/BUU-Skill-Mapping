@@ -40,7 +40,16 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="250">
       <q-list>
-        <q-item-label header> Menu </q-item-label>
+        <q-item-label header>
+          <q-img
+            :src="
+              $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
+            "
+            alt="BUU"
+            height="64px"
+            fit="contain"
+          />
+        </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
       <q-space />
