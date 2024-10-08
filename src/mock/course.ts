@@ -1,5 +1,5 @@
 import { Course } from 'src/types/course';
-import { ExpectedMean } from 'src/types/skill_mapping';
+import { SkillLevel } from 'src/types/skill-collection';
 import { CourseCredit, SubjectType } from 'src/types/subject';
 import { ref } from 'vue';
 
@@ -15,29 +15,42 @@ export const mockCourse = ref<Course[]>([
       credit: CourseCredit.Two,
       type: SubjectType.Compulsory,
     },
-    curriculumId: 0,
-    teacherId: 0,
-    students: [
+    curriculum: { id: 'f1' },
+    teacher: { id: 1 },
+    courseEnrollments: [
       {
-        id: 65160666,
-        name: 'สมชาย ใจดี',
-        engName: 'Somchai Jaidee',
-        gpa: 4.0,
-        phone: '0940000000',
-        startDate: new Date(),
+        student: {
+          id: 65160666,
+          name: 'สมชาย ใจดี',
+          engName: 'Somchai Jaidee',
+          gpa: 3.99,
+          phone: '0940000000',
+          startDate: new Date(),
+        },
+        id: 0,
+        gainScore: {
+          project: 60,
+          examMid: 0,
+          examFinal: 0,
+          assignment: 30,
+        },
         skillCollection: [
           {
-            skillMapping: {
-              subjectId: 0,
-              skillId: 0,
-              expectedLevel: 1,
-              expectedMean: ExpectedMean.The1Basic,
-            },
-            acquiredLevel: 0,
-            passed: false,
+            level: SkillLevel.Ability5,
+            passed: true,
+            subject: { id: 1 },
+            skill: { id: 1 },
           },
         ],
       },
     ],
+    description: '',
+    active: true,
+    score: {
+      project: 70,
+      examMid: 0,
+      examFinal: 0,
+      assignment: 30,
+    },
   },
 ]);

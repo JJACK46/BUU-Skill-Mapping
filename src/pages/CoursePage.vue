@@ -30,7 +30,6 @@
               ></q-select>
 
               <TableSheetJS ref="sheet" text="Import students" />
-              {{ formCourse.students }}
             </q-card-section>
             <q-card-actions class="justify-end q-pa-md">
               <q-btn label="cancel" @click="isDialogOpen = false"></q-btn>
@@ -38,7 +37,7 @@
                 color="primary"
                 :disable="!formCourse.subject"
                 label="save"
-                @click="handleSave"
+                @click="handleImport"
               ></q-btn>
             </q-card-actions>
           </q-card>
@@ -64,8 +63,8 @@
           >
             <q-table
               :columns="columnsTable"
-              :rows="data.students"
-              row-key="name"
+              :rows="data.courseEnrollments"
+              row-key="id"
               style="max-height: 400px"
               flat
               :filter="filterStudent"
@@ -83,23 +82,54 @@
                   </template>
                 </q-input>
               </template>
-              <template #body-cell-skillCollection="props">
+              <template #body-cell-skills="props">
                 <q-td :props="props">
                   <q-btn flat icon="info" @click="skillDialog = true"> </q-btn>
-                  <q-popup-edit v-model="skillDialog" buttons>
-                    {{ props?.value }}
+                  <q-popup-edit v-model="skillDialog">
+                    <div class="text-body2 q-mb-sm">
+                      Skill Collection
+                      <span class="float-right"
+                        ><q-btn
+                          v-close-popup
+                          icon="close"
+                          flat
+                          size="xs"
+                          padding="none"
+                        />
+                      </span>
+                    </div>
+                    <q-table
+                      hide-bottom
+                      flat
+                      dense
+                      separator="cell"
+                      :columns="[
+                        {
+                          name: 'id',
+                          label: 'ID',
+                          field: (s) => s.skill.id,
+                        },
+                        {
+                          name: 'skill',
+                          label: 'Name',
+                          field: (s) => s.skill.name,
+                        },
+                        {
+                          name: 'level',
+                          label: 'Level',
+                          field: 'level',
+                        },
+                        {
+                          name: 'result',
+                          label: 'Result',
+                          field: (s) => (s.passed ? 'Passed' : 'Failed'),
+                        },
+                      ]"
+                      :rows="props.value"
+                      row-key="id"
+                    >
+                    </q-table>
                   </q-popup-edit>
-                </q-td>
-              </template>
-              <template #body-cell-result="props">
-                <q-td :props="props">
-                  <span v-if="props">
-                    {{
-                      (props.value as string)
-                        .split(', ')
-                        .find((s) => s === 'Failed') ?? 'Passed'
-                    }}
-                  </span>
                 </q-td>
               </template>
             </q-table>
@@ -116,7 +146,7 @@ import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { mockCourse } from 'src/mock/course';
 import { SubjectService } from 'src/services/subject';
 import { Course } from 'src/types/course';
-import { SkillCollection, Student } from 'src/types/student';
+import { SkillCollection } from 'src/types/skill-collection';
 import { Subject } from 'src/types/subject';
 import { groupBy } from 'src/utils/sheet2object';
 import { computed, reactive, ref } from 'vue';
@@ -131,27 +161,47 @@ const skillDialog = ref<boolean>(false);
 const optionSubjects = ref<Subject[]>([]);
 const sheetItems = computed(() => sheet.value?.items);
 
-const handleSave = () => {
-  const groupedByStudentID = groupBy(sheetItems.value, 'student_id');
-
-  formCourse.students = Object.entries(groupedByStudentID).map(
-    ([student_id, items]): Partial<Student> => {
-      return {
-        id: Number(student_id),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        skillCollection: items.map((item: any) => ({
-          skillMapping: {
-            skillId: item.skill_id,
-            subjectId: formCourse.subject.id ?? 0,
-            expectedLevel: 1,
-            expectedMean: item.gain_level,
-          },
-          acquiredLevel: item.gain_level,
-          passed: item.result === 1 ? true : false,
-        })),
-      };
-    }
+const handleImport = () => {
+  const groupedByStudentID = groupBy(
+    sheetItems.value,
+    (i: { student_id: string }) => i.student_id
   );
+
+  Object.entries(groupedByStudentID).map(([student_id, items]): void => {
+    formCourse.courseEnrollments.push({
+      student: { id: Number(student_id) },
+      skillCollection: items.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (item: any) =>
+          ({
+            skill: { id: Number(item.skill_id) },
+            subject: formCourse.subject,
+            level: item.gain_level,
+            passed: item.result === 1 ? true : false,
+          } as SkillCollection)
+      ),
+      gainScore: {
+        project: 0,
+        examMid: 0,
+        examFinal: 0,
+        assignment: 0,
+      },
+    });
+    // return {
+    //   id: Number(student_id),
+    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //   skillCollection: items.map((item: any) => ({
+    //     skillMapping: {
+    //       skillId: item.skill_id,
+    //       subjectId: formCourse.subject.id ?? 0,
+    //       expectedLevel: 1,
+    //       expectedMean: item.gain_level,
+    //     },
+    //     acquiredLevel: item.gain_level,
+    //     passed: item.result === 1 ? true : false,
+    //   })),
+    // };
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // formCourse.students = sheetItems.value.map((item: any): Partial<Student> => {
@@ -184,42 +234,61 @@ const columnsTable: QTableColumn[] = [
   {
     name: 'id',
     label: 'Student ID',
-    field: 'id',
+    field: (s) => s.student.id,
   },
   {
-    name: 'skillCollection',
+    name: 'name',
+    label: 'Name',
+    field: (s) => s.student.name,
+  },
+  {
+    name: 'engName',
+    label: 'Eng Name',
+    field: (s) => s.student.engName,
+  },
+  {
+    name: 'overallScore',
+    label: 'Score',
+
+    field: (s) => {
+      return (
+        s.gainScore.project +
+        s.gainScore.examMid +
+        s.gainScore.examFinal +
+        s.gainScore.assignment
+      );
+    },
+  },
+  {
+    name: 'skills',
     label: 'Skills',
     field: 'skillCollection',
     align: 'center',
-    format(val) {
-      return val
-        .map((skill: SkillCollection) => {
-          return skill.skillMapping.skillId;
-        })
-        .join(', ');
-    },
   },
   {
     name: 'result',
     label: 'Result',
     field: 'skillCollection',
-    align: 'left',
 
-    format(val) {
-      return val
-        ?.map((skill: SkillCollection) => {
-          return skill.passed ? 'Passed' : 'Failed';
-        })
-        .join(', ');
+    format(val: SkillCollection[]) {
+      return val?.map((i) => i.passed).includes(false) ? 'Failed' : 'Passed';
     },
   },
 ];
 
 const formCourse = reactive<Course>({
-  subject: null as unknown as Subject,
-  curriculumId: 0,
-  teacherId: 0,
-  students: [],
+  subject: {},
+  curriculum: {},
+  teacher: {},
+  courseEnrollments: [],
+  description: '',
+  active: true,
+  score: {
+    project: 0,
+    examMid: 0,
+    examFinal: 0,
+    assignment: 0,
+  },
 });
 
 useMeta({

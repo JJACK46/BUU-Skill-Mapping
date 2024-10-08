@@ -1,4 +1,4 @@
-import { SkillMapping } from './skill_mapping';
+import { SkillCollection } from './skill-collection';
 
 export interface Student {
   id?: number;
@@ -8,11 +8,4 @@ export interface Student {
   phone: string;
   startDate: Date;
   skillCollection: SkillCollection[];
-}
-
-export interface SkillCollection {
-  id?: number;
-  skillMapping: SkillMapping;
-  acquiredLevel: number;
-  passed: boolean;
 }

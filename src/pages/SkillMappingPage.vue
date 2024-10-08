@@ -66,12 +66,13 @@ import { QTreeNode, useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { reactive, ref } from 'vue';
-import { ExpectedMean, SkillMapping } from 'src/types/skill_mapping';
 import { SkillService } from 'src/services/skill';
+import { SkillCollection, SkillLevel } from 'src/types/skill-collection';
+import { groupBy } from 'src/utils/sheet2object';
 
 const sheet = ref();
 const items = computed(() => sheet.value?.items);
-const skillMaps = ref<SkillMapping[]>([]);
+const skillMaps = ref<SkillCollection[]>([]);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const nodes = ref<QTreeNode[]>([]);
@@ -97,36 +98,31 @@ const convertToSkill = (items: {
         Expected_Mean: string;
       }
     ) => object
-  ) => SkillMapping[];
-}): SkillMapping[] => {
-  return items.map((item) => {
+  ) => SkillCollection[];
+}): SkillCollection[] => {
+  return items.map((item): SkillCollection => {
     return {
-      subjectId: item.Subject_ID,
-      skillId: item.Skill_ID,
-      expectedLevel: item.Expected_Level as unknown as number,
-      expectedMean: item.Expected_Mean as ExpectedMean,
+      subject: { id: Number(item.Subject_ID) },
+      skill: { id: Number(item.Skill_ID) },
+      level: item.Expected_Mean as SkillLevel,
+      passed: null,
     };
   });
 };
 
-const convertToNodes = (items: SkillMapping[]): QTreeNode[] => {
-  const groupedBySubject: { [subjectId: string]: SkillMapping[] } =
-    items.reduce((acc, item) => {
-      if (!acc[item.subjectId]) {
-        acc[item.subjectId] = [];
-      }
-      acc[item.subjectId].push(item);
-      return acc;
-    }, {} as { [subjectId: string]: SkillMapping[] });
+const convertToNodes = (items: SkillCollection[]): QTreeNode[] => {
+  const groupedBySubject = groupBy(items, (items): string =>
+    items.subject.id!.toString()
+  );
 
-  return Object.entries(groupedBySubject).map(([subjectId, skillMappings]) => {
+  return Object.entries(groupedBySubject).map(([subject, skillCollect]) => {
     return {
-      label: `Subject ID: ${subjectId}`,
-      children: skillMappings.map((item) => ({
-        label: `Skill ID: ${item.skillId}`,
+      label: `Subject ID: ${subject}`,
+      children: skillCollect.map((item) => ({
+        label: `Skill ID: ${item.skill.id}`,
         children: [
           {
-            label: `Expected Level: ${item.expectedMean}`,
+            label: `Expected Level: ${item.level}`,
           },
         ],
       })),

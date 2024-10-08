@@ -1,6 +1,9 @@
-export function groupBy<T>(items: T[], key: keyof T): { [key: string]: T[] } {
+export function groupBy<T>(
+  items: T[],
+  getKey: (item: T) => string
+): { [key: string]: T[] } {
   return items.reduce((acc: { [key: string]: T[] }, item: T) => {
-    const groupKey = item[key] as unknown as string; // Convert key value to string
+    const groupKey = getKey(item); // Get key using callback
     if (!acc[groupKey]) {
       acc[groupKey] = [];
     }
@@ -9,6 +12,8 @@ export function groupBy<T>(items: T[], key: keyof T): { [key: string]: T[] } {
   }, {});
 }
 
-// Usage example
-// const groupedByStudentID = groupBy(sheetItems.value, 'student_id');
-// const groupedByClass = groupBy(sheetItems.value, 'class_id'); // Or any other key
+// *** Usage example ***
+// * use with CSV items *
+// const groupedByStudentID = groupBy(sheetItems.value, (i: { student_id: string }) => i.student_id);
+// * use with Object items *
+// const groupedBySubject = groupBy(items, (items): string => items.subject.id!.toString());
