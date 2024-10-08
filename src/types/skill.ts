@@ -1,15 +1,8 @@
-import { SkillDomain } from './skill_mapping';
-
 export interface Skill {
   id?: number;
   name: string;
   description: string;
-  domain: SkillDomain;
-  type: SkillType;
+  domain: 'Ability' | 'Psychomotor' | 'Personal Attributes' | 'Ethics';
+  type: 'Specific' | 'Generic';
   children?: Skill[];
-}
-
-export enum SkillType {
-  Specific = 'Specific',
-  Generic = 'Generic',
 }

@@ -52,8 +52,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { Skill, SkillType } from 'src/types/skill';
-import { SkillDomain } from 'src/types/skill_mapping';
+import { Skill } from 'src/types/skill';
 import { SkillService } from 'src/services/skill';
 
 const route = useRoute();
@@ -90,8 +89,8 @@ const options = <Skill[]>[
 const insSkill = reactive<Skill>({
   name: '',
   description: '',
-  domain: SkillDomain.Ability,
-  type: SkillType.Specific,
+  domain: 'Psychomotor',
+  type: 'Specific',
 });
 
 const save = () => {
