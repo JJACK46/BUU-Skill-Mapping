@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh LpR lFf">
     <q-header>
       <q-toolbar>
         <q-btn
@@ -12,7 +12,15 @@
         />
 
         <q-toolbar-title> Skill Mapping App </q-toolbar-title>
-
+        <div class="q-gutter-md q-mr-md">
+          <q-btn
+            icon="notifications"
+            flat
+            padding="none"
+            @click="toggleRightDrawer"
+          />
+          <q-btn :icon="themeIcon" flat padding="none" @click="dark.toggle" />
+        </div>
         <q-avatar class="cursor-pointer" @click="() => router.push('/account')">
           <img
             draggable="false"
@@ -24,12 +32,18 @@
             <q-list>
               <q-item clickable v-close-popup>
                 <q-item-section>
-                  <q-item-label>Account</q-item-label>
+                  <q-item-label class="row items-center q-gutter-x-sm">
+                    <q-icon name="person"></q-icon>
+                    <span class="col">Account</span>
+                  </q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+              <q-item clickable v-close-popup @click="store.logout">
                 <q-item-section>
-                  <q-item-label @click="store.logout">Logout</q-item-label>
+                  <q-item-label class="row items-center q-gutter-x-sm">
+                    <q-icon name="logout"></q-icon>
+                    <span class="col">Logout</span>
+                  </q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -38,7 +52,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="250">
+    <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" side="left">
       <q-list>
         <q-item-label header>
           <q-img
@@ -55,10 +69,14 @@
       <q-space />
       <q-separator class="q-my-sm" />
       <q-list class="flex justify-between q-px-md">
-        <div class="cursor-pointer">
-          <q-icon :name="themeIcon" @click="dark.toggle"></q-icon>
-        </div>
         <div>{{ __APP_VERSION }}</div>
+      </q-list>
+    </q-drawer>
+
+    <q-drawer v-model="rightDrawerOpen" side="right" bordered>
+      <q-list>
+        <q-item-label header> Notifications </q-item-label>
+        <q-separator />
       </q-list>
     </q-drawer>
 
@@ -95,55 +113,46 @@ defineOptions({
 const linksList: LinkProps[] = [
   {
     title: 'Dashboard',
-    caption: 'overall',
     icon: 'home',
     link: '/',
   },
   {
     title: 'Skills',
-    caption: 'All of skill',
     icon: 'code',
     link: '/skills',
   },
   {
     title: 'Subjects',
-    caption: 'All of skill',
     icon: 'book',
     link: '/subjects',
   },
   {
     title: 'Skill Mapping',
-    caption: 'Main feature',
     icon: 'engineering',
     link: '/skill-mapping',
   },
   {
     title: 'Curriculums',
-    caption: 'All of curriculum',
     icon: 'collections_bookmark',
     link: '/curriculums',
   },
   {
     title: 'Courses',
-    caption: 'All of courses',
     icon: 'play_lesson',
     link: '/courses',
   },
   {
     title: 'User',
-    caption: 'students',
     icon: 'manage_accounts',
     link: '/users',
   },
   {
     title: 'Teachers',
-    caption: 'students',
     icon: 'group',
     link: '/teachers',
   },
   {
     title: 'Students',
-    caption: 'students',
     icon: 'school',
     link: '/students',
   },
@@ -156,8 +165,12 @@ const linksList: LinkProps[] = [
 ];
 
 const leftDrawerOpen = ref(false);
+const rightDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+function toggleRightDrawer() {
+  rightDrawerOpen.value = !rightDrawerOpen.value;
 }
 </script>

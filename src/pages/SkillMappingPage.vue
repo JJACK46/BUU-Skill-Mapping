@@ -1,26 +1,8 @@
 <template>
   <q-page padding>
-    <div class="text-h6">{{ title }}</div>
+    <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <div class="flex flex-center q-gutter-sm">
-      <q-input
-        outlined
-        clearable
-        v-model="search"
-        label="Search"
-        class="col"
-        dense
-      >
-        <template #prepend>
-          <q-icon name="search"></q-icon>
-        </template>
-      </q-input>
-      <q-space />
-      <div>
-        <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
-      </div>
-    </div>
-    <q-dialog v-model="isDialogOpen">
+    <q-dialog v-model="dialogState">
       <q-card>
         <p class="text-h5 q-px-md q-pt-md">New Mapping</p>
         <q-card-section class="q-gutter-md">
@@ -35,10 +17,8 @@
           </q-select>
         </q-card-section>
         <q-card-actions class="justify-end">
-          <q-btn flat @click="isDialogOpen = false"> cancel </q-btn>
-          <q-btn flat color="positive" @click="isDialogOpen = false">
-            add</q-btn
-          >
+          <q-btn flat @click="dialogState = false"> cancel </q-btn>
+          <q-btn flat color="positive" @click="dialogState = false"> add</q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -69,6 +49,7 @@ import { reactive, ref } from 'vue';
 import { SkillService } from 'src/services/skill';
 import { SkillCollection, SkillLevel } from 'src/types/skill-collection';
 import { groupBy } from 'src/utils/sheet2object';
+import PageHeader from 'src/components/PageHeader.vue';
 
 const sheet = ref();
 const items = computed(() => sheet.value?.items);
@@ -79,7 +60,7 @@ const nodes = ref<QTreeNode[]>([]);
 useMeta({
   title: title.value,
 });
-const isDialogOpen = ref(false);
+const dialogState = ref(false);
 const search = ref();
 const refForm = reactive({
   id: 0,

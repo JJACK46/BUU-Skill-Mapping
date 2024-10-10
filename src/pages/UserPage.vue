@@ -1,22 +1,7 @@
 <template>
   <q-page padding>
-    <div class="text-h6">{{ title }}</div>
+    <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <div class="flex justify-end q-gutter-md q-mb-md">
-      <q-input
-        outlined
-        clearable
-        v-model="search"
-        label="Search"
-        class="col"
-        dense
-      >
-        <template #prepend>
-          <q-icon name="search"></q-icon>
-        </template>
-      </q-input>
-      <q-btn @click="dialogState = true" color="secondary">Add</q-btn>
-    </div>
     <q-table :rows="users" row-key="name" :loading="loading"> </q-table>
     <q-dialog v-model="dialogState">
       <q-card>
@@ -35,6 +20,7 @@
 
 <script lang="ts" setup>
 import { useMeta } from 'quasar';
+import PageHeader from 'src/components/PageHeader.vue';
 import { UserService } from 'src/services/user';
 import { User } from 'src/types/user';
 import { computed, onMounted, reactive, ref } from 'vue';

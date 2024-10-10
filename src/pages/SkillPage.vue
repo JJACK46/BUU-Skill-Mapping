@@ -1,26 +1,8 @@
 <template>
   <q-page padding>
-    <div class="text-h6">{{ title }}</div>
+    <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <div class="flex flex-center q-gutter-sm">
-      <q-input
-        outlined
-        clearable
-        v-model="search"
-        label="Search"
-        class="col"
-        dense
-      >
-        <template #prepend>
-          <q-icon name="search"></q-icon>
-        </template>
-      </q-input>
-      <q-space />
-      <div>
-        <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
-      </div>
-    </div>
-    <q-dialog v-model="isDialogOpen">
+    <q-dialog v-model="dialogState">
       <q-card>
         <div class="q-pa-md text-h5">New Skill</div>
         <q-card-section class="flex q-gutter-md">
@@ -35,8 +17,8 @@
           />
         </q-card-section>
         <q-card-actions class="justify-end">
-          <q-btn flat @click="isDialogOpen = false"> cancel </q-btn>
-          <q-btn flat color="blue" @click="save(), (isDialogOpen = false)">
+          <q-btn flat @click="dialogState = false"> cancel </q-btn>
+          <q-btn flat color="blue" @click="save(), (dialogState = false)">
             save
           </q-btn>
         </q-card-actions>
@@ -54,6 +36,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { Skill } from 'src/types/skill';
 import { SkillService } from 'src/services/skill';
+import PageHeader from 'src/components/PageHeader.vue';
 
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -62,7 +45,7 @@ useMeta({
 });
 
 const search = ref('');
-const isDialogOpen = ref();
+const dialogState = ref();
 const skills = ref<Skill[]>();
 
 const options = <Skill[]>[

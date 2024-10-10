@@ -1,31 +1,7 @@
 <template>
   <q-page padding>
-    <div class="text-h6">{{ title }}</div>
+    <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <div class="flex flex-center q-gutter-sm">
-      <q-input
-        outlined
-        clearable
-        v-model="search"
-        label="Search"
-        class="col"
-        dense
-      >
-        <template #prepend>
-          <q-icon name="search"></q-icon>
-        </template>
-      </q-input>
-      <q-space />
-      <div>
-        <q-btn @click="isDialogOpen = true" color="secondary" label="add">
-          <q-dialog v-model="isDialogOpen">
-            <q-card>
-              <q-card-section>Subject some</q-card-section>
-            </q-card>
-          </q-dialog>
-        </q-btn>
-      </div>
-    </div>
 
     <q-table
       v-if="filteredSubjects"
@@ -45,10 +21,11 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { SubjectService } from 'src/services/subject';
 import { Subject } from 'src/types/subject';
+import PageHeader from 'src/components/PageHeader.vue';
 
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const isDialogOpen = ref(false);
+const dialogState = ref(false);
 const search = ref('');
 useMeta({
   title: title.value,

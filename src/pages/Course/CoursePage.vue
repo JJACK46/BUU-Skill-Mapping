@@ -1,78 +1,55 @@
 <template>
   <q-page padding>
-    <div class="row q-gutter-y-sm justify-between">
-      <div class="row q-gutter-sm">
-        <q-btn label="import" icon="upload" outline></q-btn>
-        <q-btn label="export" icon="cloud_download" outline></q-btn>
-      </div>
-      <div class="row q-gutter-sm">
-        <q-btn icon="filter_alt" flat label="filter" color="primary" dense>
-        </q-btn>
-        <q-input
-          outlined
-          clearable
-          v-model="filterCourse"
-          label="Search"
-          class="col"
-          dense
-          style="width: 300px"
-        >
-          <template #prepend>
-            <q-icon name="search"></q-icon>
-          </template>
-        </q-input>
-        <q-btn
-          @click="handleOpenDialog"
-          color="secondary"
-          label="add"
-          unelevated
-        >
-          <q-dialog v-model="isDialogAdd" full-width>
-            <q-card>
-              <q-card-section class="q-gutter-y-md">
-                <div class="text-h6">New Course</div>
-                <q-select
-                  outlined
-                  v-model="formCourse.subject"
-                  :options="optionSubjects"
-                  option-label="thaiName"
-                  options-dense
-                ></q-select>
+    <PageHeader
+      v-model:searchText="filterCourse"
+      @open-dialog="handleOpenDialog"
+    />
+    {{ filterCourse }}
+    <q-dialog v-model="isDialogAdd" full-width>
+      <q-card>
+        <q-card-section class="q-gutter-y-md">
+          <div class="text-h6">New Course</div>
+          <q-select
+            outlined
+            v-model="formCourse.subject"
+            :options="optionSubjects"
+            option-label="thaiName"
+            options-dense
+          ></q-select>
 
-                <TableSheetJS ref="sheet" text="Import students" />
-              </q-card-section>
-              <q-card-actions class="justify-end q-pa-md">
-                <q-btn label="cancel" @click="isDialogAdd = false"></q-btn>
-                <q-btn
-                  color="primary"
-                  :disable="!formCourse.subject"
-                  label="save"
-                  @click="handleImport"
-                ></q-btn>
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-        </q-btn>
-      </div>
-    </div>
+          <TableSheetJS ref="sheet" text="Import students" />
+        </q-card-section>
+        <q-card-actions class="justify-end q-pa-md">
+          <q-btn label="cancel" @click="isDialogAdd = false"></q-btn>
+          <q-btn
+            color="primary"
+            :disable="!formCourse.subject"
+            label="save"
+            @click="handleImport"
+          ></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-separator class="q-my-md" />
-    <section class="q-mt-md q-gutter-x-lg row">
+    <section class="q-gutter-lg row">
       <q-card
         class="col-grow col-md-auto"
         v-for="data in mockCourse"
         :key="data.id"
-        style="width: 300px"
+        style="width: 300px; max-height: 400px"
       >
-        <div class="row justify-between q-pa-md">
-          <span class="text-h6"
-            >{{ data.subject.name ?? data.subject.engName }}
-          </span>
-          <q-btn icon="more_vert" flat padding="none" />
-        </div>
-        <div style="text-indent: 1rem" class="q-py-sm">
-          {{ data.subject.description }}
-        </div>
-        <q-card-section class="text-body1 row justify-between">
+        <q-card-section>
+          <div class="row justify-between">
+            <span class="text-h6"
+              >{{ data.subject.name ?? data.subject.engName }}
+            </span>
+            <q-btn icon="more_vert" flat padding="none" />
+          </div>
+          <div style="text-indent: 1rem" class="q-py-sm text-body2">
+            {{ data.subject.description }}
+          </div>
+        </q-card-section>
+        <q-card-actions class="text-body1 q-pa-md" align="between">
           <div>{{ new Date().toLocaleDateString() }}</div>
           <q-btn
             label="View"
@@ -81,7 +58,7 @@
             @click="handleViewCourse(data.id)"
           >
           </q-btn>
-        </q-card-section>
+        </q-card-actions>
       </q-card>
     </section>
   </q-page>
@@ -89,6 +66,7 @@
 
 <script lang="ts" setup>
 import { useMeta } from 'quasar';
+import PageHeader from 'src/components/PageHeader.vue';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { mockCourse } from 'src/mock/course';
 import { SubjectService } from 'src/services/subject';
@@ -100,12 +78,12 @@ import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const sheet = ref();
 const isDialogAdd = ref(false);
-const filterCourse = ref();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const optionSubjects = ref<Subject[]>([]);
 const sheetItems = computed(() => sheet.value?.items);
 const router = useRouter();
+const filterCourse = ref('');
 
 const handleViewCourse = (id: number | undefined) => {
   if (id) {
