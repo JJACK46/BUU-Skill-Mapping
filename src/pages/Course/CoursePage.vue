@@ -131,7 +131,7 @@ const handleImport = () => {
             level: item.gain_level,
             score: 0,
             passed: item.result === 1 ? true : false,
-          } as SkillCollection)
+          } as unknown as SkillCollection)
       ),
     });
     // return {
