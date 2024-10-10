@@ -16,7 +16,7 @@ export const mockCourse = ref<Course[]>([
       type: SubjectType.Compulsory,
     },
     curriculum: { id: 'f1' },
-    teacher: { id: 1 },
+    teachers: [{ id: 1 }],
     courseEnrollments: [
       {
         student: {
@@ -28,14 +28,9 @@ export const mockCourse = ref<Course[]>([
           startDate: new Date(),
         },
         id: 0,
-        gainScore: {
-          project: 60,
-          examMid: 0,
-          examFinal: 0,
-          assignment: 30,
-        },
         skillCollection: [
           {
+            score: 100,
             level: SkillLevel.Ability5,
             passed: true,
             subject: { id: 1 },
@@ -46,11 +41,5 @@ export const mockCourse = ref<Course[]>([
     ],
     description: '',
     active: true,
-    score: {
-      project: 70,
-      examMid: 0,
-      examFinal: 0,
-      assignment: 30,
-    },
   },
 ]);

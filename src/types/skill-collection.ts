@@ -6,6 +6,7 @@ export interface SkillCollection {
   subject: Partial<Subject>;
   skill: Partial<Skill>;
   level: SkillLevel;
+  score: number;
   passed: boolean | null;
 }
 export enum SkillLevel {

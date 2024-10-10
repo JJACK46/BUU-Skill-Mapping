@@ -106,6 +106,7 @@ const convertToSkill = (items: {
       skill: { id: Number(item.Skill_ID) },
       level: item.Expected_Mean as SkillLevel,
       passed: null,
+      score: 0,
     };
   });
 };
