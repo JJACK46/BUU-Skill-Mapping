@@ -10,20 +10,11 @@ export interface Course {
   active: boolean;
   subject: Partial<Subject>;
   curriculum: Partial<Curriculum>;
-  teacher: Partial<Teacher>;
-  score: Score;
+  teachers: Partial<Teacher>[];
   courseEnrollments: CourseEnrollment[];
 }
 export interface CourseEnrollment {
   id?: number;
-  gainScore: Score;
   student: Partial<Student>;
   skillCollection: SkillCollection[];
-}
-
-interface Score {
-  project: number;
-  examMid: number;
-  examFinal: number;
-  assignment: number;
 }
