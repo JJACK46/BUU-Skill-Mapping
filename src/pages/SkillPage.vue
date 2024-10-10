@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <q-page padding>
     <div class="text-h6">{{ title }}</div>
     <q-separator class="q-my-md" />
@@ -123,4 +123,4 @@ const save = () => {
 onMounted(async () => {
   skills.value = await SkillService.fetchAll();
 });
-</script>
+</script> -->

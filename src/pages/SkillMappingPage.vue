@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <q-page padding>
     <div class="text-h6">{{ title }}</div>
     <q-separator class="q-my-md" />
@@ -45,7 +45,6 @@
     <q-card v-if="skillMaps.length <= 0" class="q-pa-lg q-mt-lg">
       <TableSheetJS ref="sheet" text="Skill Mapping" />
     </q-card>
-    <!-- {{ sheet?.items }} -->
     <div class="flex flex-center q-mt-lg">
       <q-btn
         v-if="items"
@@ -90,7 +89,6 @@ const refForm = reactive({
 const convertToSkill = (items: {
   map: (
     arg0: (
-      /// <reference types=".vue-global-types/vue_3.5_false.d.ts" />
       item: {
         Subject_ID: string;
         Skill_ID: string;
@@ -135,4 +133,4 @@ const handleProcess = () => {
   nodes.value = convertToNodes(skillMaps.value);
   SkillService.mapping(skillMaps.value);
 };
-</script>
+</script> -->

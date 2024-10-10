@@ -178,7 +178,7 @@ const handleImport = () => {
             subject: formCourse.subject,
             level: item.gain_level,
             passed: item.result === 1 ? true : false,
-          } as SkillCollection)
+          } as unknown as SkillCollection)
       ),
       gainScore: {
         project: 0,

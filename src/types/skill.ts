@@ -1,8 +1,11 @@
-export interface Skill {
-  id?: number;
+type Skill = {
+  id: string;
   name: string;
   description: string;
-  domain: 'Ability' | 'Psychomotor' | 'Personal Attributes' | 'Ethics';
-  type: 'Specific' | 'Generic';
-  children?: Skill[];
-}
+  domain: string;
+  parent?: Skill[];
+  children: Skill[];
+  techSkills: Skill[];
+};
+
+export type { Skill };
