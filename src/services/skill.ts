@@ -1,31 +1,54 @@
-import { Skill } from 'src/types/skill';
+import type { PageParams } from 'src/types/pagination';
 import http from './index';
-import { PageParams } from 'src/types/pagination';
-import { SkillCollection } from 'src/types/skill-collection';
+import type { Skill } from 'src/types/skill';
 
-export class SkillService {
-  static async fetchAll(params?: PageParams) {
-    const response = await http.get('skills', { params });
-    return response.data;
-  }
-
-  static async createOne(s: Skill) {
-    const response = await http.post('skills', { ...s });
-    return response.data;
-  }
-
-  static async updateOne(s: Skill) {
-    const response = await http.patch(`skills/${s.id}`, { ...s });
-    return response.data;
-  }
-
-  static async deleteOne(s: Skill) {
-    const response = await http.delete(`skills/${s.id}`);
-    return response.data;
-  }
-
-  static async mapping(s: SkillCollection[]) {
-    const response = await http.post('skills/mapping', { ...s });
-    return response.data;
-  }
+function addSkill(skill: object) {
+  return http.post('/skills', skill);
 }
+
+function addSubSkill(id: string, subSkill: object) {
+  return http.post(`/skills/${id}/createSubSkills`, subSkill); // Corrected URL
+}
+
+function addTechSkill(id: string, techSkill: Skill[]) {
+  return http.post(`/skills/${id}/createTechSkills/`, techSkill);
+}
+function updateSkill(skill: Skill) {
+  return http.patch(`/skills/${skill.id}`, skill);
+}
+function removeSubSkill(id: string, subSkillId: string) {
+  console.log('Test Removing subSkill', subSkillId);
+  return http.patch(`/skills/${id}/removeSubSkill/${subSkillId}`);
+}
+function removeTechSkill(id: string, techSkillId: string) {
+  return http.patch(`/skills/${id}`, techSkillId);
+}
+function delSkill(id: string) {
+  return http.delete(`/skills/${id}`);
+}
+
+function getSkills() {
+  return http.get<Skill[]>('/skills');
+}
+function getSkillsByPage(params: PageParams) {
+  return http.get<{ data: Skill[]; total: number }>('/skills/pages', {
+    params,
+  });
+}
+
+function getSkill(id: string) {
+  return http.get<Skill>(`/skills/${id}`);
+}
+
+export default {
+  addSkill,
+  addSubSkill,
+  addTechSkill,
+  updateSkill,
+  removeSubSkill,
+  removeTechSkill,
+  delSkill,
+  getSkills,
+  getSkillsByPage,
+  getSkill,
+};
