@@ -34,7 +34,7 @@ export const mockCourse = ref<Course[]>([
             level: SkillLevel.Ability5,
             passed: true,
             subject: { id: 1 },
-            skill: { id: 1 },
+            skill: { id: '1' },
           },
         ],
       },

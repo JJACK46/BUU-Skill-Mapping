@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <q-page padding>
     <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
@@ -106,4 +106,4 @@ const save = () => {
 onMounted(async () => {
   skills.value = await SkillService.fetchAll();
 });
-</script>
+</script> -->
