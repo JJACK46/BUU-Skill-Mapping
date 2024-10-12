@@ -23,9 +23,7 @@ export const mockCourse = ref<Course[]>([
           id: 65160666,
           name: 'สมชาย ใจดี',
           engName: 'Somchai Jaidee',
-          gpa: 3.99,
-          phone: '0940000000',
-          startDate: new Date(),
+          dateEnrollment: new Date(),
         },
         id: 0,
         skillCollection: [

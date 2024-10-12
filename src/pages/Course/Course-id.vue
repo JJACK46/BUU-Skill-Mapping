@@ -1,27 +1,30 @@
 <template>
-  <q-page padding>
-    <div class="q-pb-sm q-px-md">
-      <span>
-        <q-breadcrumbs>
-          <q-breadcrumbs-el label="Courses" to="/courses" />
-          <q-breadcrumbs-el :label="`${courseId}`" />
-        </q-breadcrumbs>
-      </span>
-      <div class="text-body2">
-        <div>name:</div>
-        <div>eng name:</div>
-      </div>
-      <q-separator class="q-my-sm" />
+  <q-page padding class="q-gutter-y-md">
+    <div>
+      <q-breadcrumbs>
+        <q-breadcrumbs-el label="Courses" to="/courses" />
+        <q-breadcrumbs-el :label="`${courseId}`" />
+      </q-breadcrumbs>
     </div>
+    <q-separator class="q-my-sm" />
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">Course Name</div>
+        <div class="text-body2">
+          <div>eng name:</div>
+          <div>description:</div>
+        </div>
+      </q-card-section>
+    </q-card>
+
     <q-table
       :columns="columns"
       :rows="rows"
       row-key="id"
-      flat
       :filter="filterStudent"
     >
       <template #top>
-        <div class="q-py-sm">
+        <div class="q-pb-sm">
           <span class="text-h6">Course Enrollment</span>
         </div>
         <div class="flex justify-between fit">
@@ -31,19 +34,17 @@
               icon="upload"
               outline
               color="primary"
-              @click="importDialog = true"
+              @click="dialogImport = true"
             >
-              <q-dialog v-model="importDialog">
-                <q-card>
-                  <q-card-section>
-                    <TableSheetJS text="import" />
-                  </q-card-section>
-                  <q-card-actions align="right">
-                    <q-btn label="close" unelevated v-close-popup></q-btn>
-                    <q-btn label="save" unelevated color="primary"></q-btn>
-                  </q-card-actions>
-                </q-card>
-              </q-dialog>
+              <DialogForm
+                title="Import Students"
+                v-model="dialogImport"
+                @save="handleImport"
+              >
+                <template #body>
+                  <TableSheetJS text="import" ref="sheet" />
+                </template>
+              </DialogForm>
             </q-btn>
             <q-btn
               label="export"
@@ -147,19 +148,31 @@
 
 <script lang="ts" setup>
 import { QTableColumn } from 'quasar';
+import DialogForm from 'src/components/DialogForm.vue';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { mockCourse } from 'src/mock/course';
-import { CourseEnrollment } from 'src/types/course';
+import { Course, CourseEnrollment } from 'src/types/course';
 import { SkillCollection } from 'src/types/skill-collection';
-import { onMounted, ref } from 'vue';
+import { groupBy } from 'src/utils/sheet2object';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+const sheet = ref();
 const filterStudent = ref();
 const skillDialog = ref();
 const rows = ref<CourseEnrollment[]>([]);
 const courseId = ref(0);
 const route = useRoute();
-const importDialog = ref(false);
+const dialogImport = ref(false);
+
+const formCourse = reactive<Course>({
+  description: '',
+  active: true,
+  subject: null,
+  curriculum: null,
+  teachers: [],
+  courseEnrollments: [],
+});
 
 onMounted(() => {
   filterStudent.value = '';
@@ -201,4 +214,61 @@ const columns: QTableColumn[] = [
     },
   },
 ];
+
+const handleImport = () => {
+  const groupedByStudentID = groupBy(
+    sheet.value.item,
+    (i: { student_id: string }) => i.student_id
+  );
+
+  Object.entries(groupedByStudentID).map(([student_id, items]): void => {
+    formCourse.courseEnrollments.push({
+      student: { id: Number(student_id) },
+      skillCollection: items.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (item: any) =>
+          ({
+            skill: { id: Number(item.skill_id) },
+            subject: formCourse.subject,
+            level: item.gain_level,
+            score: 0,
+            passed: item.result === 1 ? true : false,
+          } as unknown as SkillCollection)
+      ),
+    });
+    // return {
+    //   id: Number(student_id),
+    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //   skillCollection: items.map((item: any) => ({
+    //     skillMapping: {
+    //       skillId: item.skill_id,
+    //       subjectId: formCourse.subject.id ?? 0,
+    //       expectedLevel: 1,
+    //       expectedMean: item.gain_level,
+    //     },
+    //     acquiredLevel: item.gain_level,
+    //     passed: item.result === 1 ? true : false,
+    //   })),
+    // };
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // formCourse.students = sheetItems.value.map((item: any): Partial<Student> => {
+  //   return {
+  //     id: item.student_id,
+  //     skillCollection: [
+  //       {
+  //         skillMapping: {
+  //           skillId: item.skill_id,
+  //           subjectId: 0,
+  //           expectedLevel: 1,
+  //           expectedMean: item.gain_level,
+  //         },
+  //         acquiredLevel: item.gain_level,
+  //         passed: item.result === 1 ? true : false,
+  //       },
+  //     ],
+  //   };
+  // });
+};
 </script>

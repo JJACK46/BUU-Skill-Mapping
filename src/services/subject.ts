@@ -1,6 +1,6 @@
 import http from './index';
 export class SubjectService {
-  static async fetchAll() {
+  static async getAll() {
     try {
       const response = await http.get('subjects');
       return response.data;

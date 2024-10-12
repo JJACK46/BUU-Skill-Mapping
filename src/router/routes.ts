@@ -88,12 +88,12 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        name: 'course-management',
+        name: 'Course Management',
         component: () => import('pages/Course/CoursePage.vue'),
       },
       {
         path: ':id',
-        name: 'course-detail',
+        name: 'Course Detail',
         component: () => import('pages/Course/Course-id.vue'),
       },
     ],

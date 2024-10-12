@@ -56,6 +56,6 @@ const filteredSubjects = computed(() => {
 });
 
 onMounted(async () => {
-  subjects.value = await SubjectService.fetchAll();
+  subjects.value = await SubjectService.getAll();
 });
 </script>

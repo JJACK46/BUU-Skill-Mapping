@@ -8,8 +8,8 @@ export interface Course {
   id?: number;
   description: string;
   active: boolean;
-  subject: Partial<Subject>;
-  curriculum: Partial<Curriculum>;
+  subject: Partial<Subject> | null;
+  curriculum: Partial<Curriculum> | null;
   teachers: Partial<Teacher>[];
   courseEnrollments: CourseEnrollment[];
 }

@@ -2,7 +2,7 @@ import { User } from 'src/types/user';
 import http from './index';
 
 export class UserService {
-  static async fetchAll() {
+  static async getAll() {
     const response = await http.get('users');
     return response.data;
   }

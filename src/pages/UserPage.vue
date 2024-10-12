@@ -41,7 +41,7 @@ useMeta({
 });
 onMounted(async () => {
   loading.value = true;
-  users.value = await UserService.fetchAll();
+  users.value = await UserService.getAll();
   loading.value = false;
 });
 </script>

@@ -50,6 +50,6 @@ useMeta({
 const curriculums = ref<Curriculum[]>();
 
 onMounted(async () => {
-  curriculums.value = await CurriculumService.fetchAll();
+  curriculums.value = await CurriculumService.getAll();
 });
 </script>
