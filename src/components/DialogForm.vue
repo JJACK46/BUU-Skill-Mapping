@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="dialogState">
-    <q-card class="dialog-form" style="width: 500px">
+    <q-card class="dialog-form" :style="{ width: width ? width : '500px' }">
       <q-form autofocus>
         <q-card-section>
           <div class="text-h6 q-mb-md">{{ title }}</div>
@@ -27,6 +27,7 @@
 <script lang="ts" setup>
 defineProps<{
   title: string;
+  width?: string;
 }>();
 const dialogState = defineModel<boolean>();
 defineEmits<{ (e: 'save'): void }>();

@@ -1,10 +1,10 @@
-import http from './index';
+import { api } from 'boot/axios';
 import { AxiosResponse } from 'axios';
 import { Payload } from 'src/types/payload';
 
 class AuthService {
   static async login(email: string, password: string): Promise<AxiosResponse> {
-    const res = await http.post('/auth/login', { email, password });
+    const res = await api.post('/auth/login', { email, password });
     return res.data;
   }
 
@@ -14,12 +14,12 @@ class AuthService {
 
   static loginGoogle() {
     localStorage.removeItem('token');
-    window.location.href = http.defaults.baseURL + '/auth/google';
+    window.location.href = api.defaults.baseURL + '/auth/google';
   }
 
   static async logout(): Promise<AxiosResponse> {
     try {
-      const res = await http.post('/auth/logout', { withCredentials: true });
+      const res = await api.post('/auth/logout', { withCredentials: true });
       localStorage.removeItem('token');
       window.location.replace('/login');
       return res.data;
@@ -31,7 +31,7 @@ class AuthService {
 
   static async fetchProfile(): Promise<Payload | null> {
     try {
-      const res = await http.get<Payload>('auth/profile');
+      const res = await api.get<Payload>('auth/profile');
       if (!res.data) {
         return null;
       }

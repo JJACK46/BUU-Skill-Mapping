@@ -61,17 +61,6 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/skill-mapping',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '',
-        name: 'Skill Mapping',
-        component: () => import('pages/SkillMappingPage.vue'),
-      },
-    ],
-  },
-  {
     path: '/curriculums',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -139,6 +128,17 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'Account',
         component: () => import('pages/AccountPage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/branches',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Branch',
+        component: () => import('pages/BranchPage.vue'),
       },
     ],
   },

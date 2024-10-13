@@ -1,8 +1,7 @@
-import { Student } from 'src/types/student';
+import { Branch } from 'src/types/branch';
 import { api } from 'boot/axios';
-export class StudentService {
-  static path = 'student';
-
+export class BranchService {
+  static path = 'branches';
   static async getAll() {
     const res = await api.get(this.path);
     return res.data;
@@ -13,12 +12,12 @@ export class StudentService {
     return res.data;
   }
 
-  static async createOne(obj: Student) {
+  static async createOne(obj: Branch) {
     const res = await api.post(this.path, obj);
     return res.data;
   }
 
-  static async updateOne(obj: Student) {
+  static async updateOne(obj: Branch) {
     const res = await api.patch(this.path, obj);
     return res.data;
   }

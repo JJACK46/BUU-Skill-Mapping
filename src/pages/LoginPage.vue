@@ -96,7 +96,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { reactive } from 'vue';
 import AuthService from 'src/services/auth';
-import { __APP_VERSION } from 'src/utils';
+import { __APP_VERSION } from 'src/utils/app';
 
 const route = useRoute();
 const title = computed(() => route.matched[0].name as string);

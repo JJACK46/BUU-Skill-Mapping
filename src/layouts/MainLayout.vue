@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import MenuLink, { LinkProps } from 'components/MenuLink.vue';
-import { __APP_VERSION } from 'src/utils';
+import { __APP_VERSION } from 'src/utils/app';
 import { Payload } from 'src/types/payload';
 import { useUserStore } from 'src/stores/user';
 import { useQuasar } from 'quasar';
@@ -127,14 +127,14 @@ const linksList: LinkProps[] = [
     link: '/subjects',
   },
   {
-    title: 'Skill Mapping',
-    icon: 'engineering',
-    link: '/skill-mapping',
-  },
-  {
     title: 'Curriculums',
     icon: 'collections_bookmark',
     link: '/curriculums',
+  },
+  {
+    title: 'Branch',
+    icon: 'books',
+    link: '/branches',
   },
   {
     title: 'Courses',
