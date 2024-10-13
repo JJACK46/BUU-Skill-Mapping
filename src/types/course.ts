@@ -6,6 +6,7 @@ import { Teacher } from './teacher';
 
 export interface Course {
   id?: number;
+  name: string;
   description: string;
   active: boolean;
   subject: Partial<Subject> | null;

@@ -166,6 +166,7 @@ const route = useRoute();
 const dialogImport = ref(false);
 
 const formCourse = reactive<Course>({
+  name: '',
   description: '',
   active: true,
   subject: null,

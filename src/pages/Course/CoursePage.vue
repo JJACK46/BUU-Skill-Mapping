@@ -8,6 +8,30 @@
 
     <DialogForm title="New Course" v-model="dialogStateAdd" @save="handleSave">
       <template #body>
+        <q-input
+          outlined
+          label="Course ID"
+          v-model="formCourse.id"
+          autofocus
+          mask="########"
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          label="Name"
+          v-model="formCourse.name"
+          :rules="[requireField]"
+        />
+        <q-select
+          outlined
+          label="Curriculum"
+          v-model="formCourse.curriculum"
+          :options="curriculums"
+          option-label="engName"
+          options-dense
+          :rules="[requireField]"
+        >
+        </q-select>
         <q-select
           outlined
           label="Subject"
@@ -15,7 +39,6 @@
           :options="subjects"
           option-label="engName"
           options-dense
-          autofocus
           :rules="[requireField]"
         >
         </q-select>
@@ -25,7 +48,7 @@
           v-model="formCourse.teachers"
           :options="teachers"
           multiple
-          option-label="name"
+          :option-label="(item) => `${item.position ?? ''} ${item.name}`"
           options-dense
           :rules="[requireField]"
         />
@@ -81,8 +104,11 @@ import DialogForm from 'src/components/DialogForm.vue';
 import PageHeader from 'src/components/PageHeader.vue';
 import { mockCourse } from 'src/mock/course';
 import { CourseService } from 'src/services/course';
+import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
+import { TeacherService } from 'src/services/teacher';
 import { Course } from 'src/types/course';
+import { Curriculum } from 'src/types/curriculum';
 import { Subject } from 'src/types/subject';
 import { Teacher } from 'src/types/teacher';
 import { requireField } from 'src/utils/field-rules';
@@ -92,6 +118,7 @@ const dialogStateAdd = ref(false);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const subjects = ref<Subject[]>([]);
+const curriculums = ref<Curriculum[]>([]);
 const router = useRouter();
 const filterCourse = ref('');
 const teachers = ref<Teacher[]>([]);
@@ -110,9 +137,12 @@ const handleSave = () => {
 const handleOpenDialog = async () => {
   dialogStateAdd.value = true;
   subjects.value = await SubjectService.getAll();
+  teachers.value = await TeacherService.getAll();
+  curriculums.value = await CurriculumService.getAll();
 };
 
 const formCourse = reactive<Course>({
+  name: '',
   subject: null,
   curriculum: null,
   teachers: [],
@@ -121,11 +151,13 @@ const formCourse = reactive<Course>({
   active: true,
 });
 
-onMounted(async () => {
+async function fetchAll() {
   isLoading.value = true;
   courses.value = await CourseService.getAll();
   isLoading.value = false;
-});
+}
+
+onMounted(fetchAll);
 
 useMeta({
   title: title.value,

@@ -6,6 +6,7 @@ import { ref } from 'vue';
 export const mockCourse = ref<Course[]>([
   {
     id: 1,
+    name: 'การพัฒนาหน้าบ้าน',
     subject: {
       id: 1,
       name: 'การพัฒนาหน้าบ้าน',

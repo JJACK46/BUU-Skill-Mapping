@@ -32,10 +32,11 @@ api.interceptors.response.use(
   function (e) {
     Notify.create({
       type: 'negative',
-      message: '' + e,
+      message: e + ' | ' + e.response.data.message,
       timeout: 5000,
       progress: true,
     });
+    console.error(e);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return Promise.reject(e);

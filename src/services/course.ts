@@ -2,7 +2,7 @@ import { Course } from 'src/types/course';
 import { api } from 'boot/axios';
 
 export class CourseService {
-  static path = 'teachers';
+  static path = 'courses';
 
   static async getAll() {
     const res = await api.get(this.path);
@@ -15,7 +15,13 @@ export class CourseService {
   }
 
   static async createOne(obj: Course) {
-    const res = await api.post(this.path, obj);
+    const dto = {
+      ...obj,
+      teacherListId: obj.teachers.map((t) => t.id),
+      curriculumId: obj.curriculum?.id,
+      subjectId: obj.subject?.id,
+    };
+    const res = await api.post(this.path, dto);
     return res.data;
   }
 
