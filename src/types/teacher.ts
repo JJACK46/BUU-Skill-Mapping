@@ -1,8 +1,33 @@
+import { Branch } from './branch';
+import { Course } from './course';
+import { Curriculum } from './curriculum';
+
 export interface Teacher {
-  id?: number;
+  id: number;
+
   name: string;
-  engName?: string;
-  biology: string;
-  engBiology?: string;
-  phone: string;
+
+  engName: string;
+
+  tel: string;
+
+  picture: string;
+
+  position: string;
+
+  email: string;
+
+  officeRoom: string;
+
+  specialists: string;
+
+  socials: string;
+
+  bio: string;
+
+  branch?: Branch;
+
+  curriculums?: Curriculum[];
+
+  courses?: Course[];
 }
