@@ -86,6 +86,10 @@ useMeta({
 
 <style lang="scss">
 .body--light {
+  .q-page {
+    background-color: $surface-light;
+  }
+
   .q-table {
     // height: calc(100vh - 280px);
 

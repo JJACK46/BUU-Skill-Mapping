@@ -1,7 +1,7 @@
-import http from './index';
+import { api } from 'boot/axios';
 export class CurriculumService {
-  static async fetchAll() {
-    const response = await http.get('curriculums');
+  static async getAll() {
+    const response = await api.get('curriculums');
     return response.data;
   }
 }

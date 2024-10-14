@@ -6,6 +6,7 @@ import { ref } from 'vue';
 export const mockCourse = ref<Course[]>([
   {
     id: 1,
+    name: 'การพัฒนาหน้าบ้าน',
     subject: {
       id: 1,
       name: 'การพัฒนาหน้าบ้าน',
@@ -15,7 +16,6 @@ export const mockCourse = ref<Course[]>([
       credit: CourseCredit.Two,
       type: SubjectType.Compulsory,
     },
-    curriculum: { id: 'f1' },
     teachers: [{ id: 1 }],
     courseEnrollments: [
       {
@@ -23,9 +23,7 @@ export const mockCourse = ref<Course[]>([
           id: 65160666,
           name: 'สมชาย ใจดี',
           engName: 'Somchai Jaidee',
-          gpa: 3.99,
-          phone: '0940000000',
-          startDate: new Date(),
+          dateEnrollment: new Date(),
         },
         id: 0,
         skillCollection: [

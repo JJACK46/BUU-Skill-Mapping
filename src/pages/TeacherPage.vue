@@ -1,50 +1,142 @@
 <template>
   <q-page padding>
-    <div class="text-h6">{{ title }}</div>
+    <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <div class="flex justify-end q-gutter-md q-mb-md">
-      <q-input
-        outlined
-        clearable
-        v-model="search"
-        label="Search"
-        class="col"
-        dense
-      >
-        <template #prepend>
-          <q-icon name="search"></q-icon>
-        </template>
-      </q-input>
-      <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
-    </div>
-    <q-table :rows="mockRows" :columns="mockColumns" row-key="name"></q-table>
-    <q-dialog v-model="isDialogOpen">
-      <q-card>
-        <div class="q-pa-md text-h5">New User</div>
-        <q-card-section class="flex q-gutter-md">
-          <q-input outlined v-model="form.email" label="Email"></q-input>
-        </q-card-section>
-        <q-card-actions class="justify-end">
-          <q-btn flat @click="isDialogOpen = false"> cancel </q-btn>
-          <q-btn flat color="positive"> save </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <q-table :rows="teachers" row-key="id" :loading="loading"></q-table>
+    <DialogForm title="New Teacher" v-model="dialogState" @save="handleSave">
+      <template #body>
+        <q-select
+          outlined
+          v-model="form.branch"
+          :options="branches"
+          option-label="name"
+          label="Branch"
+          options-dense
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="form.email"
+          label="Email"
+          type="email"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="form.name"
+          label="Name"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="form.engName"
+          label="English Name"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-select
+          outlined
+          v-model="form.position"
+          :options="[...Object.values(AcademicRank)]"
+          label="Position"
+          options-dense
+          :rules="[requireField]"
+        />
+        <q-select
+          outlined
+          v-model="form.specialists"
+          :options="[
+            'Machine Learning',
+            'Deep Learning',
+            'Software Engineering',
+          ]"
+          label="Specialists"
+          options-dense
+          clearable
+          multiple
+        />
+        <q-input
+          outlined
+          v-model="form.tel"
+          label="Telephone"
+          clearable
+          :rules="[(val) => val.length == 10 || 'Field not correct format']"
+          mask="###-###-####"
+          unmasked-value
+        />
+        <q-input
+          outlined
+          v-model="form.officeRoom"
+          label="Office Room"
+          clearable
+          hint="optional"
+        />
+        <q-input
+          outlined
+          v-model="form.bio"
+          label="Bio"
+          hint="optional"
+          autogrow
+        />
+      </template>
+    </DialogForm>
   </q-page>
 </template>
 
 <script lang="ts" setup>
 import { useMeta } from 'quasar';
-import { mockColumns, mockRows } from 'src/mock/DataTable';
-import { computed, reactive, ref } from 'vue';
+import DialogForm from 'src/components/DialogForm.vue';
+import PageHeader from 'src/components/PageHeader.vue';
+import { BranchService } from 'src/services/branches';
+import { TeacherService } from 'src/services/teacher';
+import { Branch } from 'src/types/branch';
+import { AcademicRank } from 'src/types/poistion.enum';
+import { Teacher } from 'src/types/teacher';
+import { requireField } from 'src/utils/field-rules';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
-const isDialogOpen = ref(false);
+const dialogState = ref(false);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const search = ref();
-const form = reactive({
+const form = reactive<Teacher>({
+  name: '',
+  engName: '',
+  tel: '',
+  picture: '',
   email: '',
+  officeRoom: '',
+  specialists: [],
+  bio: '',
+  position: '',
+  branch: null,
+  socials: {
+    line: '',
+  },
+  curriculums: [],
+  user: null,
 });
+const loading = ref(false);
+const teachers = ref<Teacher[]>([]);
+const branches = ref<Branch[]>([]);
+
+const handleSave = async () => {
+  TeacherService.createOne(form);
+  dialogState.value = false;
+  window.location.reload();
+};
+
+const fetchAll = async () => {
+  loading.value = true;
+  teachers.value = await TeacherService.getAll();
+  branches.value = await BranchService.getAll();
+  loading.value = false;
+};
+
+onMounted(fetchAll);
+
 useMeta({
   title: title.value,
 });

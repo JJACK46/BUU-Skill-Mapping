@@ -1,8 +1,21 @@
+import { Branch } from './branch';
+import { Curriculum } from './curriculum';
+import { SocialForm } from './social';
+import { User } from './user';
+
 export interface Teacher {
   id?: number;
   name: string;
-  engName?: string;
-  biology: string;
-  engBiology?: string;
-  phone: string;
+  engName: string;
+  tel: string;
+  picture: string;
+  user: Partial<User> | null;
+  email: string;
+  officeRoom: string;
+  specialists: string[];
+  socials: Partial<SocialForm> | null;
+  bio: string;
+  position: string;
+  branch: Partial<Branch> | null;
+  curriculums: Partial<Curriculum>[] | null;
 }

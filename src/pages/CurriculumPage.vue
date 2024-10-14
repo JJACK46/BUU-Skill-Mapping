@@ -1,27 +1,7 @@
 <template>
   <q-page padding>
-    <div class="text-h6">{{ title }}</div>
+    <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <div class="flex flex-center q-gutter-sm">
-      <q-input
-        outlined
-        clearable
-        v-model="search"
-        label="Search"
-        class="col"
-        dense
-      >
-        <template #prepend>
-          <q-icon name="search">
-            <template #default></template>
-          </q-icon>
-        </template>
-      </q-input>
-      <q-space />
-      <div>
-        <q-btn @click="isDialogOpen = true" color="secondary">Add</q-btn>
-      </div>
-    </div>
     <section class="q-mt-md q-gutter-y-lg">
       <q-card class="q-pa-md" v-for="c in curriculums" :key="c.id">
         <div class="row justify-between">
@@ -53,12 +33,13 @@
 
 <script lang="ts" setup>
 import { useMeta } from 'quasar';
+import PageHeader from 'src/components/PageHeader.vue';
 import { CurriculumService } from 'src/services/curriculums';
 import { Curriculum } from 'src/types/curriculum';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-const isDialogOpen = ref(false);
+const dialogState = ref(false);
 const search = ref();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -69,6 +50,6 @@ useMeta({
 const curriculums = ref<Curriculum[]>();
 
 onMounted(async () => {
-  curriculums.value = await CurriculumService.fetchAll();
+  curriculums.value = await CurriculumService.getAll();
 });
 </script>
