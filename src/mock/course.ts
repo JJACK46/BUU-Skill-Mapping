@@ -16,7 +16,6 @@ export const mockCourse = ref<Course[]>([
       credit: CourseCredit.Two,
       type: SubjectType.Compulsory,
     },
-    curriculum: { id: 'f1' },
     teachers: [{ id: 1 }],
     courseEnrollments: [
       {

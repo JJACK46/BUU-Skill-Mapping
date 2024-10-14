@@ -19,7 +19,7 @@
             padding="none"
             @click="toggleRightDrawer"
           />
-          <q-btn :icon="themeIcon" flat padding="none" @click="dark.toggle" />
+          <q-btn :icon="themeIcon" flat padding="none" @click="handleTheme" />
         </div>
         <q-avatar class="cursor-pointer" @click="() => router.push('/account')">
           <img
@@ -94,8 +94,13 @@ import { Payload } from 'src/types/payload';
 import { useUserStore } from 'src/stores/user';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
+import { LocalStorage } from 'quasar';
 
 const themeIcon = computed(() => (dark.isActive ? 'dark_mode' : 'light_mode'));
+const handleTheme = () => {
+  dark.toggle();
+  LocalStorage.set('theme', dark.isActive ? 'dark' : 'light');
+};
 
 const router = useRouter();
 const { dark } = useQuasar();
@@ -103,6 +108,11 @@ const store = useUserStore();
 const profile = ref<Payload | null>(null);
 
 onMounted(async () => {
+  if (LocalStorage.getItem('theme') === 'dark') {
+    dark.set(true);
+  } else {
+    dark.set(false);
+  }
   profile.value = await store.getProfile();
 });
 
@@ -158,7 +168,6 @@ const linksList: LinkProps[] = [
   },
   {
     title: 'About',
-    caption: 'about',
     icon: 'info',
     link: '/about',
   },

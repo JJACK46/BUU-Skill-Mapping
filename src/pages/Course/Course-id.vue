@@ -9,18 +9,18 @@
     <q-separator class="q-my-sm" />
     <q-card>
       <q-card-section>
-        <div class="text-h6">Course Name</div>
+        <div class="text-h6">{{ course.name }}</div>
         <div class="text-body2">
-          <div>eng name:</div>
-          <div>description:</div>
+          <div>Course Description: {{ course.description }}</div>
+          <div>Subject Description: {{ course.subject?.description }}</div>
         </div>
       </q-card-section>
     </q-card>
 
     <q-table
+      :rows="rows ?? []"
+      :row-key="(s) => s.student.id"
       :columns="columns"
-      :rows="rows"
-      row-key="id"
       :filter="filterStudent"
     >
       <template #top>
@@ -150,36 +150,41 @@
 import { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
-import { mockCourse } from 'src/mock/course';
+import { CourseService } from 'src/services/course';
 import { Course, CourseEnrollment } from 'src/types/course';
 import { SkillCollection } from 'src/types/skill-collection';
 import { groupBy } from 'src/utils/sheet2object';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const sheet = ref();
 const filterStudent = ref();
 const skillDialog = ref();
-const rows = ref<CourseEnrollment[]>([]);
 const courseId = ref(0);
 const route = useRoute();
 const dialogImport = ref(false);
 
-const formCourse = reactive<Course>({
+const rows = ref<CourseEnrollment[]>();
+
+const course = ref<Course>({
   name: '',
   description: '',
   active: true,
   subject: null,
-  curriculum: null,
   teachers: [],
   courseEnrollments: [],
 });
 
+function fetchCourse() {
+  CourseService.getOne(courseId.value).then((res) => {
+    course.value = res;
+  });
+}
+
 onMounted(() => {
   filterStudent.value = '';
-  //fake fetch api
   route.params.id && (courseId.value = Number(route.params.id));
-  rows.value = mockCourse.value[0].courseEnrollments;
+  fetchCourse();
 });
 
 const columns: QTableColumn[] = [
@@ -217,59 +222,48 @@ const columns: QTableColumn[] = [
 ];
 
 const handleImport = () => {
-  const groupedByStudentID = groupBy(
-    sheet.value.item,
-    (i: { student_id: string }) => i.student_id
-  );
+  const sheetItems = sheet.value.items;
+  if (!course.value.id) return;
+  if (sheetItems[0].skill_id) {
+    const groupedByStudentID = groupBy(
+      sheetItems,
+      (i: { student_id: string }) => i.student_id
+    );
 
-  Object.entries(groupedByStudentID).map(([student_id, items]): void => {
-    formCourse.courseEnrollments.push({
-      student: { id: Number(student_id) },
-      skillCollection: items.map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (item: any) =>
-          ({
-            skill: { id: Number(item.skill_id) },
-            subject: formCourse.subject,
-            level: item.gain_level,
-            score: 0,
-            passed: item.result === 1 ? true : false,
-          } as unknown as SkillCollection)
-      ),
-    });
-    // return {
-    //   id: Number(student_id),
-    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   skillCollection: items.map((item: any) => ({
-    //     skillMapping: {
-    //       skillId: item.skill_id,
-    //       subjectId: formCourse.subject.id ?? 0,
-    //       expectedLevel: 1,
-    //       expectedMean: item.gain_level,
-    //     },
-    //     acquiredLevel: item.gain_level,
-    //     passed: item.result === 1 ? true : false,
-    //   })),
-    // };
+    course.value.courseEnrollments = Object.entries(groupedByStudentID).map(
+      ([student_id, items]) => {
+        return {
+          student: { id: Number(student_id) },
+          skillCollection: items.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (item: any) =>
+              ({
+                skill: { id: Number(item.skill_id) },
+                subject: { id: course.value.subject?.id },
+                level: item.gain_level,
+                score: 0,
+                passed: item.result === 1 ? true : false,
+              } as unknown as SkillCollection)
+          ),
+        };
+      }
+    );
+  } else {
+    course.value.courseEnrollments = sheetItems.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) =>
+        ({
+          student: { id: Number(item.student_id) },
+        } as unknown as SkillCollection)
+    );
+  }
+
+  CourseService.postEnrollment(
+    course.value.id,
+    course.value.courseEnrollments
+  ).then((res) => {
+    rows.value = res;
+    dialogImport.value = false;
   });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // formCourse.students = sheetItems.value.map((item: any): Partial<Student> => {
-  //   return {
-  //     id: item.student_id,
-  //     skillCollection: [
-  //       {
-  //         skillMapping: {
-  //           skillId: item.skill_id,
-  //           subjectId: 0,
-  //           expectedLevel: 1,
-  //           expectedMean: item.gain_level,
-  //         },
-  //         acquiredLevel: item.gain_level,
-  //         passed: item.result === 1 ? true : false,
-  //       },
-  //     ],
-  //   };
-  // });
 };
 </script>

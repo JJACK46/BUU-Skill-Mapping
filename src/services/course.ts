@@ -1,4 +1,4 @@
-import { Course } from 'src/types/course';
+import { Course, CourseEnrollment } from 'src/types/course';
 import { api } from 'boot/axios';
 
 export class CourseService {
@@ -18,7 +18,7 @@ export class CourseService {
     const dto = {
       ...obj,
       teacherListId: obj.teachers.map((t) => t.id),
-      curriculumId: obj.curriculum?.id,
+      // curriculumId: obj.curriculum?.id,
       subjectId: obj.subject?.id,
     };
     const res = await api.post(this.path, dto);
@@ -32,6 +32,14 @@ export class CourseService {
 
   static async removeOne(id: number) {
     const res = await api.delete(`${this.path}/${id}`);
+    return res.data;
+  }
+
+  static async postEnrollment(
+    id: number,
+    list: CourseEnrollment[]
+  ): Promise<CourseEnrollment[]> {
+    const res = await api.patch(`${this.path}/${id}/import-enrollment`, list);
     return res.data;
   }
 }

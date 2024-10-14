@@ -22,16 +22,7 @@
           v-model="formCourse.name"
           :rules="[requireField]"
         />
-        <q-select
-          outlined
-          label="Curriculum"
-          v-model="formCourse.curriculum"
-          :options="curriculums"
-          option-label="engName"
-          options-dense
-          :rules="[requireField]"
-        >
-        </q-select>
+
         <q-select
           outlined
           label="Subject"
@@ -65,31 +56,31 @@
       <q-linear-progress v-if="isLoading" indeterminate />
       <q-card
         class="col-grow col-md-auto"
-        v-for="data in mockCourse"
-        :key="data.id"
+        v-for="course in courses"
+        :key="course.id"
         style="width: 300px; max-height: 400px"
       >
         <q-card-section>
           <div class="row justify-between">
             <span class="text-h6"
-              >{{ data.subject?.name ?? data.subject?.engName }}
+              >{{ course.subject?.name ?? course.subject?.engName }}
             </span>
             <q-btn icon="more_vert" flat padding="none" />
           </div>
           <div style="text-indent: 1rem" class="q-py-sm text-body2">
-            {{ data.subject?.description }}
+            {{ course.subject?.description }}
           </div>
         </q-card-section>
         <q-card-actions class="text-body1 q-pa-md" align="between">
-          <div :class="`text-${data.active ? 'primary' : 'negative'}`">
-            {{ data.active ? 'Active' : 'Inactive' }}
+          <div :class="`text-${course.active ? 'primary' : 'negative'}`">
+            {{ course.active ? 'Active' : 'Inactive' }}
           </div>
           <q-btn
             label="View"
             unelevated
             color="primary"
             style="width: 80px"
-            @click="handleViewCourse(data.id)"
+            @click="handleViewCourse(course.id)"
           >
           </q-btn>
         </q-card-actions>
@@ -102,7 +93,6 @@
 import { useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import PageHeader from 'src/components/PageHeader.vue';
-import { mockCourse } from 'src/mock/course';
 import { CourseService } from 'src/services/course';
 import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
@@ -144,7 +134,6 @@ const handleOpenDialog = async () => {
 const formCourse = reactive<Course>({
   name: '',
   subject: null,
-  curriculum: null,
   teachers: [],
   courseEnrollments: [],
   description: '',

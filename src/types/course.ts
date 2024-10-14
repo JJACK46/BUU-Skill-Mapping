@@ -1,4 +1,3 @@
-import { Curriculum } from './curriculum';
 import { SkillCollection } from './skill-collection';
 import { Student } from './student';
 import { Subject } from './subject';
@@ -10,7 +9,7 @@ export interface Course {
   description: string;
   active: boolean;
   subject: Partial<Subject> | null;
-  curriculum: Partial<Curriculum> | null;
+  // curriculum: Partial<Curriculum> | null;
   teachers: Partial<Teacher>[];
   courseEnrollments: CourseEnrollment[];
 }
