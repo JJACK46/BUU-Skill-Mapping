@@ -25,10 +25,14 @@ const localVisible = ref(props.visible);
 
 watch(
   () => props.visible,
-  (newVal) => {
+  async (newVal) => {
     localVisible.value = newVal;
     if (props.item) {
-      skillStore.fetchSkill(props.item.id);
+      try {
+        await skillStore.fetchSkill(props.item.id);
+      } catch (error) {
+        console.error('Error fetching skills:', error);
+      }
     }
   }
 );
@@ -63,46 +67,50 @@ onMounted(async () => {
 
 <template>
   <q-dialog v-model="localVisible" persistent>
-    <q-card class="q-pa-md" style="min-width: 200px; max-width: 1000px">
+    <q-card class="q-pa-md" style="min-width: 1000px">
       <q-card-section>
-        <div class="row items-center">
-          <q-col cols="11">
-            <p style="font-size: 20px">{{ skills.name }}</p>
-          </q-col>
-          <q-col cols="1" align="right">
+        <div class="row justify-between">
+          <div>
+            <div style="font-size: 20px; margin-top: 6px">Add Sub Skill</div>
+          </div>
+          <div>
             <q-btn flat round icon="close" @click="closeDialog" />
-          </q-col>
+          </div>
         </div>
       </q-card-section>
 
       <q-card-section>
-        <q-input
-          v-model="inputSkill.name"
-          label="Name"
-          maxlength="10"
-          hide-bottom-space
-          dense
-          outlined
-        ></q-input>
-
-        <q-input
-          v-model="inputSkill.description"
-          label="Description"
-          maxlength="10"
-          hide-bottom-space
-          dense
-          outlined
-          class="q-mt-md"
-        ></q-input>
-
-        <q-select
-          v-model="inputSkill.domain"
-          label="Skill Type"
-          :options="['ความรู้', 'คุณลักษณะบุคคล', 'จริยธรรม', 'ทักษะ']"
-          outlined
-          dense
-          class="q-mt-md"
-        ></q-select>
+        <div class="row justify-between">
+          <div class="col-6">
+            <q-input
+              v-model="inputSkill.name"
+              label="Name"
+              hide-bottom-space
+              dense
+              outlined
+            ></q-input>
+          </div>
+          <div class="col-4">
+            <q-select
+              v-model="inputSkill.domain"
+              label="Skill Type"
+              :options="['ความรู้', 'คุณลักษณะบุคคล', 'จริยธรรม', 'ทักษะ']"
+              outlined
+              dense
+            ></q-select>
+          </div>
+          <div class="col-12">
+            <q-input
+              v-model="inputSkill.description"
+              type="textarea"
+              label="Description"
+              hide-bottom-space
+              dense
+              outlined
+              class="q-mt-lg"
+            ></q-input>
+          </div>
+        </div>
       </q-card-section>
 
       <!-- Sub Skill Treeview (Commented out as per the original code) -->
@@ -132,8 +140,21 @@ onMounted(async () => {
       </q-card-section> -->
 
       <q-card-actions align="right">
-        <q-btn flat label="Cancel" color="negative" @click="closeDialog" />
-        <q-btn flat label="Save" color="primary" @click="saveSkill" />
+        <q-btn
+          flat
+          label="Cancel"
+          color="negative"
+          @click="closeDialog"
+          style="width: 70px"
+        />
+
+        <q-btn
+          flat
+          label="Save"
+          color="primary"
+          @click="saveSkill"
+          style="width: 70px"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>

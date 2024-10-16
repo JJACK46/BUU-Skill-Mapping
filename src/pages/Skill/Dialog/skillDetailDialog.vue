@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skills';
-import type { Skill } from 'src/types/skill'; // Import type Skill
+import { Skill } from 'src/types/skill';
 
 const props = defineProps<{ visible: boolean; item: Skill | null }>(); // Use Skill instead of any
 const emit = defineEmits(['close-dialog']);
@@ -36,58 +36,67 @@ async function saveSkill() {
 </script>
 
 <template>
-  <q-dialog
-    v-model="localVisible"
-    max-width="1000px"
-    persistent
-    style="height: 100vh; overflow-y: auto"
-  >
-    <q-card
-      class="q-elevation-5"
-      rounded="lg"
-      style="min-width: 200px; width: 100%; height: 100%"
-    >
+  <q-dialog v-model="localVisible" persistent>
+    <q-card class="q-pa-md" style="min-width: 1000px">
       <q-card-section>
-        <div class="row items-center">
-          <q-col cols="11">
-            <p style="font-size: 24px">Detail</p>
-          </q-col>
-          <q-col cols="1">
-            <q-btn
-              color="primary"
-              flat
-              icon="close"
-              @click="closeDialog"
-              class="circular-btn"
-            />
-          </q-col>
+        <div class="row justify-between">
+          <div>
+            <div style="font-size: 20px; margin-top: 6px">Add Sub Skill</div>
+          </div>
+          <div>
+            <q-btn flat round icon="close" @click="closeDialog" />
+          </div>
         </div>
-
-        <q-input
-          v-model="skills.name"
-          label="Name"
-          required
-          class="q-mt-md"
-        ></q-input>
-
-        <q-input
-          v-model="skills.description"
-          label="Description"
-          required
-          class="q-mt-md"
-        ></q-input>
-
-        <q-select
-          v-model="skills.domain"
-          label="Skill Type"
-          :options="['ความรู้', 'คุณลักษณะบุคคล', 'จริยธรรม', 'ทักษะ']"
-          class="q-mt-md"
-        ></q-select>
+      </q-card-section>
+      <q-card-section>
+        <div class="row justify-between">
+          <div class="col-6">
+            <q-input
+              v-model="skills.name"
+              label="Name"
+              hide-bottom-space
+              dense
+              outlined
+            ></q-input>
+          </div>
+          <div class="col-4">
+            <q-select
+              v-model="skills.domain"
+              label="Skill Type"
+              :options="['ความรู้', 'คุณลักษณะบุคคล', 'จริยธรรม', 'ทักษะ']"
+              outlined
+              dense
+            ></q-select>
+          </div>
+          <div class="col-12">
+            <q-input
+              v-model="skills.description"
+              type="textarea"
+              label="Description"
+              hide-bottom-space
+              dense
+              outlined
+              class="q-mt-lg"
+            ></q-input>
+          </div>
+        </div>
       </q-card-section>
 
-      <q-card-actions>
-        <q-btn @click="closeDialog" color="negative" label="Cancel" flat />
-        <q-btn @click="saveSkill" color="primary" label="Save" flat />
+      <q-card-actions align="right">
+        <q-btn
+          @click="closeDialog"
+          color="negative"
+          label="Cancel"
+          flat
+          style="width: 70px"
+        />
+        <q-btn
+          @click="saveSkill"
+          color="primary"
+          label="Save"
+          flat
+          style="width: 70px"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>

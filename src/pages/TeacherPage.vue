@@ -19,7 +19,6 @@
       </div>
     </div>
     <q-separator class="q-my-md" />
-
     <q-table
       :rows="teacherStore.teachers"
       row-key="name"

@@ -30,4 +30,5 @@ export interface Teacher {
   curriculums?: Curriculum[];
 
   courses?: Course[];
+
 }

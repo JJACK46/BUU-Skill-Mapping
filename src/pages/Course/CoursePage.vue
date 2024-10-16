@@ -5,57 +5,82 @@
       @open-dialog="handleOpenDialog"
     />
     {{ filterCourse }}
-    <q-dialog v-model="isDialogAdd" full-width>
-      <q-card>
-        <q-card-section class="q-gutter-y-md">
-          <div class="text-h6">New Course</div>
-          <q-select
-            outlined
-            v-model="formCourse.subject"
-            :options="optionSubjects"
-            option-label="thaiName"
-            options-dense
-          ></q-select>
 
-          <TableSheetJS ref="sheet" text="Import students" />
-        </q-card-section>
-        <q-card-actions class="justify-end q-pa-md">
-          <q-btn label="cancel" @click="isDialogAdd = false"></q-btn>
-          <q-btn
-            color="primary"
-            :disable="!formCourse.subject"
-            label="save"
-            @click="handleImport"
-          ></q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <DialogForm title="New Course" v-model="dialogStateAdd" @save="handleSave">
+      <template #body>
+        <q-input
+          outlined
+          label="Course ID"
+          v-model="formCourse.id"
+          autofocus
+          mask="########"
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          label="Name"
+          v-model="formCourse.name"
+          :rules="[requireField]"
+        />
+
+        <q-select
+          outlined
+          label="Subject"
+          v-model="formCourse.subject"
+          :options="subjects"
+          option-label="engName"
+          options-dense
+          :rules="[requireField]"
+        >
+        </q-select>
+        <q-select
+          outlined
+          label="Teachers"
+          v-model="formCourse.teachers"
+          :options="teachers"
+          multiple
+          :option-label="(item) => `${item.position ?? ''} ${item.name}`"
+          options-dense
+          :rules="[requireField]"
+        />
+        <q-input
+          v-model="formCourse.description"
+          label="Course Description"
+          autogrow
+          outlined
+        />
+      </template>
+    </DialogForm>
     <q-separator class="q-my-md" />
     <section class="q-gutter-lg row">
+      <q-linear-progress v-if="isLoading" indeterminate />
       <q-card
         class="col-grow col-md-auto"
-        v-for="data in mockCourse"
-        :key="data.id"
+        v-for="course in courses"
+        :key="course.id"
         style="width: 300px; max-height: 400px"
       >
         <q-card-section>
           <div class="row justify-between">
             <span class="text-h6"
-              >{{ data.subject.name ?? data.subject.engName }}
+              >{{ course.subject?.name ?? course.subject?.engName }}
             </span>
             <q-btn icon="more_vert" flat padding="none" />
           </div>
           <div style="text-indent: 1rem" class="q-py-sm text-body2">
-            {{ data.subject.description }}
+            {{ course.subject?.description }}
           </div>
         </q-card-section>
         <q-card-actions class="text-body1 q-pa-md" align="between">
-          <div>{{ new Date().toLocaleDateString() }}</div>
+          <div :class="`text-${course.active ? 'primary' : 'negative'}`">
+            {{ course.active ? 'Active' : 'Inactive' }}
+          </div>
           <q-btn
             label="View"
             unelevated
             color="primary"
-            @click="handleViewCourse(data.id)"
+            style="width: 80px"
+            @click="handleViewCourse(course.id)"
           >
           </q-btn>
         </q-card-actions>
@@ -66,103 +91,62 @@
 
 <script lang="ts" setup>
 import { useMeta } from 'quasar';
+import DialogForm from 'src/components/DialogForm.vue';
 import PageHeader from 'src/components/PageHeader.vue';
-import TableSheetJS from 'src/components/TableSheetJS.vue';
-import { mockCourse } from 'src/mock/course';
+import { CourseService } from 'src/services/course';
+import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
+import { TeacherService } from 'src/services/teacher';
 import { Course } from 'src/types/course';
-import { SkillCollection } from 'src/types/skill-collection';
+import { Curriculum } from 'src/types/curriculum';
 import { Subject } from 'src/types/subject';
-import { groupBy } from 'src/utils/sheet2object';
-import { computed, reactive, ref } from 'vue';
+import { Teacher } from 'src/types/teacher';
+import { requireField } from 'src/utils/field-rules';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-const sheet = ref();
-const isDialogAdd = ref(false);
+const dialogStateAdd = ref(false);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const optionSubjects = ref<Subject[]>([]);
-const sheetItems = computed(() => sheet.value?.items);
+const subjects = ref<Subject[]>([]);
+const curriculums = ref<Curriculum[]>([]);
 const router = useRouter();
 const filterCourse = ref('');
-
+const teachers = ref<Teacher[]>([]);
+const courses = ref<Course[]>([]);
+const isLoading = ref(false);
 const handleViewCourse = (id: number | undefined) => {
   if (id) {
-    router.push({ name: 'course-detail', params: { id } });
+    router.push({ name: 'Course Detail', params: { id } });
   }
 };
 
-const handleImport = () => {
-  const groupedByStudentID = groupBy(
-    sheetItems.value,
-    (i: { student_id: string }) => i.student_id
-  );
-
-  Object.entries(groupedByStudentID).map(([student_id, items]): void => {
-    formCourse.courseEnrollments.push({
-      student: { id: Number(student_id) },
-      skillCollection: items.map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (item: any) =>
-          ({
-            skill: { id: Number(item.skill_id) },
-            subject: formCourse.subject,
-            level: item.gain_level,
-            score: 0,
-            passed: item.result === 1 ? true : false,
-          } as unknown as SkillCollection)
-      ),
-    });
-    // return {
-    //   id: Number(student_id),
-    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   skillCollection: items.map((item: any) => ({
-    //     skillMapping: {
-    //       skillId: item.skill_id,
-    //       subjectId: formCourse.subject.id ?? 0,
-    //       expectedLevel: 1,
-    //       expectedMean: item.gain_level,
-    //     },
-    //     acquiredLevel: item.gain_level,
-    //     passed: item.result === 1 ? true : false,
-    //   })),
-    // };
-  });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // formCourse.students = sheetItems.value.map((item: any): Partial<Student> => {
-  //   return {
-  //     id: item.student_id,
-  //     skillCollection: [
-  //       {
-  //         skillMapping: {
-  //           skillId: item.skill_id,
-  //           subjectId: 0,
-  //           expectedLevel: 1,
-  //           expectedMean: item.gain_level,
-  //         },
-  //         acquiredLevel: item.gain_level,
-  //         passed: item.result === 1 ? true : false,
-  //       },
-  //     ],
-  //   };
-  // });
-  //push to array & post api
-  mockCourse.value.push(formCourse);
-  isDialogAdd.value = false;
+const handleSave = () => {
+  CourseService.createOne(formCourse);
+  dialogStateAdd.value = false;
 };
 const handleOpenDialog = async () => {
-  isDialogAdd.value = true;
-  optionSubjects.value = await SubjectService.fetchAll();
+  dialogStateAdd.value = true;
+  subjects.value = await SubjectService.getAll();
+  teachers.value = await TeacherService.getAll();
+  curriculums.value = await CurriculumService.getAll();
 };
 
 const formCourse = reactive<Course>({
-  subject: {},
-  curriculum: {},
+  name: '',
+  subject: null,
   teachers: [],
   courseEnrollments: [],
   description: '',
   active: true,
 });
+
+async function fetchAll() {
+  isLoading.value = true;
+  courses.value = await CourseService.getAll();
+  isLoading.value = false;
+}
+
+onMounted(fetchAll);
 
 useMeta({
   title: title.value,

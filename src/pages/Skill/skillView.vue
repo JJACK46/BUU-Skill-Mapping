@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, watch, Ref } from 'vue';
+import { computed, ref, onMounted, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skills';
 import AddSkillDialog from './Dialog/addSkillDialog.vue';
 import AddSubSkillDialog from './Dialog/addSubSkillDialog.vue';
@@ -57,21 +57,14 @@ const confirmDeleteSkill = async (item: Skill) => {
   selectedItem.value = item;
   dialogConfirmVisible.value = true;
 };
-const closeDialog = (dialog: Ref<boolean>) => {
-  dialog.value = false;
+const closeDialogDelete = () => {
+  dialogConfirmVisible.value = false;
 };
 
-const deleteSkillConfirmed = async () => {
-  if (selectedItem.value) {
-    try {
-      await skillStore.deleteSkill(selectedItem.value.id);
-      fetchSkill();
-    } catch (error) {
-      console.error('Error deleting skill:', error);
-    } finally {
-      closeDialog(dialogConfirmVisible);
-    }
-  }
+const deleteSkillConfirmed = () => {
+  skillStore.deleteSkill(selectedItem.value!.id);
+  dialogConfirmVisible.value = false;
+  fetchSkill();
 };
 
 const fetchSkill = async () => {
@@ -101,44 +94,38 @@ onMounted(fetchSkill);
 
 <template>
   <q-page padding>
-    &nbsp;
-    <h2 class="text-h6" style="margin-left: 2%; margin-bottom: 2%">ทักษะ</h2>
+    <q-toolbar-title style="font-size: 24px; margin-left: 15px"
+      >Skill</q-toolbar-title
+    >
 
-    <q-spacer />
-
-    <q-row>
-      <q-col cols="12" md="7">
+    <div class="row justify-between q-my-lg">
+      <div class="col-8">
         <q-input
           filled
-          clearable
           v-model="pageParams.search"
           placeholder="หลักสูตร"
           @keyup.enter="fetchSkill"
-          class="q-my-md"
-          style="height: 55px; width: 100%; min-width: 300px"
-          bottom-slots
         >
           <template v-slot:prepend>
             <q-icon name="search" />
           </template>
         </q-input>
-      </q-col>
+      </div>
 
-      <q-col md="3"> </q-col>
-      <q-col md="2">
-        <q-btn
-          color="primary"
-          label="ADD NEW"
-          icon="add"
-          @click="showDialogAdd"
-          rounded
-          class="full-width"
-          style="height: 45px; min-width: 170px"
-        />
-      </q-col>
-    </q-row>
+      <div class="col-4">
+        <div class="row justify-end">
+          <q-btn
+            color="primary"
+            label="ADD NEW"
+            icon="add"
+            @click="showDialogAdd"
+            style="width: 200px; height: 55px"
+          />
+        </div>
+      </div>
+    </div>
 
-    <q-card flat bordered class="q-my-lg" rounded>
+    <q-card flat bordered>
       <q-col cols="12">
         <q-tree :nodes="skills" node-key="id">
           <template v-slot:default-header="props">
@@ -192,7 +179,7 @@ onMounted(fetchSkill);
     <ConfirmDialog
       :visible="dialogConfirmVisible"
       :item="selectedItem"
-      @close-dialog="() => (dialogConfirmVisible = false)"
+      @close-dialog="closeDialogDelete"
       @confirm-delete="deleteSkillConfirmed"
     />
   </q-page>

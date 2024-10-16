@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { Notify } from 'quasar';
 
-const instance = axios.create({
+const api = axios.create({
   baseURL: process.env.BACKEND_API,
   withCredentials: true,
   timeout: 5000,
 });
 
-instance.interceptors.request.use(
+api.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem('token');
     if (token) {
@@ -20,7 +21,7 @@ instance.interceptors.request.use(
   }
 );
 
-instance.interceptors.response.use(
+api.interceptors.response.use(
   function (response) {
     if (response.status === 401) {
       localStorage.removeItem('token');
@@ -28,11 +29,17 @@ instance.interceptors.response.use(
     }
     return response;
   },
-  function (error) {
+  function (e) {
+    Notify.create({
+      type: 'negative',
+      message: e + ' | ' + e.response.data.message,
+      timeout: 5000,
+      progress: true,
+    });
+    console.error(e);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(error);
+    return Promise.reject(e);
   }
 );
-
-export default instance;
+export { api, axios };
