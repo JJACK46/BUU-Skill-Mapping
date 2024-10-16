@@ -12,6 +12,6 @@ export interface Curriculum {
   minimumGrade: number;
   coordinators: Teacher[];
   // plos: any[];
-  subjects: Subject[];
+  subjects?: Subject[];
   branch: Branch;
 }

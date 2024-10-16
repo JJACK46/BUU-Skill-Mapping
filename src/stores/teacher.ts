@@ -37,9 +37,15 @@ export const useTeacherStore = defineStore('teacher', () => {
   const teachers = ref([]);
   const loading = ref(false);
 
-  async function fetchData(columnId?: string, columnName?: string) {
+  async function fetchData(
+    search?: string,
+    columnId?: string,
+    columnName?: string
+  ) {
     loading.value = true;
-    console.log(pageParams.value);
+    if (search) {
+      pageParams.value.search = search;
+    }
 
     if (columnId && columnName) {
       pageParams.value.columnId = columnId;
