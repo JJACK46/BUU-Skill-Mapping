@@ -1,26 +1,23 @@
 <template>
   <q-page padding>
-    <PageHeader
-      :search-text="teacherStore.search"
-      @open-dialog="teacherStore.dialogState = true"
-    />
-    <q-input
-      outlined
-      clearable
-      label="Search"
-      class="col"
-      v-model="teacherStore.pageParams.search"
-      dense
-      style="width: 300px"
-      @keydown.enter="teacherStore.fetchData"
-    >
-      <template v-slot:append>
-        <q-icon name="search">
-          <template #default></template>
-        </q-icon>
-      </template>
-    </q-input>
-
+    <div class="row q-gutter-md">
+      <div class="col-grow">
+        <SearchData
+          :fetch-data="teacherStore.fetchData"
+          label="Teacher"
+        ></SearchData>
+      </div>
+      <div class="col">
+        <FillterData
+          :fetch-data="teacherStore.fetchData"
+          :by-branch="true"
+          :by-curriculum="true"
+        ></FillterData>
+      </div>
+      <div class="col-shrink">
+        <AddButton :click-add-fuction="addTeacher"></AddButton>
+      </div>
+    </div>
     <q-separator class="q-my-md" />
 
     <q-table
@@ -54,15 +51,18 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useMeta } from 'quasar';
-import PageHeader from 'src/components/PageHeader.vue';
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTeacherStore } from 'src/stores/teacher';
+import SearchData from 'src/components/SearchData.vue';
+import AddButton from 'src/components/AddButton.vue';
+import FillterData from 'src/components/FillterData.vue';
 
 const teacherStore = useTeacherStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-
+const isCreate = ref(false);
+const addDialog = ref(false);
 const teacherColumns = [
   {
     name: 'id',
@@ -110,6 +110,11 @@ const paginationInit = ref({
   page: 1,
   rowsPerPage: 10,
 });
+
+const addTeacher = () => {
+  isCreate.value = true;
+  addDialog.value = true;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onRequest(props: any) {
