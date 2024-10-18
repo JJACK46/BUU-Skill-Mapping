@@ -1,13 +1,14 @@
 <template>
   <q-page padding>
     <div class="row q-gutter-md">
-      <div class="col-grow" style="width: 40%">
+      <div class="col-grow">
         <SearchData
           :fetch-data="teacherStore.fetchData"
           label="Teacher"
         ></SearchData>
       </div>
-      <div class="col">
+
+      <div class="col-auto">
         <FillterData
           :fetch-data="teacherStore.fetchData"
           :by-branch="true"

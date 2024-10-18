@@ -1,19 +1,20 @@
 <template>
-  <div class="row q-gutter-md">
-    <div class="col">
-      <q-select
-        v-model="selectedFaculty"
-        :options="faculties"
-        option-value="id"
-        :option-label="(item) => `${item.name || ''}`"
-        label="Faculty"
-        clearable
-        @clear="handleClear"
-        outlined
-        style="height: 55px; min-width: 150px"
-      />
-    </div>
-    <div class="col">
+  <div>
+    <q-select
+      v-model="selectedFaculty"
+      :options="faculties"
+      option-value="id"
+      :option-label="(item) => `${item.name || ''}`"
+      label="Faculty"
+      clearable
+      @clear="handleClear"
+      outlined
+      style="height: 55px; min-width: 150px"
+    />
+  </div>
+
+  <div class="row q-gutter-md q-my-xs" v-if="selectedFaculty && props.byBranch">
+    <div class="col-auto" style="min-width: 200px">
       <q-select
         v-model="selectedBranch"
         :options="branches"
@@ -23,7 +24,11 @@
         outlined
       />
     </div>
-    <div class="col" v-if="props.byCurriculum">
+    <div
+      class="col-auto md:col-auto"
+      style="min-width: 200px"
+      v-if="props.byCurriculum && selectedBranch"
+    >
       <q-select
         v-model="selectedCurriculum"
         :options="curriculums"
@@ -33,7 +38,7 @@
         outlined
       />
     </div>
-    <div class="col" v-if="props.bySubject">
+    <div class="col-auto" v-if="props.bySubject && selectedCurriculum">
       <q-select
         v-model="selectedSubject"
         :options="subjects"
@@ -43,7 +48,7 @@
         outlined
       />
     </div>
-    <div class="col" v-if="props.bySkill">
+    <div class="col-sm-auto" v-if="props.bySkill && selectedSubject">
       <q-select
         v-model="selectedSkill"
         :options="skills"
@@ -54,16 +59,6 @@
         style="height: 55px; min-width: 150px"
       />
     </div>
-    <!-- <div class="col" v-if="props.byTechSkill">
-      <q-select
-        v-model="selectedTechSkill"
-        :options="techSkills"
-        label="TechSkill"
-        outlined
-        rounded
-        :return-object="true"
-      />
-    </div> -->
   </div>
 </template>
 
