@@ -25,7 +25,7 @@ export const useTeacherStore = defineStore('teacher', {
       position: '',
       email: '',
       officeRoom: '',
-      specialists: '',
+      specialists: [],
       socials: '',
       bio: '',
       branch: undefined,
@@ -57,10 +57,6 @@ export const useTeacherStore = defineStore('teacher', {
       this.teachers = res.data;
 
       this.loading = false;
-    },
-    handleSave() {
-      TeacherService.createOne(this.form);
-      this.dialogState = false;
     },
   },
 });

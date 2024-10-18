@@ -1,36 +1,23 @@
 import { Branch } from './branch';
 import { Course } from './course';
 import { Curriculum } from './curriculum';
+import { SocialForm } from './social';
 import { User } from './user';
 
 export interface Teacher {
-  id: number;
-
+  id?: number;
   name: string;
-
   engName: string;
-
   tel: string;
-
   picture: string;
-
-  position: string;
-
   email: string;
-
   officeRoom: string;
-
-  specialists: string;
-
-  socials: string;
-
+  specialists: string[];
+  socials: Partial<SocialForm> | null;
   bio: string;
-
-  branch?: Branch;
-
-  curriculums?: Curriculum[];
-
+  position: string;
+  branch: Partial<Branch> | null;
   courses?: Course[];
-
+  curriculums: Partial<Curriculum>[] | null;
   user?: User;
 }
