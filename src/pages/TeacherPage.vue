@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <div class="row q-gutter-md">
-      <div class="col-grow">
+      <div class="col-grow" style="width: 40%">
         <SearchData
           :fetch-data="teacherStore.fetchData"
           label="Teacher"
@@ -207,7 +207,6 @@ const addTeacher = () => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onRequest(props: any) {
-  console.log(props);
   teacherStore.pageParams.page = props.page;
   teacherStore.pageParams.limit = props.rowsPerPage;
   teacherStore.pageParams.sort = props.sortBy;

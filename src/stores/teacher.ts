@@ -41,8 +41,8 @@ export const useTeacherStore = defineStore('teacher', () => {
 
   async function fetchData(
     search?: string,
-    columnId?: string,
-    columnName?: string
+    columnId?: string | null,
+    columnName?: string | null
   ) {
     loading.value = true;
     if (search) {
@@ -54,7 +54,11 @@ export const useTeacherStore = defineStore('teacher', () => {
       pageParams.value.columnName = columnName;
     } else {
       pageParams.value.columnId = pageParams.value.columnId || '';
-      pageParams.value.columnName = pageParams.value.columnId || '';
+      pageParams.value.columnName = pageParams.value.columnName || '';
+    }
+    if (columnId && columnName === 'null') {
+      pageParams.value.columnId = '';
+      pageParams.value.columnName = '';
     }
 
     const res = await TeacherService.fetchByPage(pageParams.value);

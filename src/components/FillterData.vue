@@ -8,6 +8,7 @@
         :option-label="(item) => `${item.name || ''}`"
         label="Faculty"
         clearable
+        @clear="handleClear"
         outlined
         style="height: 55px; min-width: 150px"
       />
@@ -76,7 +77,11 @@ import { Subject } from 'src/types/subject';
 import { Skill } from 'src/types/skill';
 
 const props = defineProps<{
-  fetchData: (search: string, columnId: string, columnName: string) => void;
+  fetchData: (
+    search: string,
+    columnId: string | null,
+    columnName: string | null
+  ) => void;
   byBranch?: boolean;
   byCurriculum?: boolean;
   bySubject?: boolean;
@@ -129,7 +134,7 @@ watch(selectedBranch, (newBranch) => {
     }
     if (newBranch.curriculums) {
       curriculums.value = newBranch.curriculums;
-      selectedCurriculum.value = curriculums.value[0];
+      // selectedCurriculum.value = curriculums.value[0];
     } else {
       curriculums.value = [];
       selectedCurriculum.value = null;
@@ -181,6 +186,15 @@ watch(selectedSkill, (newSkill) => {
 // watch(selectedTechSkill, (newTechSkill) => {
 //   return props.fetchData('', newTechSkill.id, 'techSkill');
 // });
+
+const handleClear = () => {
+  selectedFaculty.value = null;
+  selectedBranch.value = null;
+  selectedCurriculum.value = null;
+  selectedSubject.value = null;
+  selectedSkill.value = null;
+  props.fetchData('', 'null', 'null');
+};
 
 onMounted(() => {
   fetchFacultiesAndBranches();
