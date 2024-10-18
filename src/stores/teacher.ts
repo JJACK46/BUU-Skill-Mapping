@@ -58,5 +58,8 @@ export const useTeacherStore = defineStore('teacher', {
 
       this.loading = false;
     },
+    handleSave() {
+      TeacherService.createOne(this.form);
+    },
   },
 });

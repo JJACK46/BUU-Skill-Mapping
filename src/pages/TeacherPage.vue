@@ -1,23 +1,5 @@
 <template>
   <q-page padding>
-    <!-- <div class="row q-gutter-md">
-      <div class="col-grow">
-        <SearchData
-          :fetch-data="teacherStore.fetchData"
-          label="Teacher"
-        ></SearchData>
-      </div>
-      <div class="col">
-        <FillterData
-          :fetch-data="teacherStore.fetchData"
-          :by-branch="true"
-          :by-curriculum="true"
-        ></FillterData>
-      </div>
-      <div class="col-shrink">
-        <AddButton :click-add-fuction="addTeacher"></AddButton>
-      </div>
-    </div> -->
     <PageHeader
       v-model:search-text="store.search"
       @open-dialog="store.dialogState = true"
@@ -125,13 +107,6 @@
           label="Bio"
           hint="optional"
           autogrow
-        />
-        <q-input
-          outlined
-          dense
-          v-model="store.form.bio"
-          label="Bio"
-          hint="optional"
         />
       </template>
     </DialogForm>
