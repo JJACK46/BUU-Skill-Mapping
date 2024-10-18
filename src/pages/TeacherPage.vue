@@ -28,22 +28,6 @@
       @update:pagination="onRequest"
     >
     </q-table>
-    <q-dialog v-model="teacherStore.dialogState">
-      <q-card>
-        <div class="q-pa-md text-h5">New User</div>
-        <q-card-section class="flex q-gutter-md">
-          <q-input
-            outlined
-            v-model="teacherStore.formTeacher.email"
-            label="Email"
-          ></q-input>
-        </q-card-section>
-        <q-card-actions class="justify-end">
-          <q-btn flat @click="teacherStore.dialogState = false"> cancel </q-btn>
-          <q-btn flat color="positive"> save </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
 
     <DialogForm
       title="New Teacher"
