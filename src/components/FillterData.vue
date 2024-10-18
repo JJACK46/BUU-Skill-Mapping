@@ -68,12 +68,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { api } from 'boot/axios';
 import { Faculty } from 'src/types/faculty';
 import { Branch } from 'src/types/branch';
 import { Curriculum } from 'src/types/curriculum';
 import { Subject } from 'src/types/subject';
 import { Skill } from 'src/types/skill';
+import { api } from 'src/boot/axios';
 
 const props = defineProps<{
   fetchData: (search: string, columnId: string, columnName: string) => void;

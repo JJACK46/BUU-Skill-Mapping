@@ -1,59 +1,31 @@
 <template>
   <q-page padding>
-    <div class="row q-gutter-md">
-      <div class="col-grow">
-        <SearchData
-          :fetch-data="teacherStore.fetchData"
-          label="Teacher"
-        ></SearchData>
-      </div>
-      <div class="col">
-        <FillterData
-          :fetch-data="teacherStore.fetchData"
-          :by-branch="true"
-          :by-curriculum="true"
-        ></FillterData>
-      </div>
-      <div class="col-shrink">
-        <AddButton :click-add-fuction="addTeacher"></AddButton>
-      </div>
-    </div>
+    <PageHeader
+      v-model:search-text="store.search"
+      @open-dialog="store.dialogState = true"
+      @open-filter="handleDialogFilter"
+    />
     <q-separator class="q-my-md" />
     <q-table
-      :rows="teacherStore.teachers"
+      :rows="store.teachers"
       row-key="name"
-      :loading="teacherStore.loading"
+      :loading="store.loading"
       :columns="teacherColumns"
+      :filter="store.search"
       v-model:pagination="paginationInit"
       @update:pagination="onRequest"
     >
     </q-table>
-    <q-dialog v-model="teacherStore.dialogState">
-      <q-card>
-        <div class="q-pa-md text-h5">New User</div>
-        <q-card-section class="flex q-gutter-md">
-          <q-input
-            outlined
-            v-model="teacherStore.formTeacher.email"
-            label="Email"
-          ></q-input>
-        </q-card-section>
-        <q-card-actions class="justify-end">
-          <q-btn flat @click="teacherStore.dialogState = false"> cancel </q-btn>
-          <q-btn flat color="positive"> save </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
     <DialogForm
       title="New Teacher"
-      v-model="addDialog"
-      @save="teacherStore.handleSave"
+      v-model="store.dialogState"
+      @save="store.handleSave"
     >
       <template #body>
         <q-select
           outlined
-          v-model="teacherStore.formTeacher.branch"
+          dense
+          v-model="store.form.branch"
           :options="branches"
           option-label="name"
           label="Branch"
@@ -62,7 +34,8 @@
         />
         <q-input
           outlined
-          v-model="teacherStore.formTeacher.email"
+          dense
+          v-model="store.form.email"
           label="Email"
           type="email"
           clearable
@@ -70,21 +43,24 @@
         />
         <q-input
           outlined
-          v-model="teacherStore.formTeacher.name"
+          v-model="store.form.name"
           label="Name"
           clearable
+          dense
           :rules="[requireField]"
         />
         <q-input
           outlined
-          v-model="teacherStore.formTeacher.engName"
+          dense
+          v-model="store.form.engName"
           label="English Name"
           clearable
           :rules="[requireField]"
         />
         <q-select
           outlined
-          v-model="teacherStore.formTeacher.position"
+          dense
+          v-model="store.form.position"
           :options="[...Object.values(AcademicRank)]"
           label="Position"
           options-dense
@@ -92,20 +68,23 @@
         />
         <q-select
           outlined
-          v-model="teacherStore.formTeacher.specialists"
+          dense
+          v-model="store.form.specialists"
           :options="[
             'Machine Learning',
             'Deep Learning',
             'Software Engineering',
           ]"
           label="Specialists"
+          hint="optional"
           options-dense
           clearable
           multiple
         />
         <q-input
           outlined
-          v-model="teacherStore.formTeacher.tel"
+          dense
+          v-model="store.form.tel"
           label="Telephone"
           clearable
           :rules="[(val) => val.length == 10 || 'Field not correct format']"
@@ -114,14 +93,17 @@
         />
         <q-input
           outlined
-          v-model="teacherStore.formTeacher.officeRoom"
+          dense
+          v-model="store.form.officeRoom"
           label="Office Room"
+          :rules="[requireField]"
           clearable
           hint="optional"
         />
         <q-input
           outlined
-          v-model="teacherStore.formTeacher.bio"
+          dense
+          v-model="store.form.bio"
           label="Bio"
           hint="optional"
           autogrow
@@ -133,26 +115,23 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useMeta } from 'quasar';
+import { QTableProps, useMeta } from 'quasar';
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTeacherStore } from 'src/stores/teacher';
-import { AcademicRank } from 'src/types/poistion.enum';
-import SearchData from 'src/components/SearchData.vue';
-import AddButton from 'src/components/AddButton.vue';
-import FillterData from 'src/components/FillterData.vue';
-import { requireField } from 'src/utils/field-rules';
-import { BranchService } from 'src/services/branches';
-import { Branch } from 'src/types/branch';
+import PageHeader from 'src/components/PageHeader.vue';
 import DialogForm from 'src/components/DialogForm.vue';
+import { requireField } from 'src/utils/field-rules';
+import { AcademicRank } from 'src/types/position.enum';
+import { Branch } from 'src/types/branch';
+import { BranchService } from 'src/services/branches';
 
-const teacherStore = useTeacherStore();
+const dialogFilter = ref(false);
 const branches = ref<Branch[]>([]);
+const store = useTeacherStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const isCreate = ref(false);
-const addDialog = ref(false);
-const teacherColumns = [
+const teacherColumns: QTableProps['columns'] = [
   {
     name: 'id',
     label: 'ID',
@@ -193,33 +172,32 @@ const teacherColumns = [
   },
 ];
 
-const paginationInit = ref({
+const paginationInit = ref<QTableProps['pagination']>({
   sortBy: '',
   descending: false,
   page: 1,
   rowsPerPage: 10,
 });
-
-const addTeacher = () => {
-  isCreate.value = true;
-  addDialog.value = true;
+const handleDialogFilter = () => {
+  dialogFilter.value = !dialogFilter.value;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onRequest(props: any) {
   console.log(props);
-  teacherStore.pageParams.page = props.page;
-  teacherStore.pageParams.limit = props.rowsPerPage;
-  teacherStore.pageParams.sort = props.sortBy;
-  teacherStore.pageParams.order = props.descending ? 'DESC' : 'ASC';
-  teacherStore.pageParams.search = props.search;
-  teacherStore.fetchData();
+  store.pageParams.page = props.page;
+  store.pageParams.limit = props.rowsPerPage;
+  store.pageParams.sort = props.sortBy;
+  store.pageParams.order = props.descending ? 'DESC' : 'ASC';
+  store.pageParams.search = props.search;
+  store.fetchData();
 }
 
 useMeta({
   title: title.value,
 });
 onMounted(async () => {
+  store.setup();
   branches.value = await BranchService.getAll();
 });
 </script>
