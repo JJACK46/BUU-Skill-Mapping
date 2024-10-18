@@ -2,11 +2,11 @@ import { Teacher } from 'src/types/teacher';
 import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
-export class TeacherService {
-  static path = 'teachers';
+export class FacultyService {
+  static path = 'faculties';
 
   static async fetchByPage(p: PageParams) {
-    const response = await api.get('teachers/pages', { params: p });
+    const response = await api.get(`${this.path}/pages`, { params: p });
     return response.data;
   }
 

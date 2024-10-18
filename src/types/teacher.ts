@@ -1,6 +1,7 @@
 import { Branch } from './branch';
 import { Course } from './course';
 import { Curriculum } from './curriculum';
+import { User } from './user';
 
 export interface Teacher {
   id: number;
@@ -31,4 +32,5 @@ export interface Teacher {
 
   courses?: Course[];
 
+  user?: User;
 }
