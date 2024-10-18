@@ -18,20 +18,22 @@ export const useTeacherStore = defineStore('teacher', () => {
   });
 
   const formTeacher = reactive<Teacher>({
-    id: 0,
     name: '',
     engName: '',
     tel: '',
     picture: '',
-    position: '',
     email: '',
     officeRoom: '',
-    specialists: '',
-    socials: '',
+    specialists: [],
     bio: '',
-    branch: undefined,
-    curriculums: [],
+    position: '',
+    branch: null,
+    socials: {
+      line: '',
+    },
     courses: [],
+    curriculums: [],
+    user: null,
   });
 
   const teachers = ref([]);
@@ -61,6 +63,12 @@ export const useTeacherStore = defineStore('teacher', () => {
     loading.value = false;
   }
 
+  const handleSave = async () => {
+    TeacherService.createOne(formTeacher);
+    dialogState.value = false;
+    window.location.reload();
+  };
+
   return {
     dialogState,
     formTeacher,
@@ -69,5 +77,6 @@ export const useTeacherStore = defineStore('teacher', () => {
     search,
     pageParams,
     fetchData,
+    handleSave,
   };
 });

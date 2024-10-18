@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import instance from 'src/services/index';
+import { api } from 'boot/axios';
 import { Faculty } from 'src/types/faculty';
 import { Branch } from 'src/types/branch';
 import { Curriculum } from 'src/types/curriculum';
@@ -100,7 +100,7 @@ const selectedSkill = ref();
 // Fetch faculties and branches
 const fetchFacultiesAndBranches = async () => {
   try {
-    const response = await instance.get('/faculties/getAllDetails'); // Adjust the URL as needed
+    const response = await api.get('/faculties/getAllDetails'); // Adjust the URL as needed
     faculties.value = response.data;
     console.log(faculties.value);
   } catch (error) {

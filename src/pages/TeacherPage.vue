@@ -44,6 +44,90 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <DialogForm
+      title="New Teacher"
+      v-model="addDialog"
+      @save="teacherStore.handleSave"
+    >
+      <template #body>
+        <q-select
+          outlined
+          v-model="teacherStore.formTeacher.branch"
+          :options="branches"
+          option-label="name"
+          label="Branch"
+          options-dense
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="teacherStore.formTeacher.email"
+          label="Email"
+          type="email"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="teacherStore.formTeacher.name"
+          label="Name"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="teacherStore.formTeacher.engName"
+          label="English Name"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-select
+          outlined
+          v-model="teacherStore.formTeacher.position"
+          :options="[...Object.values(AcademicRank)]"
+          label="Position"
+          options-dense
+          :rules="[requireField]"
+        />
+        <q-select
+          outlined
+          v-model="teacherStore.formTeacher.specialists"
+          :options="[
+            'Machine Learning',
+            'Deep Learning',
+            'Software Engineering',
+          ]"
+          label="Specialists"
+          options-dense
+          clearable
+          multiple
+        />
+        <q-input
+          outlined
+          v-model="teacherStore.formTeacher.tel"
+          label="Telephone"
+          clearable
+          :rules="[(val) => val.length == 10 || 'Field not correct format']"
+          mask="###-###-####"
+          unmasked-value
+        />
+        <q-input
+          outlined
+          v-model="teacherStore.formTeacher.officeRoom"
+          label="Office Room"
+          clearable
+          hint="optional"
+        />
+        <q-input
+          outlined
+          v-model="teacherStore.formTeacher.bio"
+          label="Bio"
+          hint="optional"
+          autogrow
+        />
+      </template>
+    </DialogForm>
   </q-page>
 </template>
 
@@ -53,11 +137,17 @@ import { useMeta } from 'quasar';
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTeacherStore } from 'src/stores/teacher';
+import { AcademicRank } from 'src/types/poistion.enum';
 import SearchData from 'src/components/SearchData.vue';
 import AddButton from 'src/components/AddButton.vue';
 import FillterData from 'src/components/FillterData.vue';
+import { requireField } from 'src/utils/field-rules';
+import { BranchService } from 'src/services/branches';
+import { Branch } from 'src/types/branch';
+import DialogForm from 'src/components/DialogForm.vue';
 
 const teacherStore = useTeacherStore();
+const branches = ref<Branch[]>([]);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const isCreate = ref(false);
@@ -129,5 +219,7 @@ function onRequest(props: any) {
 useMeta({
   title: title.value,
 });
-onMounted(async () => {});
+onMounted(async () => {
+  branches.value = await BranchService.getAll();
+});
 </script>

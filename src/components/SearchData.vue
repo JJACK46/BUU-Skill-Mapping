@@ -18,8 +18,6 @@ const search = ref('');
 <template>
   <q-input
     outlined
-    :debounce="500"
-    @update:model-value="fetchData(search)"
     clearable
     v-model="search"
     :loading="loading"
