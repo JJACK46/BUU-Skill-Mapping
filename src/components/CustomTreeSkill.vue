@@ -8,7 +8,7 @@
     >
       <template #default-body="{ node }">
         <q-btn
-          v-if="node.children && node.children.length > 0"
+          v-if="node.children && node.children.length > 0 && !readonly"
           icon="edit"
           flat
           size="sm"
@@ -82,6 +82,7 @@ import { Skill } from 'src/types/skill';
 
 const props = defineProps<{
   skills: Skill[];
+  readonly?: true;
 }>();
 
 const nodes = ref<QTreeProps['nodes']>([]);

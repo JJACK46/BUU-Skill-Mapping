@@ -1,11 +1,13 @@
+import { Skill } from './skill';
+
 export interface Subject {
   id?: number;
   name: string;
   engName: string;
   description: string;
-  engDescription: string;
   credit: CourseCredit;
   type: SubjectType;
+  skills?: Skill[];
 }
 
 export enum SubjectType {

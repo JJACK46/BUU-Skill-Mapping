@@ -1,54 +1,67 @@
 import type { PageParams } from 'src/types/pagination';
 import { api } from 'boot/axios';
 import type { Skill } from 'src/types/skill';
+class SkillService {
+  static path = 'skills';
+  static addSkill = async (skill: object) => {
+    const res = await api.post(this.path, skill);
+    return res.data;
+  };
 
-function addSkill(skill: object) {
-  return api.post('/skills', skill);
+  static addSubSkill = async (id: string, subSkill: object) => {
+    const res = await api.post(`${this.path}/${id}/createSubSkills`, subSkill);
+    return res.data;
+  };
+
+  static addTechSkill = async (id: string, techSkill: Skill[]) => {
+    const res = await api.post(
+      `${this.path}/${id}/createTechSkills/`,
+      techSkill
+    );
+    return res.data;
+  };
+
+  static updateSkill = async (skill: Skill) => {
+    const res = await api.patch(`${this.path}/${skill.id}`, skill);
+    return res.data;
+  };
+
+  static removeSubSkill = async (id: string, subSkillId: string) => {
+    const res = await api.patch(
+      `${this.path}/${id}/removeSubSkill/${subSkillId}`
+    );
+    return res.data;
+  };
+
+  static removeTechSkill = async (id: string, techSkillId: string) => {
+    const res = await api.patch(`${this.path}/${id}`, techSkillId);
+    return res.data;
+  };
+
+  static delSkill = async (id: string) => {
+    const res = await api.delete(`${this.path}/${id}`);
+    return res.data;
+  };
+
+  static getAll = async () => {
+    const res = await api.get(this.path);
+    return res.data;
+  };
+
+  static getAllByPage = async (params: PageParams) => {
+    const res = await api.get<{ data: Skill[]; total: number }>(
+      `${this.path}/pages`,
+      {
+        params,
+      }
+    );
+    return res;
+  };
+
+  static getOne = async (id: string) => {
+    const res = await api.get<Skill>(`${this.path}/${id}`);
+    return res.data;
+  };
 }
 
-function addSubSkill(id: string, subSkill: object) {
-  return api.post(`/skills/${id}/createSubSkills`, subSkill); // Corrected URL
-}
-
-function addTechSkill(id: string, techSkill: Skill[]) {
-  return api.post(`/skills/${id}/createTechSkills/`, techSkill);
-}
-function updateSkill(skill: Skill) {
-  return api.patch(`/skills/${skill.id}`, skill);
-}
-function removeSubSkill(id: string, subSkillId: string) {
-  console.log('Test Removing subSkill', subSkillId);
-  return api.patch(`/skills/${id}/removeSubSkill/${subSkillId}`);
-}
-function removeTechSkill(id: string, techSkillId: string) {
-  return api.patch(`/skills/${id}`, techSkillId);
-}
-function delSkill(id: string) {
-  return api.delete(`/skills/${id}`);
-}
-
-function getSkills() {
-  return api.get<Skill[]>('/skills');
-}
-function getSkillsByPage(params: PageParams) {
-  return api.get<{ data: Skill[]; total: number }>('/skills/pages', {
-    params,
-  });
-}
-
-function getSkill(id: string) {
-  return api.get<Skill>(`/skills/${id}`);
-}
-
-export default {
-  addSkill,
-  addSubSkill,
-  addTechSkill,
-  updateSkill,
-  removeSubSkill,
-  removeTechSkill,
-  delSkill,
-  getSkills,
-  getSkillsByPage,
-  getSkill,
-};
+export default SkillService;

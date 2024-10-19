@@ -23,19 +23,17 @@ export const useSkillStore = defineStore('skill', () => {
 
   async function fetchSkill(id: string) {
     dataInit.value = false;
-    const res = await skillService.getSkill(id);
-    editedSkill.value = res.data;
+    editedSkill.value = await skillService.getOne(id);
     console.log(editedSkill.value);
     dataInit.value = true;
   }
 
   async function fetchSkills() {
-    const res = await skillService.getSkills();
-    skillss.value = res.data;
+    skillss.value = await skillService.getAll();
   }
 
   async function fetchSkillsPage(params: PageParams) {
-    const res = await skillService.getSkillsByPage(params);
+    const res = await skillService.getAllByPage(params);
     skills.value = res.data.data;
     totalSkills.value = res.data.total;
   }

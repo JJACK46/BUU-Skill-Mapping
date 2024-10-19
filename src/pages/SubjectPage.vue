@@ -1,12 +1,87 @@
 <template>
   <q-page padding>
-    <PageHeader :search-text="search" @open-dialog="dialogState = true" />
+    <PageHeader
+      v-model:search-text="search"
+      @open-dialog="store.dialogState = true"
+    />
     <q-separator class="q-my-md" />
-
+    <DialogForm
+      v-model="store.dialogState"
+      title="New Subject"
+      @save="store.handleSave"
+    >
+      <template #body>
+        <q-tabs v-model="tabModel">
+          <q-tab name="req" label="Requirements" />
+          <q-tab name="add" label="Additional" />
+        </q-tabs>
+        <q-tab-panels v-model="tabModel">
+          <q-tab-panel name="req">
+            <q-input
+              v-model="store.form.id"
+              outlined
+              dense
+              label="ID"
+              mask="########"
+              :rules="[requireField]"
+            />
+            <q-select
+              v-model="store.form.type"
+              outlined
+              dense
+              label="Type"
+              :options="Object.values(SubjectType)"
+              :rules="[requireField]"
+            />
+            <q-input
+              v-model="store.form.name"
+              outlined
+              dense
+              label="Name"
+              :rules="[requireField]"
+            />
+            <q-input
+              v-model="store.form.engName"
+              outlined
+              dense
+              label="Eng Name"
+              :rules="[requireField]"
+            />
+            <q-input
+              v-model="store.form.description"
+              outlined
+              dense
+              label="Description"
+              :rules="[requireField]"
+            />
+            <q-input
+              v-model="store.form.credit"
+              outlined
+              dense
+              label="Credit"
+              mask="# (#-#-#)"
+              :rules="[requireField]"
+            />
+          </q-tab-panel>
+          <q-tab-panel name="add" @vue:mounted="store.fetchAllSkills">
+            <q-select
+              label="Skills"
+              outlined
+              :options="store.skillOptions"
+              option-label="name"
+              multiple
+              use-chips
+              v-model="store.form.skills"
+            />
+            <CustomTreeSkill :skills="store.form.skills || []" readonly />
+          </q-tab-panel>
+        </q-tab-panels>
+      </template>
+    </DialogForm>
     <q-table
-      v-if="filteredSubjects"
       class="q-mt-md"
-      :rows="filteredSubjects"
+      :rows="store.subjects"
+      :filter="search"
       :columns="columns"
       row-key="id"
       wrap-cells
@@ -19,21 +94,22 @@
 import { QTableColumn, useMeta } from 'quasar';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { SubjectService } from 'src/services/subject';
-import { Subject } from 'src/types/subject';
 import PageHeader from 'src/components/PageHeader.vue';
+import DialogForm from 'src/components/DialogForm.vue';
+import { useSubjectStore } from 'src/stores/subject';
+import { requireField } from 'src/utils/field-rules';
+import { SubjectType } from 'src/types/subject';
+import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 
+const tabModel = ref();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const dialogState = ref(false);
 const search = ref('');
-useMeta({
-  title: title.value,
-});
+const store = useSubjectStore();
 
 const columns: QTableColumn[] = [
-  { name: 'name', label: 'Name', field: 'thaiName', align: 'left' },
-  { name: 'engname', label: 'Eng Name', field: 'engName', align: 'left' },
+  { name: 'name', label: 'Name', field: 'name', align: 'left' },
+  { name: 'engName', label: 'Eng Name', field: 'engName', align: 'left' },
   {
     name: 'description',
     label: 'Description',
@@ -44,18 +120,11 @@ const columns: QTableColumn[] = [
   { name: 'credit', label: 'Credit', field: 'credit', align: 'left' },
 ];
 
-const subjects = ref<Subject[]>([]);
-
-const filteredSubjects = computed(() => {
-  if (search.value.trim()) {
-    return subjects.value.filter((subject) =>
-      subject.name.toLowerCase().includes(search.value.toLowerCase())
-    );
-  }
-  return subjects.value;
+onMounted(async () => {
+  await store.setup();
 });
 
-onMounted(async () => {
-  subjects.value = await SubjectService.getAll();
+useMeta({
+  title: title.value,
 });
 </script>

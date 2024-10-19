@@ -12,7 +12,6 @@ export const mockCourse = ref<Course[]>([
       name: 'การพัฒนาหน้าบ้าน',
       engName: 'Frontend Development',
       description: 'วิธีการพัฒนาหน้าบ้าน',
-      engDescription: 'Some detail ...Frontend Development',
       credit: CourseCredit.Two,
       type: SubjectType.Compulsory,
     },
