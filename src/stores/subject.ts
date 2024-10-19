@@ -20,6 +20,7 @@ export const useSubjectStore = defineStore('subject', {
     },
     async handleSave() {
       await SubjectService.createOne(this.form);
+      this.dialogState = false;
     },
     async fetchAllSkills() {
       this.skillOptions = await SkillService.getAll();

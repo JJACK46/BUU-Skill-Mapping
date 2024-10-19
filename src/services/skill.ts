@@ -8,12 +8,12 @@ class SkillService {
     return res.data;
   };
 
-  static addSubSkill = async (id: string, subSkill: object) => {
+  static addSubSkill = async (id: number, subSkill: object) => {
     const res = await api.post(`${this.path}/${id}/createSubSkills`, subSkill);
     return res.data;
   };
 
-  static addTechSkill = async (id: string, techSkill: Skill[]) => {
+  static addTechSkill = async (id: number, techSkill: Skill[]) => {
     const res = await api.post(
       `${this.path}/${id}/createTechSkills/`,
       techSkill
@@ -26,19 +26,19 @@ class SkillService {
     return res.data;
   };
 
-  static removeSubSkill = async (id: string, subSkillId: string) => {
+  static removeSubSkill = async (id: number, subSkillId: number) => {
     const res = await api.patch(
       `${this.path}/${id}/removeSubSkill/${subSkillId}`
     );
     return res.data;
   };
 
-  static removeTechSkill = async (id: string, techSkillId: string) => {
+  static removeTechSkill = async (id: number, techSkillId: number) => {
     const res = await api.patch(`${this.path}/${id}`, techSkillId);
     return res.data;
   };
 
-  static delSkill = async (id: string) => {
+  static delSkill = async (id: number) => {
     const res = await api.delete(`${this.path}/${id}`);
     return res.data;
   };
@@ -58,7 +58,7 @@ class SkillService {
     return res;
   };
 
-  static getOne = async (id: string) => {
+  static getOne = async (id: number) => {
     const res = await api.get<Skill>(`${this.path}/${id}`);
     return res.data;
   };

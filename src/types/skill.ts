@@ -1,5 +1,5 @@
 type Skill = {
-  id: string;
+  id: number;
   name: string;
   description: string;
   domain: string;

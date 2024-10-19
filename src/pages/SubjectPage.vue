@@ -52,6 +52,7 @@
               outlined
               dense
               label="Description"
+              autogrow
               :rules="[requireField]"
             />
             <q-input
@@ -86,6 +87,14 @@
       row-key="id"
       wrap-cells
     >
+      <template #body-cell-skills="props">
+        <q-td>
+          <q-btn icon="info" padding="none" flat @click="skillsModel = true" />
+          <q-popup-edit v-model="skillsModel" :cover="false" anchor="top right">
+            <CustomTreeSkill :skills="props.value || []" readonly />
+          </q-popup-edit>
+        </q-td>
+      </template>
     </q-table>
   </q-page>
 </template>
@@ -101,6 +110,7 @@ import { requireField } from 'src/utils/field-rules';
 import { SubjectType } from 'src/types/subject';
 import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 
+const skillsModel = ref(false);
 const tabModel = ref();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -108,16 +118,18 @@ const search = ref('');
 const store = useSubjectStore();
 
 const columns: QTableColumn[] = [
-  { name: 'name', label: 'Name', field: 'name', align: 'left' },
-  { name: 'engName', label: 'Eng Name', field: 'engName', align: 'left' },
+  { name: 'id', label: 'ID', field: 'id' },
+  { name: 'name', label: 'Name', field: 'name' },
+  { name: 'engName', label: 'Eng Name', field: 'engName' },
   {
     name: 'description',
     label: 'Description',
     field: 'description',
     align: 'left',
   },
-  { name: 'type', label: 'Type', field: 'type', align: 'left' },
-  { name: 'credit', label: 'Credit', field: 'credit', align: 'left' },
+  { name: 'type', label: 'Type', field: 'type' },
+  { name: 'credit', label: 'Credit', field: 'credit' },
+  { name: 'skills', label: 'Skills', field: 'skills' },
 ];
 
 onMounted(async () => {

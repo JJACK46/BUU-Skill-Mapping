@@ -10,7 +10,7 @@ export const useSkillStore = defineStore('skill', () => {
   const dataInit = ref(true);
   const totalSkills = ref(0);
   const initialSkill: Skill = {
-    id: '',
+    id: 0,
     name: '',
     description: '',
     domain: '',
@@ -21,9 +21,9 @@ export const useSkillStore = defineStore('skill', () => {
 
   const editedSkill = ref<Skill>({ ...initialSkill });
 
-  async function fetchSkill(id: string) {
+  async function fetchSkill(id: number) {
     dataInit.value = false;
-    editedSkill.value = await skillService.getOne(id);
+    editedSkill.value = await skillService.getOne(+id);
     console.log(editedSkill.value);
     dataInit.value = true;
   }
@@ -58,16 +58,16 @@ export const useSkillStore = defineStore('skill', () => {
     await skillService.updateSkill(updatedSkill);
   }
 
-  async function deleteSkill(id: string) {
+  async function deleteSkill(id: number) {
     await skillService.delSkill(id);
     await fetchSkills();
   }
 
-  async function deleteSubSkill(id: string, subSkillId: string) {
+  async function deleteSubSkill(id: number, subSkillId: number) {
     await skillService.removeSubSkill(id, subSkillId);
   }
 
-  async function deleteTechSkill(id: string, techSkillId: string) {
+  async function deleteTechSkill(id: number, techSkillId: number) {
     await skillService.removeTechSkill(id, techSkillId);
   }
 

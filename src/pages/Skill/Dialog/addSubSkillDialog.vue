@@ -10,7 +10,7 @@ const emit = defineEmits(['close-dialog']);
 const skillStore = useSkillStore();
 
 const initialSkill: Skill = {
-  id: '',
+  id: 0,
   name: '',
   description: '',
   domain: '',
