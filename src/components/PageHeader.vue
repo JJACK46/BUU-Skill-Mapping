@@ -49,9 +49,6 @@
                 filled
                 fill-input
                 option-label="name"
-                option-value="id"
-                map-options
-                emit-value
                 :options="branchOptions"
               >
               </q-select
@@ -95,7 +92,7 @@
     />
     <q-chip
       v-if="selectedBranch"
-      :label="selectedBranch"
+      :label="selectedBranch.name"
       removable
       @remove="selectedBranch = null"
     />
@@ -117,7 +114,7 @@ const selectedFaculty = ref();
 const selectedBranch = ref();
 
 const initOptions = async () => {
-  const res = await api.get('/faculties/getAllDetails');
+  const res = await api.get('/faculties');
   if (res.data) {
     facultyOptions.value = res.data;
   }
