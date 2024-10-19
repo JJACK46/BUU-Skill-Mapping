@@ -94,16 +94,20 @@
             icon="info"
             padding="none"
             flat
-            @click="skillsModel = true"
-          />
-          <q-popup-edit
-            v-model="skillsModel"
-            :cover="false"
-            anchor="top right"
-            style="width: 400px"
           >
-            <CustomTreeSkill :skills="props.value || []" readonly />
-          </q-popup-edit>
+            <q-popup-proxy
+              :cover="false"
+              anchor="top right"
+              style="width: 400px"
+            >
+              <q-toolbar>
+                <q-toolbar-title>Skills View</q-toolbar-title>
+                <q-btn icon="close" flat padding="none" v-close-popup />
+              </q-toolbar>
+              <q-separator></q-separator>
+              <CustomTreeSkill :skills="props.value || []" readonly />
+            </q-popup-proxy>
+          </q-btn>
         </q-td>
       </template>
     </q-table>
@@ -121,7 +125,6 @@ import { requireField } from 'src/utils/field-rules';
 import { SubjectType } from 'src/types/subject';
 import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 
-const skillsModel = ref(false);
 const tabModel = ref();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
