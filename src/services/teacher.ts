@@ -6,7 +6,7 @@ export class TeacherService {
   static path = 'teachers';
 
   static async fetchByPage(p: PageParams) {
-    const response = await api.get('teachers/pages', { params: p });
+    const response = await api.get(`${this.path}/pages`, { params: p });
     return response.data;
   }
 

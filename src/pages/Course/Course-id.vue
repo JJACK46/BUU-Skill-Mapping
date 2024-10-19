@@ -42,6 +42,7 @@
                 @save="handleImport"
               >
                 <template #body>
+                  <q-separator />
                   <TableSheetJS text="import" ref="sheet" />
                 </template>
               </DialogForm>

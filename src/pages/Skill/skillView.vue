@@ -7,6 +7,7 @@ import SkillDetailDialog from './Dialog/skillDetailDialog.vue';
 import ConfirmDialog from './Dialog/ConfirmDialog.vue';
 import type { PageParams } from 'src/types/pagination';
 import { Skill } from 'src/types/skill';
+import PageHeader from 'src/components/PageHeader.vue';
 
 const skillStore = useSkillStore();
 const loading = ref(false);
@@ -94,37 +95,13 @@ onMounted(fetchSkill);
 
 <template>
   <q-page padding>
-    <q-toolbar-title style="font-size: 24px; margin-left: 15px"
-      >Skill</q-toolbar-title
-    >
-
-    <div class="row justify-between q-my-lg">
-      <div class="col-8">
-        <q-input
-          filled
-          v-model="pageParams.search"
-          placeholder="หลักสูตร"
-          @keyup.enter="fetchSkill"
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </div>
-
-      <div class="col-4">
-        <div class="row justify-end">
-          <q-btn
-            color="primary"
-            label="ADD NEW"
-            icon="add"
-            @click="showDialogAdd"
-            style="width: 200px; height: 55px"
-          />
-        </div>
-      </div>
-    </div>
-
+    <PageHeader
+      v-model:search-text="pageParams.search"
+      label-search="Curriculums"
+      @open-dialog="showDialogAdd"
+      @enter-search="fetchSkill"
+    />
+    <q-separator class="q-my-md" />
     <q-card flat bordered>
       <q-col cols="12">
         <q-tree :nodes="skills" node-key="id">

@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import type { Skill } from 'src/types/skill';
+import { LearningDomain, type Skill } from 'src/types/skill';
 import skillService from 'src/services/skill';
 import type { PageParams } from 'src/types/pagination';
 
@@ -10,10 +10,10 @@ export const useSkillStore = defineStore('skill', () => {
   const dataInit = ref(true);
   const totalSkills = ref(0);
   const initialSkill: Skill = {
-    id: '',
+    id: 0,
     name: '',
     description: '',
-    domain: '',
+    domain: LearningDomain.Cognitive,
     parent: [],
     children: [],
     techSkills: [],
@@ -21,21 +21,19 @@ export const useSkillStore = defineStore('skill', () => {
 
   const editedSkill = ref<Skill>({ ...initialSkill });
 
-  async function fetchSkill(id: string) {
+  async function fetchSkill(id: number) {
     dataInit.value = false;
-    const res = await skillService.getSkill(id);
-    editedSkill.value = res.data;
+    editedSkill.value = await skillService.getOne(+id);
     console.log(editedSkill.value);
     dataInit.value = true;
   }
 
   async function fetchSkills() {
-    const res = await skillService.getSkills();
-    skillss.value = res.data;
+    skillss.value = await skillService.getAll();
   }
 
   async function fetchSkillsPage(params: PageParams) {
-    const res = await skillService.getSkillsByPage(params);
+    const res = await skillService.getAllByPage(params);
     skills.value = res.data.data;
     totalSkills.value = res.data.total;
   }
@@ -60,16 +58,16 @@ export const useSkillStore = defineStore('skill', () => {
     await skillService.updateSkill(updatedSkill);
   }
 
-  async function deleteSkill(id: string) {
+  async function deleteSkill(id: number) {
     await skillService.delSkill(id);
     await fetchSkills();
   }
 
-  async function deleteSubSkill(id: string, subSkillId: string) {
+  async function deleteSubSkill(id: number, subSkillId: number) {
     await skillService.removeSubSkill(id, subSkillId);
   }
 
-  async function deleteTechSkill(id: string, techSkillId: string) {
+  async function deleteTechSkill(id: number, techSkillId: number) {
     await skillService.removeTechSkill(id, techSkillId);
   }
 

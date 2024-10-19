@@ -1,11 +1,16 @@
-type Skill = {
-  id: string;
+export type Skill = {
+  id: number;
   name: string;
   description: string;
-  domain: string;
+  domain: LearningDomain;
   parent?: Skill[];
   children: Skill[];
   techSkills: Skill[];
 };
 
-export type { Skill };
+export enum LearningDomain {
+  Psychomotor = 'Psychomotor', // ทักษะ
+  Affective = 'Affective', // คุณลักษณะบุคคล
+  Cognitive = 'Cognitive', //  ความรู้
+  Ethics = 'Ethics', //  จริยธรรม
+}
