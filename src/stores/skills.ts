@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import type { Skill } from 'src/types/skill';
+import { LearningDomain, type Skill } from 'src/types/skill';
 import skillService from 'src/services/skill';
 import type { PageParams } from 'src/types/pagination';
 
@@ -13,7 +13,7 @@ export const useSkillStore = defineStore('skill', () => {
     id: 0,
     name: '',
     description: '',
-    domain: '',
+    domain: LearningDomain.Cognitive,
     parent: [],
     children: [],
     techSkills: [],

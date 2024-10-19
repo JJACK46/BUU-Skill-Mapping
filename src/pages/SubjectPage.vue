@@ -89,8 +89,19 @@
     >
       <template #body-cell-skills="props">
         <q-td>
-          <q-btn icon="info" padding="none" flat @click="skillsModel = true" />
-          <q-popup-edit v-model="skillsModel" :cover="false" anchor="top right">
+          <q-btn
+            :disable="props.value === null || props.value.length === 0"
+            icon="info"
+            padding="none"
+            flat
+            @click="skillsModel = true"
+          />
+          <q-popup-edit
+            v-model="skillsModel"
+            :cover="false"
+            anchor="top right"
+            style="width: 400px"
+          >
             <CustomTreeSkill :skills="props.value || []" readonly />
           </q-popup-edit>
         </q-td>

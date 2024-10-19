@@ -64,7 +64,8 @@
         outlined
         clearable
         v-model="searchText"
-        label="Search"
+        @keyup.enter="$emit('enterSearch')"
+        :label="labelSearch ?? 'Search'"
         class="col"
         dense
         debounce="500"
@@ -78,6 +79,7 @@
         @click="$emit('openDialog')"
         color="primary"
         label="add"
+        style="width: 80px"
         unelevated
       >
       </q-btn>
@@ -127,10 +129,12 @@ const handleChangeFaculty = (v: Faculty) => {
 defineProps<{
   handleImport?: () => void;
   handleExport?: () => void;
+  labelSearch?: string;
 }>();
 
 defineEmits<{
   (e: 'openDialog'): void;
+  (e: 'enterSearch'): void;
 }>();
 
 const searchText = defineModel('searchText', { default: '' });
