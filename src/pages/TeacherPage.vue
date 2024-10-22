@@ -1,5 +1,21 @@
 <template>
   <q-page padding>
+    <div class="row q-gutter-md">
+      <div class="col-grow">
+        <SearchData :fetch-data="store.fetchData" label="Teacher"></SearchData>
+      </div>
+
+      <div class="col-auto">
+        <FillterData
+          :fetch-data="store.fetchData"
+          :by-branch="true"
+          :by-curriculum="true"
+        ></FillterData>
+      </div>
+      <div class="col-shrink">
+        <AddButton :click-add-fuction="addTeacher"></AddButton>
+      </div>
+    </div>
     <PageHeader
       v-model:search-text="store.search"
       @open-dialog="store.dialogState = true"
@@ -25,7 +41,7 @@
         <q-select
           outlined
           dense
-          v-model="store.form.branch"
+          v-model="store.formTeacher.branch"
           :options="branches"
           option-label="name"
           label="Branch"
@@ -35,7 +51,7 @@
         <q-input
           outlined
           dense
-          v-model="store.form.email"
+          v-model="store.formTeacher.email"
           label="Email"
           type="email"
           clearable
@@ -43,7 +59,7 @@
         />
         <q-input
           outlined
-          v-model="store.form.name"
+          v-model="store.formTeacher.name"
           label="Name"
           clearable
           dense
@@ -52,7 +68,7 @@
         <q-input
           outlined
           dense
-          v-model="store.form.engName"
+          v-model="store.formTeacher.engName"
           label="English Name"
           clearable
           :rules="[requireField]"
@@ -60,7 +76,7 @@
         <q-select
           outlined
           dense
-          v-model="store.form.position"
+          v-model="store.formTeacher.position"
           :options="[...Object.values(AcademicRank)]"
           label="Position"
           options-dense
@@ -69,7 +85,7 @@
         <q-select
           outlined
           dense
-          v-model="store.form.specialists"
+          v-model="store.formTeacher.specialists"
           :options="[
             'Machine Learning',
             'Deep Learning',
@@ -84,7 +100,7 @@
         <q-input
           outlined
           dense
-          v-model="store.form.tel"
+          v-model="store.formTeacher.tel"
           label="Telephone"
           clearable
           :rules="[(val) => val.length == 10 || 'Field not correct format']"
@@ -94,7 +110,7 @@
         <q-input
           outlined
           dense
-          v-model="store.form.officeRoom"
+          v-model="store.formTeacher.officeRoom"
           label="Office Room"
           :rules="[requireField]"
           clearable
@@ -103,7 +119,7 @@
         <q-input
           outlined
           dense
-          v-model="store.form.bio"
+          v-model="store.formTeacher.bio"
           label="Bio"
           hint="optional"
           autogrow
@@ -122,15 +138,20 @@ import { useTeacherStore } from 'src/stores/teacher';
 import PageHeader from 'src/components/PageHeader.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import { requireField } from 'src/utils/field-rules';
-import { AcademicRank } from 'src/types/position.enum';
 import { Branch } from 'src/types/branch';
 import { BranchService } from 'src/services/branches';
+import { AcademicRank } from 'src/types/poistion.enum';
+import SearchData from 'src/components/SearchData.vue';
+import FillterData from 'src/components/FillterData.vue';
+import AddButton from 'src/components/AddButton.vue';
 
-const dialogFilter = ref(false);
 const branches = ref<Branch[]>([]);
 const store = useTeacherStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
+const isCreate = ref(false);
+const addDialog = ref(false);
+const dialogFilter = ref(false);
 const teacherColumns: QTableProps['columns'] = [
   {
     name: 'id',
@@ -181,15 +202,19 @@ const paginationInit = ref<QTableProps['pagination']>({
 const handleDialogFilter = () => {
   dialogFilter.value = !dialogFilter.value;
 };
+const addTeacher = () => {
+  isCreate.value = true;
+  addDialog.value = true;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onRequest(props: any) {
-  console.log(props);
   store.pageParams.page = props.page;
   store.pageParams.limit = props.rowsPerPage;
   store.pageParams.sort = props.sortBy;
   store.pageParams.order = props.descending ? 'DESC' : 'ASC';
   store.pageParams.search = props.search;
+  console.log(store.pageParams);
   store.fetchData();
 }
 
@@ -197,7 +222,6 @@ useMeta({
   title: title.value,
 });
 onMounted(async () => {
-  store.setup();
   branches.value = await BranchService.getAll();
 });
 </script>

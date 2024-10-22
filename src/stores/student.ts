@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
-import { TeacherService } from 'src/services/teacher';
+import { StudentService } from 'src/services/student';
 import { PageParams } from 'src/types/pagination';
-import { Teacher } from 'src/types/teacher';
+import { Student } from 'src/types/student';
 import { reactive, ref } from 'vue';
 
-export const useTeacherStore = defineStore('teacher', () => {
+export const useStudentStore = defineStore('student', () => {
   const dialogState = ref(false);
   const search = ref();
   const pageParams = ref<PageParams>({
@@ -17,25 +17,14 @@ export const useTeacherStore = defineStore('teacher', () => {
     columnName: '',
   });
 
-  const formTeacher = reactive<Teacher>({
+  const formStudent = reactive<Student>({
     name: '',
     engName: '',
-    tel: '',
-    picture: '',
-    email: '',
-    officeRoom: '',
-    specialists: [],
-    bio: '',
-    position: '',
-    branch: null,
-    socials: {
-      line: '',
-    },
-    courses: [],
-    curriculums: [],
+    dateEnrollment: new Date(),
+    skillCollection: [],
   });
 
-  const teachers = ref([]);
+  const students = ref([]);
   const loading = ref(false);
 
   async function fetchData(
@@ -60,22 +49,22 @@ export const useTeacherStore = defineStore('teacher', () => {
       pageParams.value.columnName = '';
     }
 
-    const res = await TeacherService.fetchByPage(pageParams.value);
-    teachers.value = res.data;
+    const res = await StudentService.fetchByPage(pageParams.value);
+    students.value = res.data;
 
     loading.value = false;
   }
 
   const handleSave = async () => {
-    TeacherService.createOne(formTeacher);
+    StudentService.createOne(formStudent);
     dialogState.value = false;
     window.location.reload();
   };
 
   return {
     dialogState,
-    formTeacher,
-    teachers,
+    formStudent,
+    students,
     loading,
     search,
     pageParams,
