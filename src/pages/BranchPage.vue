@@ -7,12 +7,12 @@
         <q-input label="Name" v-model="form.name" />
       </template>
     </DialogForm>
-    <q-table :rows="branches" row-key="id"></q-table>
+    <q-table :rows="branches" row-key="id" :columns="columns"></q-table>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { useMeta } from 'quasar';
+import { QTableProps, useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import { BranchService } from 'src/services/branches';
 import { Branch } from 'src/types/branch';
@@ -27,6 +27,33 @@ const form = reactive<Branch>({
 });
 const loading = ref(false);
 const branches = ref<Branch[]>([]);
+const columns = ref<QTableProps['columns']>([
+  {
+    name: 'name',
+    label: 'Name',
+    field: 'name',
+  },
+  {
+    name: 'engName',
+    label: 'English Name',
+    field: 'engName',
+  },
+  {
+    name: 'abbrev',
+    label: 'Abbrev',
+    field: 'abbrev',
+  },
+  {
+    name: 'curriculum',
+    label: 'Curriculum',
+    field: (c) => c.name,
+  },
+  {
+    name: 'faculty',
+    label: 'Faculty',
+    field: (f) => f.name,
+  },
+]);
 const handleSave = () => {
   dialogState.value = false;
 };

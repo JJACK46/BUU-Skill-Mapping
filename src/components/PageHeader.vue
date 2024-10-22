@@ -114,7 +114,7 @@ const selectedFaculty = ref();
 const selectedBranch = ref();
 
 const initOptions = async () => {
-  const res = await api.get('/faculties');
+  const res = await api.get('/faculties'); //filters/1, filters/2
   if (res.data) {
     facultyOptions.value = res.data;
   }

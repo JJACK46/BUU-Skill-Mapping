@@ -20,11 +20,13 @@ export const useStudentStore = defineStore('student', () => {
   const formStudent = reactive<Student>({
     name: '',
     engName: '',
-    dateEnrollment: new Date(),
+    dateEnrollment: '',
     skillCollection: [],
+    socials: null,
+    branch: null,
   });
 
-  const students = ref([]);
+  const students = ref<Student[]>([]);
   const loading = ref(false);
 
   async function fetchData(
