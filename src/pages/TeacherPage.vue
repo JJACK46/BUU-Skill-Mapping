@@ -1,21 +1,5 @@
 <template>
   <q-page padding>
-    <div class="row q-gutter-md">
-      <div class="col-grow">
-        <SearchData :fetch-data="store.fetchData" label="Teacher"></SearchData>
-      </div>
-
-      <div class="col-auto">
-        <FillterData
-          :fetch-data="store.fetchData"
-          :by-branch="true"
-          :by-curriculum="true"
-        ></FillterData>
-      </div>
-      <div class="col-shrink">
-        <AddButton :click-add-fuction="addTeacher"></AddButton>
-      </div>
-    </div>
     <PageHeader
       v-model:search-text="store.search"
       @open-dialog="store.dialogState = true"
@@ -140,17 +124,12 @@ import DialogForm from 'src/components/DialogForm.vue';
 import { requireField } from 'src/utils/field-rules';
 import { Branch } from 'src/types/branch';
 import { BranchService } from 'src/services/branches';
-import { AcademicRank } from 'src/types/poistion.enum';
-import SearchData from 'src/components/SearchData.vue';
-import FillterData from 'src/components/FillterData.vue';
-import AddButton from 'src/components/AddButton.vue';
+import { AcademicRank } from 'src/types/position.enum';
 
 const branches = ref<Branch[]>([]);
 const store = useTeacherStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const isCreate = ref(false);
-const addDialog = ref(false);
 const dialogFilter = ref(false);
 const teacherColumns: QTableProps['columns'] = [
   {
@@ -201,10 +180,6 @@ const paginationInit = ref<QTableProps['pagination']>({
 });
 const handleDialogFilter = () => {
   dialogFilter.value = !dialogFilter.value;
-};
-const addTeacher = () => {
-  isCreate.value = true;
-  addDialog.value = true;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
