@@ -10,7 +10,6 @@ export interface Teacher {
   engName: string;
   tel: string;
   picture: string;
-  user: Partial<User> | null;
   email: string;
   officeRoom: string;
   specialists: string[];
@@ -20,4 +19,5 @@ export interface Teacher {
   branch: Partial<Branch> | null;
   courses?: Course[];
   curriculums: Partial<Curriculum>[] | null;
+  user?: User;
 }

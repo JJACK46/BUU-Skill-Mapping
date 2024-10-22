@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skills';
-import { Skill } from 'src/types/skill';
+import { LearningDomain, Skill } from 'src/types/skill';
 
 const props = defineProps<{ visible: boolean; item: Skill | null }>(); // Use Skill instead of any
 const emit = defineEmits(['close-dialog']);
@@ -63,7 +63,7 @@ async function saveSkill() {
             <q-select
               v-model="skills.domain"
               label="Skill Type"
-              :options="['ความรู้', 'คุณลักษณะบุคคล', 'จริยธรรม', 'ทักษะ']"
+              :options="Object.values(LearningDomain)"
               outlined
               dense
             ></q-select>

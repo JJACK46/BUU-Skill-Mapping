@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts" setup>
-import { QSpinnerFacebook, useMeta, useQuasar } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { reactive } from 'vue';
@@ -111,19 +111,18 @@ const refForm = reactive({
 const handleForgetPassword = () => {
   window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
 };
-
 const $q = useQuasar();
 
 const handleLogin = () => {
-  $q.loading.show({
-    spinner: QSpinnerFacebook,
-    spinnerColor: 'yellow',
-    spinnerSize: 200,
-  });
-  setTimeout(() => {
-    $q.loading.hide();
-    AuthService.loginGoogle();
-  }, 1100);
+  // $q.loading.show({
+  //   spinner: QSpinnerFacebook,
+  //   spinnerColor: 'yellow',
+  //   spinnerSize: 200,
+  // });
+  AuthService.loginGoogle();
+  // setTimeout(() => {
+  //   $q.loading.hide();
+  // }, 1100);
 };
 </script>
 

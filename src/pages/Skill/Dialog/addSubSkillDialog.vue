@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, watch } from 'vue';
 import skillService from 'src/services/skill';
 import { useSkillStore } from 'src/stores/skills';
-import type { Skill } from 'src/types/skill'; // Import ประเภท Skill
+import { LearningDomain, type Skill } from 'src/types/skill'; // Import ประเภท Skill
 
 // ปรับประเภทของ props.item ให้ชัดเจนขึ้น
 const props = defineProps<{ visible: boolean; item: Skill | null }>();
@@ -10,10 +10,10 @@ const emit = defineEmits(['close-dialog']);
 const skillStore = useSkillStore();
 
 const initialSkill: Skill = {
-  id: '',
+  id: 0,
   name: '',
   description: '',
-  domain: '',
+  domain: LearningDomain.Cognitive,
   parent: [],
   children: [],
   techSkills: [],
@@ -94,7 +94,7 @@ onMounted(async () => {
             <q-select
               v-model="inputSkill.domain"
               label="Skill Type"
-              :options="['ความรู้', 'คุณลักษณะบุคคล', 'จริยธรรม', 'ทักษะ']"
+              :options="Object.values(LearningDomain)"
               outlined
               dense
             ></q-select>

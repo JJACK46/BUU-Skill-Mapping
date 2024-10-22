@@ -1,10 +1,9 @@
 import { Teacher } from 'src/types/teacher';
 import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
-import { Subject } from 'src/types/subject';
 
-export class SubjectService {
-  static path = 'subjects';
+export class FacultyService {
+  static path = 'faculties';
 
   static async fetchByPage(p: PageParams) {
     const response = await api.get(`${this.path}/pages`, { params: p });
@@ -21,10 +20,12 @@ export class SubjectService {
     return res.data;
   }
 
-  static async createOne(obj: Partial<Subject>) {
+  static async createOne(obj: Partial<Teacher>) {
     const dto = {
       ...obj,
-      skillListId: obj.skills?.map((s) => s.id),
+      userId: obj.user?.id,
+      branchId: obj.branch?.id,
+      curriculumListId: obj.curriculums?.map((c) => c.id),
     };
     const res = await api.post(this.path, dto);
     return res.data;

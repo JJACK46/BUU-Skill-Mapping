@@ -1,6 +1,6 @@
 import { Teacher } from 'src/types/teacher';
-import { api } from 'boot/axios';
 import { PageParams } from 'src/types/pagination';
+import { api } from 'src/boot/axios';
 
 export class TeacherService {
   static path = 'teachers';

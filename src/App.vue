@@ -107,6 +107,14 @@ useMeta({
     thead tr:first-child th {
       top: 0;
     }
+
+    tr:nth-child(odd) {
+      background-color: #f5f5f5;
+    }
+
+    tr:nth-child(even) {
+      background-color: #e6e6e6;
+    }
   }
 
   .q-table__bottom,

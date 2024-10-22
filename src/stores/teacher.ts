@@ -33,7 +33,6 @@ export const useTeacherStore = defineStore('teacher', () => {
     },
     courses: [],
     curriculums: [],
-    user: null,
   });
 
   const teachers = ref([]);
