@@ -1,14 +1,42 @@
 import { User } from 'src/types/user';
-import { api } from 'boot/axios';
+import { PageParams } from 'src/types/pagination';
+import { api } from 'src/boot/axios';
 
 export class UserService {
+  static path = 'users';
+
+  static getAllByPage = async (params: PageParams) => {
+    const res = await api.get<{ data: User[]; total: number }>(
+      `${this.path}/pages`,
+      {
+        params,
+      }
+    );
+    return res;
+  };
+
   static async getAll() {
-    const response = await api.get('users');
-    return response.data;
+    const res = await api.get(this.path);
+    return res.data;
   }
 
-  static async createOne(u: User) {
-    const response = await api.post('users', { ...u });
-    return response.data;
+  static async getOne(id: number) {
+    const res = await api.get(`${this.path}/${id}`);
+    return res.data;
+  }
+
+  static async createOne(obj: object) {
+    const res = await api.post(this.path, obj);
+    return res.data;
+  }
+
+  static async updateOne(obj: User) {
+    const res = await api.patch(this.path, obj);
+    return res.data;
+  }
+
+  static async removeOne(id: number) {
+    const res = await api.delete(`${this.path}/${id}`);
+    return res.data;
   }
 }

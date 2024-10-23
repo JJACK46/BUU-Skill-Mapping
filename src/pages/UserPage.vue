@@ -30,9 +30,13 @@ const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const search = ref();
 const formUser = reactive<User>({
-  id: 0,
+  id: '',
   email: '',
-  role: { id: 1, name: 'Admin' },
+  password: '',
+  role: {
+    id: '',
+    name: '',
+  },
 });
 const users = ref([]);
 const loading = ref(false);

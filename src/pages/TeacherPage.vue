@@ -99,7 +99,9 @@
           :rules="[requireField]"
           clearable
           hint="optional"
-        />
+        >
+          <template #prepend></template> </q-input
+        >/>
         <q-input
           outlined
           dense
