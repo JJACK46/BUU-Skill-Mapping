@@ -103,39 +103,38 @@ onMounted(fetchSkill);
     />
     <q-separator class="q-my-md" />
     <q-card flat bordered>
-      <q-col cols="12">
-        <q-tree :nodes="skills" node-key="id">
-          <template v-slot:default-header="props">
-            <q-tr>
-              <q-td style="padding-right: 50px">{{ props.node.name }}</q-td>
-              <q-td>
-                <q-btn
-                  flat
-                  round
-                  icon="add"
-                  @click.stop="showDialogAddSub(props.node)"
-                />
-              </q-td>
-              <q-td>
-                <q-btn
-                  flat
-                  round
-                  icon="edit"
-                  @click.stop="showDialogDetail(props.node)"
-                />
-              </q-td>
-              <q-td>
-                <q-btn
-                  flat
-                  round
-                  icon="close"
-                  @click.stop="confirmDeleteSkill(props.node)"
-                />
-              </q-td>
-            </q-tr>
-          </template>
-        </q-tree>
-      </q-col>
+      <q-tree :nodes="skills" node-key="id">
+        <template v-slot:default-header="props">
+          <q-tr>
+            <q-td style="padding-right: 50px">{{ props.node.name }}</q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="add"
+                @click.stop="showDialogAddSub(props.node)"
+              />
+            </q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="edit"
+                @click.stop="showDialogDetail(props.node)"
+              />
+            </q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="close"
+                @click.stop="confirmDeleteSkill(props.node)"
+              />
+            </q-td>
+          </q-tr>
+        </template>
+        <template #default-body></template>
+      </q-tree>
     </q-card>
 
     <AddSubSkillDialog

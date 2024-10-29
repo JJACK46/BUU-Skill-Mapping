@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import { QTableProps, useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
+import PageHeader from 'src/components/PageHeader.vue';
 import { BranchService } from 'src/services/branches';
 import { Branch } from 'src/types/branch';
 import { computed, onMounted, reactive, ref } from 'vue';

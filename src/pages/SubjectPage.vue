@@ -90,7 +90,7 @@
       <template #body-cell-skills="props">
         <q-td>
           <q-btn
-            :disable="props.value === null || props.value.length === 0"
+            :disable="props.value === undefined || props.value.length === 0"
             icon="info"
             padding="none"
             flat

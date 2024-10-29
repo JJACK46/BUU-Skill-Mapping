@@ -154,7 +154,7 @@ import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { CourseService } from 'src/services/course';
 import { Course, CourseEnrollment } from 'src/types/course';
 import { SkillCollection } from 'src/types/skill-collection';
-import { groupBy } from 'src/utils/sheet2object';
+// import { groupBy } from 'src/utils/sheet2object';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -225,46 +225,11 @@ const columns: QTableColumn[] = [
 const handleImport = () => {
   const sheetItems = sheet.value.items;
   if (!course.value.id) return;
-  if (sheetItems[0].skill_id) {
-    const groupedByStudentID = groupBy(
-      sheetItems,
-      (i: { student_id: string }) => i.student_id
-    );
 
-    course.value.courseEnrollments = Object.entries(groupedByStudentID).map(
-      ([student_id, items]) => {
-        return {
-          student: { id: Number(student_id) },
-          skillCollection: items.map(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (item: any) =>
-              ({
-                skill: { id: Number(item.skill_id) },
-                subject: { id: course.value.subject?.id },
-                level: item.gain_level,
-                score: 0,
-                passed: item.result === 1 ? true : false,
-              } as unknown as SkillCollection)
-          ),
-        };
-      }
-    );
-  } else {
-    course.value.courseEnrollments = sheetItems.map(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (item: any) =>
-        ({
-          student: { id: Number(item.student_id) },
-        } as unknown as SkillCollection)
-    );
-  }
-
-  CourseService.postEnrollment(
-    course.value.id,
-    course.value.courseEnrollments
-  ).then((res) => {
-    rows.value = res;
-    dialogImport.value = false;
+  const studentListId = sheetItems.map((args: { student_id: string }) => {
+    return String(args.student_id);
   });
+
+  CourseService.importStudents(courseId.value, studentListId);
 };
 </script>

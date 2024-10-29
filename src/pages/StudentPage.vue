@@ -1,6 +1,11 @@
 <template>
   <q-page padding>
-    <PageHeader @open-dialog="addDialog = true"></PageHeader>
+    <PageHeader
+      @open-dialog="addDialog = true"
+      :search-text="search"
+      import-btn
+      @open-dialog-import="importDialog = true"
+    ></PageHeader>
     <q-separator class="q-my-md" />
     <q-table
       :rows="store.students"
@@ -9,6 +14,18 @@
       :columns="studentColumns"
     >
     </q-table>
+    <!-- import btn -->
+    <DialogForm
+      title="Import Students"
+      v-model="importDialog"
+      @save="handleImport"
+    >
+      <template #body>
+        <q-separator />
+        <TableSheetJS text="import" ref="sheet" />
+      </template>
+    </DialogForm>
+    <!-- add btn -->
     <DialogForm
       title="New Student"
       v-model="addDialog"
@@ -53,17 +70,6 @@
             </q-icon>
           </template>
         </q-input>
-        q-
-
-        <!-- <q-select
-      outlined
-      v-model="studentStore.formStudent.skillCollection"
-      :options="skillCollections"
-      label="Skill Collection"
-      options-dense
-      multiple
-      clearable
-    /> -->
       </template>
     </DialogForm>
   </q-page>
@@ -83,7 +89,10 @@ import { Branch } from 'src/types/branch';
 import DialogForm from 'src/components/DialogForm.vue';
 import { StudentService } from 'src/services/student';
 import PageHeader from 'src/components/PageHeader.vue';
+import TableSheetJS from 'src/components/TableSheetJS.vue';
 
+const importDialog = ref(false);
+const search = ref('');
 const store = useStudentStore();
 const branches = ref<Branch[]>([]);
 const route = useRoute();
@@ -140,6 +149,10 @@ const studentColumns: QTableProps['columns'] = [
 //   studentStore.pageParams.search = props.search;
 //   studentStore.fetchData();
 // }
+
+function handleImport() {
+  // something here
+}
 
 useMeta({
   title: title.value,
