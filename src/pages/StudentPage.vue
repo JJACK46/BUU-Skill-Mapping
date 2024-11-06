@@ -1,67 +1,27 @@
 <template>
   <q-page padding>
-    <PageHeader
-      @open-dialog="addDialog = true"
-      :search-text="search"
-      import-btn
-      @open-dialog-import="importDialog = true"
-    ></PageHeader>
+    <PageHeader @open-dialog="addDialog = true" :search-text="search" import-btn
+      @open-dialog-import="importDialog = true"></PageHeader>
     <q-separator class="q-my-md" />
-    <q-table
-      :rows="store.students"
-      row-key="id"
-      :loading="store.loading"
-      :columns="studentColumns"
-    >
+    <q-table :rows="store.students" row-key="id" :loading="store.loading" :columns="studentColumns">
     </q-table>
     <!-- import btn -->
-    <DialogForm
-      title="Import Students"
-      v-model="importDialog"
-      @save="handleImport"
-    >
+    <DialogForm title="Import Students" v-model="importDialog" @save="handleImport">
       <template #body>
         <q-separator />
         <TableSheetJS text="import" ref="sheet" />
       </template>
     </DialogForm>
     <!-- add btn -->
-    <DialogForm
-      title="New Student"
-      v-model="addDialog"
-      @save="store.handleSave"
-    >
+    <DialogForm title="New Student" v-model="addDialog" @save="store.handleSave">
       <template #body>
-        <q-input
-          outlined
-          v-model="store.formStudent.name"
-          label="Name"
-          clearable
-          :rules="[requireField]"
-        />
-        <q-input
-          outlined
-          v-model="store.formStudent.engName"
-          label="English Name"
-          clearable
-          :rules="[requireField]"
-        />
-        <q-input
-          label="Date Enrolled"
-          outlined
-          v-model="(store.formStudent.dateEnrollment as string)"
-        >
+        <q-input outlined v-model="store.formStudent.name" label="Name" clearable :rules="[requireField]" />
+        <q-input outlined v-model="store.formStudent.engName" label="English Name" clearable :rules="[requireField]" />
+        <q-input label="Date Enrolled" outlined v-model="(store.formStudent.dateEnrollment as string)">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy
-                cover
-                transition-show="scale"
-                transition-hide="scale"
-              >
-                <q-date
-                  v-model="store.formStudent.dateEnrollment"
-                  mask="YYYY-MM-DD"
-                >
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="store.formStudent.dateEnrollment" mask="YYYY-MM-DD">
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
                   </div>
@@ -150,8 +110,10 @@ const studentColumns: QTableProps['columns'] = [
 //   studentStore.fetchData();
 // }
 
-function handleImport() {
-  // something here
+const sheet = ref();
+
+async function handleImport() {
+  await StudentService.postImportedStudents(sheet.value.items);
 }
 
 useMeta({

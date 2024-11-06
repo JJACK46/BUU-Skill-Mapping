@@ -2,6 +2,11 @@ import { Student } from 'src/types/student';
 import { api } from 'boot/axios';
 import { PageParams } from 'src/types/pagination';
 export class StudentService {
+
+  static async postImportedStudents(items: unknown) {
+    const res = await api.post(`${this.path}/import`, items);
+    return res.data;
+  }
   static path = 'students';
 
   static async fetchByPage(p: PageParams) {

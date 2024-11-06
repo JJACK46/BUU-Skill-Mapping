@@ -72,7 +72,8 @@ const fetchSkill = async () => {
   loading.value = true;
   skillStore.clearForm();
   try {
-    await skillStore.fetchSkillsPage(pageParams.value);
+    // await skillStore.fetchSkillsPage(pageParams.value);
+    await skillStore.fetchSkills();
   } catch (error) {
     console.error('Error fetching skills:', error);
   } finally {
@@ -95,12 +96,8 @@ onMounted(fetchSkill);
 
 <template>
   <q-page padding>
-    <PageHeader
-      v-model:search-text="pageParams.search"
-      label-search="Curriculums"
-      @open-dialog="showDialogAdd"
-      @enter-search="fetchSkill"
-    />
+    <PageHeader v-model:search-text="pageParams.search" label-search="Curriculums" @open-dialog="showDialogAdd"
+      @enter-search="fetchSkill" />
     <q-separator class="q-my-md" />
     <q-card flat bordered>
       <q-tree :nodes="skills" node-key="id">
@@ -108,55 +105,23 @@ onMounted(fetchSkill);
           <q-tr>
             <q-td style="padding-right: 50px">{{ props.node.name }}</q-td>
             <q-td>
-              <q-btn
-                flat
-                round
-                icon="add"
-                @click.stop="showDialogAddSub(props.node)"
-              />
+              <q-btn flat round icon="add" @click.stop="showDialogAddSub(props.node)" />
             </q-td>
             <q-td>
-              <q-btn
-                flat
-                round
-                icon="edit"
-                @click.stop="showDialogDetail(props.node)"
-              />
+              <q-btn flat round icon="edit" @click.stop="showDialogDetail(props.node)" />
             </q-td>
             <q-td>
-              <q-btn
-                flat
-                round
-                icon="close"
-                @click.stop="confirmDeleteSkill(props.node)"
-              />
+              <q-btn flat round icon="close" @click.stop="confirmDeleteSkill(props.node)" />
             </q-td>
           </q-tr>
         </template>
-        <template #default-body></template>
       </q-tree>
     </q-card>
 
-    <AddSubSkillDialog
-      :visible="dialogAddSubVisible"
-      :item="selectedItem"
-      @close-dialog="closeDialogAddSub"
-    />
-    <SkillDetailDialog
-      :visible="dialogDetailVisible"
-      :item="selectedItem"
-      @close-dialog="closeDialogDetail"
-    />
-    <AddSkillDialog
-      :visible="dialogAddVisible"
-      :item="null"
-      @close-dialog="closeDialogAdd"
-    />
-    <ConfirmDialog
-      :visible="dialogConfirmVisible"
-      :item="selectedItem"
-      @close-dialog="closeDialogDelete"
-      @confirm-delete="deleteSkillConfirmed"
-    />
+    <AddSubSkillDialog :visible="dialogAddSubVisible" :item="selectedItem" @close-dialog="closeDialogAddSub" />
+    <SkillDetailDialog :visible="dialogDetailVisible" :item="selectedItem" @close-dialog="closeDialogDetail" />
+    <AddSkillDialog :visible="dialogAddVisible" :item="null" @close-dialog="closeDialogAdd" />
+    <ConfirmDialog :visible="dialogConfirmVisible" :item="selectedItem" @close-dialog="closeDialogDelete"
+      @confirm-delete="deleteSkillConfirmed" />
   </q-page>
 </template>

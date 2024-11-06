@@ -30,7 +30,8 @@ export const useSkillStore = defineStore('skill', () => {
   }
 
   async function fetchSkills() {
-    skillss.value = await skillService.getAll();
+    // skillss.value = await skillService.getAll();
+    skills.value = await skillService.getAll();
   }
 
   async function fetchSkillsPage(params: PageParams) {

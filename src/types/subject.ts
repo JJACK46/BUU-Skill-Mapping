@@ -1,4 +1,4 @@
-import { Skill } from './skill';
+import { SkillExpectedLevel } from './skill-exp-lvl';
 
 export interface Subject {
   id?: number;
@@ -7,7 +7,9 @@ export interface Subject {
   description: string;
   credit: string;
   type: SubjectType;
-  skills?: Skill[];
+  skillExpectedLevels?: Partial<SkillExpectedLevel>[];
+  // clos:Clo[]
+  // courses:Course[]
 }
 
 export enum SubjectType {

@@ -17,51 +17,25 @@
       </q-card-section>
     </q-card>
 
-    <q-table
-      :rows="rows ?? []"
-      :row-key="(s) => s.student.id"
-      :columns="columns"
-      :filter="filterStudent"
-    >
+    <q-table :rows="rows ?? []" :row-key="(s) => s.student.id" :columns="columns" :filter="filterStudent">
       <template #top>
         <div class="q-pb-sm">
           <span class="text-h6">Course Enrollment</span>
         </div>
         <div class="flex justify-between fit">
           <div class="row q-gutter-x-sm">
-            <q-btn
-              label="import"
-              icon="upload"
-              outline
-              color="primary"
-              @click="dialogImport = true"
-            >
-              <DialogForm
-                title="Import Students"
-                v-model="dialogImport"
-                @save="handleImport"
-              >
+            <q-btn label="import" icon="upload" outline color="primary" @click="dialogImport = true">
+              <DialogForm title="Import Students" v-model="dialogImport" @save="handleImport">
                 <template #body>
                   <q-separator />
                   <TableSheetJS text="import" ref="sheet" />
                 </template>
               </DialogForm>
             </q-btn>
-            <q-btn
-              label="export"
-              icon="cloud_download"
-              outline
-              color="primary"
-            />
+            <q-btn label="export" icon="cloud_download" outline color="primary" />
           </div>
           <div class="row q-gutter-x-sm">
-            <q-input
-              outlined
-              dense
-              debounce="200"
-              v-model="filterStudent"
-              placeholder="Search"
-            >
+            <q-input outlined dense debounce="200" v-model="filterStudent" placeholder="Search">
               <template #append>
                 <q-icon name="search" />
               </template>
@@ -76,57 +50,39 @@
           <q-popup-edit v-model="skillDialog">
             <div class="text-body2 q-mb-sm">
               Skill Collection
-              <span class="float-right"
-                ><q-btn
-                  v-close-popup
-                  icon="close"
-                  flat
-                  size="xs"
-                  padding="none"
-                />
+              <span class="float-right"><q-btn v-close-popup icon="close" flat size="xs" padding="none" />
               </span>
             </div>
-            <q-table
-              hide-bottom
-              flat
-              dense
-              separator="cell"
-              :columns="[
-                {
-                  name: 'id',
-                  label: 'ID',
-                  field: (s) => s.skill.id,
-                },
-                {
-                  name: 'skill',
-                  label: 'Name',
-                  field: (s) => s.skill.name,
-                },
-                {
-                  name: 'score',
-                  label: 'Score',
-                  field: (s) => s.skill.score,
-                },
-                {
-                  name: 'level',
-                  label: 'Level',
-                  field: 'level',
-                },
-                {
-                  name: 'result',
-                  label: 'Result',
-                  field: 'passed',
-                },
-              ]"
-              :rows="props.value"
-              row-key="id"
-            >
+            <q-table hide-bottom flat dense separator="cell" :columns="[
+              {
+                name: 'id',
+                label: 'ID',
+                field: (s) => s.skill.id,
+              },
+              {
+                name: 'skill',
+                label: 'Name',
+                field: (s) => s.skill.name,
+              },
+              {
+                name: 'score',
+                label: 'Score',
+                field: (s) => s.skill.score,
+              },
+              {
+                name: 'level',
+                label: 'Level',
+                field: 'level',
+              },
+              {
+                name: 'result',
+                label: 'Result',
+                field: 'passed',
+              },
+            ]" :rows="props.value" row-key="id">
               <template #body-cell-result="props">
-                <q-td
-                  :class="` ${
-                    props.value ? 'text-green' : 'text-red'
-                  } text-bold`"
-                >
+                <q-td :class="` ${props.value ? 'text-green' : 'text-red'
+                  } text-bold`">
                   {{ props.value ? 'Passed' : 'Failed' }}
                 </q-td>
               </template>
@@ -135,11 +91,8 @@
         </q-td>
       </template>
       <template #body-cell-result="props">
-        <q-td
-          :class="` ${
-            props.value === 'Passed' ? 'text-green' : 'text-red'
-          } text-bold text-right `"
-        >
+        <q-td :class="` ${props.value === 'Passed' ? 'text-green' : 'text-red'
+          } text-bold text-right `">
           {{ props.value === 'Passed' ? 'Passed' : 'Failed' }}
         </q-td>
       </template>
@@ -224,10 +177,9 @@ const columns: QTableColumn[] = [
 
 const handleImport = () => {
   const sheetItems = sheet.value.items;
-  if (!course.value.id) return;
 
-  const studentListId = sheetItems.map((args: { student_id: string }) => {
-    return String(args.student_id);
+  const studentListId = sheetItems.map((args: { id: string }) => {
+    return String(args.id);
   });
 
   CourseService.importStudents(courseId.value, studentListId);
