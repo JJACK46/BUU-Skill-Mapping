@@ -94,7 +94,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'User Management',
-        component: () => import('pages/UserPage.vue'),
+        component: () => import('pages/User/UserPage.vue'),
       },
     ],
   },
