@@ -20,6 +20,10 @@ export class CourseService {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;
   }
+  static async getEnrollment(id: number) {
+    const res = await api.get(`${this.path}/${id}/enrollments`);
+    return res.data;
+  }
 
   static async createOne(obj: Course) {
     const dto = {

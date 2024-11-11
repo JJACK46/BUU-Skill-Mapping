@@ -25,6 +25,7 @@ export const useCourseStore = defineStore('course', {
     },
     async removeOne(id: number) {
       await CourseService.removeOne(id);
+      window.location.reload();
     },
   },
 });
