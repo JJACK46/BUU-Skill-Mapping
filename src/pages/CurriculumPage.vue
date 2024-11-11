@@ -3,30 +3,22 @@
     <PageHeader :search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
     <section class="q-mt-md q-gutter-y-lg">
-      <q-card class="q-pa-md" v-for="(c, index) in curriculums" :key="c.id">
-        <div class="row justify-between">
-          <span class="text-h6">
-            {{ c.thaiName }}
-            <p class="text-caption">{{ c.engName }}</p>
-          </span>
-          <q-btn icon="edit" flat padding="none" class="q-mr-md" />
-        </div>
-        <div>{{ c.description }}</div>
+      <q-card class="q-pa-md" v-for="(c, index) in curriculums" bordered flat :key="c.id">
+        <q-card-section>
+          <div class="row justify-between">
+            <span class="text-h6">
+              {{ c.thaiName }}
+              <p class="text-caption">{{ c.engName }}</p>
+            </span>
+            <q-btn icon="edit" flat padding="none" />
+          </div>
+          <div>{{ c.description }}</div>
+        </q-card-section>
         <q-card-section class="text-body1 q-pa-none">
-          <q-expansion-item
-            label="List of subjects"
-            @click="handleSubjects(index)"
-          >
-            <q-list>
-              <q-item v-for="s in c.subjects" :key="s.id">
-                <q-item-label>
-                  <span
-                    >{{ s }}
-                    <p class="text-caption">{{ s }}</p>
-                  </span></q-item-label
-                >
-              </q-item>
-            </q-list>
+          <q-expansion-item label="List of subjects" @click="handleSubjects(index)">
+            <q-table :rows="c.subjects || []" wrap-cells grid flat bordered row-key="id" :rows-per-page-options="[0]"
+              hide-bottom>
+            </q-table>
           </q-expansion-item>
         </q-card-section>
       </q-card>

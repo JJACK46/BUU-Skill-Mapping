@@ -48,7 +48,13 @@
       </template>
     </DialogForm>
     <!-- Table -->
-    <q-table class="q-mt-md" :rows="store.getSubjects" :filter="search" :columns="columns" row-key="id" wrap-cells>
+    <q-table class="q-mt-md" :rows="store.getSubjects" :filter="search" :columns="columns" row-key="id" wrap-cells
+      separator="cell">
+      <template #body-cell-description="props">
+        <q-td style="max-width: 300px">
+          {{ props.value }}
+        </q-td>
+      </template>
       <template #body-cell-skills="props">
         <q-td>
           <q-btn :disable="props.value === undefined || props.value.length === 0" icon="info" padding="none" flat>
@@ -103,6 +109,7 @@ watch(
         name: 'actions',
         label: 'Actions',
         field: 'actions',
+        align: 'center'
       })
     } else {
       columns.value.pop()
@@ -137,18 +144,18 @@ function handleDuplicate() {
 }
 
 const columns = ref<QTableColumn[]>([
-  { name: 'id', label: 'ID', field: 'id' },
-  { name: 'name', label: 'Name', field: 'name' },
-  { name: 'engName', label: 'Eng Name', field: 'engName' },
+  { name: 'id', label: 'ID', field: 'id', align: 'left' },
+  { name: 'name', label: 'Name', field: 'name', align: 'left' },
+  { name: 'engName', label: 'Eng Name', field: 'engName', align: 'left' },
   {
     name: 'description',
     label: 'Description',
     field: 'description',
     align: 'left',
   },
-  { name: 'type', label: 'Type', field: 'type' },
-  { name: 'credit', label: 'Credit', field: 'credit' },
-  { name: 'skills', label: 'Skills', field: 'skillExpectedLevels' },
+  { name: 'type', label: 'Type', field: 'type', align: 'left' },
+  { name: 'credit', label: 'Credit', field: 'credit', align: 'left' },
+  { name: 'skills', label: 'Skills', field: 'skillExpectedLevels', align: 'left' },
 ]);
 
 onMounted(async () => {

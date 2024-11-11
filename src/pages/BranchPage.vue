@@ -7,7 +7,7 @@
         <q-input label="Name" v-model="form.name" />
       </template>
     </DialogForm>
-    <q-table :rows="branches" row-key="id" :columns="columns"></q-table>
+    <q-table :rows="branches" row-key="id" :columns="columns" wrap-cells></q-table>
   </q-page>
 </template>
 
@@ -33,26 +33,32 @@ const columns = ref<QTableProps['columns']>([
     name: 'name',
     label: 'Name',
     field: 'name',
+    align: 'left'
   },
   {
     name: 'engName',
     label: 'English Name',
     field: 'engName',
+    align: 'left'
   },
-  {
-    name: 'abbrev',
-    label: 'Abbrev',
-    field: 'abbrev',
-  },
+
   {
     name: 'curriculum',
     label: 'Curriculum',
     field: (c) => c.name,
+    align: 'left'
   },
   {
     name: 'faculty',
     label: 'Faculty',
     field: (f) => f.name,
+    align: 'left'
+  },
+  {
+    name: 'abbrev',
+    label: 'Abbrev',
+    field: 'abbrev',
+    align: 'left'
   },
 ]);
 const handleSave = () => {

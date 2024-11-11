@@ -22,7 +22,7 @@
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                 <q-date v-model="store.formStudent.dateEnrollment" mask="YYYY-MM-DD">
-                  <div class="row items-center justify-end">
+                  <div class="row items-left justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
                   </div>
                 </q-date>
@@ -64,27 +64,27 @@ const studentColumns: QTableProps['columns'] = [
     name: 'id',
     label: 'ID',
     field: 'id',
-    align: 'center',
+    align: 'left',
     sortable: true,
   },
   {
     name: 'email',
     label: 'Email',
-    field: 'email',
-    align: 'center',
+    field: (s) => s.email || 'Unknown',
+    align: 'left',
     sortable: true,
   },
   {
     name: 'name',
     label: 'Name',
     field: 'name',
-    align: 'center',
+    align: 'left',
   },
   {
     name: 'engName',
-    label: 'EngName',
+    label: 'Engish Name',
     field: 'engName',
-    align: 'center',
+    align: 'left',
   },
 ];
 

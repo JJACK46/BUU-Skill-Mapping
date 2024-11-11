@@ -1,11 +1,8 @@
 <template>
   <q-page padding>
-    <PageHeader
-      v-model:search-text="search"
-      @open-dialog="dialogState = true"
-    />
+    <PageHeader v-model:search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <q-table :rows="users" row-key="name" :loading="loading" :filter="search">
+    <q-table :rows="users" :columns="columns" row-key="name" :loading="loading" :filter="search" wrap-cells>
     </q-table>
     <DialogForm v-model="dialogState" title="New User">
       <template #body>
@@ -16,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useMeta } from 'quasar';
+import { QTableColumn, useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import PageHeader from 'src/components/PageHeader.vue';
 import { UserService } from 'src/services/user';
@@ -34,6 +31,29 @@ const formUser = reactive<User>({
 });
 const users = ref([]);
 const loading = ref(false);
+
+const columns = ref(<QTableColumn[]>[
+  {
+    name: 'id',
+    label: 'ID',
+    field: 'id',
+    align: 'left',
+    sortable: true,
+  },
+  {
+    name: 'email',
+    label: 'Email',
+    field: 'email',
+    align: 'left',
+  },
+  {
+    name: 'role',
+    label: 'Role',
+    field: 'role',
+    align: 'left',
+  },
+])
+
 useMeta({
   title: title.value,
 });
