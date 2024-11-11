@@ -10,6 +10,15 @@ export const useSkillStore = defineStore('skill', () => {
   const skillss = ref<Skill[]>([]);
   const dataInit = ref(true);
   const totalSkills = ref(0);
+  const pageParams = ref<PageParams>({
+    page: 1,
+    limit: 10,
+    sort: '',
+    order: 'ASC',
+    search: '',
+    columnId: '',
+    columnName: '',
+  });
   const initialSkill: Skill = {
     id: 0,
     name: '',
@@ -30,8 +39,8 @@ export const useSkillStore = defineStore('skill', () => {
   }
 
   async function fetchSkills() {
-    // skillss.value = await skillService.getAll();
-    skills.value = await skillService.getAll();
+    skillss.value = await skillService.getAll();
+    // skills.value = await skillService.getAll();
   }
 
   async function fetchSkillsPage(params: PageParams) {
@@ -83,8 +92,9 @@ export const useSkillStore = defineStore('skill', () => {
     dataInit,
     editedSkill,
     totalSkills,
+    pageParams,
     addSkill,
-    // addSubSkill,
+
     // addTechSkill,
     updateSkill,
     fetchSkill,
