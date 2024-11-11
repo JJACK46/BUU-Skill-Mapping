@@ -7,7 +7,7 @@ export interface SkillCollection {
   subject: Partial<Subject>;
   skill: Partial<Skill>;
   skillExpectedLevels: SkillExpectedLevel;
-  gainLevel: number;
+  gainedLevel: number;
   passed: boolean | null;
 }
 

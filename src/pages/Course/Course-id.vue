@@ -27,7 +27,8 @@
       </q-card-section>
     </q-card>
     <!-- Table -->
-    <q-table :rows="enrollments ?? []" row-key="id" :columns="columns" :filter="filterStudent">
+    <q-table v-model:expanded="expanded" :rows="enrollments ?? []" row-key="id" :columns="columns" separator="cell"
+      :filter="filterStudent">
       <template #top>
         <div class="q-pb-sm">
           <span class="text-h6">Course Enrollment</span>
@@ -51,54 +52,80 @@
               </template>
             </q-input>
             <q-btn label="add" unelevated color="primary" />
+            <q-toggle v-model="editMode" label="Evaluation Mode" unelevated color="primary" />
           </div>
         </div>
       </template>
-      <template #body-cell-skills="props">
-        <q-td style="cursor: pointer;">
-          <!-- Popup Skill -->
-          <q-btn class="flex q-mx-auto" flat icon="info" @click="skillDialog = true"> </q-btn>
-          <q-popup-edit v-model="skillDialog">
-            <div class="text-body2 text-bold q-mb-sm">
-              Skill Collection
-              <span class="float-right"><q-btn v-close-popup icon="close" flat size="xs" padding="none" />
-              </span>
-            </div>
+      <template #body="props">
+        <q-tr :props>
+          <q-td key="id" :props>
+            {{ props.row.student.id }}
+          </q-td>
+          <q-td key="name" :props>
+            {{ props.row.student.name }}
+          </q-td>
+          <q-td key="result"
+            :class="`${computeSumResult(props.row.skillCollections as SkillCollection[]).css} text-bold`" :props>
+            {{ computeSumResult(props.row.skillCollections as SkillCollection[]).text }}
+          </q-td>
+          <q-td key="skills" :props="props">
+            <q-btn :icon="props.expand ? 'expand_less' : 'expand_more'" flat padding="none"
+              @click="props.expand = !props.expand" />
+          </q-td>
+        </q-tr>
+        <q-tr v-show="props.expand" :props="props">
+          <q-td colspan="100%" class="bg-secondary">
             <q-table hide-bottom flat dense separator="cell" :columns="([
               {
-                name: 'skill',
+                name: 'name',
                 label: 'Name',
                 field: (s) => s.skillExpectedLevels?.skill?.name,
+                align: 'left'
               },
               {
                 name: 'level',
                 label: 'Gained Level',
-                field: (s) => s.gainLevel ?? 0,
+                field: (s) => s.gainedLevel ?? 0,
+                align: 'left'
               },
               {
-                name: 'expected-level',
+                name: 'exp-level',
                 label: 'Expected Level',
                 field: (s) => s.skillExpectedLevels.expectedLevel,
+                align: 'left'
               },
               {
                 name: 'result',
                 label: 'Result',
                 field: 'passed',
+                align: 'left'
               },
-            ] as QTableColumn<SkillCollection>[])" :rows="props.value || []" row-key="id">
-              <template #body-cell-result="props">
-                <q-td :class="` ${computedResult(props.row).css} text-bold`">
-                  {{ computedResult(props.row).text }}
-                </q-td>
+            ] as QTableColumn<SkillCollection>[])" :rows="props.row.skillCollections || []" row-key="id">
+              <template #body="props">
+                <q-tr :props>
+                  <q-td key="name">
+                    {{ props.row.skillExpectedLevels?.skill?.name }}
+                  </q-td>
+                  <q-td key="level" :class="editMode ? `cursor-pointer bg-accent` : ''">
+                    {{ props.row.gainedLevel ?? 0 }}
+                    <q-popup-edit v-if="editMode" v-model="props.row.gainedLevel" v-slot="scope">
+                      <q-input v-model.number="scope.value" dense autofocus @keyup.enter="() => {
+                        props.row.passed = scope.value >= props.row.skillExpectedLevels.expectedLevel
+                        scope.set()
+                      }" />
+                    </q-popup-edit>
+                  </q-td>
+                  <q-td key="exp-level">
+                    {{ props.row.skillExpectedLevels.expectedLevel }}
+                  </q-td>
+                  <q-td :class="` ${computeResult(props.row).css} text-bold`">
+                    {{ computeResult(props.row).text }}
+                  </q-td>
+                </q-tr>
               </template>
             </q-table>
-          </q-popup-edit>
-        </q-td>
-      </template>
-      <template #body-cell-result="props">
-        <q-td :class="` ${computedResult(props.row).css} text-bold text-right`">
-          {{ computedResult(props.row).text }}
-        </q-td>
+          </q-td>
+        </q-tr>
       </template>
     </q-table>
   </q-page>
@@ -112,27 +139,51 @@ import { CourseService } from 'src/services/course';
 import { Course, CourseEnrollment } from 'src/types/course';
 import { SkillCollection } from 'src/types/skill-collection';
 // import { groupBy } from 'src/utils/sheet2object';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const sheet = ref();
 const filterStudent = ref();
-const skillDialog = ref();
 const courseId = ref(0);
 const route = useRoute();
 const dialogImport = ref(false);
 const enrollments = ref<CourseEnrollment[]>([]);
+const expanded = ref<number[]>([])
+const editMode = ref(false)
 
-function computedResult(sk: SkillCollection) {
-  if (sk.gainLevel === 0 || !sk.gainLevel) {
+watch(
+  () => editMode.value,
+  () => {
+    if (editMode.value) {
+      expanded.value = Array.from({ length: enrollments.value.length }, (_, i) => i + 1);
+    } else {
+      expanded.value = []
+    }
+  }
+)
+
+const computeResult = computed(() => (sk: SkillCollection) => {
+  if (sk.gainedLevel === 0 || !sk.gainedLevel) {
     return { text: 'Not Evaluated', css: 'text-grey' }
   }
-  if (sk.gainLevel >= sk.skillExpectedLevels.expectedLevel) {
-    return { text: 'Passed', class: 'text-green' }
+  if (sk.gainedLevel >= sk.skillExpectedLevels.expectedLevel) {
+    return { text: 'Passed', css: 'text-green' }
   } else {
-    return { text: 'Failed', class: 'text-red' }
+    return { text: 'Failed', css: 'text-red' }
   }
-}
+});
+
+const computeSumResult = computed(() => (sk: SkillCollection[]) => {
+  if (sk.some(s => s.gainedLevel === 0 || !s.gainedLevel)) {
+    return { text: 'Not Evaluated', css: 'text-grey' }
+  }
+  const result = sk.every(s => s.passed)
+  if (result) {
+    return { text: 'Passed', css: 'text-green' }
+  } else {
+    return { text: 'Failed', css: 'text-red' }
+  }
+});
 
 const course = ref<Course>({
   name: '',
@@ -161,23 +212,26 @@ const columns: QTableColumn<CourseEnrollment>[] = [
     name: 'id',
     label: 'Student ID',
     field: (s) => s.student.id,
+    align: 'left'
   },
   {
     name: 'name',
     label: 'Name',
     field: (s) => s.student.name,
+    align: 'left'
+  },
+  {
+    name: 'result',
+    label: 'Summary Result',
+    field: (s) => s.skillCollections.map((s) => s.passed),
+    sortable: true,
+    align: 'left'
   },
   {
     name: 'skills',
     label: 'Skills',
     field: (s) => s.skillCollections,
-    align: 'center'
-  },
-  {
-    name: 'result',
-    label: 'Summary Result',
-    field: (s) => s.skillCollections?.map((i) => i.passed),
-    sortable: true,
+    align: 'left'
   },
 ];
 
