@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skills';
-import { LearningDomain, Skill } from 'src/types/skill';
+import { Skill } from 'src/types/skill';
+import { LearningDomain } from 'src/types/learning-domain';
 
 const props = defineProps<{ visible: boolean; item: Skill | null }>(); // Use Skill instead of any
 const emit = defineEmits(['close-dialog']);

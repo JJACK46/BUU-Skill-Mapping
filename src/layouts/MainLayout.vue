@@ -5,7 +5,6 @@
         <q-btn
           flat
           dense
-          round
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
@@ -21,16 +20,16 @@
           />
           <q-btn :icon="themeIcon" flat padding="none" @click="handleTheme" />
         </div>
-        <q-avatar class="cursor-pointer" @click="() => router.push('/account')">
+        <q-avatar class="cursor-pointer">
           <img
             draggable="false"
             :src="`${
               profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
             } `"
           />
-          <q-menu>
+          <q-menu :offset="[-10, 0]">
             <q-list>
-              <q-item clickable v-close-popup>
+              <q-item clickable v-close-popup @click="router.push('/account')">
                 <q-item-section>
                   <q-item-label class="row items-center q-gutter-x-sm">
                     <q-icon name="person"></q-icon>

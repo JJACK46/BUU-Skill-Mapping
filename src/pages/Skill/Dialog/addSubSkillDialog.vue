@@ -2,7 +2,8 @@
 import { computed, ref, onMounted, watch } from 'vue';
 import skillService from 'src/services/skill';
 import { useSkillStore } from 'src/stores/skills';
-import { LearningDomain, type Skill } from 'src/types/skill'; // Import ประเภท Skill
+import { LearningDomain } from 'src/types/learning-domain'; // Import ประเภท Skill
+import { Skill } from 'src/types/skill';
 
 // ปรับประเภทของ props.item ให้ชัดเจนขึ้น
 const props = defineProps<{ visible: boolean; item: Skill | null }>();

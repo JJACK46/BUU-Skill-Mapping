@@ -1,8 +1,9 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { LearningDomain, type Skill } from 'src/types/skill';
+import { type Skill } from 'src/types/skill';
 import skillService from 'src/services/skill';
 import type { PageParams } from 'src/types/pagination';
+import { LearningDomain } from 'src/types/learning-domain';
 
 export const useSkillStore = defineStore('skill', () => {
   const skills = ref<Skill[]>([]);
@@ -29,7 +30,8 @@ export const useSkillStore = defineStore('skill', () => {
   }
 
   async function fetchSkills() {
-    skillss.value = await skillService.getAll();
+    // skillss.value = await skillService.getAll();
+    skills.value = await skillService.getAll();
   }
 
   async function fetchSkillsPage(params: PageParams) {

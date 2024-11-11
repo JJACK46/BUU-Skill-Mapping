@@ -1,13 +1,21 @@
 <template>
   <div class="row justify-between">
     <div class="row q-gutter-sm">
-      <q-btn v-if="handleImport" label="import" icon="upload" outline></q-btn>
       <q-btn
-        v-if="handleExport"
+        v-if="importBtn"
+        label="import"
+        icon="upload"
+        outline
+        color="primary"
+        @click="$emit('openDialogImport')"
+      />
+      <q-btn
+        v-if="exportBtn"
         label="export"
         icon="cloud_download"
         outline
-      ></q-btn>
+        @click="$emit('openDialogExport')"
+      />
     </div>
     <div class="row q-gutter-sm">
       <q-btn
@@ -124,14 +132,16 @@ const handleChangeFaculty = (v: Faculty) => {
 };
 
 defineProps<{
-  handleImport?: () => void;
-  handleExport?: () => void;
+  importBtn?: true;
+  exportBtn?: true;
   labelSearch?: string;
 }>();
 
 defineEmits<{
   (e: 'openDialog'): void;
   (e: 'enterSearch'): void;
+  (e: 'openDialogImport'): void;
+  (e: 'openDialogExport'): void;
 }>();
 
 const searchText = defineModel('searchText', { default: '' });

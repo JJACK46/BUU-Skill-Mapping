@@ -1,3 +1,5 @@
+import { LearningDomain } from './learning-domain';
+
 export type Skill = {
   id: number;
   name: string;
@@ -7,10 +9,3 @@ export type Skill = {
   children: Skill[];
   techSkills: Skill[];
 };
-
-export enum LearningDomain {
-  Psychomotor = 'Psychomotor', // ทักษะ
-  Affective = 'Affective', // คุณลักษณะบุคคล
-  Cognitive = 'Cognitive', //  ความรู้
-  Ethics = 'Ethics', //  จริยธรรม
-}

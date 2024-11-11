@@ -17,51 +17,25 @@
       </q-card-section>
     </q-card>
 
-    <q-table
-      :rows="rows ?? []"
-      :row-key="(s) => s.student.id"
-      :columns="columns"
-      :filter="filterStudent"
-    >
+    <q-table :rows="rows ?? []" :row-key="(s) => s.student.id" :columns="columns" :filter="filterStudent">
       <template #top>
         <div class="q-pb-sm">
           <span class="text-h6">Course Enrollment</span>
         </div>
         <div class="flex justify-between fit">
           <div class="row q-gutter-x-sm">
-            <q-btn
-              label="import"
-              icon="upload"
-              outline
-              color="primary"
-              @click="dialogImport = true"
-            >
-              <DialogForm
-                title="Import Students"
-                v-model="dialogImport"
-                @save="handleImport"
-              >
+            <q-btn label="import" icon="upload" outline color="primary" @click="dialogImport = true">
+              <DialogForm title="Import Students" v-model="dialogImport" @save="handleImport">
                 <template #body>
                   <q-separator />
                   <TableSheetJS text="import" ref="sheet" />
                 </template>
               </DialogForm>
             </q-btn>
-            <q-btn
-              label="export"
-              icon="cloud_download"
-              outline
-              color="primary"
-            />
+            <q-btn label="export" icon="cloud_download" outline color="primary" />
           </div>
           <div class="row q-gutter-x-sm">
-            <q-input
-              outlined
-              dense
-              debounce="200"
-              v-model="filterStudent"
-              placeholder="Search"
-            >
+            <q-input outlined dense debounce="200" v-model="filterStudent" placeholder="Search">
               <template #append>
                 <q-icon name="search" />
               </template>
@@ -76,57 +50,39 @@
           <q-popup-edit v-model="skillDialog">
             <div class="text-body2 q-mb-sm">
               Skill Collection
-              <span class="float-right"
-                ><q-btn
-                  v-close-popup
-                  icon="close"
-                  flat
-                  size="xs"
-                  padding="none"
-                />
+              <span class="float-right"><q-btn v-close-popup icon="close" flat size="xs" padding="none" />
               </span>
             </div>
-            <q-table
-              hide-bottom
-              flat
-              dense
-              separator="cell"
-              :columns="[
-                {
-                  name: 'id',
-                  label: 'ID',
-                  field: (s) => s.skill.id,
-                },
-                {
-                  name: 'skill',
-                  label: 'Name',
-                  field: (s) => s.skill.name,
-                },
-                {
-                  name: 'score',
-                  label: 'Score',
-                  field: (s) => s.skill.score,
-                },
-                {
-                  name: 'level',
-                  label: 'Level',
-                  field: 'level',
-                },
-                {
-                  name: 'result',
-                  label: 'Result',
-                  field: 'passed',
-                },
-              ]"
-              :rows="props.value"
-              row-key="id"
-            >
+            <q-table hide-bottom flat dense separator="cell" :columns="[
+              {
+                name: 'id',
+                label: 'ID',
+                field: (s) => s.skill.id,
+              },
+              {
+                name: 'skill',
+                label: 'Name',
+                field: (s) => s.skill.name,
+              },
+              {
+                name: 'score',
+                label: 'Score',
+                field: (s) => s.skill.score,
+              },
+              {
+                name: 'level',
+                label: 'Level',
+                field: 'level',
+              },
+              {
+                name: 'result',
+                label: 'Result',
+                field: 'passed',
+              },
+            ]" :rows="props.value" row-key="id">
               <template #body-cell-result="props">
-                <q-td
-                  :class="` ${
-                    props.value ? 'text-green' : 'text-red'
-                  } text-bold`"
-                >
+                <q-td :class="` ${props.value ? 'text-green' : 'text-red'
+                  } text-bold`">
                   {{ props.value ? 'Passed' : 'Failed' }}
                 </q-td>
               </template>
@@ -135,11 +91,8 @@
         </q-td>
       </template>
       <template #body-cell-result="props">
-        <q-td
-          :class="` ${
-            props.value === 'Passed' ? 'text-green' : 'text-red'
-          } text-bold text-right `"
-        >
+        <q-td :class="` ${props.value === 'Passed' ? 'text-green' : 'text-red'
+          } text-bold text-right `">
           {{ props.value === 'Passed' ? 'Passed' : 'Failed' }}
         </q-td>
       </template>
@@ -154,7 +107,7 @@ import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { CourseService } from 'src/services/course';
 import { Course, CourseEnrollment } from 'src/types/course';
 import { SkillCollection } from 'src/types/skill-collection';
-import { groupBy } from 'src/utils/sheet2object';
+// import { groupBy } from 'src/utils/sheet2object';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -224,47 +177,11 @@ const columns: QTableColumn[] = [
 
 const handleImport = () => {
   const sheetItems = sheet.value.items;
-  if (!course.value.id) return;
-  if (sheetItems[0].skill_id) {
-    const groupedByStudentID = groupBy(
-      sheetItems,
-      (i: { student_id: string }) => i.student_id
-    );
 
-    course.value.courseEnrollments = Object.entries(groupedByStudentID).map(
-      ([student_id, items]) => {
-        return {
-          student: { id: Number(student_id) },
-          skillCollection: items.map(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (item: any) =>
-              ({
-                skill: { id: Number(item.skill_id) },
-                subject: { id: course.value.subject?.id },
-                level: item.gain_level,
-                score: 0,
-                passed: item.result === 1 ? true : false,
-              } as unknown as SkillCollection)
-          ),
-        };
-      }
-    );
-  } else {
-    course.value.courseEnrollments = sheetItems.map(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (item: any) =>
-        ({
-          student: { id: Number(item.student_id) },
-        } as unknown as SkillCollection)
-    );
-  }
-
-  CourseService.postEnrollment(
-    course.value.id,
-    course.value.courseEnrollments
-  ).then((res) => {
-    rows.value = res;
-    dialogImport.value = false;
+  const studentListId = sheetItems.map((args: { id: string }) => {
+    return String(args.id);
   });
+
+  CourseService.importStudents(courseId.value, studentListId);
 };
 </script>

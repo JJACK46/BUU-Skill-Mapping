@@ -1,7 +1,6 @@
 <template>
   <q-card
-    id="course-card"
-    class="col-grow col-sm-auto"
+    class="col-grow col-sm-auto hover-card"
     :key="course.id"
     style="width: 350px"
   >
@@ -12,7 +11,7 @@
         </q-item-section>
         <q-item-section avatar>
           <q-btn icon="more_vert" flat padding="none">
-            <q-popup-proxy>
+            <q-menu>
               <q-list>
                 <q-item
                   clickable
@@ -27,16 +26,16 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-            </q-popup-proxy>
+            </q-menu>
           </q-btn>
         </q-item-section>
       </q-item>
     </q-card-section>
-    <q-card-section style="text-indent: 1rem" class="text-body2 q-pt-none">
-      {{ course.courseEnrollments?.length ?? 0 }} Students
+    <q-card-section class="text-body2 q-pt-none">
+      {{ course.description }}
     </q-card-section>
     <q-separator />
-    <q-card-actions class="text-body1 q-pa-md" align="between">
+    <q-card-actions class="text-body1 q-pa-md text-bold" align="between">
       <div :class="`text-${course.active ? 'positive' : 'negative'}`">
         {{ course.active ? 'Active' : 'Inactive' }}
       </div>
@@ -64,13 +63,3 @@ defineEmits<{
   (e: 'handle-delete', id: number): void;
 }>();
 </script>
-
-<style scoped lang="scss">
-#course-card {
-  transition: all 0.15s ease-in-out;
-  border: 2px solid transparent;
-}
-#course-card:hover {
-  border: 2px solid $accent-select;
-}
-</style>
