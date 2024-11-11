@@ -39,7 +39,7 @@
               <DialogForm title="Import Students" v-model="dialogImport" @save="handleImport">
                 <template #body>
                   <q-separator />
-                  <TableSheetJS text="import" ref="sheet" />
+                  <TableSheetJS ref="sheet" @download-template="downloadTemplate" />
                 </template>
               </DialogForm>
             </q-btn>
@@ -161,6 +161,10 @@ watch(
     }
   }
 )
+
+function downloadTemplate() {
+  alert('not implemented yet')
+}
 
 const computeResult = computed(() => (sk: SkillCollection) => {
   if (sk.gainedLevel === 0 || !sk.gainedLevel) {

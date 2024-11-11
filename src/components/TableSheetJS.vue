@@ -79,8 +79,8 @@ const getRowsCols = (data: DataSet, sheetName: string): RowCol => {
 
 const makeDisplay =
   (col: number): RowCB =>
-  (row: Row) =>
-    `<span
+    (row: Row) =>
+      `<span
   style="user-select: none; display: block"
   onblur="endEdit(event)" ondblclick="startEdit(event)"
   position="${Math.floor(cell++ / columns.value.length)}.${col}"
@@ -174,29 +174,63 @@ defineExpose({
 });
 
 defineProps<{
-  text: string;
+  hasTemplate?: true;
 }>();
+
+
+defineEmits<{
+  downloadTemplate: []
+}>()
+
+const dropZoneRef = ref<HTMLElement | null>(null);
+const isOverDropZone = ref(false);
+
+// Function to handle file drop
+async function onDrop(event: DragEvent) {
+  event.preventDefault();
+  isOverDropZone.value = false; // Reset drop zone state
+  const files = event.dataTransfer?.files;
+  if (!files || files.length === 0) return;
+
+  const file = files[0];
+  await importAB(await file.arrayBuffer(), file.name);
+}
+
+// Handle the drag events
+function onDragEnter(event: DragEvent) {
+  event.preventDefault();
+  isOverDropZone.value = true;
+}
+
+function onDragOver(event: DragEvent) {
+  event.preventDefault();
+}
+
+function onDragLeave(event: DragEvent) {
+  event.preventDefault();
+  const relatedTarget = event.relatedTarget as Node | null;
+  if (!dropZoneRef.value?.contains(relatedTarget)) {
+    isOverDropZone.value = false;
+  }
+}
+
+
 </script>
 
 <template>
-  <div class="flex q-my-md">
-    <div class="q-mx-auto" v-if="!currSheet">
-      <p class="text-h6">{{ text }} by upload file .csv | .xlsx | .xlsb</p>
-      <label
-        for="upload"
-        class="q-pa-sm cursor-pointer rounded-borders bg-cyan text-white q-mx-auto flex flex-center"
-        style="width: 100px"
-      >
-        <q-icon name="upload" class="q-mr-xs"></q-icon>
-        <span class="text-weight-medium">UPLOAD</span>
+  <div class="text-center" v-show="!currSheet">
+    <div class="text-blue-10 cursor-pointer q-my-md" @click="$emit('downloadTemplate')">
+      Example Template <q-icon name="download" />
+    </div>
+    <div ref="dropZoneRef" style="border: 1px dashed #ccc;" :class="isOverDropZone ? 'bg-blue-1' : ''"
+      @dragenter="onDragEnter" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop" id="dropzone">
+      <label for="upload" class="fit cursor-pointer">
+        <div class="text-body1">
+          <div>Drop item here or click</div>
+          <q-icon name="upload" class="q-mr-xs q-mt-sm"></q-icon>
+        </div>
       </label>
-      <input
-        id="upload"
-        class="hidden"
-        type="file"
-        @change="importFile"
-        accept=".csv,.xlsx,.xlsb"
-      />
+      <input id="upload" class="hidden" type="file" @change="importFile" accept=".csv,.xlsx,.xlsb" />
     </div>
     <!-- <div v-else class="q-mx-auto">
       <q-btn-dropdown color="secondary" label="Export" v-if="currFileName">
@@ -217,15 +251,9 @@ defineProps<{
     </div> -->
   </div>
 
-  <div class="flex flex-center" v-if="currSheet.length > 0">
-    <q-select
-      v-model="currSheet"
-      :options="sheets"
-      outlined
-      @update:model-value="selectSheet"
-      label="Select Sheet"
-      style="width: 300px"
-    ></q-select>
+  <div class="flex flex-center" v-show="currSheet.length > 0">
+    <q-select v-model="currSheet" :options="sheets" outlined @update:model-value="selectSheet" label="Select Sheet"
+      style="width: 300px"></q-select>
     <!-- <q-btn
       outlined
       class="cursor-pointer no-shadow"
@@ -237,17 +265,19 @@ defineProps<{
       {{ sheet }}
     </q-btn> -->
   </div>
-  <q-table
-    v-if="currSheet"
-    class="q-mt-sm"
-    :rows="rows.slice(1)"
-    :columns="buildHeaderItems()"
-    row-key="id"
-    hide-bottom
-    flat
-  >
+  <q-table v-show="currSheet" class="q-mt-sm" :rows="rows.slice(1)" :columns="buildHeaderItems()" row-key="id"
+    hide-bottom flat>
     <template #top>
       <div class="text-h6">Preview : {{ currSheet }}</div>
     </template>
   </q-table>
 </template>
+
+<style scoped lang="scss">
+#dropzone {
+  margin-top: 1rem;
+  padding: 5rem;
+  border: 2px solid $primary;
+  border-radius: 6px;
+}
+</style>
