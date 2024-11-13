@@ -1,27 +1,21 @@
 import { defineStore } from 'pinia';
-import AuthService from 'src/services/auth';
-import { Payload } from 'src/types/payload';
+import { UserService } from 'src/services/user';
+import { User } from 'src/types/user';
 
 export const useUserStore = defineStore('user', {
-  state: () => ({
-    profile: {} as Payload | null,
-  }),
+    state: () => ({
+        form: {} as User,
+        dialogState: false
+    }),
 
-  getters: {
-    isSignIn: (s) => !!s.profile,
-  },
-
-  actions: {
-    async loginGoogle() {
-      return AuthService.loginGoogle();
+    getters: {
     },
-
-    async getProfile() {
-      return (this.profile = await AuthService.fetchProfile());
+    actions: {
+        toggleDialog() {
+            this.dialogState = !this.dialogState
+        },
+        async handleSave() {
+            await UserService.createOne(this.form)
+        }
     },
-
-    async logout() {
-      return await AuthService.logout();
-    },
-  },
 });

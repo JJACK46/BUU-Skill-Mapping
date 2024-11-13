@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 import CourseCard from 'src/components/CourseCard.vue';
-import { useUserStore } from 'src/stores/user';
+import { useAuthStore } from 'src/stores/auth';
 import { Course } from 'src/types/course';
 
-const user = useUserStore();
+const user = useAuthStore();
 
 defineOptions({
   name: 'IndexPage',
