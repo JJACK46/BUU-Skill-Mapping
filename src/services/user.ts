@@ -12,7 +12,7 @@ export class UserService {
         params,
       }
     );
-    return res;
+    return res.data.data; //data.users
   };
 
   static async getAll() {
