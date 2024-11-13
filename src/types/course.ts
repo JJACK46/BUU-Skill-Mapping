@@ -15,6 +15,7 @@ export interface Course {
 }
 export interface CourseEnrollment {
   id?: number;
+  course: Partial<Course>;
   student: Partial<Student>;
   skillCollections: SkillCollection[];
 }
