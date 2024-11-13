@@ -2,7 +2,8 @@
   <q-page padding>
     <PageHeader v-model:search-text="search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <q-table :rows="users" :columns="columns" row-key="name" :loading="loading" :filter="search" wrap-cells>
+    <q-table separator="cell" :rows="users" :columns="columns" row-key="name" :loading="loading" :filter="search"
+      wrap-cells>
     </q-table>
     <DialogForm v-model="dialogState" title="New User" @save="store.handleSave">
       <template #body>

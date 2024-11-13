@@ -4,7 +4,7 @@
       @open-dialog-import="importDialog = true"></PageHeader>
     <q-separator class="q-my-md" />
     <!-- Table -->
-    <q-table :rows="store.students" row-key="id" :loading="store.loading" :columns="studentColumns">
+    <q-table separator="cell" :rows="store.students" row-key="id" :loading="store.loading" :columns="studentColumns">
       <template #body-cell-info="props">
         <q-td>
           <q-btn icon="info" padding="none" flat @click="handleClickInfo(props.row.id)"></q-btn>

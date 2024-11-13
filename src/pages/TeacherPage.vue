@@ -3,7 +3,7 @@
     <PageHeader v-model:search-text="store.search" @open-dialog="store.dialogState = true"
       @open-filter="handleDialogFilter" />
     <q-separator class="q-my-md" />
-    <q-table :rows="store.teachers" row-key="name" :loading="store.loading" :columns="teacherColumns"
+    <q-table separator="cell" :rows="store.teachers" row-key="name" :loading="store.loading" :columns="teacherColumns"
       :filter="store.search" v-model:pagination="paginationInit" @update:pagination="onRequest">
     </q-table>
     <DialogForm title="New Teacher" v-model="store.dialogState" @save="store.handleSave">

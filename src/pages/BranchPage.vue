@@ -13,7 +13,7 @@
           :rules="[requireField, onlyAlphabet]" />
       </template>
     </DialogForm>
-    <q-table :rows="branches" row-key="id" :columns="columns" wrap-cells></q-table>
+    <q-table separator="cell" :rows="branches" row-key="id" :columns="columns" wrap-cells></q-table>
   </q-page>
 </template>
 
