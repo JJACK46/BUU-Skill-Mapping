@@ -15,17 +15,24 @@
             <template #after>
               <q-tab-panels v-model="innerTab" animated transition-next="slide-up" transition-prev="slide-down">
                 <q-tab-panel name="main" class="q-gutter-y-md">
-                  <q-input dense outlined v-model="store.form.thaiName" label="Name" />
-                  <q-input dense outlined v-model="store.form.engName" label="English Name" />
-                  <q-input dense type="textarea" outlined v-model="store.form.description" label="Description" />
-                  <q-input dense outlined v-model="store.form.thaiDegreeName" label="Degree Name" />
-                  <q-input dense outlined v-model="store.form.engDegreeName" label="English Degree Name" />
-                  <q-input dense type="number" outlined v-model="store.form.period" label="Period" />
-                  <q-input dense type="number" outlined v-model="store.form.minimumGrade" label="Minimum Grade" />
+                  <q-input dense outlined v-model="store.form.thaiName" label="Name"
+                    :rules="[requireField, onlyAlphabet]" />
+                  <q-input dense outlined v-model="store.form.engName" label="English Name"
+                    :rules="[requireField, onlyAlphabet]" />
+                  <q-input dense type="textarea" outlined v-model="store.form.description" label="Description"
+                    :rules="[requireField]" />
+                  <q-input dense outlined v-model="store.form.thaiDegreeName" label="Degree Name"
+                    :rules="[requireField, onlyAlphabet]" />
+                  <q-input dense outlined v-model="store.form.engDegreeName" label="English Degree Name"
+                    :rules="[requireField, onlyAlphabet]" />
+                  <q-input dense type="number" outlined v-model="store.form.period" label="Period"
+                    :rules="[requireField]" />
+                  <q-input dense type="number" outlined v-model="store.form.minimumGrade" label="Minimum Grade"
+                    :rules="[requireField]" />
                 </q-tab-panel>
                 <q-tab-panel name="subjects">
                   <q-select dense outlined v-model="store.form.subjects" :options="subjects" label="Subjects" use-chips
-                    option-label="name" multiple></q-select>
+                    option-label="name" multiple :rules="[requireField]"></q-select>
                 </q-tab-panel>
               </q-tab-panels>
 
@@ -70,6 +77,7 @@ import { SubjectService } from 'src/services/subject';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { Curriculum } from 'src/types/curriculum';
 import { Subject } from 'src/types/subject';
+import { onlyAlphabet, requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 

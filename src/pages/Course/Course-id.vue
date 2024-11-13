@@ -86,7 +86,7 @@
           </q-td>
         </q-tr>
         <q-tr v-show="props.expand" :props="props">
-          <q-td colspan="100%" class="bg-secondary">
+          <q-td colspan="100%" class="bg-gray">
             <q-table hide-bottom flat dense separator="cell" :columns="([
               {
                 name: 'name',
@@ -119,15 +119,10 @@
                     {{ props.row.skillExpectedLevels?.skill?.name }}
                   </q-td>
                   <q-td key="level" :class="editMode ? `cursor-pointer bg-amber-2` : ''">
-                    <q-select v-model="props.row.gainedLevel" v-if="editMode" dense outlined
-                      :options="[1, 2, 3, 4, 5]"></q-select>
+                    <q-select v-model="props.row.gainedLevel" v-if="editMode" dense outlined autofocus
+                      :options="[1, 2, 3, 4, 5]"
+                      @update:model-value="() => props.row.passed = props.row.gainedLevel >= props.row.skillExpectedLevels.expectedLevel"></q-select>
                     <span v-else>{{ props.row.gainedLevel ?? 0 }}</span>
-                    <q-popup-edit v-if="editMode" v-model="props.row.gainedLevel" v-slot="scope">
-                      <q-input v-model.number="scope.value" dense autofocus @keyup.enter="() => {
-                        props.row.passed = scope.value >= props.row.skillExpectedLevels.expectedLevel
-                        scope.set()
-                      }" />
-                    </q-popup-edit>
                   </q-td>
                   <q-td key="exp-level">
                     {{ props.row.skillExpectedLevels.expectedLevel }}
