@@ -11,14 +11,26 @@
     <q-card>
       <q-card-section>
         <div class="text-h6">{{ course.name }}</div>
-        <div class="text-body2">
-          <div>Course Description: {{ course.description }}</div>
-          <div>Subject ID: {{ course.subject?.id }}</div>
-          <div>Subject Name: {{ course.subject?.name }}</div>
-          <div>Subject Description: {{ course.subject?.description }}</div>
+        <div class="text-body2" style="line-height: 1.5;">
+          <div>Course Description: <span class="text-primary">
+              {{ course.description }}
+            </span> </div>
+          <div>Subject ID: <span class="text-primary">
+              {{ course.subject?.id }}
+            </span> </div>
+          <div>Subject Name:
+            <span class="text-primary">
+              {{ course.subject?.name }}
+            </span>
+          </div>
+          <div>Subject Description:
+            <span class="text-primary">
+              {{ course.subject?.description }}
+            </span>
+          </div>
           <div>Subject Skills:
-            <ul>
-              <li v-for="s in course.subject?.skillExpectedLevels" :key="s.id">
+            <ul class="q-ma-none">
+              <li v-for="s in course.subject?.skillExpectedLevels" :key="s.id" class="text-primary">
                 {{ s.skill?.name }} - {{ s.expectedLevel }}
               </li>
             </ul>
@@ -106,8 +118,10 @@
                   <q-td key="name">
                     {{ props.row.skillExpectedLevels?.skill?.name }}
                   </q-td>
-                  <q-td key="level" :class="editMode ? `cursor-pointer bg-accent` : ''">
-                    {{ props.row.gainedLevel ?? 0 }}
+                  <q-td key="level" :class="editMode ? `cursor-pointer bg-amber-2` : ''">
+                    <q-select v-model="props.row.gainedLevel" v-if="editMode" dense outlined
+                      :options="[1, 2, 3, 4, 5]"></q-select>
+                    <span v-else>{{ props.row.gainedLevel ?? 0 }}</span>
                     <q-popup-edit v-if="editMode" v-model="props.row.gainedLevel" v-slot="scope">
                       <q-input v-model.number="scope.value" dense autofocus @keyup.enter="() => {
                         props.row.passed = scope.value >= props.row.skillExpectedLevels.expectedLevel

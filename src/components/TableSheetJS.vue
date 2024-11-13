@@ -227,7 +227,7 @@ function onDragLeave(event: DragEvent) {
       <label for="upload" class="fit cursor-pointer">
         <div class="text-body1">
           <div>Drop item here or click</div>
-          <q-icon name="upload" class="q-mr-xs q-mt-sm"></q-icon>
+          <q-icon name="upload_file" class="q-mr-xs q-mt-sm"></q-icon>
         </div>
       </label>
       <input id="upload" class="hidden" type="file" @change="importFile" accept=".csv,.xlsx,.xlsb" />
