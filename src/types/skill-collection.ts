@@ -1,14 +1,17 @@
 import { Skill } from './skill';
+import { SkillExpectedLevel } from './skill-exp-lvl';
 import { Subject } from './subject';
 
 export interface SkillCollection {
   id?: number;
   subject: Partial<Subject>;
   skill: Partial<Skill>;
-  expectedLevel: number; //max 6
-  gainLevel: number; //gain level
+  skillExpectedLevels: SkillExpectedLevel;
+  gainedLevel: number;
   passed: boolean | null;
 }
+
+
 // export enum SkillLevel {
 //   Cognitive1 = '1 - Remember',
 //   Cognitive2 = '2 - Understand',

@@ -105,7 +105,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Student Management',
-        component: () => import('pages/StudentPage.vue'),
+        component: () => import('src/pages/Student/StudentPage.vue'),
+      },
+      {
+        path: ':id',
+        name: 'Student Detail',
+        component: () => import('src/pages/Student/Student-id.vue'),
       },
     ],
   },

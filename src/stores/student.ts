@@ -24,6 +24,7 @@ export const useStudentStore = defineStore('student', () => {
     skillCollection: [],
     socials: null,
     branch: null,
+    courseEnrollment: []
   });
 
   const students = ref<Student[]>([]);

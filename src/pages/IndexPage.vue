@@ -1,16 +1,16 @@
 <template>
-  <q-page class="" padding>
-    <div class="text-h4">Welcome {{ user.profile?.email }}</div>
+  <q-page padding>
+    <div class="text-h4">Sawasdee {{ user.profile?.email }}</div>
     <q-separator class="q-my-md" />
-    <section name="pinCourses">
-      <div class="text-h6 q-pb-sm">Pin Course:</div>
+    <section name="courses">
+      <div class="text-h6 q-mb-md"><q-icon name="push_pin"></q-icon> Courses</div>
       <div class="row q-gutter-lg">
         <CourseCard v-for="index in 3" :key="index" :course="({} as Course)" />
       </div>
     </section>
-    <q-separator class="q-my-lg" />
-    <section name="news">
-      <div class="text-h6 q-pb-sm">Skill Collections:</div>
+    <q-separator class="q-my-md" />
+    <section name="skills">
+      <div class="text-h6 q-mb-md">Skill Collections</div>
       <div class="row q-gutter-lg">
         <q-chip v-for="index in 14" :key="index" bordered flat>
           <q-card-section> skill {{ index }} </q-card-section>
@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 import CourseCard from 'src/components/CourseCard.vue';
-import { useUserStore } from 'src/stores/user';
+import { useAuthStore } from 'src/stores/auth';
 import { Course } from 'src/types/course';
 
-const user = useUserStore();
+const user = useAuthStore();
 
 defineOptions({
   name: 'IndexPage',
