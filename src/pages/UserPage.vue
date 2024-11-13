@@ -1,9 +1,10 @@
 <template>
   <q-page padding>
-    <PageHeader v-model:search-text="search" @open-dialog="dialogState = true" />
+    <PageHeader v-model:search-text="store.search" @open-dialog="dialogState = true" />
     <q-separator class="q-my-md" />
-    <q-table separator="cell" :rows="users" :columns="columns" row-key="name" :loading="loading" :filter="search"
-      wrap-cells>
+    <q-table class="q-animate--fade" :filter="store.search" v-model:pagination="store.pagination"
+      @update:pagination="store.fetchData" separator="cell" :rows="users" :columns="columns" row-key="name"
+      :loading="global.getLoadingState" wrap-cells>
     </q-table>
     <DialogForm v-model="dialogState" title="New User" @save="store.handleSave">
       <template #body>
@@ -22,6 +23,7 @@ import DialogForm from 'src/components/DialogForm.vue';
 import PageHeader from 'src/components/PageHeader.vue';
 import { RoleService } from 'src/services/role';
 import { UserService } from 'src/services/user';
+import { useGlobalStore } from 'src/stores/global';
 import { useUserStore } from 'src/stores/user';
 import { Role } from 'src/types/role';
 import { requireField } from 'src/utils/field-rules';
@@ -31,10 +33,9 @@ const store = useUserStore()
 const dialogState = ref(false);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const search = ref();
 const roles = ref<Role[]>([])
 const users = ref([]);
-const loading = ref(false);
+const global = useGlobalStore()
 
 const columns = ref(<QTableColumn[]>[
   {
@@ -66,8 +67,6 @@ useMeta({
   title: title.value,
 });
 onMounted(async () => {
-  loading.value = true;
   users.value = await UserService.getAll();
-  loading.value = false;
 });
 </script>

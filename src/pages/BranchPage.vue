@@ -13,7 +13,8 @@
           :rules="[requireField, onlyAlphabet]" />
       </template>
     </DialogForm>
-    <q-table separator="cell" :rows="branches" row-key="id" :columns="columns" wrap-cells></q-table>
+    <q-table :loading="global.getLoadingState" :pagination="store.pagination" class="q-animate--fade" separator="cell"
+      :rows="branches" row-key="id" :columns="columns" wrap-cells></q-table>
   </q-page>
 </template>
 
@@ -24,12 +25,14 @@ import PageHeader from 'src/components/PageHeader.vue';
 import { BranchService } from 'src/services/branches';
 import { FacultyService } from 'src/services/faculty';
 import { useBranchStore } from 'src/stores/branch';
+import { useGlobalStore } from 'src/stores/global';
 import { Branch } from 'src/types/branch';
 import { Faculty } from 'src/types/faculty';
 import { onlyAlphabet, requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+const global = useGlobalStore()
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const search = ref();

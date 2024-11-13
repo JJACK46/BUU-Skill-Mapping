@@ -40,7 +40,7 @@
           </q-splitter>
         </template>
       </DialogForm>
-      <q-card class="q-pa-md" v-for="(c, index) in curriculums" bordered flat :key="c.id">
+      <q-card class="q-pa-md q-animate--fade" v-for="(c, index) in curriculums" bordered flat :key="c.id">
         <q-card-section>
           <div class="row justify-between">
             <span class="text-h6">
