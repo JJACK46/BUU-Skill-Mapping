@@ -4,7 +4,8 @@
       @open-dialog-import="importDialog = true"></PageHeader>
     <q-separator class="q-my-md" />
     <!-- Table -->
-    <q-table separator="cell" :rows="store.students" row-key="id" :loading="store.loading" :columns="studentColumns">
+    <q-table class="q-animate--fade" separator="cell" :rows="store.students" row-key="id"
+      :loading="global.getLoadingState" :columns="studentColumns">
       <template #body-cell-info="props">
         <q-td>
           <q-btn icon="info" padding="none" flat @click="handleClickInfo(props.row.id)"></q-btn>
@@ -47,8 +48,6 @@ import { QTableColumn, useMeta } from 'quasar';
 import { computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStudentStore } from 'src/stores/student';
-// import SearchData from 'src/components/SearchData.vue';
-// import AddButton from 'src/components/AddButton.vue';
 import { requireField } from 'src/utils/field-rules';
 import { BranchService } from 'src/services/branches';
 import { Branch } from 'src/types/branch';
@@ -56,7 +55,9 @@ import DialogForm from 'src/components/DialogForm.vue';
 import { StudentService } from 'src/services/student';
 import PageHeader from 'src/components/PageHeader.vue';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
+import { useGlobalStore } from 'src/stores/global';
 
+const global = useGlobalStore()
 const router = useRouter()
 const importDialog = ref(false);
 const search = ref('');
@@ -64,7 +65,6 @@ const store = useStudentStore();
 const branches = ref<Branch[]>([]);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-// const isCreate = ref(false);
 const addDialog = ref(false);
 const studentColumns: QTableColumn[] = [
   {

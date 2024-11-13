@@ -1,7 +1,7 @@
 <template>
   <q-dialog v-model="dialogState" :full-width="fullWidth">
     <q-card class="dialog-form" :style="{ width: width ? width : '500px' }">
-      <q-form autofocus>
+      <q-form autofocus id="global-form">
         <q-card-section>
           <div class="text-h6 ">{{ title }}</div>
           <q-separator class="q-my-md"></q-separator>

@@ -48,8 +48,8 @@
       </template>
     </DialogForm>
     <!-- Table -->
-    <q-table class="q-mt-md" :rows="store.getSubjects" :filter="search" :columns="columns" row-key="id" wrap-cells
-      separator="cell">
+    <q-table :loading="global.getLoadingState" :pagination="store.pagination" class="q-mt-md q-animate--fade"
+      :rows="store.getSubjects" :filter="search" :columns="columns" row-key="id" wrap-cells separator="cell">
       <template #body-cell-description="props">
         <q-td style="max-width: 300px">
           {{ props.value }}
@@ -94,8 +94,9 @@ import DialogForm from 'src/components/DialogForm.vue';
 import { useSubjectStore } from 'src/stores/subject';
 import { requireField } from 'src/utils/field-rules';
 import { SubjectType } from 'src/types/subject';
-// import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
+import { useGlobalStore } from 'src/stores/global';
 
+const global = useGlobalStore()
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const search = ref('');

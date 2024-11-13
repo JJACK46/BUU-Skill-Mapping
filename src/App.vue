@@ -34,7 +34,7 @@ useMeta({
   // meta tags
   meta: {
     description: { name: 'description', content: 'Page 1' },
-    keywords: { name: 'keywords', content: 'Quasar website' },
+    keywords: { name: 'BUU', content: 'BUU Skill Mapping website' },
     equiv: {
       'http-equiv': 'Content-Type',
       content: 'text/html; charset=UTF-8',
@@ -131,6 +131,7 @@ useMeta({
   }
 
   .q-table {
+
     .q-table__top,
     thead tr:first-child th {
       background-color: $primary-dark;
@@ -161,6 +162,7 @@ useMeta({
   transition: all 0.15s ease-in-out;
   border: 2px solid transparent;
 }
+
 .hover-card:hover {
   border: 2px solid $accent-select;
 }

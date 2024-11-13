@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { QTableProps } from 'quasar';
 import SkillService from 'src/services/skill';
 import { SubjectService } from 'src/services/subject';
 import { Skill } from 'src/types/skill';
@@ -13,6 +14,7 @@ export const useSubjectStore = defineStore('subject', {
     tabsModel: 'req',
     editMode: false,
     dialogTitle: 'New Subject',
+    pagination: { 'rowsPerPage': 10 } as QTableProps['pagination']
   }),
 
   getters: {
