@@ -31,6 +31,12 @@ export const useUserStore = defineStore('user', () => {
       id: '',
       name: '',
     },
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    gender: '',
+    googleId: '',
+    phone: '',
   });
 
   const isSignIn = computed(() => !!profile.value);
@@ -48,6 +54,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const users = ref<User[]>([]);
+  const editedUser = ref<User | null>(null);
   const totalUsers = ref(0);
 
   async function fetchUserPage(params: PageParams) {
@@ -55,10 +62,14 @@ export const useUserStore = defineStore('user', () => {
     users.value = res.data.data;
     totalUsers.value = res.data.total;
   }
-  async function fetchUser() {
+  async function fetchUsers() {
     const res = await UserService.getAll();
     users.value = res.data.data;
     totalUsers.value = res.data.total;
+  }
+  async function fetchUser(id: number) {
+    editedUser.value = await UserService.getOne(+id);
+    console.log(editedUser.value);
   }
   // Getters
   // async function fetchData(
@@ -103,11 +114,13 @@ export const useUserStore = defineStore('user', () => {
     pageParams,
     formUser,
     users,
+    editedUser,
     loginGoogle,
     getProfile,
     logout,
     handleSave,
     fetchUserPage,
+    fetchUsers,
     fetchUser,
   };
 });

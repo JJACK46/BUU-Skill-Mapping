@@ -35,6 +35,12 @@ const formUser = reactive<User>({
     id: '',
     name: '',
   },
+  firstName: '',
+  middleName: '',
+  lastName: '',
+  gender: '',
+  googleId: '',
+  phone: '',
 });
 const users = ref([]);
 const loading = ref(false);
