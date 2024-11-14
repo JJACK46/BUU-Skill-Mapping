@@ -3,9 +3,6 @@ import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
 export class UserService {
-  static deleteOne(userId: number) {
-    throw new Error('Method not implemented.');
-  }
   static path = 'users';
 
   static async getAll(pag?: PageParams) {
@@ -27,11 +24,11 @@ export class UserService {
   }
 
   static async updateOne(obj: Partial<User>) {
-    const res = await api.patch(`${this.path}/${obj.id}`, obj);
+    const res = await api.patch(`${this.path}/${obj.id}, obj`);
     return res.data;
   }
 
-  static async removeOne(id: number) {
+  static async removeOne(id: string) {
     const res = await api.delete(`${this.path}/${id}`);
     return res.data;
   }
