@@ -69,7 +69,7 @@ const handlePopup = (id: number) => {
   }).onOk(() => store.removeOne(id));
 };
 
-onMounted(async () => await store.setup);
+onMounted(store.setup);
 
 const title = computed(() => route.matched[1].name as string);
 useMeta({
