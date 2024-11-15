@@ -21,12 +21,12 @@
                 <q-item>
                   <q-item-section avatar>
                     <q-icon name="person" class="q-mr-sm" /></q-item-section>
-                  <q-item-section>Name</q-item-section>
+                  <q-item-section>{{ usr.profile?.name }}</q-item-section>
                 </q-item>
                 <q-item>
                   <q-item-section avatar>
-                    <q-icon name="lock" class="q-mr-sm" /></q-item-section>
-                  <q-item-section>Role</q-item-section>
+                    <q-icon name="build_circle" class="q-mr-sm" /></q-item-section>
+                  <q-item-section>{{ usr.profile?.role }}</q-item-section>
                 </q-item>
               </q-list>
             </q-card-section>
