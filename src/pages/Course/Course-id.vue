@@ -48,10 +48,9 @@
         <div class="flex justify-between fit">
           <div class="row q-gutter-x-sm">
             <q-btn label="import" icon="upload" outline color="primary" @click="dialogImport = true">
-              <DialogForm title="Import Students" v-model="dialogImport" @save="handleImport">
+              <DialogForm title="Import Students" v-model="dialogImport" @save="handleImport" full-width>
                 <template #body>
-                  <q-separator />
-                  <TableSheetJS ref="sheet" @download-template="downloadTemplate" />
+                  <TableSheetJS ref="sheet" @download-template="downloadTemplateForStudents" />
                 </template>
               </DialogForm>
             </q-btn>
@@ -147,7 +146,7 @@ import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { CourseService } from 'src/services/course';
 import { Course, CourseEnrollment } from 'src/types/course';
 import { SkillCollection } from 'src/types/skill-collection';
-// import { groupBy } from 'src/utils/sheet2object';
+import { downloadTemplateForStudents } from 'src/utils/file-template';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -170,10 +169,6 @@ watch(
     }
   }
 )
-
-function downloadTemplate() {
-  alert('not implemented yet')
-}
 
 const computeResult = computed(() => (sk: SkillCollection) => {
   if (sk.gainedLevel === 0 || !sk.gainedLevel) {

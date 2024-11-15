@@ -13,10 +13,9 @@
       </template>
     </q-table>
     <!-- import btn -->
-    <DialogForm title="Import Students" v-model="importDialog" @save="handleImport">
+    <DialogForm title="Import Students" v-model="importDialog" @save="handleImport" full-width>
       <template #body>
-        <q-separator />
-        <TableSheetJS ref="sheet" />
+        <TableSheetJS ref="sheet" @download-template="downloadTemplateForStudents" />
       </template>
     </DialogForm>
     <!-- add btn -->
@@ -56,6 +55,7 @@ import { StudentService } from 'src/services/student';
 import PageHeader from 'src/components/PageHeader.vue';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useGlobalStore } from 'src/stores/global';
+import { downloadTemplateForStudents } from 'src/utils/file-template';
 
 const global = useGlobalStore()
 const router = useRouter()

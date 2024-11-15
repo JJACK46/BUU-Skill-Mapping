@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <PageHeader v-model:search-text="store.search" @open-dialog="dialogState = true" />
+    <PageHeader v-model:search-text="store.search" @open-dialog="dialogState = true" hide-filter />
     <q-separator class="q-my-md" />
     <q-toggle v-model="store.editMode">
       Edit Mode
