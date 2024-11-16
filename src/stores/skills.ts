@@ -5,7 +5,7 @@ import skillService from 'src/services/skill';
 import type { PageParams } from 'src/types/pagination';
 import { LearningDomain } from 'src/types/learning-domain';
 
-export const useSkillStore = defineStore('skill', () => {
+export const useOldSkillStore = defineStore('old-skill', () => {
   const skills = ref<Skill[]>([]);
   const skillss = ref<Skill[]>([]);
   const dataInit = ref(true);
@@ -61,7 +61,7 @@ export const useSkillStore = defineStore('skill', () => {
   }
 
   async function deleteSkill(id: number) {
-    await skillService.delSkill(id);
+    await skillService.removeSkill(id);
     await fetchSkills();
   }
 

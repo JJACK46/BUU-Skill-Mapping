@@ -21,7 +21,7 @@ class SkillService {
     return res.data;
   };
 
-  static updateSkill = async (skill: Skill) => {
+  static updateSkill = async (skill: Partial<Skill>) => {
     const res = await api.patch(`${this.path}/${skill.id}`, skill);
     return res.data;
   };
@@ -38,7 +38,7 @@ class SkillService {
     return res.data;
   };
 
-  static delSkill = async (id: number) => {
+  static removeSkill = async (id: number) => {
     const res = await api.delete(`${this.path}/${id}`);
     return res.data;
   };

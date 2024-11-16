@@ -13,7 +13,7 @@
           <q-tab name="add" label="Skills" v-show="formRef.isFormValid" />
         </q-tabs>
         <q-tab-panels v-model="store.tabsModel">
-          <q-tab-panel name="req">
+          <q-tab-panel name="req" class="q-gutter-y-md">
             <q-input v-model="store.form.id" outlined dense label="ID *" mask="########" :rules="[requireField]" />
             <q-select v-model="store.form.type" outlined dense label="Type *" :options="Object.values(SubjectType)"
               :rules="[requireField]" />
