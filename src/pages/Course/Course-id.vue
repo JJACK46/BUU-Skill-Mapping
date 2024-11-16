@@ -62,7 +62,6 @@
                 <q-icon name="search" />
               </template>
             </q-input>
-            <q-btn label="add" unelevated color="primary" />
             <q-toggle v-model="editMode" label="Evaluation Mode" unelevated color="primary" />
           </div>
         </div>

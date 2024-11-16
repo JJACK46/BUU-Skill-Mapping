@@ -4,12 +4,12 @@
     <q-separator class="q-my-md" />
     <DialogForm title="New Branch" v-model="store.dialogState" @save="store.handleSave">
       <template #body>
-        <q-input outlined dense label="Name" v-model="store.form.name" :rules="[requireField, onlyAlphabet]" />
-        <q-input outlined dense label="English Name" v-model="store.form.engName"
+        <q-input outlined dense label="Name *" v-model="store.form.name" :rules="[requireField, onlyAlphabet]" />
+        <q-input outlined dense label="English Name *" v-model="store.form.engName"
           :rules="[requireField, onlyAlphabet]" />
-        <q-select outlined dense label="Faculty" :options="faculties" v-model="store.form.faculty"
+        <q-select outlined dense label="Faculty *" :options="faculties" v-model="store.form.faculty"
           :rules="[requireField]" @vue:mounted="fetchFaculties" option-label="name" options-dense />
-        <q-input outlined dense label="Abbreviation" v-model="store.form.abbreviation"
+        <q-input outlined dense label="Abbreviation *" v-model="store.form.abbreviation"
           :rules="[requireField, onlyAlphabet]" />
       </template>
     </DialogForm>

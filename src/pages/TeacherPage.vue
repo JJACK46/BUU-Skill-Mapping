@@ -6,26 +6,26 @@
       :loading="global.getLoadingState" :columns="teacherColumns" :filter="store.search"
       @update:pagination="store.fetchData">
     </q-table>
-    <DialogForm title="New Teacher" v-model="store.dialogState" @save="store.handleSave">
+    <DialogForm title="New Teacher *" v-model="store.dialogState" @save="store.handleSave">
       <template #body>
-        <q-select outlined dense v-model="store.form.branch" :options="branches" option-label="name" label="Branch"
-          options-dense :rules="[requireField]" />
-        <q-input outlined dense v-model="store.form.email" label="Email" type="email" clearable
+        <q-select outlined dense v-model="store.form.branch" :options="branches" option-label="name" label="Branch *"
+          options-dense :rules="[requireField]" @vue:mounted="async () => branches = await BranchService.getAll()" />
+        <q-input outlined dense v-model="store.form.email" label="Email *" type="email" clearable
           :rules="[requireField]" />
-        <q-input outlined v-model="store.form.name" label="Name" clearable dense :rules="[requireField]" />
-        <q-input outlined dense v-model="store.form.engName" label="English Name" clearable :rules="[requireField]" />
+        <q-input outlined v-model="store.form.name" label="Name *" clearable dense :rules="[requireField]" />
+        <q-input outlined dense v-model="store.form.engName" label="English Name *" clearable :rules="[requireField]" />
         <q-select outlined dense v-model="store.form.position" :options="[...Object.values(AcademicRank)]"
-          label="Position" options-dense :rules="[requireField]" />
+          label="Position *" options-dense :rules="[requireField]" />
         <q-select outlined dense v-model="store.form.specialists" :options="[
           'Machine Learning',
           'Deep Learning',
           'Software Engineering',
-        ]" label="Specialists" hint="optional" options-dense clearable multiple />
-        <q-input outlined dense v-model="store.form.tel" label="Telephone" clearable
+        ]" label="Specialists" hint="Optional" options-dense clearable multiple />
+        <q-input outlined dense v-model="store.form.tel" label="Telephone *" clearable
           :rules="[(val) => val.length == 10 || 'Field not correct format']" mask="###-###-####" unmasked-value />
-        <q-input outlined dense v-model="store.form.officeRoom" label="Office Room" :rules="[requireField]" clearable
-          hint="optional" />
-        <q-input outlined dense v-model="store.form.bio" label="Bio" hint="optional" autogrow />
+        <q-input outlined dense v-model="store.form.officeRoom" label="Office Room *" :rules="[requireField]"
+          clearable />
+        <q-input outlined dense v-model="store.form.bio" label="Bio" hint="Optional" type="textarea" />
       </template>
     </DialogForm>
   </q-page>
@@ -43,6 +43,7 @@ import { requireField } from 'src/utils/field-rules';
 import { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/types/position.enum';
 import { useGlobalStore } from 'src/stores/global';
+import { BranchService } from 'src/services/branches';
 
 const global = useGlobalStore()
 const branches = ref<Branch[]>([]);

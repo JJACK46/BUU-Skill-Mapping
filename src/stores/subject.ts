@@ -33,6 +33,7 @@ export const useSubjectStore = defineStore('subject', {
       } else {
         await SubjectService.createOne(this.form);
       }
+      this.subjects = await SubjectService.getAll();
       this.dialogState = false;
     },
     async fetchAllSkills() {
@@ -48,8 +49,9 @@ export const useSubjectStore = defineStore('subject', {
       }
       this.dialogState = true;
     },
-    removeSubject(id: string) {
-      SubjectService.removeOne(id);
+    async removeSubject(id: string) {
+      await SubjectService.removeOne(id);
+      this.subjects = await SubjectService.getAll();
       // window.location.reload()
     }
   },

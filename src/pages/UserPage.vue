@@ -44,11 +44,11 @@
       </template>
     </q-table>
     <!-- Dialog Form -->
-    <DialogForm v-model="dialogState" title="New User" @save="store.handleSave">
+    <DialogForm v-model="dialogState" title="New User *" @save="store.handleSave">
       <template #body>
-        <q-input outlined v-model="store.form.email" label="Email" :rules="[requireField]" />
-        <q-input type="password" outlined v-model="store.form.password" label="Password" :rules="[requireField]" />
-        <q-select :options="Object.values(UserRole)" outlined v-model="store.form.role" label="Role"
+        <q-input outlined v-model="store.form.email" label="Email *" :rules="[requireField]" />
+        <q-input type="password" outlined v-model="store.form.password" label="Password *" :rules="[requireField]" />
+        <q-select :options="Object.values(UserRole)" outlined v-model="store.form.role" label="Role *"
           :rules="[requireField]" />
       </template>
     </DialogForm>

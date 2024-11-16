@@ -21,9 +21,13 @@
     <!-- add btn -->
     <DialogForm title="New Student" v-model="addDialog" @save="store.handleSave">
       <template #body>
-        <q-input outlined v-model="store.formStudent.name" label="Name" clearable :rules="[requireField]" />
-        <q-input outlined v-model="store.formStudent.engName" label="English Name" clearable :rules="[requireField]" />
-        <q-input label="Date Enrolled" outlined v-model="(store.formStudent.dateEnrollment as string)">
+        <q-select :options="branches" option-label="name"
+          @vue:mounted="async () => branches = await BranchService.getAll()" outlined v-model="store.formStudent.branch"
+          label="Branch *" clearable :rules="[requireField]" />
+        <q-input outlined v-model="store.formStudent.name" label="Name *" clearable :rules="[requireField]" />
+        <q-input outlined v-model="store.formStudent.engName" label="English Name *" clearable
+          :rules="[requireField]" />
+        <q-input label="Date Enrolled" readonly outlined v-model="(store.formStudent.dateEnrollment as string)">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -143,7 +147,6 @@ useMeta({
   title: title.value,
 });
 onMounted(async () => {
-  branches.value = await BranchService.getAll();
   store.students = await StudentService.getAll();
 });
 </script>
