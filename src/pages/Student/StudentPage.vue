@@ -13,18 +13,21 @@
       </template>
     </q-table>
     <!-- import btn -->
-    <DialogForm title="Import Students" v-model="importDialog" @save="handleImport">
+    <DialogForm title="Import Students" v-model="importDialog" @save="handleImport" full-width>
       <template #body>
-        <q-separator />
-        <TableSheetJS ref="sheet" />
+        <TableSheetJS ref="sheet" @download-template="downloadTemplateForStudents" />
       </template>
     </DialogForm>
     <!-- add btn -->
     <DialogForm title="New Student" v-model="addDialog" @save="store.handleSave">
       <template #body>
-        <q-input outlined v-model="store.formStudent.name" label="Name" clearable :rules="[requireField]" />
-        <q-input outlined v-model="store.formStudent.engName" label="English Name" clearable :rules="[requireField]" />
-        <q-input label="Date Enrolled" outlined v-model="(store.formStudent.dateEnrollment as string)">
+        <q-select :options="branches" option-label="name"
+          @vue:mounted="async () => branches = await BranchService.getAll()" outlined v-model="store.formStudent.branch"
+          label="Branch *" clearable :rules="[requireField]" />
+        <q-input outlined v-model="store.formStudent.name" label="Name *" clearable :rules="[requireField]" />
+        <q-input outlined v-model="store.formStudent.engName" label="English Name *" clearable
+          :rules="[requireField]" />
+        <q-input label="Date Enrolled" readonly outlined v-model="(store.formStudent.dateEnrollment as string)">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -56,6 +59,7 @@ import { StudentService } from 'src/services/student';
 import PageHeader from 'src/components/PageHeader.vue';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useGlobalStore } from 'src/stores/global';
+import { downloadTemplateForStudents } from 'src/utils/file-template';
 
 const global = useGlobalStore()
 const router = useRouter()
@@ -143,7 +147,6 @@ useMeta({
   title: title.value,
 });
 onMounted(async () => {
-  branches.value = await BranchService.getAll();
   store.students = await StudentService.getAll();
 });
 </script>

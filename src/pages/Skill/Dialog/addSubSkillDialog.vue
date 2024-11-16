@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { computed, ref, onMounted, watch } from 'vue';
 import skillService from 'src/services/skill';
 import { useSkillStore } from 'src/stores/skills';
@@ -115,7 +115,7 @@ onMounted(async () => {
       </q-card-section>
 
       <!-- Sub Skill Treeview (Commented out as per the original code) -->
-      <!-- <q-card-section>
+<!-- <q-card-section>
         <q-tree
           :nodes="skills.children"
           node-key="id"
@@ -140,7 +140,7 @@ onMounted(async () => {
         <q-btn @click="addSubSkill" label="Add Sub Skill" class="q-mt-md" />
       </q-card-section> -->
 
-      <q-card-actions align="right">
+<q-card-actions align="right">
         <q-btn
           flat
           label="Cancel"
@@ -157,6 +157,6 @@ onMounted(async () => {
           style="width: 70px"
         />
       </q-card-actions>
-    </q-card>
-  </q-dialog>
-</template>
+</q-card>
+</q-dialog>
+</template> -->

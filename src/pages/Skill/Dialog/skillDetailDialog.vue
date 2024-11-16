@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skills';
 import { Skill } from 'src/types/skill';
@@ -108,4 +108,4 @@ async function saveSkill() {
   height: 40px;
   width: 40px;
 }
-</style>
+</style> -->

@@ -5,19 +5,12 @@ import { api } from 'src/boot/axios';
 export class UserService {
   static path = 'users';
 
-  static getAllByPage = async (params: PageParams) => {
-    const res = await api.get<{ data: User[]; total: number }>(
-      `${this.path}/pages`,
-      {
-        params,
-      }
-    );
-    return res.data.data; //data.users
-  };
-
-  static async getAll() {
-    const res = await api.get(this.path);
-    return res.data;
+  static async getAll(pag?: PageParams) {
+    const { data } = await api.get(this.path, { params: pag });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   }
 
   static async getOne(id: number) {
@@ -25,13 +18,13 @@ export class UserService {
     return res.data;
   }
 
-  static async createOne(obj: object) {
+  static async createOne(obj: User) {
     const res = await api.post(this.path, obj);
     return res.data;
   }
 
-  static async updateOne(obj: User) {
-    const res = await api.patch(this.path, obj);
+  static async updateOne(obj: Partial<User>) {
+    const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.data;
   }
 
