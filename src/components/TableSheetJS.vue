@@ -254,16 +254,6 @@ function onDragLeave(event: DragEvent) {
   <div class="flex flex-center" v-show="currSheet.length > 0">
     <q-select v-model="currSheet" :options="sheets" outlined @update:model-value="selectSheet" label="Select Sheet"
       style="width: 300px" />
-    <!-- <q-btn
-      outlined
-      class="cursor-pointer no-shadow"
-      v-for="(sheet, idx) in sheets"
-      :key="idx"
-      @click="selectSheet(sheet)"
-      :class="[currSheet === sheet ? 'selected' : '']"
-    >
-      {{ sheet }}
-    </q-btn> -->
   </div>
   <q-table v-show="currSheet" separator="cell" class="q-mt-sm" :rows="rows.slice(1)" :columns="buildHeaderItems()"
     hide-bottom flat>
