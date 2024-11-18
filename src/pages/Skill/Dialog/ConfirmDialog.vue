@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { Skill } from 'src/types/skill';
 import { ref, defineEmits, watch } from 'vue';
 
@@ -41,4 +41,4 @@ const close = () => {
       </q-card-actions>
     </q-card>
   </q-dialog>
-</template>
+</template> -->

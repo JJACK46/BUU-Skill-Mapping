@@ -1,85 +1,52 @@
 import { defineStore } from 'pinia';
+import { QTableProps } from 'quasar';
 import { TeacherService } from 'src/services/teacher';
 import { PageParams } from 'src/types/pagination';
 import { Teacher } from 'src/types/teacher';
-import { reactive, ref } from 'vue';
 
-export const useTeacherStore = defineStore('teacher', () => {
-  const dialogState = ref(false);
-  const search = ref();
-  const pageParams = ref<PageParams>({
-    page: 1,
-    limit: 10,
-    sort: '',
-    order: 'ASC',
+export const useTeacherStore = defineStore('teacher', {
+  state: () => ({
+    dialogState: false,
     search: '',
-    columnId: '',
-    columnName: '',
-  });
+    pagination: {
+      rowsPerPage: 10
+    } as QTableProps['pagination'],
+    form: {} as Partial<Teacher>,
+    teachers: [] as Teacher[],
+  }),
 
-  const formTeacher = reactive<Teacher>({
-    name: '',
-    engName: '',
-    tel: '',
-    picture: '',
-    email: '',
-    officeRoom: '',
-    specialists: [],
-    bio: '',
-    position: '',
-    branch: null,
-    socials: {
-      line: '',
+  getters: {
+  },
+
+  actions: {
+    async setup() {
+      this.teachers = await TeacherService.getAll();
     },
-    courses: [],
-    curriculums: [],
-  });
+    resetForm() {
+      this.form = {} as Partial<Teacher>;
+    },
+    async fetchData(pag?: QTableProps['pagination']) {
+      const ownPaging = {
+        page: pag?.page || 1,
+        limit: pag?.rowsPerPage || 10,
+        sort: pag?.sortBy || '',
+        order: pag?.descending ? 'DESC' : 'ASC',
+        search: this.search || '',
+      } as PageParams;
+      this.teachers = await TeacherService.fetchByPage(ownPaging);
 
-  const teachers = ref([]);
-  const loading = ref(false);
+    },
 
-  async function fetchData(
-    search?: string,
-    columnId?: string | null,
-    columnName?: string | null
-  ) {
-    loading.value = true;
-    if (search) {
-      pageParams.value.search = search;
-    }
+    async handleSave() {
+      await TeacherService.createOne(this.form);
+      this.resetForm();
+      // Refresh data after saving
+      await this.fetchData();
+    },
 
-    if (columnId && columnName) {
-      pageParams.value.columnId = columnId;
-      pageParams.value.columnName = columnName;
-    } else {
-      pageParams.value.columnId = pageParams.value.columnId || '';
-      pageParams.value.columnName = pageParams.value.columnName || '';
-    }
-    if (columnId && columnName === 'null') {
-      pageParams.value.columnId = '';
-      pageParams.value.columnName = '';
-    }
+    toggleDialog() {
+      this.dialogState = !this.dialogState;
+    },
 
-    const res = await TeacherService.fetchByPage(pageParams.value);
-    teachers.value = res.data;
-
-    loading.value = false;
-  }
-
-  const handleSave = async () => {
-    TeacherService.createOne(formTeacher);
-    dialogState.value = false;
-    window.location.reload();
-  };
-
-  return {
-    dialogState,
-    formTeacher,
-    teachers,
-    loading,
-    search,
-    pageParams,
-    fetchData,
-    handleSave,
-  };
+  },
 });

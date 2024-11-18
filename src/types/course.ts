@@ -11,10 +11,11 @@ export interface Course {
   subject: Partial<Subject> | null;
   // curriculum: Partial<Curriculum> | null;
   teachers: Partial<Teacher>[];
-  courseEnrollments: CourseEnrollment[];
+  courseEnrollment: CourseEnrollment[];
 }
 export interface CourseEnrollment {
   id?: number;
+  course: Partial<Course>;
   student: Partial<Student>;
-  skillCollection: SkillCollection[];
+  skillCollections: SkillCollection[];
 }

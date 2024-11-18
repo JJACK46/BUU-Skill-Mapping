@@ -1,68 +1,25 @@
 <template>
   <q-page padding>
-    <PageHeader
-      v-model:searchText="filterCourse"
-      @open-dialog="handleOpenDialog"
-    />
-    <DialogForm
-      title="New Course"
-      v-model="store.dialogState"
-      @save="store.createOne"
-    >
+    <PageHeader v-model:searchText="filterCourse" @open-dialog="handleOpenDialog" />
+    <DialogForm title="New Course *" v-model="store.dialogState" @save="store.createOne">
       <template #body>
-        <q-input
-          outlined
-          label="Course ID"
-          v-model="store.form.id"
-          autofocus
-          mask="########"
-          :rules="[requireField]"
-        />
-        <q-input
-          outlined
-          label="Name"
-          v-model="store.form.name"
-          :rules="[requireField]"
-        />
+        <q-input outlined label="Course ID *" v-model="store.form.id" autofocus mask="########"
+          :rules="[requireField]" />
+        <q-input outlined label="Name *" v-model="store.form.name" :rules="[requireField]" />
 
-        <q-select
-          outlined
-          label="Subject"
-          v-model="store.form.subject"
-          :options="subjects"
-          option-label="engName"
-          options-dense
-          :rules="[requireField]"
-        >
+        <q-select outlined label="Subject *" v-model="store.form.subject" :options="subjects" option-label="engName"
+          options-dense :rules="[requireField]">
         </q-select>
-        <q-select
-          outlined
-          label="Teachers"
-          v-model="store.form.teachers"
-          :options="teachers"
-          multiple
-          :option-label="(item) => `${item.position ?? ''} ${item.name}`"
-          options-dense
-          :rules="[requireField]"
-        />
-        <q-input
-          v-model="store.form.description"
-          label="Course Description"
-          autogrow
-          outlined
-        />
+        <q-select outlined label="Teachers *" v-model="store.form.teachers" :options="teachers" multiple
+          :option-label="(item) => `${item.position ?? ''} ${item.name}`" options-dense :rules="[requireField]" />
+        <q-input v-model="store.form.description" label="Course Description *" autogrow outlined
+          :rules="[requireField]" />
       </template>
     </DialogForm>
     <q-separator class="q-my-md" />
     <section class="q-gutter-lg row">
-      <q-linear-progress v-if="store.loading" indeterminate />
-      <CourseCard
-        v-for="course in store.courses"
-        :key="course.id"
-        :course="course"
-        @handle-delete="handlePopup(course.id!)"
-        @handle-view="handleViewCourse(course.id!)"
-      />
+      <CourseCard v-for="course in store.courses" :key="course.id" :course="course"
+        @handle-delete="handlePopup(course.id!)" @handle-view="handleViewCourse(course.id!)" />
     </section>
   </q-page>
 </template>

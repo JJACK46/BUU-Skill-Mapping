@@ -1,4 +1,4 @@
-import { Role } from './role';
+import { UserRole } from 'src/enums/roles';
 import { Student } from './student';
 import { Teacher } from './teacher';
 
@@ -12,7 +12,7 @@ export interface User {
   gender: string;
   googleId: string;
   phone: string;
-  role: Role;
+  role: UserRole;
   teacher?: Teacher;
   student?: Student;
 }
