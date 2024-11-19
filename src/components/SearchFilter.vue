@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="row q-gutter-sm justify-end">
     <q-btn
       icon="filter_list"
       flat
@@ -15,14 +15,14 @@
         style="width: 400px"
         @vue:mounted="initOptions"
       >
-        <q-tabs v-model="tab">
-          <q-tab name="faculty" label="Faculty" />
+        <q-tabs v-model="filterMenu">
+          <q-tab name="faculty" label="Faculty" v-if="byFaculty" />
           <q-tab name="branch" label="Branch" v-if="byBranch" />
           <q-tab name="curriculum" label="Curriculum" v-if="byCurriculum" />
           <q-tab name="subject" label="Subject" v-if="bySubject" />
           <q-tab name="skill" label="Skill" v-if="bySkill" />
         </q-tabs>
-        <q-tab-panels v-model="tab">
+        <q-tab-panels v-model="filterMenu" animated>
           <q-tab-panel name="faculty">
             <q-select
               v-model="selectedFaculty"
@@ -32,7 +32,14 @@
               label="Faculty"
               clearable
               @update:model-value="handleChangeFaculty"
-              @clear="handleClear"
+              @clear="
+                (selectedFaculty = null),
+                  (selectedBranch = null),
+                  (selectedCurriculum = null),
+                  (selectedSubject = null),
+                  (selectedSkill = null),
+                  fetchData({ ...pageParams, columnName: '', columnId: '' })
+              "
               outlined
               style="height: 55px; min-width: 150px"
             />
@@ -44,6 +51,14 @@
               option-value="id"
               :option-label="(item) => `${item.name || ''}`"
               @update:model-value="handleChangeBranch"
+              clearable
+              @clear="
+                (selectedBranch = null),
+                  (selectedCurriculum = null),
+                  (selectedSubject = null),
+                  (selectedSkill = null),
+                  fetchData({ ...pageParams, columnName: '', columnId: '' })
+              "
               label="Branch"
               outlined
             />
@@ -55,6 +70,17 @@
               option-value="id"
               :option-label="(item) => `${item.name || ''}`"
               @update:model-value="handleChangeCurriculum"
+              clearable
+              @clear="
+                (selectedCurriculum = null),
+                  (selectedSubject = null),
+                  (selectedSkill = null),
+                  fetchData({
+                    ...pageParams,
+                    columnName: 'branch',
+                    columnId: selectedBranch.id,
+                  })
+              "
               label="Curriculum"
               outlined
             />
@@ -66,6 +92,16 @@
               option-value="id"
               :option-label="(item) => `${item.name || ''}`"
               @update:model-value="handleChangeSubject"
+              clearable
+              @clear="
+                (selectedSubject = null),
+                  (selectedSkill = null),
+                  fetchData({
+                    ...pageParams,
+                    columnName: 'curriculum',
+                    columnId: selectedCurriculum.id,
+                  })
+              "
               label="Subject"
               outlined
             />
@@ -76,6 +112,16 @@
               :options="skills"
               option-value="id"
               :option-label="(item) => `${item.name || ''}`"
+              clearable
+              @clear="
+                (selectedSubject = null),
+                  (selectedSkill = null),
+                  fetchData({
+                    ...pageParams,
+                    columnName: 'subject',
+                    columnId: selectedSubject.id,
+                  })
+              "
               label="Skill"
               outlined
               style="height: 55px; min-width: 150px"
@@ -83,6 +129,62 @@
           </q-tab-panel> </q-tab-panels
       ></q-popup-edit>
     </q-btn>
+    <q-input
+      outlined
+      clearable
+      v-model="search"
+      @keyup.enter="fetchData({ ...props.pageParams, search: search })"
+      :label="labelSearch ?? 'Search'"
+      class="col"
+      dense
+      debounce="500"
+      style="max-width: 500px"
+    >
+      <template #prepend>
+        <q-icon name="search"></q-icon>
+      </template>
+    </q-input>
+    <q-btn
+      @click="$emit('openDialog')"
+      color="primary"
+      label="add"
+      style="width: 80px"
+      unelevated
+    >
+    </q-btn>
+  </div>
+  <div class="row q-gutter-sm">
+    <div
+      v-show="selectedBranch || selectedFaculty"
+      class="q-animate--fade q-mt-sm"
+    >
+      <span>Filter: </span>
+      <q-chip
+        v-if="selectedFaculty"
+        :label="selectedFaculty.name"
+        @remove="selectedFaculty = null"
+      />
+      <q-chip
+        v-if="selectedBranch"
+        :label="selectedBranch.name"
+        @remove="selectedBranch = null"
+      />
+      <q-chip
+        v-if="selectedCurriculum"
+        :label="selectedCurriculum.name"
+        @remove="selectedCurriculum = null"
+      />
+      <q-chip
+        v-if="selectedSubject"
+        :label="selectedSubject.name"
+        @remove="selectedSubject = null"
+      />
+      <q-chip
+        v-if="selectedSkill"
+        :label="selectedSkill.name"
+        @remove="selectedSkill = null"
+      />
+    </div>
   </div>
 </template>
 
@@ -99,17 +201,19 @@ import { PageParams } from 'src/types/pagination';
 const props = defineProps<{
   fetchData: (pageParams?: PageParams) => void;
   pageParams: PageParams;
+  byFaculty?: boolean;
   byBranch?: boolean;
   byCurriculum?: boolean;
   bySubject?: boolean;
   bySkill?: boolean;
   byTechSkill?: boolean;
+  labelSearch?: string;
 }>();
 
-const emit = defineEmits(['update:pageParams']);
-
-const tab = ref();
+const filterMenu = ref();
 const filterDialog = ref(false);
+const search = ref('');
+
 const faculties = ref<Partial<Faculty>[]>([]);
 const branches = ref<Partial<Branch>[]>([]);
 const curriculums = ref<Partial<Curriculum>[]>([]);
@@ -127,19 +231,17 @@ const selectedSkill = ref();
 watch(selectedFaculty, (newFaculty) => {
   if (newFaculty && newFaculty.branches) {
     branches.value = newFaculty.branches;
-    selectedBranch.value = branches.value[0];
-    // disabled.value = false
+    // selectedBranch.value = branches.value[0];
   } else {
     branches.value = [];
     selectedBranch.value = null;
-    // disabled.value = true
   }
 });
 
-watch(selectedBranch, (newBranch) => {
+watch(selectedBranch, async (newBranch) => {
   if (newBranch) {
     if (props.byBranch) {
-      props.fetchData({
+      await props.fetchData({
         ...props.pageParams,
         columnName: 'branch',
         columnId: newBranch.id,
@@ -153,18 +255,13 @@ watch(selectedBranch, (newBranch) => {
       curriculums.value = [];
       selectedCurriculum.value = null;
     }
-    emit('update:pageParams', {
-      ...props.pageParams,
-      columnName: 'branch',
-      columnId: newBranch.id,
-    });
   }
 });
 
-watch(selectedCurriculum, (newCurriculum) => {
+watch(selectedCurriculum, async (newCurriculum) => {
   if (newCurriculum) {
     if (props.byCurriculum) {
-      props.fetchData({
+      await props.fetchData({
         ...props.pageParams,
         columnName: 'curriculum',
         columnId: newCurriculum.id,
@@ -181,9 +278,9 @@ watch(selectedCurriculum, (newCurriculum) => {
   }
 });
 
-watch(selectedSubject, (newSubject) => {
+watch(selectedSubject, async (newSubject) => {
   if (props.bySubject) {
-    props.fetchData({
+    await props.fetchData({
       ...props.pageParams,
       columnName: 'subject',
       columnId: newSubject.id,
@@ -199,35 +296,15 @@ watch(selectedSubject, (newSubject) => {
   }
 });
 
-watch(selectedSkill, (newSkill) => {
+watch(selectedSkill, async (newSkill) => {
   if (props.bySkill) {
-    props.fetchData({
+    await props.fetchData({
       ...props.pageParams,
       columnName: 'skill',
       columnId: newSkill.id,
     });
   }
-  //   if (newSkill && newSkill.techSkills) {
-  //     techSkills.value = newSkill.techSkills;
-  //     // selectedTechSkill.value = techSkills.value[0]
-  //   } else {
-  //     techSkills.value = [];
-  //     selectedTechSkill.value = null;
-  //   }
 });
-
-// watch(selectedTechSkill, (newTechSkill) => {
-//   return props.fetchData('', newTechSkill.id, 'techSkill');
-// });
-
-const handleClear = () => {
-  selectedFaculty.value = null;
-  selectedBranch.value = null;
-  selectedCurriculum.value = null;
-  selectedSubject.value = null;
-  selectedSkill.value = null;
-  props.fetchData({ ...props.pageParams, columnName: '', columnId: '' });
-};
 
 const initOptions = async () => {
   const res = await api.get('/faculties/filters'); //filters/1, filters/2
@@ -238,9 +315,17 @@ const initOptions = async () => {
 };
 
 const handleChangeFaculty = async (v: Faculty) => {
-  const res = await api.get('/branches/filters/' + v.id);
-  if (res.data) {
-    branches.value = res.data;
+  if (!v) {
+    return;
+  }
+  try {
+    const res = await api.get('/branches/filters/' + v.id);
+    if (res.data) {
+      console.log('Branches data:', res.data);
+      branches.value = res.data;
+    }
+  } catch (err) {
+    console.error('Error fetching branches:', err);
   }
 };
 

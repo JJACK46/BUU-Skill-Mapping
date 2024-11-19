@@ -1,52 +1,101 @@
 import { defineStore } from 'pinia';
-import { QTableProps } from 'quasar';
 import { TeacherService } from 'src/services/teacher';
 import { PageParams } from 'src/types/pagination';
 import { Teacher } from 'src/types/teacher';
+import { reactive, ref } from 'vue';
 
-export const useTeacherStore = defineStore('teacher', {
-  state: () => ({
-    dialogState: false,
+export const useTeacherStore = defineStore('teacher', () => {
+  const dialogState = ref(false);
+  const search = ref();
+  const pageParams = ref<PageParams>({
+    page: 1,
+    limit: 10,
+    sort: '',
+    order: 'ASC',
     search: '',
-    pagination: {
-      rowsPerPage: 10
-    } as QTableProps['pagination'],
-    form: {} as Partial<Teacher>,
-    teachers: [] as Teacher[],
-  }),
+    columnId: '',
+    columnName: '',
+  });
 
-  getters: {
-  },
-
-  actions: {
-    async setup() {
-      this.teachers = await TeacherService.getAll();
+  const form = reactive<Teacher>({
+    name: '',
+    engName: '',
+    tel: '',
+    picture: '',
+    email: '',
+    officeRoom: '',
+    specialists: [],
+    bio: '',
+    position: '',
+    branch: null,
+    socials: {
+      line: '',
     },
-    resetForm() {
-      this.form = {} as Partial<Teacher>;
-    },
-    async fetchData(pag?: QTableProps['pagination']) {
-      const ownPaging = {
-        page: pag?.page || 1,
-        limit: pag?.rowsPerPage || 10,
-        sort: pag?.sortBy || '',
-        order: pag?.descending ? 'DESC' : 'ASC',
-        search: this.search || '',
-      } as PageParams;
-      this.teachers = await TeacherService.fetchByPage(ownPaging);
+    courses: [],
+    curriculums: [],
+  });
 
-    },
+  const teachers = ref([]);
+  const loading = ref(false);
 
-    async handleSave() {
-      await TeacherService.createOne(this.form);
-      this.resetForm();
-      // Refresh data after saving
-      await this.fetchData();
-    },
+  async function fetchData(pageParam?: PageParams) {
+    loading.value = true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let res: any;
 
-    toggleDialog() {
-      this.dialogState = !this.dialogState;
-    },
+    if (pageParam) {
+      pageParams.value = pageParam;
+      console.log('pageParams', pageParams);
+      res = await TeacherService.fetchByPage(pageParams.value);
+    } else {
+      // initial pageParams
+      const pageParamsInit = <PageParams>{
+        page: 1,
+        limit: 10,
+        sort: '',
+        order: 'ASC',
+        search: '',
+        columnId: '',
+        columnName: '',
+      };
+      res = await TeacherService.fetchByPage(pageParamsInit);
+    }
 
-  },
+    console.log('teachers.value', res.data);
+    teachers.value = res.data;
+
+    loading.value = false;
+  }
+
+  async function setup() {
+    await fetchData();
+  }
+
+  const handleSave = async () => {
+    TeacherService.createOne(form);
+    dialogState.value = false;
+    window.location.reload();
+  };
+
+  const updatePageParams = (newParams: PageParams) => {
+    pageParams.value = newParams;
+  };
+
+  const toggleDialog = () => {
+    dialogState.value = !dialogState.value;
+  };
+
+  return {
+    dialogState,
+    form,
+    teachers,
+    loading,
+    search,
+    pageParams,
+    fetchData,
+    handleSave,
+    updatePageParams,
+    setup,
+    toggleDialog,
+  };
 });
