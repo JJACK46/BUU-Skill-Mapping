@@ -38,29 +38,28 @@ export const useTeacherStore = defineStore('teacher', () => {
   const teachers = ref([]);
   const loading = ref(false);
 
-  async function fetchData(
-    search?: string,
-    columnId?: string | null,
-    columnName?: string | null
-  ) {
+  async function fetchData(pageParams?: PageParams) {
     loading.value = true;
-    if (search) {
-      pageParams.value.search = search;
-    }
+    let res;
 
-    if (columnId && columnName) {
-      pageParams.value.columnId = columnId;
-      pageParams.value.columnName = columnName;
+    if (pageParams) {
+      console.log('pageParams', pageParams);
+      res = await TeacherService.fetchByPage(pageParams);
     } else {
-      pageParams.value.columnId = pageParams.value.columnId || '';
-      pageParams.value.columnName = pageParams.value.columnName || '';
-    }
-    if (columnId && columnName === 'null') {
-      pageParams.value.columnId = '';
-      pageParams.value.columnName = '';
+      // initial pageParams
+      const pageParamsInit = <PageParams>{
+        page: 1,
+        limit: 10,
+        sort: '',
+        order: 'ASC',
+        search: '',
+        columnId: '',
+        columnName: '',
+      };
+      res = await TeacherService.fetchByPage(pageParamsInit);
     }
 
-    const res = await TeacherService.fetchByPage(pageParams.value);
+    console.log('teachers.value', teachers.value);
     teachers.value = res.data;
 
     loading.value = false;
@@ -72,6 +71,10 @@ export const useTeacherStore = defineStore('teacher', () => {
     window.location.reload();
   };
 
+  const updatePageParams = (newParams: PageParams) => {
+    pageParams.value = newParams;
+  };
+
   return {
     dialogState,
     formTeacher,
@@ -81,5 +84,6 @@ export const useTeacherStore = defineStore('teacher', () => {
     pageParams,
     fetchData,
     handleSave,
+    updatePageParams,
   };
 });
