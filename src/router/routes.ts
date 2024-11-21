@@ -61,6 +61,17 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/addcurriculums',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'ADD Curriculum',
+        component: () => import('pages/Curriculum/AddCurriculumPage.vue'),
+      },
+    ],
+  },
+  {
     path: '/courses',
     component: () => import('layouts/MainLayout.vue'),
     children: [
