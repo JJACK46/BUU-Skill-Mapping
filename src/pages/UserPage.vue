@@ -79,6 +79,17 @@ const columns = ref(<QTableColumn[]>[
     align: 'left',
     sortable: true,
   },
+<<<<<<< HEAD
+  firstName: '',
+  middleName: '',
+  lastName: '',
+  gender: '',
+  googleId: '',
+  phone: '',
+});
+const users = ref([]);
+const loading = ref(false);
+=======
   {
     name: 'email',
     label: 'Email',
@@ -97,6 +108,7 @@ watch(() => store.search, () => {
   store.fetchData(store.pagination)
 })
 
+>>>>>>> 9921c016ceb75c6246fef495cd079f1521dbb2f6
 useMeta({
   title: title.value,
 });

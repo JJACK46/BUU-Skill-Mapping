@@ -1,130 +1,148 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-// import { useSkillStore } from 'src/stores/skills';
-// import { Skill } from 'src/types/skill';
-import PageHeader from 'src/components/PageHeader.vue';
+import { computed, ref, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skill';
-import DialogForm from 'src/components/DialogForm.vue';
-import { LearningDomain } from 'src/types/learning-domain';
-import { requireField } from 'src/utils/field-rules';
-import { useMeta } from 'quasar';
-import { useRoute } from 'vue-router';
+import AddSkillDialog from './Dialog/addSkillDialog.vue';
+import AddSubSkillDialog from './Dialog/addSubSkillDialog.vue';
+import SkillDetailDialog from './Dialog/skillDetailDialog.vue';
+import ConfirmDialog from './Dialog/ConfirmDialog.vue';
+import { Skill } from 'src/types/skill';
+import PageHeader from 'src/components/PageHeader.vue';
+import { PageParams } from 'src/types/pagination';
 
-const store = useSkillStore();
-
-onMounted(store.fetchData);
-
-const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
-useMeta({
-  title: title.value,
+const skillStore = useSkillStore();
+const dialogState = ref(false);
+const dialogFilter = ref(false);
+const dialogAddVisible = ref(false);
+const dialogAddSubVisible = ref(false);
+const dialogDetailVisible = ref(false);
+const dialogConfirmVisible = ref(false);
+const selectedItem = ref<Skill | null>(null);
+const skills = computed(() => skillStore.skills || []);
+const pageParams = ref<PageParams>({
+  page: 1,
+  limit: 10,
+  sort: '',
+  order: 'ASC',
+  search: '',
+  columnId: '',
+  columnName: '',
 });
 
+const handleDialogFilter = () => {
+  dialogFilter.value = !dialogFilter.value;
+};
+const closeDialogAdd = () => {
+  dialogAddVisible.value = false;
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function onRequest(props: any) {
+  skillStore.pageParams.page = props.page;
+  skillStore.pageParams.limit = props.rowsPerPage;
+  skillStore.pageParams.sort = props.sortBy;
+  skillStore.pageParams.order = props.descending ? 'DESC' : 'ASC';
+  skillStore.pageParams.search = props.search;
+  skillStore.fetchSkillsPage(pageParams.value);
+}
 
-// const skillStore = useSkillStore();
-// const loading = ref(false);
-// const dialogAddVisible = ref(false);
-// const dialogAddSubVisible = ref(false);
-// const dialogDetailVisible = ref(false);
-// const dialogConfirmVisible = ref(false);
-// const selectedItem = ref<Skill | null>(null);
-// const skills = computed(() => skillStore.skills || []);
+const fetchSkill = async () => {
+  skillStore.clearForm();
+  try {
+    await skillStore.fetchSkillsPage(pageParams.value);
+  } catch (error) {
+    console.error('Error fetching skills:', error);
+  }
+};
 
-// const showDialogAdd = async () => {
-//   dialogAddVisible.value = true;
-// };
+// Watch for changes in search text and update the skill list accordingly
+watch(
+  () => pageParams.value.search,
+  () => {
+    fetchSkill();
+  }
+);
 
-// const closeDialogAdd = () => {
-//   dialogAddVisible.value = false;
-// };
-
-// const showDialogAddSub = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogAddSubVisible.value = true;
-// };
-
-// const closeDialogAddSub = () => {
-//   dialogAddSubVisible.value = false;
-// };
-
-// const showDialogDetail = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogDetailVisible.value = true;
-// };
-
-// const closeDialogDetail = () => {
-//   dialogDetailVisible.value = false;
-// };
-
-// const confirmDeleteSkill = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogConfirmVisible.value = true;
-// };
-// const closeDialogDelete = () => {
-//   dialogConfirmVisible.value = false;
-// };
-
-// const deleteSkillConfirmed = () => {
-//   skillStore.deleteSkill(selectedItem.value!.id);
-//   dialogConfirmVisible.value = false;
-//   fetchSkill();
-// };
-
-// const fetchSkill = async () => {
-//   loading.value = true;
-//   skillStore.clearForm();
-//   try {
-//     // await skillStore.fetchSkillsPage(pageParams.value);
-//     await skillStore.fetchSkills();
-//   } catch (error) {
-//     console.error('Error fetching skills:', error);
-//   } finally {
-//     loading.value = false;
-//   }
-// };
-// watch(
-//   [
-//     () => dialogAddVisible.value,
-//     () => dialogAddSubVisible.value,
-//     () => dialogDetailVisible.value,
-//   ],
-//   () => {
-//     fetchSkill();
-//   }
-// );
-
-
+watch(
+  [
+    () => dialogAddVisible.value,
+    () => dialogAddSubVisible.value,
+    () => dialogDetailVisible.value,
+  ],
+  () => {
+    fetchSkill();
+  }
+);
 </script>
 
 <template>
   <q-page padding>
-    <PageHeader v-model:search-text="store.pageParams.search" label-search="Curriculums"
-      @open-dialog="store.toggleDialog({ title: 'New Skill' })" @enter-search="store.fetchData" />
+    <PageHeader
+      v-model:search-text="pageParams.search"
+      @open-dialog="dialogState = true"
+      @open-filter="handleDialogFilter"
+      @enter-search="fetchSkill"
+    />
     <q-separator class="q-my-md" />
-    <!-- Top -->
-    <div class="q-py-md"><q-icon name="info" class="q-mr-sm" />Right click to open menu of each row</div>
-    <!-- Content -->
-    <q-card flat bordered class="q-animate--fade">
-      <q-tree :nodes="store.skills" node-key="id" class="q-pa-sm">
+    <q-card flat bordered>
+      <q-tree :nodes="skills" node-key="id" @node-click="onRequest">
         <template v-slot:default-header="props">
-          <q-tr class="full-width q-py-xs" style="cursor: pointer;">
-            <!-- Header -->
-            <q-td style="user-select: none;">
-              <span class="text-body1">
-                {{ props.node.name }}
-              </span>
+          <q-tr>
+            <q-td style="padding-right: 50px">{{ props.node.name }}</q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="add"
+                @click.stop="showDialogAddSub(props.node)"
+              />
+            </q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="edit"
+                @click.stop="showDialogDetail(props.node)"
+              />
+            </q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="close"
+                @click.stop="confirmDeleteSkill(props.node)"
+              />
             </q-td>
             <!-- Context Menu -->
             <q-menu context-menu touch-position>
               <q-list dense style="min-width: 100px">
-                <q-item clickable v-close-popup
-                  @click="store.toggleDialog({ title: 'Insert Sub-Skill', parentId: props.node.id })">
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    store.toggleDialog({
+                      title: 'Insert Sub-Skill',
+                      parentId: props.node.id,
+                    })
+                  "
+                >
                   <q-item-section>Insert child</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="store.toggleDialog({ form: props.node, title: 'Edit Skill' })">
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    store.toggleDialog({
+                      form: props.node,
+                      title: 'Edit Skill',
+                    })
+                  "
+                >
                   <q-item-section>Edit</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="store.handleRemove({ id: props.node.id })">
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="store.handleRemove({ id: props.node.id })"
+                >
                   <q-item-section>Delete</q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup>
@@ -137,23 +155,69 @@ useMeta({
       </q-tree>
     </q-card>
     <!-- All in One Dialog -->
-    <DialogForm :title="store.getTitleForm" @save="store.handleSave" v-model="store.dialogForm">
+    <DialogForm
+      :title="store.getTitleForm"
+      @save="store.handleSave"
+      v-model="store.dialogForm"
+    >
       <template #body>
-        <q-input v-show="store.parentId" v-model="store.parentId" label="Parent ID" hint="Readonly" outlined readonly />
-        <q-input v-model="store.form.id" label="ID" outlined readonly hint="Readonly" />
-        <q-input v-model="store.form.name" label="Name *" outlined :rules="[requireField]" />
-        <q-select :options="Object.values(LearningDomain)" v-model="store.form.domain" label="Domain *" outlined
-          :rules="[requireField]" />
-        <q-input v-model="store.form.description" label="Description *" outlined type="textarea"
-          :rules="[requireField]" />
+        <q-input
+          v-show="store.parentId"
+          v-model="store.parentId"
+          label="Parent ID"
+          hint="Readonly"
+          outlined
+          readonly
+        />
+        <q-input
+          v-model="store.form.id"
+          label="ID"
+          outlined
+          readonly
+          hint="Readonly"
+        />
+        <q-input
+          v-model="store.form.name"
+          label="Name *"
+          outlined
+          :rules="[requireField]"
+        />
+        <q-select
+          :options="Object.values(LearningDomain)"
+          v-model="store.form.domain"
+          label="Domain *"
+          outlined
+          :rules="[requireField]"
+        />
+        <q-input
+          v-model="store.form.description"
+          label="Description *"
+          outlined
+          type="textarea"
+          :rules="[requireField]"
+        />
       </template>
     </DialogForm>
-
-    <!-- 
-    <AddSubSkillDialog :visible="dialogAddSubVisible" :item="selectedItem" @close-dialog="closeDialogAddSub" />
-    <SkillDetailDialog :visible="dialogDetailVisible" :item="selectedItem" @close-dialog="closeDialogDetail" />
-    <AddSkillDialog :visible="dialogAddVisible" :item="null" @close-dialog="closeDialogAdd" />
-    <ConfirmDialog :visible="dialogConfirmVisible" :item="selectedItem" @close-dialog="closeDialogDelete"
-      @confirm-delete="deleteSkillConfirmed" /> -->
+    <AddSubSkillDialog
+      :visible="dialogAddSubVisible"
+      :item="selectedItem"
+      @close-dialog="closeDialogAddSub"
+    />
+    <SkillDetailDialog
+      :visible="dialogDetailVisible"
+      :item="selectedItem"
+      @close-dialog="closeDialogDetail"
+    />
+    <AddSkillDialog
+      :visible="dialogAddVisible"
+      :item="null"
+      @close-dialog="closeDialogAdd"
+    />
+    <ConfirmDialog
+      :visible="dialogConfirmVisible"
+      :item="selectedItem"
+      @close-dialog="closeDialogDelete"
+      @confirm-delete="deleteSkillConfirmed"
+    />
   </q-page>
 </template>
