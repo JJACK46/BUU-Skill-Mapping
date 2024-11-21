@@ -1,7 +1,7 @@
 import { Curriculum } from './curriculum';
 
 export interface Branch {
-  id?: number;
+  id?: string;
   name: string;
   curriculums?: Curriculum[];
 }

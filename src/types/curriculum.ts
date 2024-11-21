@@ -10,8 +10,8 @@ export interface Curriculum {
   description: string;
   period: number;
   minimumGrade: number;
-  coordinators: Teacher[];
+  coordinators?: Teacher[] | '';
   // plos: any[];
-  subjects?: Subject[];
-  branch: Branch;
+  subjects?: Subject[] | '';
+  branch: Branch | '';
 }
