@@ -1,28 +1,30 @@
 <template>
   <q-page padding>
-    <PageHeader v-model:search-text="search" @open-dialog="store.handleOpenDialog" />
+    <PageHeader v-model:search-text="search" @open-dialog="store.handleOpenDialog" hide-filter />
     <q-separator class="q-my-md" />
     <q-toggle v-model="store.editMode" label="Edit Mode"></q-toggle>
+
     <!-- Add & Edit Dialog -->
-    <DialogForm v-model="store.dialogState" :title="store.getDialogTitle" @save="store.handleSave">
+    <DialogForm v-model="store.dialogState" :title="store.getDialogTitle" @save="store.handleSave" ref="formRef"
+      v-model:form-valid="formValid">
       <template #body>
         <q-tabs v-model="store.tabsModel">
-          <q-tab name="req" label="Standard" />
-          <q-tab name="add" label="Skills" />
+          <q-tab name="req" label="Required" />
+          <q-tab name="add" label="Skills" v-show="formRef.isFormValid" />
         </q-tabs>
         <q-tab-panels v-model="store.tabsModel">
-          <q-tab-panel name="req">
-            <q-input v-model="store.form.id" outlined dense label="ID" mask="########" :rules="[requireField]" />
-            <q-select v-model="store.form.type" outlined dense label="Type" :options="Object.values(SubjectType)"
+          <q-tab-panel name="req" class="q-gutter-y-md">
+            <q-input v-model="store.form.id" outlined dense label="ID *" mask="########" :rules="[requireField]" />
+            <q-select v-model="store.form.type" outlined dense label="Type *" :options="Object.values(SubjectType)"
               :rules="[requireField]" />
-            <q-input v-model="store.form.name" outlined dense label="Name" :rules="[requireField]" />
-            <q-input v-model="store.form.engName" outlined dense label="Eng Name" :rules="[requireField]" />
-            <q-input v-model="store.form.description" outlined dense label="Description" autogrow
+            <q-input v-model="store.form.name" outlined dense label="Name *" :rules="[requireField]" />
+            <q-input v-model="store.form.engName" outlined dense label="Eng Name *" :rules="[requireField]" />
+            <q-input v-model="store.form.description" outlined dense label="Description *" autogrow
               :rules="[requireField]" />
-            <q-input v-model="store.form.credit" outlined dense label="Credit" mask="# (#-#-#)"
+            <q-input v-model="store.form.credit" outlined dense label="Credit *" mask="# (#-#-#)"
               :rules="[requireField]" />
           </q-tab-panel>
-          <q-tab-panel name="add" @vue:mounted="store.fetchAllSkills">
+          <q-tab-panel v-show="formRef.isFormValid" name="add" @vue:mounted="store.fetchAllSkills">
             <q-list>
               <q-item v-for="(s, i) in store.form.skillExpectedLevels" :key="i" class="rounded-borders">
                 <q-item-section avatar>
@@ -48,7 +50,18 @@
       </template>
     </DialogForm>
     <!-- Table -->
-    <q-table class="q-mt-md" :rows="store.getSubjects" :filter="search" :columns="columns" row-key="id" wrap-cells>
+    <q-table :loading="global.getLoadingState" :pagination="store.pagination" class="q-mt-md q-animate--fade"
+      :rows="store.getSubjects" :filter="search" :columns="columns" row-key="id" wrap-cells separator="cell">
+      <template #body-cell-description="props">
+        <q-td style="max-width: 300px">
+          {{ props.value }}
+        </q-td>
+      </template>
+      <template #body-cell-credit="props">
+        <q-td style="min-width: 90px">
+          {{ props.value }}
+        </q-td>
+      </template>
       <template #body-cell-skills="props">
         <q-td>
           <q-btn :disable="props.value === undefined || props.value.length === 0" icon="info" padding="none" flat>
@@ -64,13 +77,12 @@
                   <q-item-section>Expected Level: {{ s.expectedLevel }}</q-item-section>
                 </q-item>
               </q-list>
-              <!-- <CustomTreeSkill :skills="props.value || []" readonly /> -->
             </q-popup-proxy>
           </q-btn>
         </q-td>
       </template>
       <template #body-cell-actions="props">
-        <q-td class="q-gutter-x-sm">
+        <q-td class="q-gutter-x-sm" style="min-width: 100px;">
           <q-btn icon="edit" padding="none" flat @click="store.handleOpenDialog(props.row)"></q-btn>
           <q-btn icon="delete" padding="none" flat @click="store.removeSubject(props.row.id)"></q-btn>
         </q-td>
@@ -88,12 +100,25 @@ import DialogForm from 'src/components/DialogForm.vue';
 import { useSubjectStore } from 'src/stores/subject';
 import { requireField } from 'src/utils/field-rules';
 import { SubjectType } from 'src/types/subject';
-// import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
+import { useGlobalStore } from 'src/stores/global';
 
+const global = useGlobalStore()
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const search = ref('');
 const store = useSubjectStore();
+const formRef = ref()
+const formValid = ref<boolean>(false)
+
+watch(
+  () => store.form.skillExpectedLevels?.length,
+  (newVal) => {
+    if (newVal && newVal > 0) {
+      formValid.value = true
+    } else {
+      formValid.value = false
+    }
+  })
 
 watch(
   () => store.editMode,
@@ -103,6 +128,7 @@ watch(
         name: 'actions',
         label: 'Actions',
         field: 'actions',
+        align: 'center'
       })
     } else {
       columns.value.pop()
@@ -111,7 +137,6 @@ watch(
 );
 
 function handleAddSkill() {
-  if (!store.form.id) return
   store.form.skillExpectedLevels = store.form.skillExpectedLevels || [];
   store.form.skillExpectedLevels.push({
     subject: { id: store.form.id }, //at least subject id is required
@@ -137,18 +162,18 @@ function handleDuplicate() {
 }
 
 const columns = ref<QTableColumn[]>([
-  { name: 'id', label: 'ID', field: 'id' },
-  { name: 'name', label: 'Name', field: 'name' },
-  { name: 'engName', label: 'Eng Name', field: 'engName' },
+  { name: 'id', label: 'ID', field: 'id', align: 'left' },
+  { name: 'name', label: 'Name', field: 'name', align: 'left' },
+  { name: 'engName', label: 'Eng Name', field: 'engName', align: 'left' },
   {
     name: 'description',
     label: 'Description',
     field: 'description',
     align: 'left',
   },
-  { name: 'type', label: 'Type', field: 'type' },
-  { name: 'credit', label: 'Credit', field: 'credit' },
-  { name: 'skills', label: 'Skills', field: 'skillExpectedLevels' },
+  { name: 'type', label: 'Type', field: 'type', align: 'left' },
+  { name: 'credit', label: 'Credit', field: 'credit', align: 'left' },
+  { name: 'skills', label: 'Skills', field: 'skillExpectedLevels', align: 'left' },
 ]);
 
 onMounted(async () => {

@@ -2,31 +2,16 @@
   <q-layout view="hHh LpR lFf">
     <q-header>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> Skill Mapping App </q-toolbar-title>
         <div class="q-gutter-md q-mr-md">
-          <q-btn
-            icon="notifications"
-            flat
-            padding="none"
-            @click="toggleRightDrawer"
-          />
+          <q-btn icon="notifications" flat padding="none" @click="toggleRightDrawer" />
           <q-btn :icon="themeIcon" flat padding="none" @click="handleTheme" />
         </div>
         <q-avatar class="cursor-pointer">
-          <img
-            draggable="false"
-            :src="`${
-              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
-            } `"
-          />
+          <img draggable="false" :src="`${profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
+            } `" />
           <q-menu :offset="[-10, 0]">
             <q-list>
               <q-item clickable v-close-popup @click="router.push('/account')">
@@ -54,14 +39,8 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" side="left">
       <q-list>
         <q-item-label header>
-          <q-img
-            :src="
-              $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
-            "
-            alt="BUU"
-            height="64px"
-            fit="contain"
-          />
+          <q-img :src="$q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
+            " alt="BUU" height="64px" fit="contain" />
         </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
@@ -90,7 +69,7 @@ import { computed, onMounted, ref } from 'vue';
 import MenuLink, { LinkProps } from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils/app';
 import { Payload } from 'src/types/payload';
-import { useUserStore } from 'src/stores/user';
+import { useAuthStore } from 'src/stores/auth';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { LocalStorage } from 'quasar';
@@ -103,7 +82,7 @@ const handleTheme = () => {
 
 const router = useRouter();
 const { dark } = useQuasar();
-const store = useUserStore();
+const store = useAuthStore();
 const profile = ref<Payload | null>(null);
 
 onMounted(async () => {

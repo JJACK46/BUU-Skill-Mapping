@@ -1,58 +1,40 @@
-import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import { QTableProps } from 'quasar';
 import { BranchService } from 'src/services/branches';
-import type { Branch } from 'src/types/branch';
+import { Branch } from 'src/types/branch';
 
-export const useBranchStore = defineStore('branch', () => {
-  const branches = ref<Branch[]>([]);
-  const initialBranch: Branch = {
-    id: '',
-    name: '',
-    curriculums: [],
-  };
-  const editedBranch = ref<Branch>(JSON.parse(JSON.stringify(initialBranch)));
+export const useBranchStore = defineStore('branch', {
+  state: () => ({
+    form: {} as Branch,
+    branches: <Branch[]>[],
+    dialogState: false,
+    loading: false,
+    pagination: {
+      rowsPerPage: 10
+    } as QTableProps['pagination']
+  }),
 
-  async function getBranch(id: string) {
-    const res = await BranchService.getOne(id);
-    editedBranch.value = res.data;
-  }
-
-  async function getBranches() {
-    const res = await BranchService.getAll();
-    branches.value = res.data;
-  }
-
-  async function saveBranch() {
-    const branch = editedBranch.value;
-    if (!branch.id) {
-      // Add new
-      console.log('Post ' + JSON.stringify(branch));
-      await BranchService.apply;
-    } else {
-      // Update
-      console.log('Patch ' + JSON.stringify(branch));
-      await BranchService.updateOne(branch);
+  getters: {},
+  actions: {
+    async setup() {
+      this.loading = true;
+      this.branches = await BranchService.getAll();
+      this.loading = false;
+    },
+    async createOne() {
+      BranchService.createOne(this.form as Branch);
+      this.dialogState = false;
+      window.location.reload();
+    },
+    async removeOne(id: number) {
+      BranchService.removeOne(String(id));
+      window.location.reload();
+    },
+    toggleDialog() {
+      this.dialogState = !this.dialogState;
+    },
+    async handleSave() {
+      await BranchService.createOne(this.form as Branch);
     }
-
-    await getBranches();
-  }
-
-  async function deleteBranch(id: string) {
-    await BranchService.removeOne(id);
-    await getBranches();
-  }
-
-  function clearForm() {
-    editedBranch.value = JSON.parse(JSON.stringify(initialBranch));
-  }
-
-  return {
-    branches,
-    getBranches,
-    saveBranch,
-    deleteBranch,
-    editedBranch,
-    getBranch,
-    clearForm,
-  };
+  },
 });

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skills';
 import { LearningDomain } from 'src/types/learning-domain';
@@ -107,4 +107,4 @@ async function saveSkill() {
   display: flex;
   justify-content: center;
 }
-</style>
+</style> -->

@@ -5,9 +5,9 @@ import { api } from 'src/boot/axios';
 export class TeacherService {
   static path = 'teachers';
 
-  static async fetchByPage(p: PageParams) {
+  static async fetchByPage(p: PageParams): Promise<Teacher[]> {
     const response = await api.get(`${this.path}/pages`, { params: p });
-    return response.data;
+    return response.data.data //data.teacher;
   }
 
   static async getAll() {

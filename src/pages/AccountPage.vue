@@ -6,34 +6,27 @@
           <q-card-section horizontal>
             <q-card-section>
               <q-avatar size="150px" class="col-auto q-mx-auto">
-                <img
-                  draggable="false"
-                  :src="`${
-                    usr.profile?.avatarUrl ||
-                    'https://placehold.co/32x32?text=nopic'
-                  } `"
-                />
+                <img draggable="false" :src="`${usr.profile?.avatarUrl ||
+                  'https://placehold.co/32x32?text=nopic'
+                  } `" />
               </q-avatar>
             </q-card-section>
             <q-card-section class="flex items-center text-body1">
               <q-list>
                 <q-item>
                   <q-item-section avatar>
-                    <q-icon name="email" class="q-mr-sm"
-                  /></q-item-section>
+                    <q-icon name="email" class="q-mr-sm" /></q-item-section>
                   <q-item-section>{{ usr.profile?.email }}</q-item-section>
                 </q-item>
                 <q-item>
                   <q-item-section avatar>
-                    <q-icon name="person" class="q-mr-sm"
-                  /></q-item-section>
-                  <q-item-section>Name</q-item-section>
+                    <q-icon name="person" class="q-mr-sm" /></q-item-section>
+                  <q-item-section>{{ usr.profile?.name }}</q-item-section>
                 </q-item>
                 <q-item>
                   <q-item-section avatar>
-                    <q-icon name="lock" class="q-mr-sm"
-                  /></q-item-section>
-                  <q-item-section>Role</q-item-section>
+                    <q-icon name="build_circle" class="q-mr-sm" /></q-item-section>
+                  <q-item-section>{{ usr.profile?.role }}</q-item-section>
                 </q-item>
               </q-list>
             </q-card-section>
@@ -89,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useUserStore } from 'src/stores/user';
+import { useAuthStore } from 'src/stores/auth';
 
-const usr = useUserStore();
+const usr = useAuthStore();
 </script>
