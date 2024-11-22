@@ -7,7 +7,7 @@ export class TeacherService {
 
   static async fetchByPage(p: PageParams): Promise<Teacher[]> {
     const response = await api.get(`${this.path}/pages`, { params: p });
-    return response.data.data //data.teacher;
+    return response.data;
   }
 
   static async getAll() {
