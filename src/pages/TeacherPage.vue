@@ -1,9 +1,10 @@
 <template>
   <q-page padding>
-    <FillDataV2
+    <SearchFilter
       v-model:page-params.sync="store.pageParams"
       :by-faculty="true"
       :by-branch="true"
+      :by-curriculum="true"
       :fetch-data="store.fetchData"
       @open-dialog="store.toggleDialog"
     />
@@ -124,12 +125,12 @@ import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTeacherStore } from 'src/stores/teacher';
 import DialogForm from 'src/components/DialogForm.vue';
-import FillDataV2 from 'src/components/FillDataV2.vue';
 import { requireField } from 'src/utils/field-rules';
 import { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/types/position.enum';
 import { useGlobalStore } from 'src/stores/global';
 import { BranchService } from 'src/services/branches';
+import SearchFilter from 'src/components/SearchFilter.vue';
 
 const global = useGlobalStore();
 const branches = ref<Branch[]>([]);
