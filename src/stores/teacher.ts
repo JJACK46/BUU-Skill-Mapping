@@ -1,89 +1,52 @@
 import { defineStore } from 'pinia';
+import { QTableProps } from 'quasar';
 import { TeacherService } from 'src/services/teacher';
 import { PageParams } from 'src/types/pagination';
 import { Teacher } from 'src/types/teacher';
-import { reactive, ref } from 'vue';
 
-export const useTeacherStore = defineStore('teacher', () => {
-  const dialogState = ref(false);
-  const search = ref();
-  const pageParams = ref<PageParams>({
-    page: 1,
-    limit: 10,
-    sort: '',
-    order: 'ASC',
+export const useTeacherStore = defineStore('teacher', {
+  state: () => ({
+    dialogState: false,
     search: '',
-    columnId: '',
-    columnName: '',
-  });
+    pagination: {
+      rowsPerPage: 10
+    } as QTableProps['pagination'],
+    form: {} as Partial<Teacher>,
+    teachers: [] as Teacher[],
+  }),
 
-  const formTeacher = reactive<Teacher>({
-    name: '',
-    engName: '',
-    tel: '',
-    picture: '',
-    email: '',
-    officeRoom: '',
-    specialists: [],
-    bio: '',
-    position: '',
-    branch: null,
-    socials: {
-      line: '',
+  getters: {
+  },
+
+  actions: {
+    async setup() {
+      this.teachers = await TeacherService.getAll();
     },
-    courses: [],
-    curriculums: [],
-  });
+    resetForm() {
+      this.form = {} as Partial<Teacher>;
+    },
+    async fetchData(pag?: QTableProps['pagination']) {
+      const ownPaging = {
+        page: pag?.page || 1,
+        limit: pag?.rowsPerPage || 10,
+        sort: pag?.sortBy || '',
+        order: pag?.descending ? 'DESC' : 'ASC',
+        search: this.search || '',
+      } as PageParams;
+      this.teachers = await TeacherService.fetchByPage(ownPaging);
 
-  const teachers = ref([]);
-  const loading = ref(false);
+    },
 
-  async function fetchData(pageParams?: PageParams) {
-    loading.value = true;
-    let res;
+    async handleSave() {
+      await TeacherService.createOne(this.form);
+      this.resetForm();
+      // Refresh data after saving
+      await this.fetchData();
+    },
 
-    if (pageParams) {
-      console.log('pageParams', pageParams);
-      res = await TeacherService.fetchByPage(pageParams);
-    } else {
-      // initial pageParams
-      const pageParamsInit = <PageParams>{
-        page: 1,
-        limit: 10,
-        sort: '',
-        order: 'ASC',
-        search: '',
-        columnId: '',
-        columnName: '',
-      };
-      res = await TeacherService.fetchByPage(pageParamsInit);
-    }
+    toggleDialog() {
+      this.dialogState = !this.dialogState;
+    },
 
-    console.log('teachers.value', teachers.value);
-    teachers.value = res.data;
-
-    loading.value = false;
-  }
-
-  const handleSave = async () => {
-    TeacherService.createOne(formTeacher);
-    dialogState.value = false;
-    window.location.reload();
-  };
-
-  const updatePageParams = (newParams: PageParams) => {
-    pageParams.value = newParams;
-  };
-
-  return {
-    dialogState,
-    formTeacher,
-    teachers,
-    loading,
-    search,
-    pageParams,
-    fetchData,
-    handleSave,
-    updatePageParams,
-  };
+  },
 });

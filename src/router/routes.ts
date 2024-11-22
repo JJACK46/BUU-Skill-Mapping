@@ -37,17 +37,6 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  // {
-  //   path: '/skills',
-  //   component: () => import('layouts/MainLayout.vue'),
-  //   children: [
-  //     {
-  //       path: '',
-  //       name: 'Skill Management',
-  //       component: () => import('pages/SkillPage.vue'),
-  //     },
-  //   ],
-  // },
   {
     path: '/subjects',
 
@@ -94,7 +83,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'User Management',
-        component: () => import('pages/User/UserPage.vue'),
+        component: () => import('pages/UserPage.vue'),
       },
     ],
   },

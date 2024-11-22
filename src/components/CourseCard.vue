@@ -1,9 +1,6 @@
 <template>
-  <q-card
-    class="col-grow col-sm-auto hover-card"
-    :key="course.id"
-    style="width: 350px"
-  >
+  <q-card v-if="!global.getLoadingState" class="col-grow col-sm-auto hover-card q-animate--fade" :key="course.id"
+    style="width: 350px">
     <q-card-section class="q-py-sm">
       <q-item class="q-pa-none">
         <q-item-section class="text-h6">
@@ -13,13 +10,8 @@
           <q-btn icon="more_vert" flat padding="none">
             <q-menu>
               <q-list>
-                <q-item
-                  clickable
-                  onmouseenter="this.style.color='red'"
-                  onmouseleave="this.style.color=''"
-                  @click="$emit('handle-delete', course.id ?? 0)"
-                  v-close-popup
-                >
+                <q-item clickable onmouseenter="this.style.color='red'" onmouseleave="this.style.color=''"
+                  @click="$emit('handle-delete', course.id ?? 0)" v-close-popup>
                   <q-item-section> Delete</q-item-section>
                   <q-item-section avatar>
                     <q-icon name="delete" />
@@ -39,20 +31,19 @@
       <div :class="`text-${course.active ? 'positive' : 'negative'}`">
         {{ course.active ? 'Active' : 'Inactive' }}
       </div>
-      <q-btn
-        label="View"
-        unelevated
-        color="primary"
-        style="width: 80px"
-        @click="$emit('handle-view', course.id ?? 0)"
-      >
+      <q-btn label="View" unelevated color="primary" style="width: 80px" @click="$emit('handle-view', course.id ?? 0)">
       </q-btn>
     </q-card-actions>
   </q-card>
+  <q-skeleton v-else type="rect" style="width: 350px;height: 180px;" />
+
 </template>
 
 <script lang="ts" setup>
+import { useGlobalStore } from 'src/stores/global';
 import { Course } from 'src/types/course';
+
+const global = useGlobalStore()
 
 defineProps<{
   course: Course;

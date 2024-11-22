@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { QTableProps } from 'quasar';
 import { BranchService } from 'src/services/branches';
 import { Branch } from 'src/types/branch';
 
@@ -8,6 +9,9 @@ export const useBranchStore = defineStore('branch', {
         branches: <Branch[]>[],
         dialogState: false,
         loading: false,
+        pagination: {
+            rowsPerPage: 10
+        } as QTableProps['pagination']
     }),
 
     getters: {},

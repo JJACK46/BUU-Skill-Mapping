@@ -15,24 +15,24 @@
             <template #after>
               <q-tab-panels v-model="innerTab" animated transition-next="slide-up" transition-prev="slide-down">
                 <q-tab-panel name="main" class="q-gutter-y-md">
-                  <q-input dense outlined v-model="store.form.thaiName" label="Name"
+                  <q-input dense outlined v-model="store.form.thaiName" label="Name *"
                     :rules="[requireField, onlyAlphabet]" />
-                  <q-input dense outlined v-model="store.form.engName" label="English Name"
+                  <q-input dense outlined v-model="store.form.engName" label="English Name *"
                     :rules="[requireField, onlyAlphabet]" />
-                  <q-input dense type="textarea" outlined v-model="store.form.description" label="Description"
+                  <q-input dense type="textarea" outlined v-model="store.form.description" label="Description *"
                     :rules="[requireField]" />
-                  <q-input dense outlined v-model="store.form.thaiDegreeName" label="Degree Name"
+                  <q-input dense outlined v-model="store.form.thaiDegreeName" label="Degree Name *"
                     :rules="[requireField, onlyAlphabet]" />
-                  <q-input dense outlined v-model="store.form.engDegreeName" label="English Degree Name"
+                  <q-input dense outlined v-model="store.form.engDegreeName" label="English Degree Name *"
                     :rules="[requireField, onlyAlphabet]" />
-                  <q-input dense type="number" outlined v-model="store.form.period" label="Period"
+                  <q-input dense type="number" outlined v-model="store.form.period" label="Period *"
                     :rules="[requireField]" />
-                  <q-input dense type="number" outlined v-model="store.form.minimumGrade" label="Minimum Grade"
+                  <q-input dense type="number" outlined v-model="store.form.minimumGrade" label="Minimum Grade *"
                     :rules="[requireField]" />
                 </q-tab-panel>
                 <q-tab-panel name="subjects">
-                  <q-select dense outlined v-model="store.form.subjects" :options="subjects" label="Subjects" use-chips
-                    option-label="name" multiple :rules="[requireField]"></q-select>
+                  <q-select dense outlined v-model="store.form.subjects" :options="subjects" label="Subjects  *"
+                    use-chips option-label="name" multiple :rules="[requireField]"></q-select>
                 </q-tab-panel>
               </q-tab-panels>
 
@@ -40,7 +40,7 @@
           </q-splitter>
         </template>
       </DialogForm>
-      <q-card class="q-pa-md" v-for="(c, index) in curriculums" bordered flat :key="c.id">
+      <q-card class="q-pa-md q-animate--fade" v-for="(c, index) in curriculums" bordered flat :key="c.id">
         <q-card-section>
           <div class="row justify-between">
             <span class="text-h6">
