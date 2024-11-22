@@ -1,37 +1,94 @@
 <template>
   <q-page padding>
-    <PageHeader @open-dialog="addDialog = true" :search-text="search" import-btn
-      @open-dialog-import="importDialog = true"></PageHeader>
+    <PageHeader
+      @open-dialog="store.toggleDialog"
+      :search-text="search"
+      import-btn
+      @open-dialog-import="store.toggleDialogImport"
+    ></PageHeader>
     <q-separator class="q-my-md" />
     <!-- Table -->
-    <q-table class="q-animate--fade" separator="cell" :rows="store.students" row-key="id"
-      :loading="global.getLoadingState" :columns="studentColumns">
+    <q-table
+      class="q-animate--fade"
+      separator="cell"
+      :rows="store.students"
+      row-key="id"
+      :loading="global.getLoadingState"
+      :columns="studentColumns"
+    >
       <template #body-cell-info="props">
         <q-td>
-          <q-btn icon="info" padding="none" flat @click="handleClickInfo(props.row.id)"></q-btn>
+          <q-btn
+            icon="info"
+            padding="none"
+            flat
+            @click="handleClickInfo(props.row.id)"
+          ></q-btn>
         </q-td>
       </template>
     </q-table>
     <!-- import btn -->
-    <DialogForm title="Import Students" v-model="importDialog" @save="handleImport" full-width>
+    <DialogForm
+      title="Import Students"
+      v-model="store.dialogImport"
+      @save="handleImport"
+      full-width
+    >
       <template #body>
-        <TableSheetJS ref="sheet" @download-template="downloadTemplateForStudents" />
+        <TableSheetJS
+          ref="sheet"
+          @download-template="downloadTemplateForStudents"
+        />
       </template>
     </DialogForm>
     <!-- add btn -->
-    <DialogForm title="New Student" v-model="addDialog" @save="store.handleSave">
+    <DialogForm
+      :title="store.getTitleForm"
+      v-model="store.dialogState"
+      @save="store.handleSave"
+    >
       <template #body>
-        <q-select :options="branches" option-label="name"
-          @vue:mounted="async () => branches = await BranchService.getAll()" outlined v-model="store.formStudent.branch"
-          label="Branch *" clearable :rules="[requireField]" />
-        <q-input outlined v-model="store.formStudent.name" label="Name *" clearable :rules="[requireField]" />
-        <q-input outlined v-model="store.formStudent.engName" label="English Name *" clearable
-          :rules="[requireField]" />
-        <q-input label="Date Enrolled" readonly outlined v-model="(store.formStudent.dateEnrollment as string)">
+        <q-select
+          :options="branches"
+          option-label="name"
+          @vue:mounted="async () => (branches = await BranchService.getAll())"
+          outlined
+          v-model="store.formStudent.branch"
+          label="Branch *"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="store.formStudent.name"
+          label="Name *"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          v-model="store.formStudent.engName"
+          label="English Name *"
+          clearable
+          :rules="[requireField]"
+        />
+        <q-input
+          label="Date Enrolled"
+          readonly
+          outlined
+          v-model="(store.formStudent.dateEnrollment as string)"
+        >
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="store.formStudent.dateEnrollment" mask="YYYY-MM-DD">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
+                <q-date
+                  v-model="store.formStudent.dateEnrollment"
+                  mask="YYYY-MM-DD"
+                >
                   <div class="row items-left justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
                   </div>
@@ -61,15 +118,13 @@ import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useGlobalStore } from 'src/stores/global';
 import { downloadTemplateForStudents } from 'src/utils/file-template';
 
-const global = useGlobalStore()
-const router = useRouter()
-const importDialog = ref(false);
+const global = useGlobalStore();
+const router = useRouter();
 const search = ref('');
 const store = useStudentStore();
 const branches = ref<Branch[]>([]);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const addDialog = ref(false);
 const studentColumns: QTableColumn[] = [
   {
     name: 'id',
@@ -93,7 +148,7 @@ const studentColumns: QTableColumn[] = [
   },
   {
     name: 'engName',
-    label: 'Engish Name',
+    label: 'English Name',
     field: 'engName',
     align: 'left',
   },
@@ -106,6 +161,12 @@ const studentColumns: QTableColumn[] = [
   {
     name: 'info',
     label: 'More Info',
+    field: '',
+    align: 'left',
+  },
+  {
+    name: 'actions',
+    label: 'Actions',
     field: '',
     align: 'left',
   },
@@ -136,7 +197,7 @@ const studentColumns: QTableColumn[] = [
 const sheet = ref();
 
 function handleClickInfo(id: number | string) {
-  router.push(`/students/${id}`)
+  router.push(`/students/${id}`);
 }
 
 async function handleImport() {
@@ -147,6 +208,6 @@ useMeta({
   title: title.value,
 });
 onMounted(async () => {
-  store.students = await StudentService.getAll();
+  await store.fetchData();
 });
 </script>

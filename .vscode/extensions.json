@@ -1,9 +1,9 @@
 {
   "recommendations": [
+    "Vue.volar",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "editorconfig.editorconfig",
-    "vue.volar",
     "simonhe.common-intellisense",
     "hossaini.quasar-intellisense"
   ],
