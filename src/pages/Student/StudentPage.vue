@@ -11,7 +11,7 @@
     <q-table
       class="q-animate--fade"
       separator="cell"
-      :rows="store.students"
+      :rows="store.students || []"
       row-key="id"
       :loading="global.getLoadingState"
       :columns="studentColumns"
