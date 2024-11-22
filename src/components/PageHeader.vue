@@ -1,46 +1,113 @@
 <template>
   <div class="row justify-between">
     <div class="row q-gutter-sm">
-      <q-btn v-if="importBtn" label="import" icon="upload" outline color="primary" @click="$emit('openDialogImport')" />
-      <q-btn v-if="exportBtn" label="export" icon="cloud_download" outline @click="$emit('openDialogExport')" />
+      <q-btn
+        v-if="importBtn"
+        label="import"
+        icon="upload"
+        outline
+        color="primary"
+        @click="$emit('openDialogImport')"
+      />
+      <q-btn
+        v-if="exportBtn"
+        label="export"
+        icon="cloud_download"
+        outline
+        @click="$emit('openDialogExport')"
+      />
     </div>
     <div class="row q-gutter-sm">
-      <q-btn v-show="!hideFilter" icon="filter_list" flat label="Filter" color="primary" dense
-        @click="filterDialog = !filterDialog">
-        <q-popup-edit v-model="filterDialog" :cover="false" :offset="[0, 10]" style="width: 400px"
-          @vue:mounted="initOptions">
+      <q-btn
+        v-show="!hideFilter"
+        icon="filter_list"
+        flat
+        label="Filter"
+        color="primary"
+        dense
+        @click="filterDialog = !filterDialog"
+      >
+        <q-popup-edit
+          v-model="filterDialog"
+          :cover="false"
+          :offset="[0, 10]"
+          style="width: 400px"
+          @vue:mounted="initOptions"
+        >
           <q-tabs v-model="filterMenu">
             <q-tab name="faculty" label="Faculty" />
             <q-tab name="branch" label="Branch" />
           </q-tabs>
           <q-tab-panels v-model="filterMenu" animated>
             <q-tab-panel name="faculty">
-              <q-select v-model="selectedFaculty" label="Select Faculty" filled fill-input option-label="name"
-                :options="facultyOptions" @update:model-value="handleChangeFaculty">
+              <q-select
+                v-model="selectedFaculty"
+                label="Select Faculty"
+                filled
+                fill-input
+                option-label="name"
+                :options="facultyOptions"
+                @update:model-value="handleChangeFaculty"
+              >
               </q-select>
             </q-tab-panel>
             <q-tab-panel name="branch">
-              <q-select v-model="selectedBranch" label="Select Branch" filled fill-input option-label="name"
-                :options="branchOptions">
-              </q-select></q-tab-panel>
+              <q-select
+                v-model="selectedBranch"
+                label="Select Branch"
+                filled
+                fill-input
+                option-label="name"
+                :options="branchOptions"
+              >
+              </q-select
+            ></q-tab-panel>
           </q-tab-panels>
         </q-popup-edit>
       </q-btn>
 
-      <q-input outlined clearable v-model="searchText" @keyup.enter="$emit('enterSearch')"
-        :label="labelSearch ?? 'Search'" class="col" dense debounce="500" style="width: 300px">
+      <q-input
+        outlined
+        clearable
+        v-model="searchText"
+        @keyup.enter="$emit('enterSearch')"
+        :label="labelSearch ?? 'Search'"
+        class="col"
+        dense
+        debounce="500"
+        style="width: 300px"
+      >
         <template #prepend>
           <q-icon name="search"></q-icon>
         </template>
       </q-input>
-      <q-btn @click="$emit('openDialog')" color="primary" label="add" style="width: 80px" unelevated>
+      <q-btn
+        @click="$emit('openDialog')"
+        color="primary"
+        label="add"
+        style="width: 80px"
+        unelevated
+      >
       </q-btn>
     </div>
   </div>
-  <div v-show="selectedBranch || selectedFaculty" class="q-animate--fade q-mt-sm">
+  <div
+    v-show="selectedBranch || selectedFaculty"
+    class="q-animate--fade q-mt-sm"
+  >
     <span>Filter: </span>
-    <q-chip v-if="selectedFaculty" :label="selectedFaculty.name" removable @remove="selectedFaculty = null" />
-    <q-chip v-if="selectedBranch" :label="selectedBranch.name" removable @remove="selectedBranch = null" />
+    <q-chip
+      v-if="selectedFaculty"
+      :label="selectedFaculty.name"
+      removable
+      @remove="selectedFaculty = null"
+    />
+    <q-chip
+      v-if="selectedBranch"
+      :label="selectedBranch.name"
+      removable
+      @remove="selectedBranch = null"
+    />
   </div>
 </template>
 
@@ -72,7 +139,7 @@ defineProps<{
   importBtn?: true;
   exportBtn?: true;
   labelSearch?: string;
-  hideFilter?: true
+  hideFilter?: true;
 }>();
 
 defineEmits<{

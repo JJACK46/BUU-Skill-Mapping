@@ -11,6 +11,13 @@
         />
 
         <q-toolbar-title> Skill Mapping App </q-toolbar-title>
+        <q-btn
+          flat
+          padding="none"
+          class="q-mr-md text-bold"
+          @click="changeLocale"
+          >{{ getCurrentLocale }}</q-btn
+        >
         <div class="q-gutter-md q-mr-md">
           <q-btn
             icon="notifications"
@@ -33,7 +40,7 @@
                 <q-item-section>
                   <q-item-label class="row items-center q-gutter-x-sm">
                     <q-icon name="person"></q-icon>
-                    <span class="col">Account</span>
+                    <span class="col">{{ t('account') }}</span>
                   </q-item-label>
                 </q-item-section>
               </q-item>
@@ -41,7 +48,7 @@
                 <q-item-section>
                   <q-item-label class="row items-center q-gutter-x-sm">
                     <q-icon name="logout"></q-icon>
-                    <span class="col">Logout</span>
+                    <span class="col"> {{ t('logout') }}</span>
                   </q-item-label>
                 </q-item-section>
               </q-item>
@@ -94,7 +101,24 @@ import { useAuthStore } from 'src/stores/auth';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { LocalStorage } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n();
+const getCurrentLocale = computed(() => {
+  const cur = locale.value.split('-')[0];
+  if (cur === 'th') {
+    return 'EN';
+  } else {
+    return 'TH';
+  }
+});
+function changeLocale() {
+  if (locale.value === 'en-US') {
+    locale.value = 'th-TH';
+  } else {
+    locale.value = 'en-US';
+  }
+}
 const themeIcon = computed(() => (dark.isActive ? 'dark_mode' : 'light_mode'));
 const handleTheme = () => {
   dark.toggle();
