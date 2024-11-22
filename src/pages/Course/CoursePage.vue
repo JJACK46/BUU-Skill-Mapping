@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <PageHeader
+    <MainHeader
       v-model:searchText="filterCourse"
       @open-dialog="handleOpenDialog"
     />
@@ -71,7 +71,6 @@
 import { useMeta, useQuasar } from 'quasar';
 import CourseCard from 'src/components/CourseCard.vue';
 import DialogForm from 'src/components/DialogForm.vue';
-import PageHeader from 'src/components/PageHeader.vue';
 import { SubjectService } from 'src/services/subject';
 import { InstructorService } from 'src/services/instructor';
 import { useCourseStore } from 'src/stores/course';
@@ -80,6 +79,7 @@ import { Instructor } from 'src/types/instructor';
 import { requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import MainHeader from 'src/components/Header/main-header.vue';
 
 const $q = useQuasar();
 const route = useRoute();

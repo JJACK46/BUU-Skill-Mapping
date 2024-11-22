@@ -1,11 +1,11 @@
 <template>
   <q-page padding>
-    <PageHeader
+    <MainHeader
       @open-dialog="store.toggleDialog"
       :search-text="search"
       import-btn
       @open-dialog-import="store.toggleDialogImport"
-    ></PageHeader>
+    ></MainHeader>
     <q-separator class="q-my-md" />
     <!-- Table -->
     <q-table
@@ -118,10 +118,11 @@ import { BranchService } from 'src/services/branches';
 import { Branch } from 'src/types/branch';
 import DialogForm from 'src/components/DialogForm.vue';
 import { StudentService } from 'src/services/student';
-import PageHeader from 'src/components/PageHeader.vue';
+
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useGlobalStore } from 'src/stores/global';
 import { downloadTemplateForStudents } from 'src/utils/file-template';
+import MainHeader from 'src/components/Header/main-header.vue';
 
 const global = useGlobalStore();
 const router = useRouter();

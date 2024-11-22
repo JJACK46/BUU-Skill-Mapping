@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <PageHeader
+    <MainHeader
       v-model:search-text="store.search"
       @open-dialog="store.toggleDialog"
     />
@@ -12,7 +12,7 @@
       :rows="store.teachers"
       row-key="id"
       :loading="global.getLoadingState"
-      :columns="teacherColumns"
+      :columns="columns"
       :filter="store.search"
       @update:pagination="store.fetchData"
     >
@@ -32,10 +32,7 @@
           label="Branch *"
           options-dense
           :rules="[requireField]"
-          @vue:mounted="
-            async () =>
-              (branches = await BranchService.getAll().then((r) => r.data))
-          "
+          @vue:mounted="fetchBranches"
         >
           <template #no-option></template> </q-select
         >/>
@@ -125,20 +122,20 @@ import { QTableColumn, useMeta } from 'quasar';
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTeacherStore } from 'src/stores/instructor';
-import PageHeader from 'src/components/PageHeader.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import { requireField } from 'src/utils/field-rules';
 import { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/types/position.enum';
 import { useGlobalStore } from 'src/stores/global';
 import { BranchService } from 'src/services/branches';
+import MainHeader from 'src/components/Header/main-header.vue';
 
 const global = useGlobalStore();
 const branches = ref<Branch[]>([]);
 const store = useTeacherStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const teacherColumns: QTableColumn[] = [
+const columns: QTableColumn[] = [
   {
     name: 'id',
     label: 'ID',
@@ -178,6 +175,11 @@ const teacherColumns: QTableColumn[] = [
     align: 'left',
   },
 ];
+function fetchBranches() {
+  BranchService.getAll().then((res) => {
+    branches.value = res.data;
+  });
+}
 
 useMeta({
   title: title.value,

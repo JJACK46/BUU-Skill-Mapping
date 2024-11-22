@@ -9,5 +9,17 @@
     "instructor": "Instructor",
     "students": "Students",
     "about": "About",
-    "hello": "Howdy"
+    "hello": "Howdy",
+    "search": "Search",
+    "add": "Add",
+    "edit": "Edit",
+    "remove": "Remove",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "filter": "Filter",
+    "faculty": "Faculty",
+    "noBranch": "No Branch",
+    "noFaculty": "No Faculty",
+    "Right click to open menu of each row": "Right click to open menu of each row"
 }

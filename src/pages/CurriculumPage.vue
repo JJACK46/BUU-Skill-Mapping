@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <PageHeader :search-text="search" @open-dialog="store.toggleDialogForm" />
+    <MainHeader :search-text="search" @open-dialog="store.toggleDialogForm" />
     <q-separator class="q-my-md" />
     <section class="q-mt-md q-gutter-y-lg">
       <DialogForm
@@ -149,7 +149,7 @@
 <script lang="ts" setup>
 import { useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
-import PageHeader from 'src/components/PageHeader.vue';
+import MainHeader from 'src/components/Header/main-header.vue';
 import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
 import { useCurriculumStore } from 'src/stores/curriculum';

@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <PageHeader :search-text="search" @open-dialog="store.toggleDialog" />
+    <MainHeader :search-text="search" @open-dialog="store.toggleDialog" />
     <q-separator class="q-my-md" />
     <DialogForm
       title="New Branch"
@@ -58,7 +58,7 @@
 <script lang="ts" setup>
 import { QTableProps, useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
-import PageHeader from 'src/components/PageHeader.vue';
+import MainHeader from 'src/components/Header/main-header.vue';
 import { BranchService } from 'src/services/branches';
 import { FacultyService } from 'src/services/faculty';
 import { useBranchStore } from 'src/stores/branch';

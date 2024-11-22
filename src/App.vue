@@ -163,6 +163,6 @@ useMeta({
 }
 
 .hover-card:hover {
-  border: 2px solid $accent-select;
+  border: 2px solid $secondary;
 }
 </style>

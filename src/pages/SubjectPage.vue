@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <PageHeader
+    <MainHeader
       v-model:search-text="search"
       @open-dialog="store.handleOpenDialog"
       hide-filter
@@ -204,12 +204,12 @@
 import { QTableColumn, useMeta } from 'quasar';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import PageHeader from 'src/components/PageHeader.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import { useSubjectStore } from 'src/stores/subject';
 import { requireField } from 'src/utils/field-rules';
 import { SubjectType } from 'src/types/subject';
 import { useGlobalStore } from 'src/stores/global';
+import MainHeader from 'src/components/Header/main-header.vue';
 
 const global = useGlobalStore();
 const route = useRoute();

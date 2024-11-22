@@ -9,5 +9,17 @@
     "instructor": "ผู้สอน",
     "students": "นิสิต",
     "about": "เกี่ยวกับ",
-    "hello": "สวัสดี"
+    "hello": "สวัสดี",
+    "search": "ค้้นหา",
+    "add": "เพิ่ม",
+    "edit": "แก้ไข",
+    "remove": "ลบ",
+    "delete": "ลบ",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "filter": "คัดกรอง",
+    "faculty": "คณะ",
+    "noBranch": "ไม่มีสาขา",
+    "noFaculty": "ไม่มีคณะ",
+    "Right click to open menu of each row": "คลิกขวาที่แถวเพื่อเปิดเมนู"
 }
