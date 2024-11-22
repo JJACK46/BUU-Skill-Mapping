@@ -2,76 +2,70 @@ import { defineStore } from 'pinia';
 import { StudentService } from 'src/services/student';
 import { PageParams } from 'src/types/pagination';
 import { Student } from 'src/types/student';
-import { reactive, ref } from 'vue';
 
-export const useStudentStore = defineStore('student', () => {
-  const dialogState = ref(false);
-  const search = ref();
-  const pageParams = ref<PageParams>({
-    page: 1,
-    limit: 10,
-    sort: '',
-    order: 'ASC',
+type TitleForm = 'New Student' | 'Edit Student';
+
+export const useStudentStore = defineStore('student', {
+  state: () => ({
+    dialogState: false,
+    dialogImport: false,
     search: '',
-    columnId: '',
-    columnName: '',
-  });
+    pageParams: {} as PageParams,
+    formStudent: {} as Partial<Student>,
+    students: [] as Student[],
+    titleForm: '' as TitleForm,
+  }),
+  getters: {
+    getTitleForm: (state) => state.titleForm,
+  },
+  actions: {
+    async fetchData(
+      search?: string,
+      columnId?: string | null,
+      columnName?: string | null
+    ) {
+      if (search) {
+        this.pageParams.search = search;
+      }
 
-  const formStudent = reactive<Student>({
-    name: '',
-    engName: '',
-    dateEnrollment: '',
-    skillCollection: [],
-    socials: null,
-    branch: null,
-    courseEnrollment: []
-  });
+      if (columnId && columnName) {
+        this.pageParams.columnId = columnId;
+        this.pageParams.columnName = columnName;
+      } else {
+        this.pageParams.columnId = this.pageParams.columnId || '';
+        this.pageParams.columnName = this.pageParams.columnName || '';
+      }
+      if (columnId && columnName === 'null') {
+        this.pageParams.columnId = '';
+        this.pageParams.columnName = '';
+      }
 
-  const students = ref<Student[]>([]);
-  const loading = ref(false);
+      const res = await StudentService.fetchData(this.pageParams);
+      this.students = res.data;
 
-  async function fetchData(
-    search?: string,
-    columnId?: string | null,
-    columnName?: string | null
-  ) {
-    loading.value = true;
-    if (search) {
-      pageParams.value.search = search;
+    },
+
+    async handleSave(form?: Partial<Student>) {
+      if (form) {
+        StudentService.updateOne(form);
+      } else {
+        StudentService.createOne(this.formStudent);
+      }
+      this.dialogState = false;
+      await this.fetchData();
+    },
+    toggleDialog(form?: Partial<Student>) {
+      if (form) {
+        this.formStudent = form;
+        this.titleForm = 'Edit Student';
+      } else {
+        this.formStudent = {} as Student;
+        this.titleForm = 'New Student';
+      }
+      this.dialogState = !this.dialogState
+    },
+    toggleDialogImport() {
+      this.dialogImport = !this.dialogImport
     }
-
-    if (columnId && columnName) {
-      pageParams.value.columnId = columnId;
-      pageParams.value.columnName = columnName;
-    } else {
-      pageParams.value.columnId = pageParams.value.columnId || '';
-      pageParams.value.columnName = pageParams.value.columnName || '';
-    }
-    if (columnId && columnName === 'null') {
-      pageParams.value.columnId = '';
-      pageParams.value.columnName = '';
-    }
-
-    const res = await StudentService.fetchByPage(pageParams.value);
-    students.value = res.data;
-
-    loading.value = false;
   }
-
-  const handleSave = async () => {
-    StudentService.createOne(formStudent);
-    dialogState.value = false;
-    window.location.reload();
-  };
-
-  return {
-    dialogState,
-    formStudent,
-    students,
-    loading,
-    search,
-    pageParams,
-    fetchData,
-    handleSave,
-  };
 });

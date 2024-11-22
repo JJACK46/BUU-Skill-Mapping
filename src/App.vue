@@ -131,7 +131,6 @@ useMeta({
   }
 
   .q-table {
-
     .q-table__top,
     thead tr:first-child th {
       background-color: $primary-dark;

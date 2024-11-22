@@ -9,14 +9,9 @@ export class StudentService {
   }
   static path = 'students';
 
-  static async fetchByPage(p: PageParams) {
-    const response = await api.get(`${this.path}/pages`, { params: p });
+  static async fetchData(p?: PageParams) {
+    const response = await api.get(this.path, { params: p });
     return response.data;
-  }
-
-  static async getAll() {
-    const res = await api.get(this.path);
-    return res.data;
   }
 
   static async getOne(id: number) {
@@ -24,13 +19,13 @@ export class StudentService {
     return res.data;
   }
 
-  static async createOne(obj: Student) {
+  static async createOne(obj: Partial<Student>) {
     const res = await api.post(this.path, obj);
     return res.data;
   }
 
-  static async updateOne(obj: Student) {
-    const res = await api.patch(this.path, obj);
+  static async updateOne(obj: Partial<Student>) {
+    const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.data;
   }
 

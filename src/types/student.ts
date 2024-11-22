@@ -10,6 +10,7 @@ export interface Student {
   dateEnrollment: Date | string;
   courseEnrollment: Partial<CourseEnrollment>[];
   skillCollection: SkillCollection[];
-  socials: Partial<SocialForm> | null;
+  socials?: Partial<SocialForm>;
   branch: Partial<Branch> | null;
+  tel: string;
 }
