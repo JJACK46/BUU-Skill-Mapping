@@ -72,13 +72,11 @@ import { useMeta, useQuasar } from 'quasar';
 import CourseCard from 'src/components/CourseCard.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import PageHeader from 'src/components/PageHeader.vue';
-import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
-import { InstructorService } from 'src/services/teacher';
+import { InstructorService } from 'src/services/instructor';
 import { useCourseStore } from 'src/stores/course';
-import { Curriculum } from 'src/types/curriculum';
 import { Subject } from 'src/types/subject';
-import { Teacher } from 'src/types/teacher';
+import { Instructor } from 'src/types/instructor';
 import { requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -86,10 +84,10 @@ import { useRoute, useRouter } from 'vue-router';
 const $q = useQuasar();
 const route = useRoute();
 const subjects = ref<Subject[]>([]);
-const curriculums = ref<Curriculum[]>([]);
+// const curriculums = ref<Curriculum[]>([]);
 const router = useRouter();
 const filterCourse = ref('');
-const teachers = ref<Teacher[]>([]);
+const teachers = ref<Instructor[]>([]);
 const store = useCourseStore();
 
 const handleViewCourse = (id: number) => {
@@ -102,7 +100,7 @@ const handleOpenDialog = async () => {
   store.dialogState = true;
   subjects.value = (await SubjectService.getAll()).data;
   teachers.value = (await InstructorService.getAll()).data;
-  curriculums.value = (await CurriculumService.getAll()).data;
+  // curriculums.value = wait for implement
 };
 
 const handlePopup = (id: number) => {

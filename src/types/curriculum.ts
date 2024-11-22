@@ -1,6 +1,6 @@
 import { Branch } from './branch';
 import { Subject } from './subject';
-import { Teacher } from './teacher';
+import { Instructor } from './instructor';
 export interface Curriculum {
   id: string;
   thaiName: string;
@@ -10,7 +10,7 @@ export interface Curriculum {
   description: string;
   period: number;
   minimumGrade: number;
-  coordinators: Teacher[];
+  coordinators: Instructor[];
   // plos: any[];
   subjects?: Subject[];
   branch: Branch;

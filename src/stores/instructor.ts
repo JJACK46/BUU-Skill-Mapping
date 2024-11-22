@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { QTableProps } from 'quasar';
-import { InstructorService } from 'src/services/teacher';
+import { InstructorService } from 'src/services/instructor';
 import { PageParams } from 'src/types/pagination';
-import { Teacher } from 'src/types/teacher';
+import { Instructor } from 'src/types/instructor';
 
 export const useTeacherStore = defineStore('teacher', {
   state: () => ({
@@ -11,8 +11,8 @@ export const useTeacherStore = defineStore('teacher', {
     pagination: {
       rowsPerPage: 10
     } as QTableProps['pagination'],
-    form: {} as Partial<Teacher>,
-    teachers: [] as Teacher[],
+    form: {} as Partial<Instructor>,
+    teachers: [] as Instructor[],
   }),
 
   getters: {
@@ -20,10 +20,10 @@ export const useTeacherStore = defineStore('teacher', {
 
   actions: {
     async setup() {
-      this.teachers = (await InstructorService.getAll()).data;
+      this.teachers = (await InstructorService.getAll({ page: 1 })).data;
     },
     resetForm() {
-      this.form = {} as Partial<Teacher>;
+      this.form = {} as Partial<Instructor>;
     },
     async fetchData(pag?: QTableProps['pagination']) {
       const req = {

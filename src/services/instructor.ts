@@ -1,4 +1,4 @@
-import { Teacher } from 'src/types/teacher';
+import { Instructor } from 'src/types/instructor';
 import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
@@ -18,7 +18,7 @@ export class InstructorService {
     return res.data;
   }
 
-  static async createOne(obj: Partial<Teacher>) {
+  static async createOne(obj: Partial<Instructor>) {
     const dto = {
       ...obj,
       userId: obj.user?.id,
@@ -29,7 +29,7 @@ export class InstructorService {
     return res.data;
   }
 
-  static async updateOne(obj: Teacher) {
+  static async updateOne(obj: Instructor) {
     const res = await api.patch(this.path, obj);
     return res.data;
   }

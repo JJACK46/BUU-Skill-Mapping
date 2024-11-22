@@ -184,7 +184,7 @@ useMeta({
   title: title.value,
 });
 onMounted(async () => {
-  curriculums.value = (await CurriculumService.getAll()).data;
+  curriculums.value = (await CurriculumService.getAll({ page: 1 })).data;
   subjects.value = (await SubjectService.getAll()).data;
 });
 </script>
