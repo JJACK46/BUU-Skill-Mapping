@@ -5,6 +5,8 @@ import { SubjectService } from 'src/services/subject';
 import { Skill } from 'src/types/skill';
 import { Subject } from 'src/types/subject';
 
+type TitleForm = 'New Subject' | 'Edit Subject'
+
 export const useSubjectStore = defineStore('subject', {
   state: () => ({
     dialogState: false,
@@ -12,20 +14,18 @@ export const useSubjectStore = defineStore('subject', {
     form: <Partial<Subject>>{},
     skillOptions: <Skill[]>[],
     tabsModel: 'req',
-    editMode: false,
-    dialogTitle: 'New Subject',
+    editMode: true,
+    dialogTitle: '' as TitleForm,
     pagination: { 'rowsPerPage': 10 } as QTableProps['pagination']
   }),
-
   getters: {
     getSkillOptions: (s) => s.skillOptions,
     getDialogTitle: (s) => s.dialogTitle,
     getSubjects: (s) => s.subjects,
   },
-
   actions: {
     async setup() {
-      this.subjects = await SubjectService.getAll();
+      this.subjects = (await SubjectService.getAll()).data;
     },
     async handleSave() {
       if (this.editMode) {
@@ -33,11 +33,11 @@ export const useSubjectStore = defineStore('subject', {
       } else {
         await SubjectService.createOne(this.form);
       }
-      this.subjects = await SubjectService.getAll();
+      this.subjects = (await SubjectService.getAll()).data;
       this.dialogState = false;
     },
     async fetchAllSkills() {
-      this.skillOptions = await SkillService.getAll();
+      this.skillOptions = (await SkillService.getAll()).data;
     },
     handleOpenDialog(form?: Partial<Subject>) {
       if (this.editMode && form) {
@@ -51,8 +51,7 @@ export const useSubjectStore = defineStore('subject', {
     },
     async removeSubject(id: string) {
       await SubjectService.removeOne(id);
-      this.subjects = await SubjectService.getAll();
-      // window.location.reload()
+      this.subjects = (await SubjectService.getAll()).data;
     }
   },
 });

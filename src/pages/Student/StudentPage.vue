@@ -51,7 +51,12 @@
         <q-select
           :options="branches"
           option-label="name"
-          @vue:mounted="async () => (branches = await BranchService.getAll())"
+          @vue:mounted="
+            async () => {
+              const { data } = await BranchService.getAll();
+              branches = data;
+            }
+          "
           outlined
           v-model="store.formStudent.branch"
           label="Branch *"

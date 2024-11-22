@@ -1,5 +1,6 @@
 import { Course } from 'src/types/course';
 import { api } from 'boot/axios';
+import { PageParams } from 'src/types/pagination';
 
 export class CourseService {
   static path = 'courses';
@@ -11,9 +12,12 @@ export class CourseService {
     );
     return res.data;
   }
-  static async getAll() {
-    const res = await api.get(this.path);
-    return res.data;
+  static async getAll(p?: Partial<PageParams>) {
+    const { data } = await api.get(this.path, { params: p });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   }
 
   static async getOne(id: number) {

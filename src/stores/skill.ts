@@ -21,7 +21,7 @@ export const useSkillStore = defineStore('skill', {
     },
     actions: {
         async fetchData() {
-            this.skills = await SkillService.getAll();
+            this.skills = (await SkillService.getAll()).data;
         },
         async handleSave() {
             if (this.parentId) {

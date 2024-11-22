@@ -5,14 +5,12 @@ import { Subject } from 'src/types/subject';
 export class SubjectService {
   static path = 'subjects';
 
-  static async fetchByPage(p: PageParams) {
-    const response = await api.get(`${this.path}/pages`, { params: p });
-    return response.data;
-  }
-
-  static async getAll() {
-    const res = await api.get(this.path);
-    return res.data;
+  static async getAll(p?: Partial<PageParams>) {
+    const { data } = await api.get(this.path, { params: p });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   }
 
   static async getOne(id: number) {
@@ -21,10 +19,6 @@ export class SubjectService {
   }
 
   static async createOne(obj: Partial<Subject>) {
-    // const dto = {
-    //   ...obj,
-    //   skillListId: obj.skillExpectedLevels?.map((s) => s.id),
-    // };
     const res = await api.post(this.path, obj);
     return res.data;
   }

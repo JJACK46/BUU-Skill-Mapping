@@ -11,8 +11,7 @@ export const useCurriculumStore = defineStore('curriculum', {
     getters: {},
     actions: {
         async getCurriculums() {
-            const res = await CurriculumService.getAll();
-            this.curriculums = res;
+            this.curriculums = (await CurriculumService.getAll()).data;
         },
         toggleDialogForm(form?: Partial<Curriculum>) {
             if (form) {

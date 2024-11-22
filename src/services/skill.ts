@@ -43,20 +43,23 @@ class SkillService {
     return res.data;
   };
 
-  static getAll = async () => {
-    const res = await api.get(this.path);
-    return res.data;
+  static getAll = async (p?: Partial<PageParams>) => {
+    const { data } = await api.get(this.path, { params: p });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   };
 
-  static getAllByPage = async (params: PageParams) => {
-    const res = await api.get<{ data: Skill[]; total: number }>(
-      `${this.path}/pages`,
-      {
-        params,
-      }
-    );
-    return res;
-  };
+  // static getAllByPage = async (params: PageParams) => {
+  //   const res = await api.get<{ data: Skill[]; total: number }>(
+  //     `${this.path}/pages`,
+  //     {
+  //       params,
+  //     }
+  //   );
+  //   return res;
+  // };
 
   static getOne = async (id: number) => {
     const res = await api.get<Skill>(`${this.path}/${id}`);

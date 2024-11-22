@@ -2,17 +2,15 @@ import { Teacher } from 'src/types/teacher';
 import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
-export class TeacherService {
-  static path = 'teachers';
+export class InstructorService {
+  static path = 'instructor';
 
-  static async fetchByPage(p: PageParams): Promise<Teacher[]> {
-    const response = await api.get(`${this.path}/pages`, { params: p });
-    return response.data.data //data.teacher;
-  }
-
-  static async getAll() {
-    const res = await api.get(this.path);
-    return res.data;
+  static async getAll(p?: Partial<PageParams>) {
+    const { data } = await api.get(this.path, { params: p });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   }
 
   static async getOne(id: number) {

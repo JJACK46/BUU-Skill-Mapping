@@ -8,7 +8,6 @@ export const useBranchStore = defineStore('branch', {
         form: {} as Branch,
         branches: <Branch[]>[],
         dialogState: false,
-        loading: false,
         pagination: {
             rowsPerPage: 10
         } as QTableProps['pagination']
@@ -17,18 +16,16 @@ export const useBranchStore = defineStore('branch', {
     getters: {},
     actions: {
         async setup() {
-            this.loading = true;
-            this.branches = await BranchService.getAll();
-            this.loading = false;
+            this.branches = (await BranchService.getAll()).data;
         },
         async createOne() {
             BranchService.createOne(this.form as Branch);
             this.dialogState = false;
-            window.location.reload();
+            this.branches = (await BranchService.getAll()).data;
         },
         async removeOne(id: number) {
             BranchService.removeOne(id);
-            window.location.reload();
+            this.branches = (await BranchService.getAll()).data;
         },
         toggleDialog() {
             this.dialogState = !this.dialogState;
