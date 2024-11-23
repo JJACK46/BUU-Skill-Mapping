@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { StudentService } from 'src/services/student';
-import { PageParams } from 'src/types/pagination';
 import { Student } from 'src/types/student';
+import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 type TitleForm = 'New Student' | 'Edit Student';
 
@@ -10,7 +10,7 @@ export const useStudentStore = defineStore('student', {
     dialogState: false,
     dialogImport: false,
     search: '',
-    pageParams: {} as PageParams,
+    pagination: defaultPagination,
     formStudent: {} as Partial<Student>,
     students: [] as Student[],
     titleForm: '' as TitleForm,
@@ -19,32 +19,11 @@ export const useStudentStore = defineStore('student', {
     getTitleForm: (state) => state.titleForm,
   },
   actions: {
-    async fetchData(
-      search?: string,
-      columnId?: string | null,
-      columnName?: string | null
-    ) {
-      if (search) {
-        this.pageParams.search = search;
-      }
-
-      if (columnId && columnName) {
-        this.pageParams.columnId = columnId;
-        this.pageParams.columnName = columnName;
-      } else {
-        this.pageParams.columnId = this.pageParams.columnId || '';
-        this.pageParams.columnName = this.pageParams.columnName || '';
-      }
-      if (columnId && columnName === 'null') {
-        this.pageParams.columnId = '';
-        this.pageParams.columnName = '';
-      }
-
-      const res = await StudentService.fetchData(this.pageParams);
-      this.students = res.data;
+    async fetchData() {
+      const { data } = await StudentService.fetchData(convertToPageParams(this.pagination));
+      this.students = data;
 
     },
-
     async handleSave(form?: Partial<Student>) {
       if (form) {
         StudentService.updateOne(form);

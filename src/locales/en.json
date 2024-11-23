@@ -21,5 +21,10 @@
     "faculty": "Faculty",
     "noBranch": "No Branch",
     "noFaculty": "No Faculty",
-    "Right click to open menu of each row": "Right click to open menu of each row"
+    "Right click to open menu of each row": "Right click to open menu of each row",
+    "quit": "Quit",
+    "login": "Login",
+    "logout": "Logout",
+    "account": "Account",
+    "insertSubSkill": "Insert Sub-Skill"
 }

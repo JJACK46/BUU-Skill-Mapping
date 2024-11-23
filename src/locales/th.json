@@ -21,5 +21,10 @@
     "faculty": "คณะ",
     "noBranch": "ไม่มีสาขา",
     "noFaculty": "ไม่มีคณะ",
-    "Right click to open menu of each row": "คลิกขวาที่แถวเพื่อเปิดเมนู"
+    "Right click to open menu of each row": "คลิกขวาที่แถวรายการเพื่อเปิดเมนู",
+    "quit": "ออก",
+    "login": "เข้าสู่ระบบ",
+    "logout": "ออกจากระบบ",
+    "account": "บัญชี",
+    "insertSubSkill": "เพิ่มทักษะรอง"
 }

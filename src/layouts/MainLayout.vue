@@ -182,7 +182,7 @@ const linksList: LinkProps[] = [
   {
     title: 'instructor',
     icon: 'group',
-    link: '/instructor',
+    link: '/instructors',
   },
   {
     title: 'students',

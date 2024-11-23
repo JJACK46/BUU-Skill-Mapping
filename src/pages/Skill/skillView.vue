@@ -9,9 +9,10 @@ import { requireField } from 'src/utils/field-rules';
 import { useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
 import MainHeader from 'src/components/Header/main-header.vue';
+import { useI18n } from 'vue-i18n';
 
 const store = useSkillStore();
-
+const { t } = useI18n();
 onMounted(store.fetchData);
 
 const route = useRoute();
@@ -19,84 +20,12 @@ const title = computed(() => route.matched[1].name as string);
 useMeta({
   title: title.value,
 });
-
-// const skillStore = useSkillStore();
-// const loading = ref(false);
-// const dialogAddVisible = ref(false);
-// const dialogAddSubVisible = ref(false);
-// const dialogDetailVisible = ref(false);
-// const dialogConfirmVisible = ref(false);
-// const selectedItem = ref<Skill | null>(null);
-// const skills = computed(() => skillStore.skills || []);
-
-// const showDialogAdd = async () => {
-//   dialogAddVisible.value = true;
-// };
-
-// const closeDialogAdd = () => {
-//   dialogAddVisible.value = false;
-// };
-
-// const showDialogAddSub = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogAddSubVisible.value = true;
-// };
-
-// const closeDialogAddSub = () => {
-//   dialogAddSubVisible.value = false;
-// };
-
-// const showDialogDetail = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogDetailVisible.value = true;
-// };
-
-// const closeDialogDetail = () => {
-//   dialogDetailVisible.value = false;
-// };
-
-// const confirmDeleteSkill = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogConfirmVisible.value = true;
-// };
-// const closeDialogDelete = () => {
-//   dialogConfirmVisible.value = false;
-// };
-
-// const deleteSkillConfirmed = () => {
-//   skillStore.deleteSkill(selectedItem.value!.id);
-//   dialogConfirmVisible.value = false;
-//   fetchSkill();
-// };
-
-// const fetchSkill = async () => {
-//   loading.value = true;
-//   skillStore.clearForm();
-//   try {
-//     // await skillStore.fetchSkillsPage(pageParams.value);
-//     await skillStore.fetchSkills();
-//   } catch (error) {
-//     console.error('Error fetching skills:', error);
-//   } finally {
-//     loading.value = false;
-//   }
-// };
-// watch(
-//   [
-//     () => dialogAddVisible.value,
-//     () => dialogAddSubVisible.value,
-//     () => dialogDetailVisible.value,
-//   ],
-//   () => {
-//     fetchSkill();
-//   }
-// );
 </script>
 
 <template>
   <q-page padding>
     <MainHeader
-      v-model:search-text="store.pageParams.search"
+      v-model:search-text="store.search"
       label-search="Curriculums"
       @open-dialog="store.toggleDialog({ title: 'New Skill' })"
       @enter-search="store.fetchData"
@@ -104,7 +33,9 @@ useMeta({
     <q-separator class="q-my-md" />
     <!-- Top -->
     <div class="q-py-md">
-      <q-icon name="info" class="q-mr-sm" />Right click to open menu of each row
+      <q-icon name="info" class="q-mr-sm" />{{
+        t('Right click to open menu of each row')
+      }}
     </div>
     <!-- Content -->
     <q-card flat bordered class="q-animate--fade">
@@ -130,7 +61,7 @@ useMeta({
                     })
                   "
                 >
-                  <q-item-section>Insert child</q-item-section>
+                  <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
                 </q-item>
                 <q-item
                   clickable
@@ -142,17 +73,17 @@ useMeta({
                     })
                   "
                 >
-                  <q-item-section>Edit</q-item-section>
+                  <q-item-section>{{ t('edit') }}</q-item-section>
                 </q-item>
                 <q-item
                   clickable
                   v-close-popup
                   @click="store.handleRemove({ id: props.node.id })"
                 >
-                  <q-item-section>Delete</q-item-section>
+                  <q-item-section>{{ t('delete') }}</q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup>
-                  <q-item-section>Quit</q-item-section>
+                  <q-item-section>{{ t('quit') }}</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
@@ -204,12 +135,5 @@ useMeta({
         />
       </template>
     </DialogForm>
-
-    <!-- 
-    <AddSubSkillDialog :visible="dialogAddSubVisible" :item="selectedItem" @close-dialog="closeDialogAddSub" />
-    <SkillDetailDialog :visible="dialogDetailVisible" :item="selectedItem" @close-dialog="closeDialogDetail" />
-    <AddSkillDialog :visible="dialogAddVisible" :item="null" @close-dialog="closeDialogAdd" />
-    <ConfirmDialog :visible="dialogConfirmVisible" :item="selectedItem" @close-dialog="closeDialogDelete"
-      @confirm-delete="deleteSkillConfirmed" /> -->
   </q-page>
 </template>

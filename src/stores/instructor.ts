@@ -42,6 +42,7 @@ export const useTeacherStore = defineStore('teacher', {
       this.resetForm();
       // Refresh data after saving
       await this.fetchData();
+      this.dialogState = false;
     },
 
     toggleDialog() {

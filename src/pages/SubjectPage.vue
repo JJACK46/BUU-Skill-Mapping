@@ -292,7 +292,7 @@ const columns = ref<QTableColumn[]>([
 ]);
 
 onMounted(async () => {
-  await store.setup();
+  await store.fetchData();
 });
 
 useMeta({

@@ -34,8 +34,7 @@
           :rules="[requireField]"
           @vue:mounted="fetchBranches"
         >
-          <template #no-option></template> </q-select
-        >/>
+        </q-select>
         <q-input
           outlined
           dense
@@ -119,7 +118,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { QTableColumn, useMeta } from 'quasar';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTeacherStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
@@ -183,8 +182,5 @@ function fetchBranches() {
 
 useMeta({
   title: title.value,
-});
-onMounted(async () => {
-  await store.setup();
 });
 </script>

@@ -28,7 +28,7 @@
                   <q-input
                     dense
                     outlined
-                    v-model="store.form.thaiName"
+                    v-model="store.form.name"
                     label="Name *"
                     :rules="[requireField, onlyAlphabet]"
                   />
@@ -50,7 +50,7 @@
                   <q-input
                     dense
                     outlined
-                    v-model="store.form.thaiDegreeName"
+                    v-model="store.form.degreeName"
                     label="Degree Name *"
                     :rules="[requireField, onlyAlphabet]"
                   />
@@ -106,7 +106,7 @@
         <q-card-section>
           <div class="row justify-between">
             <span class="text-h6">
-              {{ c.thaiName }}
+              {{ c.name }}
               <p class="text-caption">{{ c.engName }}</p>
             </span>
             <q-btn
@@ -117,7 +117,7 @@
             />
           </div>
           <div>{{ c.description }}</div>
-          <div>{{ c.thaiDegreeName }}</div>
+          <div>{{ c.degreeName }}</div>
           <div>{{ c.engDegreeName }}</div>
           <div>Period: {{ c.period }} Years</div>
           <div>Minimum Grade: {{ c.minimumGrade }}</div>

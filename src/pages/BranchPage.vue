@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <MainHeader :search-text="search" @open-dialog="store.toggleDialog" />
+    <MainHeader :search-text="store.search" @open-dialog="store.toggleDialog" />
     <q-separator class="q-my-md" />
     <DialogForm
       title="New Branch"
@@ -47,7 +47,7 @@
       :pagination="store.pagination"
       class="q-animate--fade"
       separator="cell"
-      :rows="branches"
+      :rows="store.branches"
       row-key="id"
       :columns="columns"
       wrap-cells
@@ -59,11 +59,9 @@
 import { QTableProps, useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/Header/main-header.vue';
-import { BranchService } from 'src/services/branches';
 import { FacultyService } from 'src/services/faculty';
 import { useBranchStore } from 'src/stores/branch';
 import { useGlobalStore } from 'src/stores/global';
-import { Branch } from 'src/types/branch';
 import { Faculty } from 'src/types/faculty';
 import { onlyAlphabet, requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
@@ -72,9 +70,7 @@ import { useRoute } from 'vue-router';
 const global = useGlobalStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const search = ref();
 const store = useBranchStore();
-const branches = ref<Branch[]>([]);
 const faculties = ref<Faculty[]>([]);
 const columns = ref<QTableProps['columns']>([
   {
@@ -111,13 +107,11 @@ const columns = ref<QTableProps['columns']>([
 ]);
 
 const fetchFaculties = async () => {
-  const { data } = await FacultyService.getAll();
-  faculties.value = data;
+  faculties.value = (await FacultyService.getAll()).data;
 };
 
 onMounted(async () => {
-  const { data } = await BranchService.getAll();
-  branches.value = data;
+  store.fetchData();
 });
 
 useMeta({

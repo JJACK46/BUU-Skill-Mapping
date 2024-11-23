@@ -3,9 +3,9 @@ import { Subject } from './subject';
 import { Instructor } from './instructor';
 export interface Curriculum {
   id: string;
-  thaiName: string;
+  name: string;
   engName: string;
-  thaiDegreeName: string;
+  degreeName: string;
   engDegreeName: string;
   description: string;
   period: number;

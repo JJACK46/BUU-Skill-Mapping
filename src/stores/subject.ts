@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
-import { QTableProps } from 'quasar';
 import SkillService from 'src/services/skill';
 import { SubjectService } from 'src/services/subject';
 import { Skill } from 'src/types/skill';
 import { Subject } from 'src/types/subject';
+import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 type TitleForm = 'New Subject' | 'Edit Subject'
 
@@ -16,7 +16,7 @@ export const useSubjectStore = defineStore('subject', {
     tabsModel: 'req',
     editMode: true,
     dialogTitle: '' as TitleForm,
-    pagination: { 'rowsPerPage': 10 } as QTableProps['pagination']
+    pagination: defaultPagination
   }),
   getters: {
     getSkillOptions: (s) => s.skillOptions,
@@ -24,8 +24,8 @@ export const useSubjectStore = defineStore('subject', {
     getSubjects: (s) => s.subjects,
   },
   actions: {
-    async setup() {
-      this.subjects = (await SubjectService.getAll()).data;
+    async fetchData() {
+      this.subjects = (await SubjectService.getAll(convertToPageParams(this.pagination))).data;
     },
     async handleSave() {
       if (this.editMode) {

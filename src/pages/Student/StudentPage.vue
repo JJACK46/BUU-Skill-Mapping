@@ -13,6 +13,7 @@
       separator="cell"
       :rows="store.students || []"
       row-key="id"
+      :pagination="store.pagination"
       :loading="global.getLoadingState"
       :columns="studentColumns"
     >
@@ -177,28 +178,6 @@ const studentColumns: QTableColumn[] = [
     align: 'left',
   },
 ];
-
-// const paginationInit = ref<QTableProps['pagination']>({
-//   sortBy: '',
-//   descending: false,
-//   page: 1,
-//   rowsPerPage: 10,
-// });
-
-// const addStudent = () => {
-//   isCreate.value = true;
-//   addDialog.value = true;
-// };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// function onRequest(props: any) {
-//   studentStore.pageParams.page = props.page;
-//   studentStore.pageParams.limit = props.rowsPerPage;
-//   studentStore.pageParams.sort = props.sortBy;
-//   studentStore.pageParams.order = props.descending ? 'DESC' : 'ASC';
-//   studentStore.pageParams.search = props.search;
-//   studentStore.fetchData();
-// }
 
 const sheet = ref();
 

@@ -104,7 +104,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/instructor',
+    path: '/instructors',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {

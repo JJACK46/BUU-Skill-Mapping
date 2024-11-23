@@ -3,7 +3,7 @@ import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
 export class InstructorService {
-  static path = 'instructor';
+  static path = 'instructors';
 
   static async getAll(p?: Partial<PageParams>) {
     const { data } = await api.get(this.path, { params: p });
