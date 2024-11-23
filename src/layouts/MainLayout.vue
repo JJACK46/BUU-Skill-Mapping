@@ -9,6 +9,13 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
+        <q-btn
+          flat
+          dense
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
 
         <q-toolbar-title> Skill Mapping App </q-toolbar-title>
         <q-btn
@@ -25,9 +32,21 @@
             padding="none"
             @click="toggleRightDrawer"
           />
+          <q-btn
+            icon="notifications"
+            flat
+            padding="none"
+            @click="toggleRightDrawer"
+          />
           <q-btn :icon="themeIcon" flat padding="none" @click="handleTheme" />
         </div>
         <q-avatar class="cursor-pointer">
+          <img
+            draggable="false"
+            :src="`${
+              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
+            } `"
+          />
           <img
             draggable="false"
             :src="`${
@@ -61,6 +80,14 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" side="left">
       <q-list>
         <q-item-label header>
+          <q-img
+            :src="
+              $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
+            "
+            alt="BUU"
+            height="64px"
+            fit="contain"
+          />
           <q-img
             :src="
               $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
