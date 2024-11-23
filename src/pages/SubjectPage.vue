@@ -128,6 +128,8 @@
     </DialogForm>
     <!-- Table -->
     <q-table
+      flat
+      bordered
       :loading="global.getLoadingState"
       :pagination="store.pagination"
       class="q-mt-md q-animate--fade"

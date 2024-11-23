@@ -9,6 +9,8 @@
     <q-separator class="q-my-md" />
     <!-- Table -->
     <q-table
+      flat
+      bordered
       class="q-animate--fade"
       separator="cell"
       :rows="store.students || []"

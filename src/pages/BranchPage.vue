@@ -43,6 +43,8 @@
       </template>
     </DialogForm>
     <q-table
+      flat
+      bordered
       :loading="global.getLoadingState"
       :pagination="store.pagination"
       class="q-animate--fade"

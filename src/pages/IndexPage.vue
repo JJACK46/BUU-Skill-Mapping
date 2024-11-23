@@ -4,7 +4,7 @@
     <q-separator class="q-my-md" />
     <section name="courses">
       <div class="text-h6 q-mb-md">
-        <q-icon name="push_pin"></q-icon> Courses
+        <q-icon name="push_pin"></q-icon> {{ t('courses') }}
       </div>
       <div class="row q-gutter-lg">
         <CourseCard v-for="index in 3" :key="index" :course="({} as Course)" />

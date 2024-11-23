@@ -9,6 +9,8 @@
     <q-toggle v-model="store.editMode"> Edit Mode </q-toggle>
     <!-- Table -->
     <q-table
+      flat
+      bordered
       class="q-animate--fade"
       :filter="store.search"
       v-model:pagination="store.pagination"
@@ -30,6 +32,7 @@
             dense
             :options="Object.values(UserRole)"
             outlined
+            bg-color="white"
             v-model="props.row.role"
             label="Role"
             @update:model-value="store.handleSave(props.row)"

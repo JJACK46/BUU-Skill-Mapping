@@ -6,6 +6,8 @@
     />
     <q-separator class="q-my-md" />
     <q-table
+      flat
+      bordered
       :pagination="store.pagination"
       class="q-animate--fade"
       separator="cell"

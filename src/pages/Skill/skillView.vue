@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-// import { useSkillStore } from 'src/stores/skills';
-// import { Skill } from 'src/types/skill';
 import { useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import { LearningDomain } from 'src/types/learning-domain';
@@ -13,10 +11,9 @@ import { useI18n } from 'vue-i18n';
 
 const store = useSkillStore();
 const { t } = useI18n();
-onMounted(store.fetchData);
-
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
+onMounted(store.fetchData);
 useMeta({
   title: title.value,
 });
@@ -26,7 +23,7 @@ useMeta({
   <q-page padding>
     <MainHeader
       v-model:search-text="store.search"
-      label-search="Curriculums"
+      :label-search="`${t('search')}`"
       @open-dialog="store.toggleDialog({ title: 'New Skill' })"
       @enter-search="store.fetchData"
     />
@@ -41,7 +38,7 @@ useMeta({
     <q-card flat bordered class="q-animate--fade">
       <q-tree :nodes="store.skills" node-key="id" class="q-pa-sm">
         <template v-slot:default-header="props">
-          <q-tr class="full-width q-py-xs" style="cursor: pointer">
+          <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
             <!-- Header -->
             <q-td style="user-select: none">
               <span class="text-body1">
@@ -61,6 +58,12 @@ useMeta({
                     })
                   "
                 >
+                  <q-item-section side>
+                    <q-icon
+                      size="16px"
+                      name="subdirectory_arrow_right"
+                    ></q-icon>
+                  </q-item-section>
                   <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
                 </q-item>
                 <q-item
@@ -73,6 +76,9 @@ useMeta({
                     })
                   "
                 >
+                  <q-item-section side>
+                    <q-icon size="16px" name="edit"></q-icon>
+                  </q-item-section>
                   <q-item-section>{{ t('edit') }}</q-item-section>
                 </q-item>
                 <q-item
@@ -80,9 +86,15 @@ useMeta({
                   v-close-popup
                   @click="store.handleRemove({ id: props.node.id })"
                 >
+                  <q-item-section side>
+                    <q-icon size="16px" name="delete"></q-icon>
+                  </q-item-section>
                   <q-item-section>{{ t('delete') }}</q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup>
+                  <q-item-section side>
+                    <q-icon size="16px" name="close"></q-icon>
+                  </q-item-section>
                   <q-item-section>{{ t('quit') }}</q-item-section>
                 </q-item>
               </q-list>
@@ -91,6 +103,14 @@ useMeta({
         </template>
       </q-tree>
     </q-card>
+    <div class="flex q-my-lg" v-show="store.getMaxPage > 1">
+      <q-pagination
+        class="q-mx-auto"
+        v-model="store.pagination!.page!"
+        :max="store.getMaxPage"
+        direction-links
+      />
+    </div>
     <!-- All in One Dialog -->
     <DialogForm
       :title="store.getTitleForm"
@@ -105,7 +125,8 @@ useMeta({
           hint="Readonly"
           outlined
           readonly
-        />
+        >
+        </q-input>
         <q-input
           v-model="store.form.id"
           label="ID"
@@ -137,3 +158,9 @@ useMeta({
     </DialogForm>
   </q-page>
 </template>
+
+<style lang="scss">
+.hover-row:hover {
+  color: $secondary;
+}
+</style>
