@@ -1,10 +1,14 @@
 import { Branch } from 'src/types/branch';
 import { api } from 'boot/axios';
+import { PageParams } from 'src/types/pagination';
 export class BranchService {
   static path = 'branches';
-  static async getAll() {
-    const res = await api.get(this.path);
-    return res.data;
+  static async getAll(p?: Partial<PageParams>) {
+    const { data } = await api.get(this.path, { params: p });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   }
 
   static async getOne(id: number) {

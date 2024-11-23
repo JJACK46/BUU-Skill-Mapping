@@ -1,27 +1,26 @@
 <template>
   <q-page padding>
-    <FillDataV2
-      v-model:page-params.sync="store.pageParams"
-      :by-faculty="true"
-      :by-branch="true"
-      :fetch-data="store.fetchData"
+    <MainHeader
+      v-model:search-text="store.search"
       @open-dialog="store.toggleDialog"
     />
-
     <q-separator class="q-my-md" />
     <q-table
+      flat
+      bordered
+      :pagination="store.pagination"
       class="q-animate--fade"
       separator="cell"
       :rows="store.teachers"
       row-key="id"
       :loading="global.getLoadingState"
-      :columns="teacherColumns"
-      v-model:pagination="paginationInit"
-      @update:pagination="onRequest"
+      :columns="columns"
+      :filter="store.search"
+      @update:pagination="store.fetchData"
     >
     </q-table>
     <DialogForm
-      title="New Teacher *"
+      title="New Instructor"
       v-model="store.dialogState"
       @save="store.handleSave"
     >
@@ -35,8 +34,9 @@
           label="Branch *"
           options-dense
           :rules="[requireField]"
-          @vue:mounted="async () => (branches = await BranchService.getAll())"
-        />
+          @vue:mounted="fetchBranches"
+        >
+        </q-select>
         <q-input
           outlined
           dense
@@ -119,24 +119,24 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { QTableColumn, QTableProps, useMeta } from 'quasar';
-import { computed, onMounted } from 'vue';
+import { QTableColumn, useMeta } from 'quasar';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useTeacherStore } from 'src/stores/teacher';
+import { useTeacherStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
-import FillDataV2 from 'src/components/FillDataV2.vue';
 import { requireField } from 'src/utils/field-rules';
 import { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/types/position.enum';
 import { useGlobalStore } from 'src/stores/global';
 import { BranchService } from 'src/services/branches';
+import MainHeader from 'src/components/Header/main-header.vue';
 
 const global = useGlobalStore();
 const branches = ref<Branch[]>([]);
 const store = useTeacherStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const teacherColumns: QTableColumn[] = [
+const columns: QTableColumn[] = [
   {
     name: 'id',
     label: 'ID',
@@ -176,28 +176,13 @@ const teacherColumns: QTableColumn[] = [
     align: 'left',
   },
 ];
-
-const paginationInit = ref<QTableProps['pagination']>({
-  sortBy: '',
-  descending: false,
-  page: 1,
-  rowsPerPage: 10,
-});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function onRequest(props: any) {
-  store.pageParams.page = props.page;
-  store.pageParams.limit = props.rowsPerPage;
-  store.pageParams.sort = props.sortBy;
-  store.pageParams.order = props.descending ? 'DESC' : 'ASC';
-  store.pageParams.search = props.search || '';
-  store.fetchData(store.pageParams);
+function fetchBranches() {
+  BranchService.getAll().then((res) => {
+    branches.value = res.data;
+  });
 }
 
 useMeta({
   title: title.value,
-});
-onMounted(async () => {
-  await store.setup();
 });
 </script>

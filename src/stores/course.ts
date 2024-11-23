@@ -7,16 +7,13 @@ export const useCourseStore = defineStore('course', {
     form: <Partial<Course>>{},
     courses: <Course[]>[],
     dialogState: false,
-    loading: false,
   }),
 
   getters: {},
 
   actions: {
-    async setup() {
-      this.loading = true;
-      this.courses = await CourseService.getAll();
-      this.loading = false;
+    async fetchData() {
+      this.courses = (await CourseService.getAll()).data;
     },
     async createOne() {
       await CourseService.createOne(this.form as Course);

@@ -104,13 +104,13 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/teachers',
+    path: '/instructors',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
-        name: 'Teacher Management',
-        component: () => import('pages/TeacherPage.vue'),
+        name: 'Instructor Management',
+        component: () => import('pages/InstructorPage.vue'),
       },
     ],
   },

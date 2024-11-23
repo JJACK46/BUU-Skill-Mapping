@@ -156,13 +156,4 @@ useMeta({
     color: $accent;
   }
 }
-
-.hover-card {
-  transition: all 0.15s ease-in-out;
-  border: 2px solid transparent;
-}
-
-.hover-card:hover {
-  border: 2px solid $accent-select;
-}
 </style>

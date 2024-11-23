@@ -1,7 +1,7 @@
 import { SkillCollection } from './skill-collection';
 import { Student } from './student';
 import { Subject } from './subject';
-import { Teacher } from './teacher';
+import { Instructor } from './instructor';
 
 export interface Course {
   id?: number;
@@ -10,7 +10,7 @@ export interface Course {
   active: boolean;
   subject: Partial<Subject> | null;
   // curriculum: Partial<Curriculum> | null;
-  teachers: Partial<Teacher>[];
+  teachers: Partial<Instructor>[];
   courseEnrollment: CourseEnrollment[];
 }
 export interface CourseEnrollment {

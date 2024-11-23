@@ -6,7 +6,7 @@ import en from '../locales/en.json'
 
 const messages = {
     'th-TH': th,
-    'en-EN': en
+    'en-US': en
 }
 
 

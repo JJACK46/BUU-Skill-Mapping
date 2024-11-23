@@ -9,9 +9,29 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
+        <q-btn
+          flat
+          dense
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
 
         <q-toolbar-title> Skill Mapping App </q-toolbar-title>
+        <q-btn
+          flat
+          padding="none"
+          class="q-mr-md text-bold"
+          @click="changeLocale"
+          >{{ getCurrentLocale }}</q-btn
+        >
         <div class="q-gutter-md q-mr-md">
+          <q-btn
+            icon="notifications"
+            flat
+            padding="none"
+            @click="toggleRightDrawer"
+          />
           <q-btn
             icon="notifications"
             flat
@@ -27,13 +47,19 @@
               profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
             } `"
           />
+          <img
+            draggable="false"
+            :src="`${
+              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
+            } `"
+          />
           <q-menu :offset="[-10, 0]">
             <q-list>
               <q-item clickable v-close-popup @click="router.push('/account')">
                 <q-item-section>
                   <q-item-label class="row items-center q-gutter-x-sm">
                     <q-icon name="person"></q-icon>
-                    <span class="col">Account</span>
+                    <span class="col">{{ t('account') }}</span>
                   </q-item-label>
                 </q-item-section>
               </q-item>
@@ -41,7 +67,7 @@
                 <q-item-section>
                   <q-item-label class="row items-center q-gutter-x-sm">
                     <q-icon name="logout"></q-icon>
-                    <span class="col">Logout</span>
+                    <span class="col"> {{ t('logout') }}</span>
                   </q-item-label>
                 </q-item-section>
               </q-item>
@@ -54,6 +80,14 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" side="left">
       <q-list>
         <q-item-label header>
+          <q-img
+            :src="
+              $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
+            "
+            alt="BUU"
+            height="64px"
+            fit="contain"
+          />
           <q-img
             :src="
               $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
@@ -94,7 +128,24 @@ import { useAuthStore } from 'src/stores/auth';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { LocalStorage } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n();
+const getCurrentLocale = computed(() => {
+  const cur = locale.value.split('-')[0];
+  if (cur === 'th') {
+    return 'EN';
+  } else {
+    return 'TH';
+  }
+});
+function changeLocale() {
+  if (locale.value === 'en-US') {
+    locale.value = 'th-TH';
+  } else {
+    locale.value = 'en-US';
+  }
+}
 const themeIcon = computed(() => (dark.isActive ? 'dark_mode' : 'light_mode'));
 const handleTheme = () => {
   dark.toggle();
@@ -158,7 +209,7 @@ const linksList: LinkProps[] = [
   {
     title: 'instructor',
     icon: 'group',
-    link: '/instructor',
+    link: '/instructors',
   },
   {
     title: 'students',

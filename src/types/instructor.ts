@@ -4,7 +4,7 @@ import { Curriculum } from './curriculum';
 import { SocialForm } from './social';
 import { User } from './user';
 
-export interface Teacher {
+export interface Instructor {
   id?: number;
   name: string;
   engName: string;

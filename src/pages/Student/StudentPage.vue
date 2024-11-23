@@ -1,18 +1,21 @@
 <template>
   <q-page padding>
-    <PageHeader
+    <MainHeader
       @open-dialog="store.toggleDialog"
       :search-text="search"
       import-btn
       @open-dialog-import="store.toggleDialogImport"
-    ></PageHeader>
+    ></MainHeader>
     <q-separator class="q-my-md" />
     <!-- Table -->
     <q-table
+      flat
+      bordered
       class="q-animate--fade"
       separator="cell"
       :rows="store.students || []"
       row-key="id"
+      :pagination="store.pagination"
       :loading="global.getLoadingState"
       :columns="studentColumns"
     >
@@ -51,7 +54,12 @@
         <q-select
           :options="branches"
           option-label="name"
-          @vue:mounted="async () => (branches = await BranchService.getAll())"
+          @vue:mounted="
+            async () => {
+              const { data } = await BranchService.getAll();
+              branches = data;
+            }
+          "
           outlined
           v-model="store.formStudent.branch"
           label="Branch *"
@@ -113,10 +121,11 @@ import { BranchService } from 'src/services/branches';
 import { Branch } from 'src/types/branch';
 import DialogForm from 'src/components/DialogForm.vue';
 import { StudentService } from 'src/services/student';
-import PageHeader from 'src/components/PageHeader.vue';
+
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useGlobalStore } from 'src/stores/global';
 import { downloadTemplateForStudents } from 'src/utils/file-template';
+import MainHeader from 'src/components/Header/main-header.vue';
 
 const global = useGlobalStore();
 const router = useRouter();
@@ -171,28 +180,6 @@ const studentColumns: QTableColumn[] = [
     align: 'left',
   },
 ];
-
-// const paginationInit = ref<QTableProps['pagination']>({
-//   sortBy: '',
-//   descending: false,
-//   page: 1,
-//   rowsPerPage: 10,
-// });
-
-// const addStudent = () => {
-//   isCreate.value = true;
-//   addDialog.value = true;
-// };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// function onRequest(props: any) {
-//   studentStore.pageParams.page = props.page;
-//   studentStore.pageParams.limit = props.rowsPerPage;
-//   studentStore.pageParams.sort = props.sortBy;
-//   studentStore.pageParams.order = props.descending ? 'DESC' : 'ASC';
-//   studentStore.pageParams.search = props.search;
-//   studentStore.fetchData();
-// }
 
 const sheet = ref();
 

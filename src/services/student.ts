@@ -10,8 +10,11 @@ export class StudentService {
   static path = 'students';
 
   static async fetchData(p?: PageParams) {
-    const response = await api.get(this.path, { params: p });
-    return response.data;
+    const { data } = await api.get(this.path, { params: p });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   }
 
   static async getOne(id: number) {
