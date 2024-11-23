@@ -88,14 +88,6 @@
             height="64px"
             fit="contain"
           />
-          <q-img
-            :src="
-              $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
-            "
-            alt="BUU"
-            height="64px"
-            fit="contain"
-          />
         </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
