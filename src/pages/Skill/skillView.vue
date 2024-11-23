@@ -46,11 +46,10 @@ useMeta({
               </span>
             </q-td>
             <!-- Context Menu -->
-            <q-menu context-menu touch-position>
+            <q-menu context-menu touch-position auto-close>
               <q-list dense style="min-width: 100px">
                 <q-item
                   clickable
-                  v-close-popup
                   @click="
                     store.toggleDialog({
                       title: 'Insert Sub-Skill',
@@ -68,7 +67,6 @@ useMeta({
                 </q-item>
                 <q-item
                   clickable
-                  v-close-popup
                   @click="
                     store.toggleDialog({
                       form: props.node,
@@ -83,7 +81,6 @@ useMeta({
                 </q-item>
                 <q-item
                   clickable
-                  v-close-popup
                   @click="store.handleRemove({ id: props.node.id })"
                 >
                   <q-item-section side>
@@ -91,7 +88,7 @@ useMeta({
                   </q-item-section>
                   <q-item-section>{{ t('delete') }}</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup>
+                <q-item clickable>
                   <q-item-section side>
                     <q-icon size="16px" name="close"></q-icon>
                   </q-item-section>

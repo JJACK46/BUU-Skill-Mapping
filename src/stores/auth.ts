@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isSignIn: (s) => !!s.profile,
-    getRoles: (s) => s.profile?.role
+    getRole: (s) => s.profile?.role
   },
 
   actions: {

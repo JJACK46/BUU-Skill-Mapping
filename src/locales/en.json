@@ -29,5 +29,10 @@
     "login": "Login",
     "logout": "Logout",
     "account": "Account",
-    "insertSubSkill": "Insert Sub-Skill"
+    "insertSubSkill": "Insert Sub-Skill",
+    "settings": "Settings",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "changeLanguage": "Change Language",
+    "language": "Language"
 }

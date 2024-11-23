@@ -29,5 +29,10 @@
     "login": "เข้าสู่ระบบ",
     "logout": "ออกจากระบบ",
     "account": "บัญชี",
-    "insertSubSkill": "เพิ่มทักษะรอง"
+    "insertSubSkill": "เพิ่มทักษะรอง",
+    "settings": "ตั้งค่า",
+    "darkMode": "โหมดมืด",
+    "lightMode": "โหมดสว่าง",
+    "changeLanguage": "เปลี่ยนภาษา",
+    "language": "ภาษา"
 }
