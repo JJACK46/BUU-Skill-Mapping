@@ -10,12 +10,12 @@ export const defaultPagination = {
     rowsNumber: undefined,
 } as QTableProps['pagination']
 
-export const convertToPageParams = (pag: QTableProps['pagination']) => {
+export const convertToPageParams = (pag: QTableProps['pagination'], search?: string) => {
     return {
         page: pag?.page || 1,
         limit: pag?.rowsPerPage || 10,
         sort: pag?.sortBy || '',
         order: pag?.descending ? 'DESC' : 'ASC',
-        search: ''
+        search: search || '',
     } as PageParams
 }

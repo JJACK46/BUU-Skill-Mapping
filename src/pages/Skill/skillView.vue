@@ -99,8 +99,8 @@ useMeta({
     >
       <template #body>
         <q-input
-          v-show="store.parentId"
-          v-model="store.parentId"
+          v-show="store.getParentId"
+          v-model="store.getParentId"
           label="Parent ID"
           hint="Readonly"
           outlined

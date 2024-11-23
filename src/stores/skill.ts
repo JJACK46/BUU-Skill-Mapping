@@ -19,10 +19,11 @@ export const useSkillStore = defineStore('skill', {
     }),
     getters: {
         getTitleForm: (state) => state.titleForm,
+        getParentId: (state) => state.parentId
     },
     actions: {
         async fetchData() {
-            this.skills = (await SkillService.getAll(convertToPageParams(this.pagination))).data;
+            this.skills = (await SkillService.getAll(convertToPageParams(this.pagination, this.search))).data;
         },
         async handleSave() {
             if (this.parentId) {
@@ -36,7 +37,9 @@ export const useSkillStore = defineStore('skill', {
             }
             this.fetchData()
             this.dialogForm = false;
-            this.resetState()
+            this.resetForm()
+            this.parentId = null
+
         },
         async handleRemove({ id, subSkillId }: { id: number, subSkillId?: number }) {
             this.qDialog.create({
@@ -60,13 +63,12 @@ export const useSkillStore = defineStore('skill', {
             if (form) {
                 this.form = form;
             } else {
-                this.resetState()
+                this.resetForm()
             }
             this.dialogForm = !this.dialogForm;
         },
-        resetState() {
+        resetForm() {
             this.form = {} as Partial<Skill>;
-            this.parentId = null
         },
     },
 });
