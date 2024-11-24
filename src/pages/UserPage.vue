@@ -6,7 +6,6 @@
       hide-filter
     />
     <q-separator class="q-my-md" />
-    <q-toggle v-model="store.editMode"> Edit Mode </q-toggle>
     <!-- Table -->
     <q-table
       flat
@@ -24,7 +23,7 @@
     >
       <template #body-cell-role="props">
         <q-td>
-          <div v-if="!store.editMode">
+          <div v-if="!auth.isAdmin">
             {{ props.value ?? 'Unknown' }}
           </div>
           <q-select
@@ -133,11 +132,14 @@ import { QTableColumn, useMeta } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { UserRole } from 'src/enums/roles';
+import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';
 import { useUserStore } from 'src/stores/user';
 import { requireField } from 'src/utils/field-rules';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+
+const auth = useAuthStore();
 const store = useUserStore();
 const dialogState = ref(false);
 const route = useRoute();

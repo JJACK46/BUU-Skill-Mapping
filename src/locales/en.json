@@ -50,5 +50,7 @@
     "result": "Result",
     "noCurriculum": "No Curriculum",
     "noSubject": "No Subject",
-    "courseEnrollment": "Course Enrollment"
+    "courseEnrollment": "Course Enrollment",
+    "faculties & branches": "Faculties & Branches",
+    "newBranch": "New Branch"
 }

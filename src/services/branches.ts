@@ -16,13 +16,21 @@ export class BranchService {
     return res.data;
   }
 
-  static async createOne(obj: Branch) {
-    const res = await api.post(this.path, obj);
+  static async createOne(obj: Partial<Branch>) {
+    const dto = {
+      facultyId: obj.faculty?.id,
+      ...obj,
+    }
+    const res = await api.post(this.path, dto);
     return res.data;
   }
 
-  static async updateOne(obj: Branch) {
-    const res = await api.patch(this.path, obj);
+  static async updateOne(obj: Partial<Branch>) {
+    const dto = {
+      facultyId: obj.faculty?.id,
+      ...obj,
+    }
+    const res = await api.patch(`${this.path}/${obj.id}`, dto);
     return res.data;
   }
 

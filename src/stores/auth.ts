@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     isSignIn: (s) => !!s.profile,
     isAdmin: (s) => s.profile?.role === UserRole.Admin,
-    getRole: (s) => s.profile?.role
+    getRole: (s) => s.profile?.role,
   },
 
   actions: {

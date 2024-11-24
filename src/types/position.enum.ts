@@ -1,14 +1,14 @@
 export enum AcademicRank {
-  Lecturer = 'Lecturer',
-  Instructor = 'Instructor',
-  AdjunctProfessor = 'Adjunct Professor',
-  AssistantProfessor = 'Assistant Professor',
-  AssociateProfessor = 'Associate Professor',
-  Professor = 'Professor',
-  SeniorLecturer = 'Senior Lecturer',
-  ResearchProfessor = 'Research Professor',
-  VisitingProfessor = 'Visiting Professor',
-  EmeritusProfessor = 'Emeritus Professor',
+  Lecturer = 'อาจารย์ผู้บรรยาย',
+  Instructor = 'ผู้สอน',
+  AdjunctProfessor = 'ศาสตราจารย์พิเศษ',
+  AssistantProfessor = 'ผู้ช่วยศาสตราจารย์',
+  AssociateProfessor = 'รองศาสตราจารย์',
+  Professor = 'ศาสตราจารย์',
+  SeniorLecturer = 'อาจารย์อาวุโส',
+  ResearchProfessor = 'ศาสตราจารย์วิจัย',
+  VisitingProfessor = 'ศาสตราจารย์รับเชิญ',
+  EmeritusProfessor = 'ศาสตราจารย์กิตติคุณ',
 }
 
 // Lecturer - อาจารย์ผู้บรรยาย

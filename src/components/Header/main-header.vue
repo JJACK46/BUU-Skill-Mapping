@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FilterBtn from './filter-btn.vue';
 
@@ -85,7 +85,7 @@ defineProps<{
   hideFilter?: true;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'openDialog'): void;
   (e: 'enterSearch'): void;
   (e: 'openDialogImport'): void;
@@ -93,4 +93,14 @@ defineEmits<{
 }>();
 
 const searchText = defineModel('searchText', { default: '' });
+
+// auto fetch data again after search empty
+watch(
+  () => searchText.value,
+  (v) => {
+    if (!v || v.length === 0) {
+      emit('enterSearch');
+    }
+  }
+);
 </script>

@@ -50,5 +50,7 @@
     "result": "ผลการประเมิน",
     "noCurriculum": "ไม่มีหลักสูตร",
     "noSubject": "ไม่มีรายวิชา",
-    "courseEnrollment": "การลงทะเบียนคอร์ส"
+    "courseEnrollment": "การลงทะเบียนคอร์ส",
+    "faculties & branches": "คณะ & สาขา",
+    "newBranch": "สาขาใหม่"
 }

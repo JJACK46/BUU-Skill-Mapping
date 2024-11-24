@@ -126,6 +126,7 @@ useMeta({
         </q-input>
         <q-input
           v-model="store.form.id"
+          v-show="store.form.id"
           label="ID"
           outlined
           readonly

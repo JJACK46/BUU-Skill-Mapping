@@ -48,7 +48,7 @@
                   <q-icon color="primary" name="accessibility"></q-icon>
                 </q-item-section>
                 <q-item-section class="text-primary text-bold">
-                  {{ auth.getRole }}
+                  {{ auth.getRole ?? 'Unknown' }}
                 </q-item-section>
               </q-item>
               <q-separator />
@@ -217,9 +217,9 @@ const linksList: LinkProps[] = [
     link: '/curriculums',
   },
   {
-    title: 'branch',
-    icon: 'books',
-    link: '/branches',
+    title: 'faculties & branches',
+    icon: 'groups',
+    link: '/faculties',
   },
   {
     title: 'courses',

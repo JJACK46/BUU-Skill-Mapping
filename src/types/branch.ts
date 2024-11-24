@@ -6,6 +6,7 @@ export interface Branch {
   name: string;
   engName: string
   faculty: Partial<Faculty>
-  abbreviation: string
+  abbrev: string
+  description: string
   curriculums?: Curriculum[];
 }

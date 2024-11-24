@@ -1,7 +1,6 @@
-import { Instructor } from 'src/types/instructor';
-
 import { api } from 'src/boot/axios';
 import { PageParams } from 'src/types/pagination';
+import { Faculty } from 'src/types/faculty';
 
 export class FacultyService {
   static path = 'faculties';
@@ -19,19 +18,13 @@ export class FacultyService {
     return res.data;
   }
 
-  static async createOne(obj: Partial<Instructor>) {
-    const dto = {
-      ...obj,
-      userId: obj.user?.id,
-      branchId: obj.branch?.id,
-      curriculumListId: obj.curriculums?.map((c) => c.id),
-    };
-    const res = await api.post(this.path, dto);
+  static async createOne(obj: Partial<Faculty>) {
+    const res = await api.post(this.path, obj);
     return res.data;
   }
 
-  static async updateOne(obj: Instructor) {
-    const res = await api.patch(this.path, obj);
+  static async updateOne(obj: Partial<Faculty>) {
+    const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.data;
   }
 

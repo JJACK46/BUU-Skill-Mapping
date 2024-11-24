@@ -12,7 +12,6 @@
       :cover="false"
       :offset="[0, 10]"
       style="width: 400px"
-      @vue:mounted="initOptions"
     >
       <q-tabs v-model="filterMenu">
         <q-tab name="faculty" :label="t('faculty')" />
@@ -74,7 +73,7 @@
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
 import { Faculty } from 'src/types/faculty';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const faculties = ref<Faculty[]>();
@@ -86,7 +85,7 @@ const strBranchOptions = ref<string[]>([]);
 const facultyOptions = ref(strFacultyOptions.value);
 const branchOptions = ref(strBranchOptions.value);
 const initOptions = async () => {
-  const { data } = await api.get<Faculty[]>('/faculties');
+  const { data } = await api.get<Faculty[]>('/faculties/filters');
   if (data) {
     faculties.value = data;
     // convert data to string[] for options
@@ -97,6 +96,9 @@ const initOptions = async () => {
       .map((b) => b?.name || '');
   }
 };
+
+onMounted(() => initOptions());
+
 const handleChangeFaculty = (val: string) => {
   const index = faculties.value?.findIndex((f) => f.name === val);
   if (index && index > -1) {
@@ -113,7 +115,7 @@ function filterFaculty(
   callback(() => {
     const needle = val.toLowerCase();
     facultyOptions.value = strFacultyOptions.value.filter(
-      (v) => v.toLowerCase().indexOf(needle) > -1
+      (v) => v?.toLowerCase().indexOf(needle) > -1
     );
   });
 }
@@ -133,15 +135,6 @@ function filterBranch(
     );
   });
 }
-
-// function setModelBranch(val: string) {
-//   selectedBranch.value = val;
-// }
-
-// defineProps<{
-//   selectedFaculty: string;
-//   selectedBranch: string;
-// }>();
 
 const selectedFaculty = defineModel('selectedFaculty', { default: '' });
 const selectedBranch = defineModel('selectedBranch', { default: '' });
