@@ -56,7 +56,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Curriculums Management',
-        component: () => import('pages/CurriculumPage.vue'),
+        component: () => import('src/pages/Curriculum/CurriculumPage.vue'),
+      },
+      {
+        path: 'new',
+        name: 'New Curriculum',
+        component: () => import('src/pages/Curriculum/Curriculum-new.vue'),
       },
     ],
   },

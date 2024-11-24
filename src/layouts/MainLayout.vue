@@ -251,7 +251,7 @@ const linksList: LinkProps[] = [
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
 const getHeaderText = computed(() => {
-  return t(currentTabModel.value || 'Settings');
+  return t(currentTabModel.value || 'settings');
 });
 
 function toggleLeftDrawer() {
