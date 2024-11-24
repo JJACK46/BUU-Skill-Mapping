@@ -1,4 +1,4 @@
-import { LearningDomain } from './learning-domain';
+import { LearningDomain } from './learning-domain.enum';
 
 export type Skill = {
   id: number;

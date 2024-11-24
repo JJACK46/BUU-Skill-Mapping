@@ -14,6 +14,7 @@
       @save="store.handleSave"
       ref="formRef"
       v-model:form-valid="formValid"
+      @vue:mounted="store.fetchAllSkills"
     >
       <template #body>
         <q-tabs v-model="store.tabsModel">
@@ -43,21 +44,21 @@
               outlined
               dense
               label="Name *"
-              :rules="[requireField]"
+              :rules="[requireField, onlyThai]"
             />
             <q-input
               v-model="store.form.engName"
               outlined
               dense
               label="Eng Name *"
-              :rules="[requireField]"
+              :rules="[requireField, onlyEnglish]"
             />
             <q-input
               v-model="store.form.description"
               outlined
               dense
+              type="textarea"
               label="Description *"
-              autogrow
               :rules="[requireField]"
             />
             <q-input
@@ -69,7 +70,7 @@
               :rules="[requireField]"
             />
           </q-tab-panel>
-          <q-tab-panel name="add" @vue:mounted="store.fetchAllSkills">
+          <q-tab-panel name="add">
             <q-list>
               <q-item
                 v-for="(s, i) in store.form.skillExpectedLevels"
@@ -204,11 +205,11 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import DialogForm from 'src/components/DialogForm.vue';
 import { useSubjectStore } from 'src/stores/subject';
-import { requireField } from 'src/utils/field-rules';
-import { SubjectType } from 'src/types/subject';
+import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { useAuthStore } from 'src/stores/auth';
+import { SubjectType } from 'src/types/subjectType.enum';
 
 const global = useGlobalStore();
 const route = useRoute();

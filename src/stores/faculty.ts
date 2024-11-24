@@ -44,6 +44,13 @@ export const useFacultyStore = defineStore('faculty', {
                     this.titleForm = 'Edit Branch';
                     this.formBranch = { ...form } as Partial<Branch>;
                 }
+                // click on name of faculty
+                if (title === 'New Branch') {
+                    this.titleForm = title;
+                    //init facultyId
+                    const braForm = { faculty: this.formFaculty } as Partial<Branch>;
+                    this.formBranch = braForm
+                }
             } else {
                 this.titleForm = title || 'New Faculty';
                 this.resetForm();
@@ -59,10 +66,7 @@ export const useFacultyStore = defineStore('faculty', {
                     await FacultyService.updateOne(this.formFaculty);
                     break
                 case 'New Branch':
-                    await BranchService.createOne({
-                        faculty: this.formFaculty,
-                        ...this.formBranch,
-                    });
+                    await BranchService.createOne(this.formBranch,);
                     break;
                 case 'Edit Branch':
                     await BranchService.updateOne(this.formBranch);
@@ -73,16 +77,21 @@ export const useFacultyStore = defineStore('faculty', {
             this.dialogState = false;
             this.fetchData()
         },
-        handleRemove(id: string | number) {
+        handleRemove({ id, node }: { id: number, node: Partial<Faculty> | Partial<Branch> }) {
             this.qDialog.create({
                 title: 'Confirm',
-                message: 'Are you sure you want to delete this item?',
+                message: `Are you sure you want to delete this <span class="text-red text-bold">${node.name}</span> ?`,
+                html: true,
                 cancel: true,
                 persistent: true
             }).onCancel(() => {
                 return
             }).onOk(async () => {
-                await FacultyService.removeOne(Number(id));
+                if ('branches' in node) {
+                    await FacultyService.removeOne(id);
+                } else {
+                    await BranchService.removeOne(id);
+                }
                 this.fetchData()
             })
         },

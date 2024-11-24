@@ -15,13 +15,13 @@ export const useSubjectStore = defineStore('subject', {
     skillOptions: <Skill[]>[],
     tabsModel: 'req',
     editMode: true,
-    dialogTitle: '' as TitleForm,
+    titleForm: '' as TitleForm,
     pagination: defaultPagination,
     search: '',
   }),
   getters: {
     getSkillOptions: (s) => s.skillOptions,
-    getDialogTitle: (s) => s.dialogTitle,
+    getDialogTitle: (s) => s.titleForm,
     getSubjects: (s) => s.subjects,
   },
   actions: {
@@ -29,7 +29,7 @@ export const useSubjectStore = defineStore('subject', {
       this.subjects = (await SubjectService.getAll(convertToPageParams(this.pagination, this.search))).data;
     },
     async handleSave() {
-      if (this.form) {
+      if (this.titleForm === 'Edit Subject') {
         await SubjectService.updateOne(this.form);
       } else {
         await SubjectService.createOne(this.form);
@@ -43,10 +43,10 @@ export const useSubjectStore = defineStore('subject', {
     },
     handleOpenDialog(form?: Partial<Subject>) {
       if (form) {
-        this.dialogTitle = 'Edit Subject';
+        this.titleForm = 'Edit Subject';
         this.form = { ...form };
       } else {
-        this.dialogTitle = 'New Subject';
+        this.titleForm = 'New Subject';
         this.form = {};
       }
       this.dialogState = true;

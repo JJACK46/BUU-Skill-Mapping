@@ -28,10 +28,12 @@
             <q-menu context-menu touch-position auto-close>
               <q-list dense style="min-width: 100px">
                 <q-item
+                  v-show="props.node.branches?.length > 0"
                   clickable
                   @click="
                     store.toggleDialog({
                       title: 'New Branch',
+                      form: props.node,
                     })
                   "
                 >
@@ -56,7 +58,15 @@
                   </q-item-section>
                   <q-item-section>{{ t('edit') }}</q-item-section>
                 </q-item>
-                <q-item clickable @click="store.handleRemove(props.node.id)">
+                <q-item
+                  clickable
+                  @click="
+                    store.handleRemove({
+                      id: props.node.id,
+                      node: props.node,
+                    })
+                  "
+                >
                   <q-item-section side>
                     <q-icon size="16px" name="delete"></q-icon>
                   </q-item-section>
