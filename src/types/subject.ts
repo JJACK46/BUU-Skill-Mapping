@@ -1,4 +1,5 @@
 import { SkillExpectedLevel } from './skill-exp-lvl';
+import { SubjectType } from './subjectType.enum';
 
 export interface Subject {
   id?: number;
@@ -10,13 +11,4 @@ export interface Subject {
   skillExpectedLevels?: Partial<SkillExpectedLevel>[];
   // clos:Clo[]
   // courses:Course[]
-}
-
-export enum SubjectType {
-  Compulsory = 'Compulsory',
-  Core = 'Core',
-  General = 'General',
-  Elective = 'Elective',
-  FreeElective = 'Free Elective',
-  CWIE = 'CWIE',
 }

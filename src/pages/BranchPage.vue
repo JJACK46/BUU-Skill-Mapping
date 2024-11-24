@@ -37,7 +37,7 @@
           outlined
           dense
           label="Abbreviation *"
-          v-model="store.form.abbreviation"
+          v-model="store.form.abbrev"
           :rules="[requireField, onlyAlphabet]"
         />
       </template>

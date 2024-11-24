@@ -6,11 +6,15 @@ export const useCourseStore = defineStore('course', {
   state: () => ({
     form: <Partial<Course>>{},
     courses: <Course[]>[],
+    course: <Course>{},
     dialogState: false,
   }),
 
-  getters: {},
-
+  getters: {
+    getCourseId(state) {
+      return state.course.id || 0;
+    }
+  },
   actions: {
     async fetchData() {
       this.courses = (await CourseService.getAll()).data;
@@ -24,5 +28,8 @@ export const useCourseStore = defineStore('course', {
       await CourseService.removeOne(id);
       window.location.reload();
     },
+    setCourseId(id: number) {
+      this.course.id = id;
+    }
   },
 });

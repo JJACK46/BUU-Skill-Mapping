@@ -1,7 +1,10 @@
 import { Branch } from './branch';
 
 export interface Faculty {
-  id: string;
+  id: number;
   name: string;
+  engName: string
+  abbrev: string;
+  description: string;
   branches?: Branch[];
 }
