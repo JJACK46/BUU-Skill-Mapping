@@ -16,7 +16,8 @@ export const useSubjectStore = defineStore('subject', {
     tabsModel: 'req',
     editMode: true,
     dialogTitle: '' as TitleForm,
-    pagination: defaultPagination
+    pagination: defaultPagination,
+    search: '',
   }),
   getters: {
     getSkillOptions: (s) => s.skillOptions,
@@ -25,24 +26,25 @@ export const useSubjectStore = defineStore('subject', {
   },
   actions: {
     async fetchData() {
-      this.subjects = (await SubjectService.getAll(convertToPageParams(this.pagination))).data;
+      this.subjects = (await SubjectService.getAll(convertToPageParams(this.pagination, this.search))).data;
     },
     async handleSave() {
-      if (this.editMode) {
+      if (this.form) {
         await SubjectService.updateOne(this.form);
       } else {
         await SubjectService.createOne(this.form);
       }
       this.subjects = (await SubjectService.getAll()).data;
       this.dialogState = false;
+      this.resetForm()
     },
     async fetchAllSkills() {
-      this.skillOptions = (await SkillService.getAll()).data;
+      this.skillOptions = (await SkillService.getAll()).data; // need to update for fetch only options
     },
     handleOpenDialog(form?: Partial<Subject>) {
-      if (this.editMode && form) {
+      if (form) {
         this.dialogTitle = 'Edit Subject';
-        this.form = form;
+        this.form = { ...form };
       } else {
         this.dialogTitle = 'New Subject';
         this.form = {};
@@ -51,7 +53,10 @@ export const useSubjectStore = defineStore('subject', {
     },
     async removeSubject(id: string) {
       await SubjectService.removeOne(id);
-      this.subjects = (await SubjectService.getAll()).data;
-    }
+      this.fetchData()
+    },
+    resetForm() {
+      this.form = {};
+    },
   },
 });

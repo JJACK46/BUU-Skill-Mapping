@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <MainHeader
-      v-model:search-text="search"
+      v-model:search-text="store.search"
       @open-dialog="store.handleOpenDialog"
       hide-filter
     />
@@ -18,7 +18,7 @@
       <template #body>
         <q-tabs v-model="store.tabsModel">
           <q-tab name="req" label="Required" />
-          <q-tab name="add" label="Skills" v-show="formRef.isFormValid" />
+          <q-tab name="add" label="Skills" />
         </q-tabs>
         <q-tab-panels v-model="store.tabsModel">
           <q-tab-panel name="req" class="q-gutter-y-md">
@@ -69,11 +69,7 @@
               :rules="[requireField]"
             />
           </q-tab-panel>
-          <q-tab-panel
-            v-show="formRef.isFormValid"
-            name="add"
-            @vue:mounted="store.fetchAllSkills"
-          >
+          <q-tab-panel name="add" @vue:mounted="store.fetchAllSkills">
             <q-list>
               <q-item
                 v-for="(s, i) in store.form.skillExpectedLevels"
@@ -134,7 +130,7 @@
       :pagination="store.pagination"
       class="q-mt-md q-animate--fade"
       :rows="store.getSubjects"
-      :filter="search"
+      :filter="store.search"
       :columns="columns"
       row-key="id"
       wrap-cells
@@ -212,14 +208,15 @@ import { requireField } from 'src/utils/field-rules';
 import { SubjectType } from 'src/types/subject';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/Header/main-header.vue';
+import { useAuthStore } from 'src/stores/auth';
 
 const global = useGlobalStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const search = ref('');
 const store = useSubjectStore();
 const formRef = ref();
 const formValid = ref<boolean>(false);
+const auth = useAuthStore();
 
 watch(
   () => store.form.skillExpectedLevels?.length,
@@ -228,22 +225,6 @@ watch(
       formValid.value = true;
     } else {
       formValid.value = false;
-    }
-  }
-);
-
-watch(
-  () => store.editMode,
-  (newVal) => {
-    if (newVal) {
-      columns.value.push({
-        name: 'actions',
-        label: 'Actions',
-        field: 'actions',
-        align: 'center',
-      });
-    } else {
-      columns.value.pop();
     }
   }
 );
@@ -295,6 +276,14 @@ const columns = ref<QTableColumn[]>([
 
 onMounted(async () => {
   await store.fetchData();
+  if (auth.isAdmin) {
+    columns.value.push({
+      name: 'actions',
+      label: 'Actions',
+      field: 'actions',
+      align: 'center',
+    });
+  }
 });
 
 useMeta({
