@@ -134,7 +134,7 @@ useMeta({
         />
         <q-input
           v-model="store.form.name"
-          label="Name *"
+          :label="t('name') + ' *'"
           outlined
           :rules="[requireField]"
         />
@@ -147,7 +147,7 @@ useMeta({
         />
         <q-input
           v-model="store.form.description"
-          label="Description *"
+          :label="t('description') + ' *'"
           outlined
           type="textarea"
           :rules="[requireField]"

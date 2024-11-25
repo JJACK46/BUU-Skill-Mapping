@@ -5,13 +5,13 @@ export interface Curriculum {
   id: string;
   name: string;
   engName: string;
-  degreeName: string;
-  engDegreeName: string;
+  degree: string;
+  engDegree: string;
   description: string;
   period: number;
   minimumGrade: number;
   coordinators: Instructor[];
   // plos: any[];
-  subjects?: Subject[];
+  subjects: Subject[];
   branch: Branch;
 }
