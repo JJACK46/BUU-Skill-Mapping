@@ -24,8 +24,8 @@
             />
           </div>
           <div>{{ c.description }}</div>
-          <div>{{ c.degreeName }}</div>
-          <div>{{ c.engDegreeName }}</div>
+          <div>{{ c.degree }}</div>
+          <div>{{ c.engDegree }}</div>
           <div>Period: {{ c.period }} Years</div>
           <div>Minimum Grade: {{ c.minimumGrade }}</div>
           <div>{{ c.coordinators }}</div>
@@ -47,6 +47,11 @@
             >
             </q-table>
           </q-expansion-item>
+        </q-card-section>
+      </q-card>
+      <q-card flat bordered v-show="!curriculums || curriculums.length === 0">
+        <q-card-section class="text-body2 text-center">
+          No Data
         </q-card-section>
       </q-card>
     </section>

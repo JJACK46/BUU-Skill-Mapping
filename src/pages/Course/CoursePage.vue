@@ -64,6 +64,14 @@
         @handle-view="handleViewCourse(course.id!)"
       />
     </section>
+    <q-card
+      class="q-mt-lg"
+      flat
+      bordered
+      v-show="!store.courses || store.courses.length === 0"
+    >
+      <q-card-section class="text-body2 text-center"> No Data </q-card-section>
+    </q-card>
   </q-page>
 </template>
 

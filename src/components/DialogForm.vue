@@ -3,16 +3,22 @@
     <q-card class="dialog-form" :style="{ width: width ? width : '500px' }">
       <q-form ref="formRef" @input="validateForm">
         <q-card-section>
-          <div class="text-h6 ">{{ title }}</div>
+          <div class="text-h6">{{ title }}</div>
           <q-separator class="q-my-md"></q-separator>
           <span class="q-gutter-y-sm">
             <slot name="body" />
           </span>
         </q-card-section>
         <q-card-actions class="justify-end q-pa-md">
-          <q-btn flat label="cancel" @click="dialogState = false"></q-btn>
-          <q-btn :disable="!isFormValid || !formValid" color="primary" unelevated label="save" style="width: 80px"
-            @click="handleSave"></q-btn>
+          <q-btn flat :label="t('cancel')" @click="dialogState = false"></q-btn>
+          <q-btn
+            :disable="!isFormValid || !formValid"
+            color="primary"
+            unelevated
+            :label="t('save')"
+            style="width: 80px"
+            @click="handleSave"
+          ></q-btn>
         </q-card-actions>
       </q-form>
     </q-card>
@@ -22,7 +28,9 @@
 <script lang="ts" setup>
 import { QForm } from 'quasar';
 import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 // Props
 defineProps<{
   title: string;
@@ -40,8 +48,8 @@ const isFormValid = ref(false);
 
 //Expose
 defineExpose({
-  isFormValid
-})
+  isFormValid,
+});
 
 //Models
 defineModel<boolean>('formValid', { default: true });
