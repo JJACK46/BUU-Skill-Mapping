@@ -17,6 +17,78 @@ onMounted(store.fetchData);
 useMeta({
   title: title.value,
 });
+
+// const skillStore = useSkillStore();
+// const loading = ref(false);
+// const dialogAddVisible = ref(false);
+// const dialogAddSubVisible = ref(false);
+// const dialogDetailVisible = ref(false);
+// const dialogConfirmVisible = ref(false);
+// const selectedItem = ref<Skill | null>(null);
+// const skills = computed(() => skillStore.skills || []);
+
+// const showDialogAdd = async () => {
+//   dialogAddVisible.value = true;
+// };
+
+// const closeDialogAdd = () => {
+//   dialogAddVisible.value = false;
+// };
+
+// const showDialogAddSub = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogAddSubVisible.value = true;
+// };
+
+// const closeDialogAddSub = () => {
+//   dialogAddSubVisible.value = false;
+// };
+
+// const showDialogDetail = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogDetailVisible.value = true;
+// };
+
+// const closeDialogDetail = () => {
+//   dialogDetailVisible.value = false;
+// };
+
+// const confirmDeleteSkill = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogConfirmVisible.value = true;
+// };
+// const closeDialogDelete = () => {
+//   dialogConfirmVisible.value = false;
+// };
+
+// const deleteSkillConfirmed = () => {
+//   skillStore.deleteSkill(selectedItem.value!.id);
+//   dialogConfirmVisible.value = false;
+//   fetchSkill();
+// };
+
+// const fetchSkill = async () => {
+//   loading.value = true;
+//   skillStore.clearForm();
+//   try {
+//     // await skillStore.fetchSkillsPage(pageParams.value);
+//     await skillStore.fetchSkills();
+//   } catch (error) {
+//     console.error('Error fetching skills:', error);
+//   } finally {
+//     loading.value = false;
+//   }
+// };
+// watch(
+//   [
+//     () => dialogAddVisible.value,
+//     () => dialogAddSubVisible.value,
+//     () => dialogDetailVisible.value,
+//   ],
+//   () => {
+//     fetchSkill();
+//   }
+// );
 </script>
 
 <template>
@@ -67,6 +139,7 @@ useMeta({
                 </q-item>
                 <q-item
                   clickable
+                  v-close-popup
                   @click="
                     store.toggleDialog({
                       form: props.node,
@@ -74,19 +147,14 @@ useMeta({
                     })
                   "
                 >
-                  <q-item-section side>
-                    <q-icon size="16px" name="edit"></q-icon>
-                  </q-item-section>
-                  <q-item-section>{{ t('edit') }}</q-item-section>
+                  <q-item-section>Edit</q-item-section>
                 </q-item>
                 <q-item
                   clickable
+                  v-close-popup
                   @click="store.handleRemove({ id: props.node.id })"
                 >
-                  <q-item-section side>
-                    <q-icon size="16px" name="delete"></q-icon>
-                  </q-item-section>
-                  <q-item-section>{{ t('delete') }}</q-item-section>
+                  <q-item-section>Delete</q-item-section>
                 </q-item>
                 <q-item clickable>
                   <q-item-section side>
@@ -116,17 +184,15 @@ useMeta({
     >
       <template #body>
         <q-input
-          v-show="store.getParentId"
-          v-model="store.getParentId"
+          v-show="store.parentId"
+          v-model="store.parentId"
           label="Parent ID"
           hint="Readonly"
           outlined
           readonly
-        >
-        </q-input>
+        />
         <q-input
           v-model="store.form.id"
-          v-show="store.form.id"
           label="ID"
           outlined
           readonly
