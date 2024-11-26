@@ -6,5 +6,5 @@ export interface Faculty {
   engName: string
   abbrev: string;
   description: string;
-  branches?: Branch[];
+  branches: Branch[];
 }
