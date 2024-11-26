@@ -19,7 +19,7 @@
                   clickable
                   onmouseenter="this.style.color='red'"
                   onmouseleave="this.style.color=''"
-                  @click="$emit('handle-delete', course.id ?? 0)"
+                  @click="$emit('handle-delete', course.id ?? '')"
                   v-close-popup
                 >
                   <q-item-section side>
@@ -65,10 +65,11 @@ defineProps<{
   course: Course;
 }>();
 
-defineEmits<{
-  (e: 'handle-view', id: number): void;
-  (e: 'handle-delete', id: number): void;
-}>();
+// defineEmits<{
+//   (e: 'handle-view', id: number): void;
+//   (e: 'handle-delete', id: number): void;
+// }>();
+defineEmits(['handle-view', 'handle-delete']);
 </script>
 
 <style lang="scss">

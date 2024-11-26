@@ -18,7 +18,7 @@ export const useBranchStore = defineStore('branch', {
             this.branches = (await BranchService.getAll(convertToPageParams(this.pagination))).data;
         },
         async createOne() {
-            BranchService.createOne(this.form as Branch);
+            await BranchService.createOne(this.form as Branch);
             this.dialogState = false;
             this.branches = (await BranchService.getAll()).data;
         },

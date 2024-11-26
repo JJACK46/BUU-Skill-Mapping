@@ -98,7 +98,7 @@ const filterCourse = ref('');
 const teachers = ref<Instructor[]>([]);
 const store = useCourseStore();
 
-const handleViewCourse = (id: number) => {
+const handleViewCourse = (id: string) => {
   if (id) {
     router.push({ name: 'Course Detail', params: { id } });
   }
@@ -111,7 +111,7 @@ const handleOpenDialog = async () => {
   // curriculums.value = wait for implement
 };
 
-const handlePopup = (id: number) => {
+const handlePopup = (id: string) => {
   $q.dialog({
     title: 'Confirm Deletion',
     message: 'Are you sure you want to delete this course?',

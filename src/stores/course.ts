@@ -12,7 +12,7 @@ export const useCourseStore = defineStore('course', {
 
   getters: {
     getCourseId(state) {
-      return state.course.id || 0;
+      return state.course.id || '';
     }
   },
   actions: {
@@ -24,11 +24,11 @@ export const useCourseStore = defineStore('course', {
       this.dialogState = false;
       window.location.reload();
     },
-    async removeOne(id: number) {
+    async removeOne(id: string) {
       await CourseService.removeOne(id);
       window.location.reload();
     },
-    setCourseId(id: number) {
+    setCourseId(id: string) {
       this.course.id = id;
     }
   },

@@ -4,7 +4,7 @@ import { Subject } from './subject';
 import { Instructor } from './instructor';
 
 export interface Course {
-  id?: number;
+  id?: string;
   name: string;
   description: string;
   active: boolean;
@@ -14,7 +14,7 @@ export interface Course {
   courseEnrollment: CourseEnrollment[];
 }
 export interface CourseEnrollment {
-  id?: number;
+  id?: string;
   course: Partial<Course>;
   student: Partial<Student>;
   skillCollections: SkillCollection[];
