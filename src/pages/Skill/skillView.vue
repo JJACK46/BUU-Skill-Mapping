@@ -17,78 +17,6 @@ onMounted(store.fetchData);
 useMeta({
   title: title.value,
 });
-
-// const skillStore = useSkillStore();
-// const loading = ref(false);
-// const dialogAddVisible = ref(false);
-// const dialogAddSubVisible = ref(false);
-// const dialogDetailVisible = ref(false);
-// const dialogConfirmVisible = ref(false);
-// const selectedItem = ref<Skill | null>(null);
-// const skills = computed(() => skillStore.skills || []);
-
-// const showDialogAdd = async () => {
-//   dialogAddVisible.value = true;
-// };
-
-// const closeDialogAdd = () => {
-//   dialogAddVisible.value = false;
-// };
-
-// const showDialogAddSub = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogAddSubVisible.value = true;
-// };
-
-// const closeDialogAddSub = () => {
-//   dialogAddSubVisible.value = false;
-// };
-
-// const showDialogDetail = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogDetailVisible.value = true;
-// };
-
-// const closeDialogDetail = () => {
-//   dialogDetailVisible.value = false;
-// };
-
-// const confirmDeleteSkill = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogConfirmVisible.value = true;
-// };
-// const closeDialogDelete = () => {
-//   dialogConfirmVisible.value = false;
-// };
-
-// const deleteSkillConfirmed = () => {
-//   skillStore.deleteSkill(selectedItem.value!.id);
-//   dialogConfirmVisible.value = false;
-//   fetchSkill();
-// };
-
-// const fetchSkill = async () => {
-//   loading.value = true;
-//   skillStore.clearForm();
-//   try {
-//     // await skillStore.fetchSkillsPage(pageParams.value);
-//     await skillStore.fetchSkills();
-//   } catch (error) {
-//     console.error('Error fetching skills:', error);
-//   } finally {
-//     loading.value = false;
-//   }
-// };
-// watch(
-//   [
-//     () => dialogAddVisible.value,
-//     () => dialogAddSubVisible.value,
-//     () => dialogDetailVisible.value,
-//   ],
-//   () => {
-//     fetchSkill();
-//   }
-// );
 </script>
 
 <template>
@@ -106,9 +34,12 @@ useMeta({
         t('Right click to open menu of each row')
       }}
     </div>
+    <q-toggle v-model="store.onlyHaveSubs"
+      >Show only skills with sub-skills</q-toggle
+    >
     <!-- Content -->
     <q-card flat bordered class="q-animate--fade">
-      <q-tree :nodes="store.skills" node-key="id" class="q-pa-sm">
+      <q-tree :nodes="store.getSkills" node-key="id" class="q-pa-sm">
         <template v-slot:default-header="props">
           <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
             <!-- Header -->

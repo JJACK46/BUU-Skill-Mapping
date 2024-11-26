@@ -13,10 +13,8 @@
             {{ t('courseId') }} : {{ store.getCourseId }}
           </div>
           <div class="text-h5">{{ store.course.name }}</div>
-          <div class="text-body1">
-            <span class="text-primary">
-              {{ store.course.description }}
-            </span>
+          <div class="text-body2 q-mt-sm">
+            {{ store.course.description }}
           </div>
         </q-card-section>
       </q-card>
@@ -28,10 +26,8 @@
           <div class="text-h5">
             {{ store.course.subject?.name }}
           </div>
-          <div>
-            <span class="text-body1">
-              {{ store.course.subject?.description }}
-            </span>
+          <div class="text-body2 q-mt-sm">
+            {{ store.course.subject?.description }}
           </div>
         </q-card-section>
       </q-card>
@@ -304,7 +300,7 @@ const skillTree = ref();
 
 onMounted(async () => {
   filterStudent.value = '';
-  route.params.id && store.setCourseId(Number(route.params.id));
+  route.params.id && store.setCourseId(String(route.params.id));
   await fetchCourse();
   skillTree.value = makeSkillTree(
     store.course.subject?.skillExpectedLevels || []

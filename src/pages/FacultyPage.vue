@@ -14,12 +14,7 @@
     </div>
     <!-- Content -->
     <q-card flat bordered class="q-pa-md">
-      <q-tree
-        :nodes="store.faculties"
-        node-key="id"
-        label-key="name"
-        children-key="branches"
-      >
+      <q-tree :nodes="store.getNodes" node-key="id" label-key="name">
         <template #default-header="props">
           <q-tr class="full-width q-py-xs hover-row cursor-pointer">
             <q-td>
@@ -28,7 +23,7 @@
             <q-menu context-menu touch-position auto-close>
               <q-list dense style="min-width: 100px">
                 <q-item
-                  v-show="props.node.branches?.length > 0"
+                  v-show="props.node.isFaculty"
                   clickable
                   @click="
                     store.toggleDialog({
@@ -84,7 +79,7 @@
         </template>
         <template #default-body="node">
           <q-td v-show="node.node.engName" class="text-body2 q-pl-lg">
-            {{ node.node.engName }} {{ node.node.abbrev }}
+            {{ node.node.engName }} {{ node.node?.abbrev }}
           </q-td>
         </template>
       </q-tree>
