@@ -1,18 +1,16 @@
-import { Teacher } from 'src/types/teacher';
-import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
+import { PageParams } from 'src/types/pagination';
+import { Faculty } from 'src/types/faculty';
 
 export class FacultyService {
   static path = 'faculties';
 
-  static async fetchByPage(p: PageParams) {
-    const response = await api.get(`${this.path}/pages`, { params: p });
-    return response.data;
-  }
-
-  static async getAll() {
-    const res = await api.get(this.path);
-    return res.data;
+  static async getAll(p?: Partial<PageParams>) {
+    const { data } = await api.get(this.path, { params: p });
+    return {
+      data: data[0],
+      total: data[1],
+    };
   }
 
   static async getOne(id: number) {
@@ -20,19 +18,13 @@ export class FacultyService {
     return res.data;
   }
 
-  static async createOne(obj: Partial<Teacher>) {
-    const dto = {
-      ...obj,
-      userId: obj.user?.id,
-      branchId: obj.branch?.id,
-      curriculumListId: obj.curriculums?.map((c) => c.id),
-    };
-    const res = await api.post(this.path, dto);
+  static async createOne(obj: Partial<Faculty>) {
+    const res = await api.post(this.path, obj);
     return res.data;
   }
 
-  static async updateOne(obj: Teacher) {
-    const res = await api.patch(this.path, obj);
+  static async updateOne(obj: Partial<Faculty>) {
+    const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.data;
   }
 

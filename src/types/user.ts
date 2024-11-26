@@ -1,12 +1,12 @@
 import { UserRole } from 'src/enums/roles';
 import { Student } from './student';
-import { Teacher } from './teacher';
+import { Instructor } from './instructor';
 
 export interface User {
   id: string;
   email: string;
   password?: string;
   role: UserRole;
-  teacher?: Teacher;
+  teacher?: Instructor;
   student?: Student;
 }

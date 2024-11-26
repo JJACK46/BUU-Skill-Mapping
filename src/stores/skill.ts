@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import SkillService from 'src/services/skill';
-import { PageParams } from 'src/types/pagination';
 import { Skill } from 'src/types/skill';
-import { Dialog } from 'quasar';
+import { Dialog, QTableProps } from 'quasar'
+import { convertToPageParams } from 'src/utils/pagination';
 
 type TitleForm =
   | 'New Skill'
@@ -15,26 +15,26 @@ export const useSkillStore = defineStore('skill', {
     skills: [] as Skill[],
     form: {} as Partial<Skill>,
     dialogForm: false,
-    pageParams: <PageParams>{
+    pagination: {
       page: 1,
-      limit: 10,
-      sort: '',
-      order: 'ASC',
-      search: '',
-      columnId: '',
-      columnName: '',
-    },
+      rowsPerPage: 10,
+    } as QTableProps['pagination'],
+    search: '',
     titleForm: 'New Skill' as TitleForm,
     qDialog: Dialog,
     parentId: null as number | null,
+    totalSkills: 0
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
+    getParentId: (state) => state.parentId,
+    getMaxPage: (state) => state.totalSkills / (state.pagination?.rowsPerPage || 10)
   },
   actions: {
     async fetchData() {
-      const response = await SkillService.getAllByPage(this.pageParams);
-      this.skills = response.data;
+      const { data, total } = (await SkillService.getAll(convertToPageParams(this.pagination, this.search)));
+      this.skills = data
+      this.totalSkills = total
     },
     async handleSave() {
       if (this.parentId) {
@@ -46,56 +46,40 @@ export const useSkillStore = defineStore('skill', {
           await SkillService.addSkill(this.form as Skill);
         }
       }
-      this.fetchData();
+      this.fetchData()
       this.dialogForm = false;
-      this.resetState();
+      this.resetForm()
+      this.parentId = null
+
     },
-    async handleRemove({
-      id,
-      subSkillId,
-    }: {
-      id: number;
-      subSkillId?: number;
-    }) {
-      this.qDialog
-        .create({
-          title: 'Confirm',
-          message: 'Are you sure you want to delete this item?',
-          cancel: true,
-          persistent: true,
-        })
-        .onCancel(() => {
-          return;
-        })
-        .onOk(async () => {
-          await SkillService.removeSkill(id);
-          if (subSkillId) {
-            await SkillService.removeSubSkill(id, subSkillId);
-          }
-          this.fetchData();
-        });
+    async handleRemove({ id, subSkillId }: { id: number, subSkillId?: number }) {
+      this.qDialog.create({
+        title: 'Confirm',
+        message: 'Are you sure you want to delete this item?',
+        cancel: true,
+        persistent: true
+      }).onCancel(() => {
+        return
+      }).onOk(async () => {
+        await SkillService.removeSkill(id);
+        if (subSkillId) {
+          await SkillService.removeSubSkill(id, subSkillId);
+        }
+        this.fetchData()
+      })
     },
-    async toggleDialog({
-      form,
-      title,
-      parentId,
-    }: {
-      form?: Partial<Skill>;
-      title?: TitleForm;
-      parentId?: number;
-    }) {
+    async toggleDialog({ form, title, parentId }: { form?: Partial<Skill>, title?: TitleForm, parentId?: number }) {
       this.titleForm = title || 'New Skill';
-      this.parentId = parentId || null;
+      this.parentId = parentId || null
       if (form) {
         this.form = form;
       } else {
-        this.resetState();
+        this.resetForm()
       }
       this.dialogForm = !this.dialogForm;
     },
-    resetState() {
+    resetForm() {
       this.form = {} as Partial<Skill>;
-      this.parentId = null;
     },
   },
 });

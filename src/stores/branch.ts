@@ -1,34 +1,30 @@
 import { defineStore } from 'pinia';
-import { QTableProps } from 'quasar';
 import { BranchService } from 'src/services/branches';
 import { Branch } from 'src/types/branch';
+import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 export const useBranchStore = defineStore('branch', {
     state: () => ({
         form: {} as Branch,
         branches: <Branch[]>[],
         dialogState: false,
-        loading: false,
-        pagination: {
-            rowsPerPage: 10
-        } as QTableProps['pagination']
+        pagination: defaultPagination,
+        search: ''
     }),
 
     getters: {},
     actions: {
-        async setup() {
-            this.loading = true;
-            this.branches = await BranchService.getAll();
-            this.loading = false;
+        async fetchData() {
+            this.branches = (await BranchService.getAll(convertToPageParams(this.pagination))).data;
         },
         async createOne() {
             BranchService.createOne(this.form as Branch);
             this.dialogState = false;
-            window.location.reload();
+            this.branches = (await BranchService.getAll()).data;
         },
         async removeOne(id: number) {
             BranchService.removeOne(id);
-            window.location.reload();
+            this.branches = (await BranchService.getAll()).data;
         },
         toggleDialog() {
             this.dialogState = !this.dialogState;

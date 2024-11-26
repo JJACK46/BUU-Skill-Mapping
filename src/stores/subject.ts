@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
-import { QTableProps } from 'quasar';
 import SkillService from 'src/services/skill';
 import { SubjectService } from 'src/services/subject';
 import { Skill } from 'src/types/skill';
 import { Subject } from 'src/types/subject';
+import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
+
+type TitleForm = 'New Subject' | 'Edit Subject'
 
 export const useSubjectStore = defineStore('subject', {
   state: () => ({
@@ -12,47 +14,49 @@ export const useSubjectStore = defineStore('subject', {
     form: <Partial<Subject>>{},
     skillOptions: <Skill[]>[],
     tabsModel: 'req',
-    editMode: false,
-    dialogTitle: 'New Subject',
-    pagination: { 'rowsPerPage': 10 } as QTableProps['pagination']
+    editMode: true,
+    titleForm: '' as TitleForm,
+    pagination: defaultPagination,
+    search: '',
   }),
-
   getters: {
     getSkillOptions: (s) => s.skillOptions,
-    getDialogTitle: (s) => s.dialogTitle,
+    getDialogTitle: (s) => s.titleForm,
     getSubjects: (s) => s.subjects,
   },
-
   actions: {
-    async setup() {
-      this.subjects = await SubjectService.getAll();
+    async fetchData() {
+      this.subjects = (await SubjectService.getAll(convertToPageParams(this.pagination, this.search))).data;
     },
     async handleSave() {
-      if (this.editMode) {
+      if (this.titleForm === 'Edit Subject') {
         await SubjectService.updateOne(this.form);
       } else {
         await SubjectService.createOne(this.form);
       }
-      this.subjects = await SubjectService.getAll();
+      this.subjects = (await SubjectService.getAll()).data;
       this.dialogState = false;
+      this.resetForm()
     },
     async fetchAllSkills() {
-      this.skillOptions = await SkillService.getAll();
+      this.skillOptions = (await SkillService.getAll()).data; // need to update for fetch only options
     },
     handleOpenDialog(form?: Partial<Subject>) {
-      if (this.editMode && form) {
-        this.dialogTitle = 'Edit Subject';
-        this.form = form;
+      if (form) {
+        this.titleForm = 'Edit Subject';
+        this.form = { ...form };
       } else {
-        this.dialogTitle = 'New Subject';
+        this.titleForm = 'New Subject';
         this.form = {};
       }
       this.dialogState = true;
     },
     async removeSubject(id: string) {
       await SubjectService.removeOne(id);
-      this.subjects = await SubjectService.getAll();
-      // window.location.reload()
-    }
+      this.fetchData()
+    },
+    resetForm() {
+      this.form = {};
+    },
   },
 });

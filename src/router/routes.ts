@@ -56,7 +56,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Curriculums Management',
-        component: () => import('pages/CurriculumPage.vue'),
+        component: () => import('src/pages/Curriculum/CurriculumPage.vue'),
+      },
+      {
+        path: 'new',
+        name: 'New Curriculum',
+        component: () => import('src/pages/Curriculum/Curriculum-new.vue'),
       },
     ],
   },
@@ -104,13 +109,13 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/teachers',
+    path: '/instructors',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
-        name: 'Teacher Management',
-        component: () => import('pages/TeacherPage.vue'),
+        name: 'Instructor Management',
+        component: () => import('pages/InstructorPage.vue'),
       },
     ],
   },
@@ -126,13 +131,13 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/branches',
+    path: '/faculties',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
-        name: 'Branch',
-        component: () => import('pages/BranchPage.vue'),
+        name: 'Faculty & Branch Management',
+        component: () => import('pages/FacultyPage.vue'),
       },
     ],
   },

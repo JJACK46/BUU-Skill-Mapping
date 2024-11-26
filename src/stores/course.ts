@@ -6,17 +6,18 @@ export const useCourseStore = defineStore('course', {
   state: () => ({
     form: <Partial<Course>>{},
     courses: <Course[]>[],
+    course: <Course>{},
     dialogState: false,
-    loading: false,
   }),
 
-  getters: {},
-
+  getters: {
+    getCourseId(state) {
+      return state.course.id || 0;
+    }
+  },
   actions: {
-    async setup() {
-      this.loading = true;
-      this.courses = await CourseService.getAll();
-      this.loading = false;
+    async fetchData() {
+      this.courses = (await CourseService.getAll()).data;
     },
     async createOne() {
       await CourseService.createOne(this.form as Course);
@@ -27,5 +28,8 @@ export const useCourseStore = defineStore('course', {
       await CourseService.removeOne(id);
       window.location.reload();
     },
+    setCourseId(id: number) {
+      this.course.id = id;
+    }
   },
 });

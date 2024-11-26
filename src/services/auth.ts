@@ -4,8 +4,8 @@ import { Payload } from 'src/types/payload';
 
 class AuthService {
   static async login(email: string, password: string): Promise<AxiosResponse> {
-    const res = await api.post('/auth/login', { email, password });
-    return res.data;
+    const { data } = await api.post('/auth/login', { email, password });
+    return data;
   }
 
   static async isAuthenticated(): Promise<boolean> {
@@ -31,11 +31,11 @@ class AuthService {
 
   static async fetchProfile(): Promise<Payload | null> {
     try {
-      const res = await api.get<Payload>('auth/profile');
-      if (!res.data) {
+      const { data } = await api.get<Payload>('auth/profile');
+      if (!data) {
         return null;
       }
-      return res.data;
+      return data;
     } catch (err) {
       console.error(err);
       return null;
