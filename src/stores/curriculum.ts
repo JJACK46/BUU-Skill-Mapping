@@ -30,7 +30,7 @@ export const useCurriculumStore = defineStore('curriculum', {
     },
     async handleSave() {
       await CurriculumService.createOne(this.form);
-      console.log(this.form);
+      console.log(JSON.stringify(this.form));
       this.router.push('/curriculums');
     },
   },

@@ -2,7 +2,7 @@
   <q-page padding>
     <MainHeader :search-text="search" @open-dialog="handleAdd" />
     <q-separator class="q-my-md" />
-    <section class="q-mt-md q-gutter-y-lg">
+    <!-- <section class="q-mt-md q-gutter-y-lg">
       <q-card
         class="q-pa-md q-animate--fade"
         v-for="(c, index) in curriculums"
@@ -54,10 +54,10 @@
           No Data
         </q-card-section>
       </q-card>
-    </section>
+    </section> -->
 
     <q-table
-      :rows="store.getCurriculums"
+      :rows="curriculums || []"
       :columns="columns"
       row-key="id"
       flat
@@ -76,7 +76,7 @@ import { QTableColumn, useMeta } from 'quasar';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
-import { useCurriculumStore } from 'src/stores/curriculum';
+// import { useCurriculumStore } from 'src/stores/curriculum';
 import { Curriculum } from 'src/types/curriculum';
 import { Subject } from 'src/types/subject';
 import { computed, onMounted, ref } from 'vue';
@@ -86,43 +86,30 @@ const search = ref();
 const route = useRoute();
 const router = useRouter();
 const title = computed(() => route.matched[1].name as string);
-const store = useCurriculumStore();
+// const store = useCurriculumStore();
 const curriculums = ref<Curriculum[]>();
 const subjects = ref<Subject[]>();
 const columns = ref<QTableColumn[]>([
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
-  { name: 'thaiName', label: 'Thai Name', field: 'thaiName', align: 'left' },
+  { name: 'name', label: 'Thai Name', field: 'name', align: 'left' },
   { name: 'engName', label: 'Eng Name', field: 'engName', align: 'left' },
   { name: 'period', label: 'Period', field: 'period', align: 'left' },
-  {
-    name: 'branch',
-    label: 'Branch',
-    field: (row) => row.branch.name,
-    align: 'left',
-  },
-  {
-    name: 'actions',
-    label: 'Actions',
-    field: () => null,
-    align: 'left',
-    sortable: false,
-  },
 ]);
 
 const handleAdd = () => {
   router.push({ name: 'New Curriculum' });
 };
-const handleSubjects = (index: number) => {
-  if (!curriculums.value) return;
-  if (
-    curriculums.value[index].subjects?.length === 0 ||
-    !curriculums.value[index].subjects
-  ) {
-    SubjectService.getAll().then((res) => {
-      curriculums.value![index].subjects = res.data;
-    });
-  }
-};
+// const handleSubjects = (index: number) => {
+//   if (!curriculums.value) return;
+//   if (
+//     curriculums.value[index].subjects?.length === 0 ||
+//     !curriculums.value[index].subjects
+//   ) {
+//     SubjectService.getAll().then((res) => {
+//       curriculums.value![index].subjects = res.data;
+//     });
+//   }
+// };
 
 useMeta({
   title: title.value,
