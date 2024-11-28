@@ -55,11 +55,24 @@
         </q-card-section>
       </q-card>
     </section>
+
+    <q-table
+      :rows="store.getCurriculums"
+      :columns="columns"
+      row-key="id"
+      flat
+      :filter="search"
+      bordered
+      class="q-mt-md q-animate--fade"
+      wrap-cells
+      separator="cell"
+    >
+    </q-table>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { useMeta } from 'quasar';
+import { QTableColumn, useMeta } from 'quasar';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
@@ -76,6 +89,25 @@ const title = computed(() => route.matched[1].name as string);
 const store = useCurriculumStore();
 const curriculums = ref<Curriculum[]>();
 const subjects = ref<Subject[]>();
+const columns = ref<QTableColumn[]>([
+  { name: 'id', label: 'ID', field: 'id', align: 'left' },
+  { name: 'thaiName', label: 'Thai Name', field: 'thaiName', align: 'left' },
+  { name: 'engName', label: 'Eng Name', field: 'engName', align: 'left' },
+  { name: 'period', label: 'Period', field: 'period', align: 'left' },
+  {
+    name: 'branch',
+    label: 'Branch',
+    field: (row) => row.branch.name,
+    align: 'left',
+  },
+  {
+    name: 'actions',
+    label: 'Actions',
+    field: () => null,
+    align: 'left',
+    sortable: false,
+  },
+]);
 
 const handleAdd = () => {
   router.push({ name: 'New Curriculum' });
