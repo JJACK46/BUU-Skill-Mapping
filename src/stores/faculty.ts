@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Dialog } from 'quasar';
+import { Dialog, Notify } from 'quasar';
 import { BranchService } from 'src/services/branches';
 import { FacultyService } from 'src/services/faculty';
 import { Branch } from 'src/types/branch';
@@ -13,24 +13,35 @@ export const useFacultyStore = defineStore('faculty', {
         formFaculty: {} as Partial<Faculty>,
         formBranch: {} as Partial<Branch>,
         faculties: [] as Faculty[],
-        branches: [] as Branch[],
+        // branches: [] as Branch[],
         dialogState: false,
         pagination: defaultPagination,
         search: '',
         titleForm: '' as TitleForm,
-        qDialog: Dialog
+        qDialog: Dialog,
+        qNotify: Notify
     }),
 
     getters: {
         isFacultyForm: (state) => (state.titleForm === 'New Faculty' || state.titleForm === 'Edit Faculty'),
+        getNodes: (state) => {
+            return state.faculties.map((faculty) => {
+                const { branches, ...rest } = faculty;
+                return ({
+                    ...rest,
+                    isFaculty: true,
+                    children: branches.map((branch) => ({ ...branch, children: [] })),
+                });
+            })
+        }
     },
     actions: {
         async fetchData() {
             this.faculties = (await FacultyService.getAll(convertToPageParams(this.pagination, this.search))).data;
         },
-        async fetchDataBranch() {
-            this.branches = (await BranchService.getAll(convertToPageParams(this.pagination, this.search))).data;
-        },
+        // async fetchDataBranch() {
+        //     this.branches = (await BranchService.getAll(convertToPageParams(this.pagination, this.search))).data;
+        // },
         async removeOne(id: number) {
             FacultyService.removeOne(id);
             this.faculties = (await FacultyService.getAll()).data;
@@ -48,7 +59,7 @@ export const useFacultyStore = defineStore('faculty', {
                 if (title === 'New Branch') {
                     this.titleForm = title;
                     //init facultyId
-                    const braForm = { faculty: this.formFaculty } as Partial<Branch>;
+                    const braForm = { faculty: { ...form } } as Partial<Branch>;
                     this.formBranch = braForm
                 }
             } else {
@@ -58,24 +69,37 @@ export const useFacultyStore = defineStore('faculty', {
             this.dialogState = !this.dialogState;
         },
         async handleSave() {
+            let ok = false
+            let text = ''
             switch (this.titleForm) {
                 case 'New Faculty':
-                    await FacultyService.createOne(this.formFaculty);
+                    ok = await FacultyService.createOne(this.formFaculty);
+                    text = 'Faculty created successfully'
                     break;
                 case 'Edit Faculty':
-                    await FacultyService.updateOne(this.formFaculty);
+                    ok = await FacultyService.updateOne(this.formFaculty);
+                    text = 'Faculty updated successfully'
                     break
                 case 'New Branch':
-                    await BranchService.createOne(this.formBranch,);
+                    ok = await BranchService.createOne(this.formBranch,);
+                    text = 'Branch created successfully'
                     break;
                 case 'Edit Branch':
-                    await BranchService.updateOne(this.formBranch);
+                    ok = await BranchService.updateOne(this.formBranch);
+                    text = 'Branch updated successfully'
                     break;
                 default:
                     break;
             }
-            this.dialogState = false;
-            this.fetchData()
+            if (ok) {
+                this.qNotify.create({
+                    type: 'ok',
+                    message: text,
+                })
+                this.dialogState = false;
+                this.fetchData()
+                // this.fetchDataBranch()
+            }
         },
         handleRemove({ id, node }: { id: number, node: Partial<Faculty> | Partial<Branch> }) {
             this.qDialog.create({

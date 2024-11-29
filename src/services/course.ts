@@ -5,7 +5,7 @@ import { PageParams } from 'src/types/pagination';
 export class CourseService {
   static path = 'courses';
 
-  static async importStudents(id: number, studentListId: string[]) {
+  static async importStudents(id: string, studentListId: string[]) {
     const res = await api.patch(
       `${this.path}/${id}/import-students`,
       studentListId
@@ -20,11 +20,11 @@ export class CourseService {
     };
   }
 
-  static async getOne(id: number) {
+  static async getOne(id: string) {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;
   }
-  static async getEnrollment(id: number) {
+  static async getEnrollment(id: string) {
     const res = await api.get(`${this.path}/${id}/enrollments`);
     return res.data;
   }
@@ -45,7 +45,7 @@ export class CourseService {
     return res.data;
   }
 
-  static async removeOne(id: number) {
+  static async removeOne(id: string) {
     const res = await api.delete(`${this.path}/${id}`);
     return res.data;
   }

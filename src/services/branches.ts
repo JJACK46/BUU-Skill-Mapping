@@ -1,6 +1,7 @@
 import { Branch } from 'src/types/branch';
 import { api } from 'boot/axios';
 import { PageParams } from 'src/types/pagination';
+import { HttpStatusCode } from 'axios';
 export class BranchService {
   static path = 'branches';
   static async getAll(p?: Partial<PageParams>) {
@@ -22,7 +23,7 @@ export class BranchService {
       ...obj,
     }
     const res = await api.post(this.path, dto);
-    return res.data;
+    return res.status === HttpStatusCode.Created;
   }
 
   static async updateOne(obj: Partial<Branch>) {
@@ -31,11 +32,11 @@ export class BranchService {
       ...obj,
     }
     const res = await api.patch(`${this.path}/${obj.id}`, dto);
-    return res.data;
+    return res.status === HttpStatusCode.Ok;
   }
 
   static async removeOne(id: number) {
     const res = await api.delete(`${this.path}/${id}`);
-    return res.data;
+    return res.status === HttpStatusCode.Ok;
   }
 }

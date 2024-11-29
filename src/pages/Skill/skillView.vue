@@ -106,9 +106,12 @@ useMeta({
         t('Right click to open menu of each row')
       }}
     </div>
+    <q-toggle v-model="store.onlyHaveSubs"
+      >Show only skills with sub-skills</q-toggle
+    >
     <!-- Content -->
     <q-card flat bordered class="q-animate--fade">
-      <q-tree :nodes="store.skills" node-key="id" class="q-pa-sm">
+      <q-tree :nodes="store.getSkills" node-key="id" class="q-pa-sm">
         <template v-slot:default-header="props">
           <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
             <!-- Header -->
@@ -200,7 +203,7 @@ useMeta({
         />
         <q-input
           v-model="store.form.name"
-          label="Name *"
+          :label="t('name') + ' *'"
           outlined
           :rules="[requireField]"
         />
@@ -213,7 +216,7 @@ useMeta({
         />
         <q-input
           v-model="store.form.description"
-          label="Description *"
+          :label="t('description') + ' *'"
           outlined
           type="textarea"
           :rules="[requireField]"

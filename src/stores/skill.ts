@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import SkillService from 'src/services/skill';
 import { Skill } from 'src/types/skill';
-import { Dialog, QTableProps } from 'quasar'
+import { Dialog, Notify, QTableProps } from 'quasar'
 import { convertToPageParams } from 'src/utils/pagination';
 
 type TitleForm =
@@ -23,12 +23,22 @@ export const useSkillStore = defineStore('skill', {
     titleForm: 'New Skill' as TitleForm,
     qDialog: Dialog,
     parentId: null as number | null,
-    totalSkills: 0
+    totalSkills: 0,
+    qNotify: Notify,
+    onlyHaveSubs: true
+
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
     getParentId: (state) => state.parentId,
-    getMaxPage: (state) => state.totalSkills / (state.pagination?.rowsPerPage || 10)
+
+    getMaxPage: (state) => state.totalSkills / (state.pagination?.rowsPerPage || 10),
+    getSkills: (state) => {
+      if (state.onlyHaveSubs) {
+        return state.skills.filter(skill => skill.children.length > 0)
+      }
+      return state.skills
+    }
   },
   actions: {
     async fetchData() {
@@ -38,12 +48,27 @@ export const useSkillStore = defineStore('skill', {
     },
     async handleSave() {
       if (this.parentId) {
-        await SkillService.addSubSkill(this.parentId, this.form);
+        const ok = await SkillService.addSubSkill(this.parentId, this.form);
+        if (ok)
+          this.qNotify.create({
+            type: 'ok',
+            message: 'Sub-Skill created successfully',
+          })
       } else {
         if (this.form.id) {
-          await SkillService.updateSkill(this.form);
+          const ok = await SkillService.updateSkill(this.form);
+          if (ok)
+            this.qNotify.create({
+              type: 'ok',
+              message: 'Skill updated successfully',
+            })
         } else {
-          await SkillService.addSkill(this.form as Skill);
+          const ok = await SkillService.addSkill(this.form as Skill);
+          if (ok)
+            this.qNotify.create({
+              type: 'ok',
+              message: 'Skill created successfully',
+            })
         }
       }
       this.fetchData()
@@ -61,6 +86,7 @@ export const useSkillStore = defineStore('skill', {
       }).onCancel(() => {
         return
       }).onOk(async () => {
+
         await SkillService.removeSkill(id);
         if (subSkillId) {
           await SkillService.removeSubSkill(id, subSkillId);
