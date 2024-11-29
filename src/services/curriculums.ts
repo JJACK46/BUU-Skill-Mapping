@@ -11,7 +11,7 @@ export class CurriculumService {
     };
   }
 
-  static async getOne(id: number) {
+  static async getOne(id: string) {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;
   }
@@ -37,7 +37,7 @@ export class CurriculumService {
     return res.data;
   }
 
-  static async removeOne(id: number) {
+  static async removeOne(id: string) {
     const res = await api.delete(`${this.path}/${id}`);
     return res.data;
   }
