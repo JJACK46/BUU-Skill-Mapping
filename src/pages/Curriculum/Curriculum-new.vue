@@ -69,7 +69,6 @@
                 :label="t('engDegree') + ' *'"
                 :rules="[requireField, onlyAlphabet]"
               />
-
               <q-input
                 dense
                 type="number"
@@ -77,9 +76,7 @@
                 v-model.number="store.form.period"
                 :label="t('period') + ' *'"
                 :rules="[requireField]"
-              >
-                <template #before></template>
-              </q-input>
+              />
               <q-input
                 dense
                 type="number"

@@ -39,7 +39,6 @@ export const useCurriculumStore = defineStore('curriculum', {
 
     async handleSave() {
       await CurriculumService.createOne(this.form);
-      console.log(JSON.stringify(this.form));
       this.router.push('/curriculums');
       this.dialogState = false;
       this.resetForm();
@@ -49,7 +48,6 @@ export const useCurriculumStore = defineStore('curriculum', {
       this.dialogState = true;
       this.titleForm = 'Edit Curriculum';
       this.form = { ...form };
-      console.log(JSON.stringify(this.form));
     },
     async removeCurriculum(id: string) {
       await CurriculumService.removeOne(id);

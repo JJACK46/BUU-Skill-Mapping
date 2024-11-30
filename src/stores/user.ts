@@ -26,7 +26,6 @@ export const useUserStore = defineStore('user', {
       this.users = data;
       this.pagination = { ...this.pagination, rowsNumber: total };
     },
-
     async toggleDialog({
       form,
       title,
@@ -42,7 +41,6 @@ export const useUserStore = defineStore('user', {
       }
       this.dialogState = !this.dialogState;
     },
-
     async handleSave() {
       if (this.titleForm === 'Edit User') {
         await UserService.updateOne(this.form);
