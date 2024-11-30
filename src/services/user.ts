@@ -3,6 +3,9 @@ import { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
 export class UserService {
+  static deleteOne(userId: number) {
+    throw new Error('Method not implemented.');
+  }
   static path = 'users';
 
   static async getAll(pag?: PageParams) {
