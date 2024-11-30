@@ -88,18 +88,17 @@
                 :label="t('minimumGrade') + ' *'"
                 :rules="[requireField]"
               />
-              <q-tab-panel name="Branch" @vue:mounted="fetchBranch">
-                <q-select
-                  dense
-                  outlined
-                  v-model="store.form.branch"
-                  :options="branchs"
-                  :label="t('branchs') + ' *'"
-                  use-chips
-                  option-label="name"
-                  :rules="[requireField]"
-                ></q-select>
-              </q-tab-panel>
+              <q-select
+                dense
+                outlined
+                v-model="store.form.branch"
+                :options="branchs"
+                :label="t('branchs') + ' *'"
+                use-chips
+                option-label="name"
+                :rules="[requireField]"
+                @vue:mounted="fetchBranch"
+              ></q-select>
             </q-tab-panel>
             <q-tab-panel name="coordinators" @vue:mounted="fetchInstructors">
               <q-select
