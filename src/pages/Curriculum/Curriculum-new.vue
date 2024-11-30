@@ -78,7 +78,6 @@
                 :label="t('period') + ' *'"
                 :rules="[requireField]"
               >
-                <template #before></template>
               </q-input>
               <q-input
                 dense

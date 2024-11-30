@@ -1,7 +1,13 @@
 <template>
   <q-page padding>
     <MainHeader :search-text="search" @open-dialog="handleAdd" />
+
     <q-separator class="q-my-md" />
+    <div class="q-py-md">
+      <q-icon name="info" class="q-mr-sm" />{{
+        t('Right click to open menu of each row')
+      }}
+    </div>
     <q-table
       flat
       bordered
@@ -13,22 +19,49 @@
       wrap-cells
       separator="cell"
     >
-      <template v-slot:body-cell-actions="props">
-        <q-btn
-          icon="edit"
-          color="primary"
-          flat
-          round
-          @click="store.handleOpenDialog(props.row)"
-          class="q-mr-sm"
-        />
-        <q-btn
-          icon="delete"
-          color="negative"
-          flat
-          round
-          @click="store.removeCurriculum(props.row.id)"
-        />
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td key="id" :props="props">
+            {{ props.row.id }}
+          </q-td>
+          <q-td key="name" :props="props">
+            {{ props.row.name }}
+          </q-td>
+          <q-td key="degree" :props="props">
+            {{ props.row.degree }}
+          </q-td>
+          <q-td key="period" :props="props">
+            {{ props.row.period }} &nbsp; ปี
+          </q-td>
+          <q-td key="branch" :props="props">
+            {{ props.row.branch.name }}
+          </q-td>
+
+          <q-menu context-menu touch-position auto-close>
+            <q-list dense style="min-width: 100px">
+              <q-item
+                clickable
+                v-close-popup
+                @click="store.handleOpenDialog(props.row)"
+              >
+                <q-item-section>Edit</q-item-section>
+              </q-item>
+              <q-item
+                clickable
+                v-close-popup
+                @click="store.removeCurriculum(props.row.id)"
+              >
+                <q-item-section>Delete</q-item-section>
+              </q-item>
+              <q-item clickable>
+                <q-item-section side>
+                  <q-icon size="16px" name="close"></q-icon>
+                </q-item-section>
+                <q-item-section>{{ t('quit') }}</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-tr>
       </template>
     </q-table>
 
@@ -37,6 +70,7 @@
       :title="store.getDialogTitle"
       @save="store.handleSave"
       @vue:mounted="store.fetchAllCurriculums"
+      width="1000px"
     >
       <template #body>
         <q-tabs v-model="store.tabsModel">
@@ -119,7 +153,6 @@
               :label="t('branchs') + ' *'"
               use-chips
               option-label="name"
-              :rules="[requireField]"
               @vue:mounted="fetchBranch"
             ></q-select>
           </q-tab-panel>
@@ -194,16 +227,10 @@ const branchs = ref<Branch[]>();
 const instructors = ref<Instructor[]>();
 const columns = ref<QTableColumn[]>([
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
-  { name: 'name', label: 'Thai Name', field: 'name', align: 'left' },
-  { name: 'engName', label: 'Eng Name', field: 'engName', align: 'left' },
+  { name: 'name', label: 'Name', field: 'name', align: 'left' },
+  { name: 'degree', label: 'Degree', field: 'degree', align: 'left' },
   { name: 'period', label: 'Period', field: 'period', align: 'left' },
-  {
-    name: 'actions',
-    label: 'Actions',
-    field: () => null, // Dummy field as this column doesn't map to actual row data
-    align: 'center',
-    sortable: false,
-  },
+  { name: 'branch', label: 'Branch', field: 'branch', align: 'left' },
 ]);
 
 onMounted(async () => {
