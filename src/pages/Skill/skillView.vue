@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useSkillStore } from 'src/stores/skill';
-import DialogForm from 'src/components/DialogForm.vue';
-import { LearningDomain } from 'src/types/learning-domain.enum';
-import { requireField } from 'src/utils/field-rules';
-import { useMeta } from 'quasar';
-import { useRoute } from 'vue-router';
-import MainHeader from 'src/components/Header/main-header.vue';
-import { useI18n } from 'vue-i18n';
+import AddSkillDialog from './Dialog/addSkillDialog.vue';
+import AddSubSkillDialog from './Dialog/addSubSkillDialog.vue';
+import SkillDetailDialog from './Dialog/skillDetailDialog.vue';
+import ConfirmDialog from './Dialog/ConfirmDialog.vue';
+import { Skill } from 'src/types/skill';
+import PageHeader from 'src/components/PageHeader.vue';
+import { PageParams } from 'src/types/pagination';
 
 const store = useSkillStore();
 const { t } = useI18n();
@@ -93,38 +93,48 @@ useMeta({
 
 <template>
   <q-page padding>
-    <MainHeader
-      v-model:search-text="store.search"
-      :label-search="`${t('search')}`"
-      @open-dialog="store.toggleDialog({ title: 'New Skill' })"
-      @enter-search="store.fetchData"
+    <PageHeader
+      v-model:search-text="pageParams.search"
+      @open-dialog="dialogState = true"
+      @open-filter="handleDialogFilter"
+      @enter-search="fetchSkill"
     />
     <q-separator class="q-my-md" />
-    <!-- Top -->
-    <div class="q-py-md">
-      <q-icon name="info" class="q-mr-sm" />{{
-        t('Right click to open menu of each row')
-      }}
-    </div>
-    <q-toggle v-model="store.onlyHaveSubs"
-      >Show only skills with sub-skills</q-toggle
-    >
-    <!-- Content -->
-    <q-card flat bordered class="q-animate--fade">
-      <q-tree :nodes="store.getSkills" node-key="id" class="q-pa-sm">
+    <q-card flat bordered>
+      <q-tree :nodes="skills" node-key="id" @node-click="onRequest">
         <template v-slot:default-header="props">
-          <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
-            <!-- Header -->
-            <q-td style="user-select: none">
-              <span class="text-body1">
-                {{ props.node.name }}
-              </span>
+          <q-tr>
+            <q-td style="padding-right: 50px">{{ props.node.name }}</q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="add"
+                @click.stop="showDialogAddSub(props.node)"
+              />
+            </q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="edit"
+                @click.stop="showDialogDetail(props.node)"
+              />
+            </q-td>
+            <q-td>
+              <q-btn
+                flat
+                round
+                icon="close"
+                @click.stop="confirmDeleteSkill(props.node)"
+              />
             </q-td>
             <!-- Context Menu -->
             <q-menu context-menu touch-position auto-close>
               <q-list dense style="min-width: 100px">
                 <q-item
                   clickable
+                  v-close-popup
                   @click="
                     store.toggleDialog({
                       title: 'Insert Sub-Skill',
@@ -132,13 +142,7 @@ useMeta({
                     })
                   "
                 >
-                  <q-item-section side>
-                    <q-icon
-                      size="16px"
-                      name="subdirectory_arrow_right"
-                    ></q-icon>
-                  </q-item-section>
-                  <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
+                  <q-item-section>Insert child</q-item-section>
                 </q-item>
                 <q-item
                   clickable
@@ -203,7 +207,7 @@ useMeta({
         />
         <q-input
           v-model="store.form.name"
-          :label="t('name') + ' *'"
+          label="Name *"
           outlined
           :rules="[requireField]"
         />
@@ -216,13 +220,34 @@ useMeta({
         />
         <q-input
           v-model="store.form.description"
-          :label="t('description') + ' *'"
+          label="Description *"
           outlined
           type="textarea"
           :rules="[requireField]"
         />
       </template>
     </DialogForm>
+    <AddSubSkillDialog
+      :visible="dialogAddSubVisible"
+      :item="selectedItem"
+      @close-dialog="closeDialogAddSub"
+    />
+    <SkillDetailDialog
+      :visible="dialogDetailVisible"
+      :item="selectedItem"
+      @close-dialog="closeDialogDetail"
+    />
+    <AddSkillDialog
+      :visible="dialogAddVisible"
+      :item="null"
+      @close-dialog="closeDialogAdd"
+    />
+    <ConfirmDialog
+      :visible="dialogConfirmVisible"
+      :item="selectedItem"
+      @close-dialog="closeDialogDelete"
+      @confirm-delete="deleteSkillConfirmed"
+    />
   </q-page>
 </template>
 

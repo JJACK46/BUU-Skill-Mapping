@@ -1,6 +1,9 @@
 <template>
   <q-dialog v-model="dialogState" :full-width="fullWidth">
-    <q-card class="dialog-form" :style="{ width: width ? width : '500px' }">
+    <q-card
+      class="dialog-form"
+      :style="{ width: width ? width : '500px', maxWidth: '1980px' }"
+    >
       <q-form ref="formRef" @input="validateForm">
         <q-card-section>
           <div class="text-h6">{{ title }}</div>
