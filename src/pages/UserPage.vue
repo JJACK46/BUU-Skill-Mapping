@@ -184,17 +184,8 @@ useMeta({
       v-model="store.dialogState"
       :title="store.titleForm"
       @save="store.handleSave"
-      v-model="store.dialogForm"
     >
       <template #body>
-        <q-input
-          v-show="store.parentId"
-          v-model="store.parentId"
-          label="Parent ID"
-          hint="Readonly"
-          outlined
-          readonly
-        />
         <q-input
           v-model="store.form.id"
           label="ID"
@@ -202,32 +193,28 @@ useMeta({
           readonly
           hint="Readonly"
         />
-        <div>
-          <q-input
-            type="password"
-            outlined
-            v-model="store.form.password"
-            label="Password *"
-            :rules="[requireField]"
-          />
-        </div>
-
-        <q-select
-          :options="Object.values(LearningDomain)"
-          v-model="store.form.domain"
-          label="Domain *"
+        <q-input
+          type="email"
           outlined
+          v-model="store.form.email"
+          label="Email *"
           :rules="[requireField]"
         />
         <q-input
-          v-model="store.form.description"
-          :label="t('description') + ' *'"
+          type="password"
           outlined
-          type="textarea"
+          v-model="store.form.password"
+          label="Password *"
+          :rules="[requireField]"
+        />
+        <q-select
+          outlined
+          v-model="store.form.role"
+          label="Role *"
+          :options="Object.values(UserRole)"
           :rules="[requireField]"
         />
       </template>
     </DialogForm>
   </q-page>
 </template>
-
