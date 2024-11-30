@@ -12,7 +12,7 @@ export class BranchService {
     };
   }
 
-  static async getOne(id: number) {
+  static async getOne(id: string) {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;
   }
@@ -35,7 +35,7 @@ export class BranchService {
     return res.status === HttpStatusCode.Ok;
   }
 
-  static async removeOne(id: number) {
+  static async removeOne(id: string) {
     const res = await api.delete(`${this.path}/${id}`);
     return res.status === HttpStatusCode.Ok;
   }

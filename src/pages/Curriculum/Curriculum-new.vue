@@ -69,6 +69,7 @@
                 :label="t('engDegree') + ' *'"
                 :rules="[requireField, onlyAlphabet]"
               />
+
               <q-input
                 dense
                 type="number"
@@ -76,7 +77,9 @@
                 v-model.number="store.form.period"
                 :label="t('period') + ' *'"
                 :rules="[requireField]"
-              />
+              >
+                <template #before></template>
+              </q-input>
               <q-input
                 dense
                 type="number"
@@ -85,6 +88,17 @@
                 :label="t('minimumGrade') + ' *'"
                 :rules="[requireField]"
               />
+              <q-select
+                dense
+                outlined
+                v-model="store.form.branch"
+                :options="branchs"
+                :label="t('branchs') + ' *'"
+                use-chips
+                option-label="name"
+                :rules="[requireField]"
+                @vue:mounted="fetchBranch"
+              ></q-select>
             </q-tab-panel>
             <q-tab-panel name="coordinators" @vue:mounted="fetchInstructors">
               <q-select
@@ -153,6 +167,7 @@
 <script lang="ts" setup>
 import { InstructorService } from 'src/services/instructor';
 import { SubjectService } from 'src/services/subject';
+import { BranchService } from 'src/services/branches';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { Instructor } from 'src/types/instructor';
 import { Subject } from 'src/types/subject';
@@ -160,9 +175,11 @@ import { onlyAlphabet, requireField } from 'src/utils/field-rules';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { Branch } from 'src/types/branch';
 
 const router = useRouter();
 const subjects = ref<Subject[]>();
+const branchs = ref<Branch[]>();
 const innerTab = ref('main');
 const qsplitterVModel = ref(10);
 const instructors = ref<Instructor[]>();
@@ -182,5 +199,9 @@ async function fetchSubjects() {
 }
 async function fetchInstructors() {
   instructors.value = (await InstructorService.getAll()).data;
+}
+
+async function fetchBranch() {
+  branchs.value = (await BranchService.getAll()).data;
 }
 </script>
