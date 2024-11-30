@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
-import { QTableProps } from 'quasar';
+import { Dialog } from 'quasar';
 import { UserService } from 'src/services/user';
 import { PageParams } from 'src/types/pagination';
 import { User } from 'src/types/user';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
+type TitleForm = 'New User' | 'Edit User' | 'Delete User';
 
 export const useUserStore = defineStore('user', {
   state: () => ({

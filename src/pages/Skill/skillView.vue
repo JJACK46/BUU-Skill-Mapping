@@ -9,68 +9,86 @@ import { Skill } from 'src/types/skill';
 import PageHeader from 'src/components/PageHeader.vue';
 import { PageParams } from 'src/types/pagination';
 
-const skillStore = useSkillStore();
-const dialogState = ref(false);
-const dialogFilter = ref(false);
-const dialogAddVisible = ref(false);
-const dialogAddSubVisible = ref(false);
-const dialogDetailVisible = ref(false);
-const dialogConfirmVisible = ref(false);
-const selectedItem = ref<Skill | null>(null);
-const skills = computed(() => skillStore.skills || []);
-const pageParams = ref<PageParams>({
-  page: 1,
-  limit: 10,
-  sort: '',
-  order: 'ASC',
-  search: '',
-  columnId: '',
-  columnName: '',
+const store = useSkillStore();
+const { t } = useI18n();
+const route = useRoute();
+const title = computed(() => route.matched[1].name as string);
+onMounted(store.fetchData);
+useMeta({
+  title: title.value,
 });
 
-const handleDialogFilter = () => {
-  dialogFilter.value = !dialogFilter.value;
-};
-const closeDialogAdd = () => {
-  dialogAddVisible.value = false;
-};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function onRequest(props: any) {
-  skillStore.pageParams.page = props.page;
-  skillStore.pageParams.limit = props.rowsPerPage;
-  skillStore.pageParams.sort = props.sortBy;
-  skillStore.pageParams.order = props.descending ? 'DESC' : 'ASC';
-  skillStore.pageParams.search = props.search;
-  skillStore.fetchSkillsPage(pageParams.value);
-}
+// const skillStore = useSkillStore();
+// const loading = ref(false);
+// const dialogAddVisible = ref(false);
+// const dialogAddSubVisible = ref(false);
+// const dialogDetailVisible = ref(false);
+// const dialogConfirmVisible = ref(false);
+// const selectedItem = ref<Skill | null>(null);
+// const skills = computed(() => skillStore.skills || []);
 
-const fetchSkill = async () => {
-  skillStore.clearForm();
-  try {
-    await skillStore.fetchSkillsPage(pageParams.value);
-  } catch (error) {
-    console.error('Error fetching skills:', error);
-  }
-};
+// const showDialogAdd = async () => {
+//   dialogAddVisible.value = true;
+// };
 
-// Watch for changes in search text and update the skill list accordingly
-watch(
-  () => pageParams.value.search,
-  () => {
-    fetchSkill();
-  }
-);
+// const closeDialogAdd = () => {
+//   dialogAddVisible.value = false;
+// };
 
-watch(
-  [
-    () => dialogAddVisible.value,
-    () => dialogAddSubVisible.value,
-    () => dialogDetailVisible.value,
-  ],
-  () => {
-    fetchSkill();
-  }
-);
+// const showDialogAddSub = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogAddSubVisible.value = true;
+// };
+
+// const closeDialogAddSub = () => {
+//   dialogAddSubVisible.value = false;
+// };
+
+// const showDialogDetail = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogDetailVisible.value = true;
+// };
+
+// const closeDialogDetail = () => {
+//   dialogDetailVisible.value = false;
+// };
+
+// const confirmDeleteSkill = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogConfirmVisible.value = true;
+// };
+// const closeDialogDelete = () => {
+//   dialogConfirmVisible.value = false;
+// };
+
+// const deleteSkillConfirmed = () => {
+//   skillStore.deleteSkill(selectedItem.value!.id);
+//   dialogConfirmVisible.value = false;
+//   fetchSkill();
+// };
+
+// const fetchSkill = async () => {
+//   loading.value = true;
+//   skillStore.clearForm();
+//   try {
+//     // await skillStore.fetchSkillsPage(pageParams.value);
+//     await skillStore.fetchSkills();
+//   } catch (error) {
+//     console.error('Error fetching skills:', error);
+//   } finally {
+//     loading.value = false;
+//   }
+// };
+// watch(
+//   [
+//     () => dialogAddVisible.value,
+//     () => dialogAddSubVisible.value,
+//     () => dialogDetailVisible.value,
+//   ],
+//   () => {
+//     fetchSkill();
+//   }
+// );
 </script>
 
 <template>
