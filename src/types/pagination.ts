@@ -6,4 +6,5 @@ export type PageParams = {
   search: string;
   columnId?: string;
   columnName?: string;
+  bySubject?: string;
 };

@@ -108,7 +108,6 @@ const handleOpenDialog = async () => {
   store.dialogState = true;
   subjects.value = (await SubjectService.getAll()).data;
   teachers.value = (await InstructorService.getAll()).data;
-  // curriculums.value = wait for implement
 };
 
 const handlePopup = (id: string) => {

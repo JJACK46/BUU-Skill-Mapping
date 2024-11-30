@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { useSkillStore } from 'src/stores/skill';
-import DialogForm from 'src/components/DialogForm.vue';
-import { LearningDomain } from 'src/types/learning-domain.enum';
-import { requireField } from 'src/utils/field-rules';
-import { useMeta } from 'quasar';
-import { useRoute } from 'vue-router';
-import MainHeader from 'src/components/Header/main-header.vue';
-import { useI18n } from 'vue-i18n';
+import { computed, onMounted } from "vue";
+import { useSkillStore } from "src/stores/skill";
+import DialogForm from "src/components/DialogForm.vue";
+import { LearningDomain } from "src/types/learning-domain.enum";
+import { requireField } from "src/utils/field-rules";
+import { useMeta } from "quasar";
+import { useRoute } from "vue-router";
+import MainHeader from "src/components/Header/main-header.vue";
+import { useI18n } from "vue-i18n";
 
 const store = useSkillStore();
 const { t } = useI18n();
@@ -31,7 +31,7 @@ useMeta({
     <!-- Top -->
     <div class="q-py-md">
       <q-icon name="info" class="q-mr-sm" />{{
-        t('Right click to open menu of each row')
+        t("Right click to open menu of each row")
       }}
     </div>
     <q-toggle v-model="store.onlyHaveSubs"
@@ -66,7 +66,7 @@ useMeta({
                       name="subdirectory_arrow_right"
                     ></q-icon>
                   </q-item-section>
-                  <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
+                  <q-item-section>{{ t("insertSubSkill") }}</q-item-section>
                 </q-item>
                 <q-item
                   clickable
@@ -91,7 +91,7 @@ useMeta({
                   <q-item-section side>
                     <q-icon size="16px" name="close"></q-icon>
                   </q-item-section>
-                  <q-item-section>{{ t('quit') }}</q-item-section>
+                  <q-item-section>{{ t("quit") }}</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>

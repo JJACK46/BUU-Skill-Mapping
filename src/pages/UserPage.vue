@@ -1,125 +1,152 @@
+<script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import { useSkillStore } from 'src/stores/skill';
+import DialogForm from 'src/components/DialogForm.vue';
+import { LearningDomain } from 'src/types/learning-domain.enum';
+import { requireField } from 'src/utils/field-rules';
+import { useMeta } from 'quasar';
+import { useRoute } from 'vue-router';
+import MainHeader from 'src/components/Header/main-header.vue';
+import { useI18n } from 'vue-i18n';
+
+const store = useSkillStore();
+const { t } = useI18n();
+const route = useRoute();
+const title = computed(() => route.matched[1].name as string);
+onMounted(store.fetchData);
+useMeta({
+  title: title.value,
+});
+</script>
+
 <template>
   <q-page padding>
     <MainHeader
       v-model:search-text="store.search"
-      @open-dialog="dialogState = true"
-      hide-filter
+      :label-search="`${t('search')}`"
+      @open-dialog="store.toggleDialog({ title: 'New Skill' })"
+      @enter-search="store.fetchData"
     />
     <q-separator class="q-my-md" />
-    <!-- Table -->
-    <q-table
-      flat
-      bordered
-      class="q-animate--fade"
-      :filter="store.search"
-      v-model:pagination="store.pagination"
-      @update:pagination="store.fetchData"
-      separator="cell"
-      :rows="store.users"
-      :columns="columns"
-      row-key="name"
-      :loading="global.getLoadingState"
-      wrap-cells
+    <!-- Top -->
+    <div class="q-py-md">
+      <q-icon name="info" class="q-mr-sm" />{{
+        t('Right click to open menu of each row')
+      }}
+    </div>
+    <q-toggle v-model="store.onlyHaveSubs"
+      >Show only skills with sub-skills</q-toggle
     >
-      <template #body-cell-role="props">
-        <q-td>
-          <div v-if="!auth.isAdmin">
-            {{ props.value ?? 'Unknown' }}
-          </div>
-          <q-select
-            v-else
-            dense
-            :options="Object.values(UserRole)"
-            outlined
-            bg-color="white"
-            v-model="props.row.role"
-            label="Role"
-            @update:model-value="store.handleSave(props.row)"
-          />
-        </q-td>
-      </template>
-      <template v-slot:pagination="scope">
-        <q-btn
-          v-if="scope.pagesNumber > 2"
-          icon="first_page"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isFirstPage"
-          @click="() => {
-            store.pagination!.page! = 1
-            store.fetchData(store.pagination)
-            scope.firstPage
-          }"
-        />
-        <q-btn
-          icon="chevron_left"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isFirstPage"
-          @click="() => {
-          store.pagination!.page!--
-          store.fetchData(store.pagination)
-          scope.prevPage
-        }"
-        />
-        <q-btn
-          icon="chevron_right"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isLastPage"
-          @click="() => {
-          store.pagination!.page!++
-          store.fetchData(store.pagination)
-          scope.nextPage
-        }"
-        />
-        <q-btn
-          v-if="scope.pagesNumber > 2"
-          icon="last_page"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isLastPage"
-          @click="() => {
-            store.pagination!.page! = scope.pagesNumber
-            store.fetchData(store.pagination)
-            scope.lastPage
-          }"
-        />
-      </template>
-    </q-table>
-    <!-- Dialog Form -->
+    <!-- Content -->
+    <q-card flat bordered class="q-animate--fade">
+      <q-tree :nodes="store.getSkills" node-key="id" class="q-pa-sm">
+        <template v-slot:default-header="props">
+          <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
+            <!-- Header -->
+            <q-td style="user-select: none">
+              <span class="text-body1">
+                {{ props.node.name }}
+              </span>
+            </q-td>
+            <!-- Context Menu -->
+            <q-menu context-menu touch-position auto-close>
+              <q-list dense style="min-width: 100px">
+                <q-item
+                  clickable
+                  @click="
+                    store.toggleDialog({
+                      title: 'Insert Sub-Skill',
+                      parentId: props.node.id,
+                    })
+                  "
+                >
+                  <q-item-section side>
+                    <q-icon
+                      size="16px"
+                      name="subdirectory_arrow_right"
+                    ></q-icon>
+                  </q-item-section>
+                  <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    store.toggleDialog({
+                      form: props.node,
+                      title: 'Edit Skill',
+                    })
+                  "
+                >
+                  <q-item-section>Edit</q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="store.handleRemove({ id: props.node.id })"
+                >
+                  <q-item-section>Delete</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section side>
+                    <q-icon size="16px" name="close"></q-icon>
+                  </q-item-section>
+                  <q-item-section>{{ t('quit') }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-tr>
+        </template>
+      </q-tree>
+    </q-card>
+    <div class="flex q-my-lg" v-show="store.getMaxPage > 1">
+      <q-pagination
+        class="q-mx-auto"
+        v-model="store.pagination!.page!"
+        :max="store.getMaxPage"
+        direction-links
+      />
+    </div>
+    <!-- All in One Dialog -->
     <DialogForm
-      v-model="dialogState"
-      title="New User *"
+      :title="store.getTitleForm"
       @save="store.handleSave"
+      v-model="store.dialogForm"
     >
       <template #body>
         <q-input
+          v-show="store.parentId"
+          v-model="store.parentId"
+          label="Parent ID"
+          hint="Readonly"
           outlined
-          v-model="store.form.email"
-          label="Email *"
-          :rules="[requireField]"
+          readonly
         />
         <q-input
-          type="password"
+          v-model="store.form.id"
+          label="ID"
           outlined
-          v-model="store.form.password"
-          label="Password *"
+          readonly
+          hint="Readonly"
+        />
+        <q-input
+          v-model="store.form.name"
+          :label="t('name') + ' *'"
+          outlined
           :rules="[requireField]"
         />
         <q-select
-          :options="Object.values(UserRole)"
+          :options="Object.values(LearningDomain)"
+          v-model="store.form.domain"
+          label="Domain *"
           outlined
-          v-model="store.form.role"
-          label="Role *"
+          :rules="[requireField]"
+        />
+        <q-input
+          v-model="store.form.description"
+          :label="t('description') + ' *'"
+          outlined
+          type="textarea"
           :rules="[requireField]"
         />
       </template>
@@ -127,55 +154,8 @@
   </q-page>
 </template>
 
-<script lang="ts" setup>
-import { QTableColumn, useMeta } from 'quasar';
-import DialogForm from 'src/components/DialogForm.vue';
-import MainHeader from 'src/components/Header/main-header.vue';
-import { UserRole } from 'src/enums/roles';
-import { useAuthStore } from 'src/stores/auth';
-import { useGlobalStore } from 'src/stores/global';
-import { useUserStore } from 'src/stores/user';
-import { requireField } from 'src/utils/field-rules';
-import { computed, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-
-const auth = useAuthStore();
-const store = useUserStore();
-const dialogState = ref(false);
-const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
-const global = useGlobalStore();
-
-const columns = ref(<QTableColumn[]>[
-  {
-    name: 'id',
-    label: 'ID',
-    field: 'id',
-    align: 'left',
-    sortable: true,
-  },
-  {
-    name: 'email',
-    label: 'Email',
-    field: 'email',
-    align: 'left',
-  },
-  {
-    name: 'role',
-    label: 'Role',
-    field: 'role',
-    align: 'left',
-  },
-]);
-
-watch(
-  () => store.search,
-  () => {
-    store.fetchData(store.pagination);
-  }
-);
-
-useMeta({
-  title: title.value,
-});
-</script>
+<style lang="scss">
+.hover-row:hover {
+  color: $secondary;
+}
+</style>
