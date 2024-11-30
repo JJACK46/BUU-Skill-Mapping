@@ -76,7 +76,8 @@
                 v-model.number="store.form.period"
                 :label="t('period') + ' *'"
                 :rules="[requireField]"
-              />
+              >
+              </q-input>
               <q-input
                 dense
                 type="number"
