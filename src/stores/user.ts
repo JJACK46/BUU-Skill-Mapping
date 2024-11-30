@@ -17,7 +17,7 @@ export const useUserStore = defineStore('user', {
     editMode: false,
   }),
 
-  getters: {},
+  getters: { getUser: (u) => u.users, getDialogTitle: (c) => c.titleForm },
   actions: {
     async fetchData() {
       const { data, total } = await UserService.getAll(

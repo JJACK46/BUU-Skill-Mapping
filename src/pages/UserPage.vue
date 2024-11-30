@@ -7,7 +7,7 @@ import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';
 import { useUserStore } from 'src/stores/user';
 import { requireField } from 'src/utils/field-rules';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 const { t } = useI18n();
@@ -49,6 +49,17 @@ watch(
 useMeta({
   title: title.value,
 });
+onMounted(async () => {
+  await store.fetchData();
+  if (auth.isAdmin) {
+    columns.value.push({
+      name: 'actions',
+      label: '',
+      field: 'actions',
+      align: 'left',
+    });
+  }
+});
 </script>
 
 <template>
@@ -62,36 +73,40 @@ useMeta({
     <q-separator class="q-my-md" />
     <!-- Table -->
     <q-table
-      flat
-      bordered
-      class="q-animate--fade"
-      :filter="store.search"
       v-model:pagination="store.pagination"
       @update:pagination="store.fetchData"
+      class="q-animate--fade"
       separator="cell"
-      wrap-cells
       row-key="id"
+      wrap-cells
+      bordered
+      flat
+      :filter="store.search"
       :rows="store.users"
       :columns="columns"
       :loading="global.getLoadingState"
-      :nodes="store.fetchData"
+      :nodes="store.getUser"
     >
-      <template v-slot:body-cell="props">
-        <q-td>
-          <div>
-            {{ props.value ?? 'Unknown' }}
+      <template v-if="auth.isAdmin" v-slot:body-cell-actions="props">
+        <q-td style="width: 100px">
+          <div
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <q-btn
+              icon="edit"
+              padding="none"
+              flat
+              @click="store.toggleDialog(props.row)"
+            ></q-btn>
+            <q-btn
+              icon="delete"
+              padding="none"
+              flat
+              @click="store.handleRemove(props.row.id)"
+            ></q-btn>
           </div>
-          <!-- <q-select
-            v-else
-            dense
-            :options="Object.values(UserRole)"
-            outlined
-            v-model="props.row.role"
-            label="Role"
-            @update:model-value="store.handleSave(props.row)"
-          /> -->
         </q-td>
-        <q-menu v-if="auth.isAdmin" context-menu touch-position auto-close>
+        <q-menu context-menu touch-position auto-close>
           <q-list dense style="min-width: 100px">
             <q-item
               clickable
