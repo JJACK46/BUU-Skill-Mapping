@@ -17,6 +17,78 @@ onMounted(store.fetchData);
 useMeta({
   title: title.value,
 });
+
+// const skillStore = useSkillStore();
+// const loading = ref(false);
+// const dialogAddVisible = ref(false);
+// const dialogAddSubVisible = ref(false);
+// const dialogDetailVisible = ref(false);
+// const dialogConfirmVisible = ref(false);
+// const selectedItem = ref<Skill | null>(null);
+// const skills = computed(() => skillStore.skills || []);
+
+// const showDialogAdd = async () => {
+//   dialogAddVisible.value = true;
+// };
+
+// const closeDialogAdd = () => {
+//   dialogAddVisible.value = false;
+// };
+
+// const showDialogAddSub = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogAddSubVisible.value = true;
+// };
+
+// const closeDialogAddSub = () => {
+//   dialogAddSubVisible.value = false;
+// };
+
+// const showDialogDetail = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogDetailVisible.value = true;
+// };
+
+// const closeDialogDetail = () => {
+//   dialogDetailVisible.value = false;
+// };
+
+// const confirmDeleteSkill = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogConfirmVisible.value = true;
+// };
+// const closeDialogDelete = () => {
+//   dialogConfirmVisible.value = false;
+// };
+
+// const deleteSkillConfirmed = () => {
+//   skillStore.deleteSkill(selectedItem.value!.id);
+//   dialogConfirmVisible.value = false;
+//   fetchSkill();
+// };
+
+// const fetchSkill = async () => {
+//   loading.value = true;
+//   skillStore.clearForm();
+//   try {
+//     // await skillStore.fetchSkillsPage(pageParams.value);
+//     await skillStore.fetchSkills();
+//   } catch (error) {
+//     console.error('Error fetching skills:', error);
+//   } finally {
+//     loading.value = false;
+//   }
+// };
+// watch(
+//   [
+//     () => dialogAddVisible.value,
+//     () => dialogAddSubVisible.value,
+//     () => dialogDetailVisible.value,
+//   ],
+//   () => {
+//     fetchSkill();
+//   }
+// );
 </script>
 
 <template>

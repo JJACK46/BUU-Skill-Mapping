@@ -28,7 +28,7 @@ export class UserService {
     return res.data;
   }
 
-  static async removeOne(id: number) {
+  static async removeOne(id: string) {
     const res = await api.delete(`${this.path}/${id}`);
     return res.data;
   }
