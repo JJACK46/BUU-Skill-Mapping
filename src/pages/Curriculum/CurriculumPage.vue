@@ -37,7 +37,6 @@
       :title="store.getDialogTitle"
       @save="store.handleSave"
       @vue:mounted="store.fetchAllCurriculums"
-      width="1000px"
     >
       <template #body>
         <q-tabs v-model="store.tabsModel">
@@ -51,83 +50,115 @@
               v-model="store.form.id"
               :label="t('id') + ' *'"
               :rules="[requireField]"
-            />
-            <q-input
-              dense
-              outlined
-              v-model="store.form.name"
-              :label="t('name') + ' *'"
-              :rules="[requireField]"
             >
             </q-input>
-            <q-input
-              dense
-              outlined
-              v-model="store.form.engName"
-              :label="t('engName') + ' *'"
-              :rules="[requireField, onlyAlphabet]"
-            />
-            <q-input
-              dense
-              type="textarea"
-              outlined
-              v-model="store.form.description"
-              :label="t('description') + ' *'"
-              :rules="[requireField]"
-            />
-            <q-input
-              dense
-              outlined
-              v-model="store.form.degree"
-              :label="t('degree') + ' *'"
-              :rules="[requireField, onlyAlphabet]"
-            />
-            <q-input
-              dense
-              outlined
-              v-model="store.form.engDegree"
-              :label="t('engDegree') + ' *'"
-              :rules="[requireField, onlyAlphabet]"
-            />
-
-            <q-input
-              dense
-              type="number"
-              outlined
-              v-model.number="store.form.period"
-              :label="t('period') + ' *'"
-              :rules="[requireField]"
-            >
-            </q-input>
-            <q-input
-              dense
-              type="number"
-              outlined
-              v-model.number="store.form.minimumGrade"
-              :label="t('minimumGrade') + ' *'"
-              :rules="[requireField]"
-            />
-
-            <q-select
-              dense
-              outlined
-              v-model="store.form.branch"
-              :options="branchs"
-              :label="t('branchs') + ' *'"
-              use-chips
-              option-label="name"
-              :rules="[requireField]"
-              @vue:mounted="fetchBranch"
-            ></q-select>
           </q-tab-panel>
         </q-tab-panels>
       </template>
     </DialogForm>
+
+    <q-dialog v-model="store.dialogState" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Test Dialog</div>
+        </q-card-section>
+        <q-input
+          dense
+          outlined
+          v-model="store.form.id"
+          :label="t('id') + ' *'"
+          :rules="[requireField]"
+        />
+        <q-input
+          dense
+          outlined
+          v-model="store.form.name"
+          :label="t('name') + ' *'"
+          :rules="[requireField]"
+        >
+          <template #label></template>
+        </q-input>
+        <q-input
+          dense
+          outlined
+          v-model="store.form.engName"
+          :label="t('engName') + ' *'"
+          :rules="[requireField, onlyAlphabet]"
+        />
+        <q-input
+          dense
+          type="textarea"
+          outlined
+          v-model="store.form.description"
+          :label="t('description') + ' *'"
+          :rules="[requireField]"
+        />
+        <q-input
+          dense
+          outlined
+          v-model="store.form.degree"
+          :label="t('degree') + ' *'"
+          :rules="[requireField, onlyAlphabet]"
+        />
+        <q-input
+          dense
+          outlined
+          v-model="store.form.engDegree"
+          :label="t('engDegree') + ' *'"
+          :rules="[requireField, onlyAlphabet]"
+        />
+
+        <q-input
+          dense
+          type="number"
+          outlined
+          v-model.number="store.form.period"
+          :label="t('period') + ' *'"
+          :rules="[requireField]"
+        >
+          <template #before></template>
+        </q-input>
+        <q-input
+          dense
+          type="number"
+          outlined
+          v-model.number="store.form.minimumGrade"
+          :label="t('minimumGrade') + ' *'"
+          :rules="[requireField]"
+        />
+
+        <q-select
+          dense
+          outlined
+          v-model="store.form.branch"
+          :options="branchs"
+          :label="t('branchs') + ' *'"
+          use-chips
+          option-label="name"
+          :rules="[requireField]"
+          @vue:mounted="fetchBranch"
+        ></q-select>
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Close"
+            color="primary"
+            @click="store.dialogState = false"
+          />
+          <q-btn
+            color="primary"
+            unelevated
+            :label="t('save')"
+            @click="store.handleSave"
+            style="width: 80px"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import DialogForm from 'src/components/DialogForm.vue';
 import { QTableColumn, useMeta } from 'quasar';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { CurriculumService } from 'src/services/curriculums';
