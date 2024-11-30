@@ -24,7 +24,7 @@ export class UserService {
   }
 
   static async updateOne(obj: Partial<User>) {
-    const res = await api.patch(`${this.path}/${obj.id}`, obj);
+    const res = await api.patch(`${this.path}/${obj.id}, obj`);
     return res.data;
   }
 
