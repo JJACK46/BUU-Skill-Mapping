@@ -1,215 +1,233 @@
-<script lang="ts" setup>
-import { QTableColumn, useMeta } from 'quasar';
+<script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import { useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
-import MainHeader from 'src/components/Header/main-header.vue';
-import { UserRole } from 'src/enums/roles';
-import { useAuthStore } from 'src/stores/auth';
-import { useGlobalStore } from 'src/stores/global';
-import { useUserStore } from 'src/stores/user';
+import { LearningDomain } from 'src/types/learning-domain.enum';
 import { requireField } from 'src/utils/field-rules';
-import { computed, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
+import MainHeader from 'src/components/Header/main-header.vue';
+import { useI18n } from 'vue-i18n';
+
+const store = useSkillStore();
 const { t } = useI18n();
-const auth = useAuthStore();
-const store = useUserStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const global = useGlobalStore();
-
-const columns = ref(<QTableColumn[]>[
-  {
-    name: 'id',
-    label: 'ID',
-    field: 'id',
-    align: 'left',
-    sortable: true,
-  },
-  {
-    name: 'email',
-    label: 'Email',
-    field: 'email',
-    align: 'left',
-  },
-  {
-    name: 'role',
-    label: 'Role',
-    field: 'role',
-    align: 'left',
-  },
-]);
-
-watch(
-  () => store.search,
-  () => {
-    store.fetchData();
-  }
-);
-
+onMounted(store.fetchData);
 useMeta({
   title: title.value,
 });
+
+// const skillStore = useSkillStore();
+// const loading = ref(false);
+// const dialogAddVisible = ref(false);
+// const dialogAddSubVisible = ref(false);
+// const dialogDetailVisible = ref(false);
+// const dialogConfirmVisible = ref(false);
+// const selectedItem = ref<Skill | null>(null);
+// const skills = computed(() => skillStore.skills || []);
+
+// const showDialogAdd = async () => {
+//   dialogAddVisible.value = true;
+// };
+
+// const closeDialogAdd = () => {
+//   dialogAddVisible.value = false;
+// };
+
+// const showDialogAddSub = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogAddSubVisible.value = true;
+// };
+
+// const closeDialogAddSub = () => {
+//   dialogAddSubVisible.value = false;
+// };
+
+// const showDialogDetail = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogDetailVisible.value = true;
+// };
+
+// const closeDialogDetail = () => {
+//   dialogDetailVisible.value = false;
+// };
+
+// const confirmDeleteSkill = async (item: Skill) => {
+//   selectedItem.value = item;
+//   dialogConfirmVisible.value = true;
+// };
+// const closeDialogDelete = () => {
+//   dialogConfirmVisible.value = false;
+// };
+
+// const deleteSkillConfirmed = () => {
+//   skillStore.deleteSkill(selectedItem.value!.id);
+//   dialogConfirmVisible.value = false;
+//   fetchSkill();
+// };
+
+// const fetchSkill = async () => {
+//   loading.value = true;
+//   skillStore.clearForm();
+//   try {
+//     // await skillStore.fetchSkillsPage(pageParams.value);
+//     await skillStore.fetchSkills();
+//   } catch (error) {
+//     console.error('Error fetching skills:', error);
+//   } finally {
+//     loading.value = false;
+//   }
+// };
+// watch(
+//   [
+//     () => dialogAddVisible.value,
+//     () => dialogAddSubVisible.value,
+//     () => dialogDetailVisible.value,
+//   ],
+//   () => {
+//     fetchSkill();
+//   }
+// );
 </script>
 
 <template>
   <q-page padding>
     <MainHeader
       v-model:search-text="store.search"
-      @open-dialog="store.toggleDialog({ title: 'New User' })"
+      :label-search="`${t('search')}`"
+      @open-dialog="store.toggleDialog({ title: 'New Skill' })"
       @enter-search="store.fetchData"
-      hide-filter
     />
     <q-separator class="q-my-md" />
-    <!-- Table -->
-    <q-table
-      flat
-      bordered
-      class="q-animate--fade"
-      :filter="store.search"
-      v-model:pagination="store.pagination"
-      @update:pagination="store.fetchData"
-      separator="cell"
-      wrap-cells
-      row-key="id"
-      :rows="store.users"
-      :columns="columns"
-      :loading="global.getLoadingState"
-      :nodes="store.fetchData"
+    <!-- Top -->
+    <div class="q-py-md">
+      <q-icon name="info" class="q-mr-sm" />{{
+        t('Right click to open menu of each row')
+      }}
+    </div>
+    <q-toggle v-model="store.onlyHaveSubs"
+      >Show only skills with sub-skills</q-toggle
     >
-      <template v-slot:body-cell="props">
-        <q-td>
-          <div>
-            {{ props.value ?? 'Unknown' }}
-          </div>
-          <!-- <q-select
-            v-else
-            dense
-            :options="Object.values(UserRole)"
-            outlined
-            v-model="props.row.role"
-            label="Role"
-            @update:model-value="store.handleSave(props.row)"
-          /> -->
-        </q-td>
-        <q-menu v-if="auth.isAdmin" context-menu touch-position auto-close>
-          <q-list dense style="min-width: 100px">
-            <q-item
-              clickable
-              v-close-popup
-              @click="
-                store.toggleDialog({
-                  form: props.row,
-                  title: 'Edit User',
-                })
-              "
-            >
-              <q-item-section>{{ t('edit') }}</q-item-section>
-            </q-item>
-            <q-item
-              clickable
-              v-close-popup
-              @click="store.handleRemove(props.row.id)"
-            >
-              <q-item-section>{{ t('delete') }}</q-item-section>
-            </q-item>
-            <q-item clickable>
-              <q-item-section side>
-                <q-icon size="16px" name="close"></q-icon>
-              </q-item-section>
-              <q-item-section>{{ t('quit') }}</q-item-section>
-            </q-item>
-          </q-list>
-        </q-menu>
-      </template>
-
-      <template v-slot:pagination="scope">
-        <q-btn
-          v-if="scope.pagesNumber > 2"
-          icon="first_page"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isFirstPage"
-          @click="() => {
-            store.pagination!.page! = 1
-            store.fetchData()
-            scope.firstPage
-          }"
-        />
-        <q-btn
-          icon="chevron_left"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isFirstPage"
-          @click="() => {
-          store.pagination!.page!--
-          store.fetchData()
-          scope.prevPage
-        }"
-        />
-        <q-btn
-          icon="chevron_right"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isLastPage"
-          @click="() => {
-          store.pagination!.page!++
-          store.fetchData()
-          scope.nextPage
-        }"
-        />
-        <q-btn
-          v-if="scope.pagesNumber > 2"
-          icon="last_page"
-          color="grey-5"
-          round
-          dense
-          flat
-          :disable="scope.isLastPage"
-          @click="() => {
-            store.pagination!.page! = scope.pagesNumber
-            store.fetchData()
-            scope.lastPage
-          }"
-        />
-      </template>
-    </q-table>
-    <!-- Dialog Form -->
+    <!-- Content -->
+    <q-card flat bordered class="q-animate--fade">
+      <q-tree :nodes="store.getSkills" node-key="id" class="q-pa-sm">
+        <template v-slot:default-header="props">
+          <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
+            <!-- Header -->
+            <q-td style="user-select: none">
+              <span class="text-body1">
+                {{ props.node.name }}
+              </span>
+            </q-td>
+            <!-- Context Menu -->
+            <q-menu context-menu touch-position auto-close>
+              <q-list dense style="min-width: 100px">
+                <q-item
+                  clickable
+                  @click="
+                    store.toggleDialog({
+                      title: 'Insert Sub-Skill',
+                      parentId: props.node.id,
+                    })
+                  "
+                >
+                  <q-item-section side>
+                    <q-icon
+                      size="16px"
+                      name="subdirectory_arrow_right"
+                    ></q-icon>
+                  </q-item-section>
+                  <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    store.toggleDialog({
+                      form: props.node,
+                      title: 'Edit Skill',
+                    })
+                  "
+                >
+                  <q-item-section>Edit</q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="store.handleRemove({ id: props.node.id })"
+                >
+                  <q-item-section>Delete</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section side>
+                    <q-icon size="16px" name="close"></q-icon>
+                  </q-item-section>
+                  <q-item-section>{{ t('quit') }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-tr>
+        </template>
+      </q-tree>
+    </q-card>
+    <div class="flex q-my-lg" v-show="store.getMaxPage > 1">
+      <q-pagination
+        class="q-mx-auto"
+        v-model="store.pagination!.page!"
+        :max="store.getMaxPage"
+        direction-links
+      />
+    </div>
+    <!-- All in One Dialog -->
     <DialogForm
-      v-model="store.dialogState"
-      :title="store.titleForm"
+      :title="store.getTitleForm"
       @save="store.handleSave"
+      v-model="store.dialogForm"
     >
       <template #body>
         <q-input
+          v-show="store.parentId"
+          v-model="store.parentId"
+          label="Parent ID"
+          hint="Readonly"
           outlined
-          v-model="store.form.email"
-          label="Email *"
+          readonly
+        />
+        <q-input
+          v-model="store.form.id"
+          label="ID"
+          outlined
+          readonly
+          hint="Readonly"
+        />
+        <q-input
+          v-model="store.form.name"
+          :label="t('name') + ' *'"
+          outlined
           :rules="[requireField]"
         />
-        <div>
-          <q-input
-            type="password"
-            outlined
-            v-model="store.form.password"
-            label="Password *"
-            :rules="[requireField]"
-          />
-        </div>
-
         <q-select
-          :options="Object.values(UserRole)"
+          :options="Object.values(LearningDomain)"
+          v-model="store.form.domain"
+          label="Domain *"
           outlined
-          v-model="store.form.role"
-          label="Role *"
+          :rules="[requireField]"
+        />
+        <q-input
+          v-model="store.form.description"
+          :label="t('description') + ' *'"
+          outlined
+          type="textarea"
           :rules="[requireField]"
         />
       </template>
     </DialogForm>
   </q-page>
 </template>
+
+<style lang="scss">
+.hover-row:hover {
+  color: $secondary;
+}
+</style>
