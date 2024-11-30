@@ -26,12 +26,10 @@ export const useSkillStore = defineStore('skill', {
     totalSkills: 0,
     qNotify: Notify,
     onlyHaveSubs: true
-
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
     getParentId: (state) => state.parentId,
-
     getMaxPage: (state) => state.totalSkills / (state.pagination?.rowsPerPage || 10),
     getSkills: (state) => {
       if (state.onlyHaveSubs) {

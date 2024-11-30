@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { useSkillStore } from 'src/stores/skill';
-import DialogForm from 'src/components/DialogForm.vue';
-import { LearningDomain } from 'src/types/learning-domain.enum';
-import { requireField } from 'src/utils/field-rules';
-import { useMeta } from 'quasar';
-import { useRoute } from 'vue-router';
-import MainHeader from 'src/components/Header/main-header.vue';
-import { useI18n } from 'vue-i18n';
+import { computed, onMounted } from "vue";
+import { useSkillStore } from "src/stores/skill";
+import DialogForm from "src/components/DialogForm.vue";
+import { LearningDomain } from "src/types/learning-domain.enum";
+import { requireField } from "src/utils/field-rules";
+import { useMeta } from "quasar";
+import { useRoute } from "vue-router";
+import MainHeader from "src/components/Header/main-header.vue";
+import { useI18n } from "vue-i18n";
 
 const store = useSkillStore();
 const { t } = useI18n();
@@ -17,78 +17,6 @@ onMounted(store.fetchData);
 useMeta({
   title: title.value,
 });
-
-// const skillStore = useSkillStore();
-// const loading = ref(false);
-// const dialogAddVisible = ref(false);
-// const dialogAddSubVisible = ref(false);
-// const dialogDetailVisible = ref(false);
-// const dialogConfirmVisible = ref(false);
-// const selectedItem = ref<Skill | null>(null);
-// const skills = computed(() => skillStore.skills || []);
-
-// const showDialogAdd = async () => {
-//   dialogAddVisible.value = true;
-// };
-
-// const closeDialogAdd = () => {
-//   dialogAddVisible.value = false;
-// };
-
-// const showDialogAddSub = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogAddSubVisible.value = true;
-// };
-
-// const closeDialogAddSub = () => {
-//   dialogAddSubVisible.value = false;
-// };
-
-// const showDialogDetail = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogDetailVisible.value = true;
-// };
-
-// const closeDialogDetail = () => {
-//   dialogDetailVisible.value = false;
-// };
-
-// const confirmDeleteSkill = async (item: Skill) => {
-//   selectedItem.value = item;
-//   dialogConfirmVisible.value = true;
-// };
-// const closeDialogDelete = () => {
-//   dialogConfirmVisible.value = false;
-// };
-
-// const deleteSkillConfirmed = () => {
-//   skillStore.deleteSkill(selectedItem.value!.id);
-//   dialogConfirmVisible.value = false;
-//   fetchSkill();
-// };
-
-// const fetchSkill = async () => {
-//   loading.value = true;
-//   skillStore.clearForm();
-//   try {
-//     // await skillStore.fetchSkillsPage(pageParams.value);
-//     await skillStore.fetchSkills();
-//   } catch (error) {
-//     console.error('Error fetching skills:', error);
-//   } finally {
-//     loading.value = false;
-//   }
-// };
-// watch(
-//   [
-//     () => dialogAddVisible.value,
-//     () => dialogAddSubVisible.value,
-//     () => dialogDetailVisible.value,
-//   ],
-//   () => {
-//     fetchSkill();
-//   }
-// );
 </script>
 
 <template>
@@ -103,7 +31,7 @@ useMeta({
     <!-- Top -->
     <div class="q-py-md">
       <q-icon name="info" class="q-mr-sm" />{{
-        t('Right click to open menu of each row')
+        t("Right click to open menu of each row")
       }}
     </div>
     <q-toggle v-model="store.onlyHaveSubs"
@@ -138,7 +66,7 @@ useMeta({
                       name="subdirectory_arrow_right"
                     ></q-icon>
                   </q-item-section>
-                  <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
+                  <q-item-section>{{ t("insertSubSkill") }}</q-item-section>
                 </q-item>
                 <q-item
                   clickable
@@ -163,7 +91,7 @@ useMeta({
                   <q-item-section side>
                     <q-icon size="16px" name="close"></q-icon>
                   </q-item-section>
-                  <q-item-section>{{ t('quit') }}</q-item-section>
+                  <q-item-section>{{ t("quit") }}</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>

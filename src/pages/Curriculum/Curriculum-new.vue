@@ -69,7 +69,6 @@
                 :label="t('engDegree') + ' *'"
                 :rules="[requireField, onlyAlphabet]"
               />
-
               <q-input
                 dense
                 type="number"
