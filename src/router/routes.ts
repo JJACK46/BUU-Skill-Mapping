@@ -33,7 +33,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Skill Management',
-        component: () => import('pages/Skill/skillView.vue'),
+        component: () => import('pages/SkillPage.vue'),
       },
     ],
   },
