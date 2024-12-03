@@ -85,7 +85,7 @@
                     v-model="s.skill"
                     outlined
                     :options="store.getSkillOptions"
-                    @update:model-value="handleDuplicate"
+                    @update:model-value="store.handleDuplicate"
                     option-label="name"
                   ></q-select>
                 </q-item-section>
@@ -104,7 +104,7 @@
                     round
                     dense
                     icon="close"
-                    @click="handleRemoveSkill(i)"
+                    @click="store.handleRemoveSkill(i)"
                     onmouseenter="this.style.color='red'"
                     onmouseleave="this.style.color=''"
                   />
@@ -117,7 +117,7 @@
               dense
               flat
               label="add"
-              @click="handleAddSkill"
+              @click="store.handleAddSkill"
             />
           </q-tab-panel>
         </q-tab-panels>
@@ -230,31 +230,6 @@ watch(
   }
 );
 
-function handleAddSkill() {
-  store.form.skillExpectedLevels = store.form.skillExpectedLevels || [];
-  store.form.skillExpectedLevels.push({
-    subject: { id: store.form.id }, //at least subject id is required
-    expectedLevel: 1,
-  });
-}
-
-function handleRemoveSkill(index: number) {
-  store.form.skillExpectedLevels?.splice(index, 1);
-}
-
-function handleDuplicate() {
-  if (!store.form.skillExpectedLevels?.length) return;
-
-  const ids = new Set();
-  const newSkills = store.form.skillExpectedLevels.filter((s) => {
-    const isDupe = ids.has(s.skill?.id);
-    ids.add(s.skill?.id);
-    return !isDupe;
-  });
-
-  store.form.skillExpectedLevels = newSkills;
-}
-
 const columns = ref<QTableColumn[]>([
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
   { name: 'name', label: 'Name', field: 'name', align: 'left' },
@@ -282,7 +257,7 @@ onMounted(async () => {
       name: 'actions',
       label: 'Actions',
       field: 'actions',
-      align: 'center',
+      align: 'left',
     });
   }
 });
