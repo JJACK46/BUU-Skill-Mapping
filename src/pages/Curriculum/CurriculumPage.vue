@@ -70,16 +70,20 @@
       :title="store.getDialogTitle"
       @save="store.handleSave"
       @vue:mounted="store.fetchAllCurriculums"
-      width="1000px"
+      width="800px"
     >
       <template #body>
         <q-tabs v-model="store.tabsModel">
-          <q-tab name="req" label="Required" />
-          <q-tab name="teach" label="teach" />
-          <q-tab name="sub" label="sub" />
+          <q-tab
+            name="main"
+            icon="collections_bookmark"
+            :label="t('curriculum')"
+          />
+          <q-tab name="coordinators" icon="group" :label="t('coordinators')" />
+          <q-tab name="subjects" icon="book" :label="t('subject')" />
         </q-tabs>
         <q-tab-panels v-model="store.tabsModel">
-          <q-tab-panel name="req" class="q-gutter-y-md">
+          <q-tab-panel name="main" class="q-gutter-y-md">
             <q-input
               dense
               outlined
@@ -95,6 +99,7 @@
               :rules="[requireField]"
             >
               <template #label></template>
+              <template #default></template>
             </q-input>
             <q-input
               dense
@@ -157,7 +162,7 @@
             ></q-select>
           </q-tab-panel>
           <q-tab-panel
-            name="teach"
+            name="coordinators"
             class="q-gutter-y-md"
             @vue:mounted="fetchInstructors"
           >
@@ -223,7 +228,7 @@
             </q-card>
           </q-tab-panel>
           <q-tab-panel
-            name="sub"
+            name="subjects"
             class="q-gutter-y-md"
             @vue:mounted="fetchSubjects"
           >

@@ -16,7 +16,7 @@ export const useCurriculumStore = defineStore('curriculum', {
       limit: 10,
     } as PageParams,
     dialogState: false,
-    tabsModel: 'req',
+    tabsModel: 'main',
     titleForm: '' as TitleForm,
     router: useRouter(),
   }),
