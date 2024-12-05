@@ -5,11 +5,16 @@
       <q-breadcrumbs-el :label="t('newCurriculum')" />
     </q-breadcrumbs>
     <q-separator class="q-my-md" />
+
     <q-card flat bordered class="q-pa-md q-animate--fade">
       <q-splitter v-model="qsplitterVModel">
         <template #before>
           <q-tabs v-model="innerTab" vertical class="text-primary">
-            <q-tab name="main" icon="home" :label="t('main')" />
+            <q-tab
+              name="main"
+              icon="collections_bookmark"
+              :label="t('curriculum')"
+            />
             <q-tab
               name="coordinators"
               icon="group"
@@ -26,6 +31,11 @@
             transition-prev="slide-down"
           >
             <q-tab-panel name="main" class="q-gutter-y-md">
+              <div class="q-py-md">
+                <div class="text-h4 text-primary">
+                  {{ t('curriculum') }}
+                </div>
+              </div>
               <q-input
                 dense
                 outlined
@@ -98,7 +108,16 @@
                 @vue:mounted="fetchBranch"
               ></q-select>
             </q-tab-panel>
-            <q-tab-panel name="coordinators" @vue:mounted="fetchInstructors">
+            <q-tab-panel
+              name="coordinators"
+              @vue:mounted="fetchInstructors"
+              class="q-gutter-y-md"
+            >
+              <div class="q-py-md">
+                <div class="text-h4 text-primary">
+                  {{ t('instructor') }}
+                </div>
+              </div>
               <q-select
                 dense
                 outlined
@@ -110,8 +129,66 @@
                 multiple
                 :rules="[requireField]"
               ></q-select>
+              <q-card
+                v-for="(coordinator, index) in store.form.coordinators"
+                :key="index"
+                class="q-mb-md shadow-3 rounded-card relative"
+              >
+                <q-card-section>
+                  <div class="row items-center">
+                    <div>
+                      <div class="text-h6 text-primary font-bold">
+                        {{ coordinator.position }} - {{ coordinator.name }}
+                      </div>
+                      <div class="text-subtitle2 text-grey-6">
+                        {{ t('branch : ')
+                        }}{{ coordinator.branch || 'No branch provided' }}
+                      </div>
+                    </div>
+
+                    <q-col class="q-ml-auto">
+                      <q-card-actions align="right">
+                        <q-btn
+                          align="right"
+                          flat
+                          color="negative"
+                          icon="close"
+                          @click="deleteCoordinator(index)"
+                          class="q-py-sm"
+                        /> </q-card-actions
+                    ></q-col>
+                  </div>
+                </q-card-section>
+
+                <q-card-section>
+                  <q-separator class="q-mb-md" />
+                  <div class="text-body1 q-pb-sm">
+                    <q-icon name="email" class="q-mr-sm text-primary" />&nbsp;
+                    <span class="text-grey-8">
+                      {{ t('email : ')
+                      }}{{ coordinator.email || 'No email provided' }}
+                    </span>
+                  </div>
+                  <div class="text-body1">
+                    <q-icon name="phone" class="q-mr-sm text-primary" />&nbsp;
+                    <span class="text-grey-8">
+                      {{ t('tel : ')
+                      }}{{ coordinator.tel || 'No phone provided' }}
+                    </span>
+                  </div>
+                </q-card-section>
+              </q-card>
             </q-tab-panel>
-            <q-tab-panel name="subjects" @vue:mounted="fetchSubjects">
+            <q-tab-panel
+              name="subjects"
+              @vue:mounted="fetchSubjects"
+              class="q-gutter-y-md"
+            >
+              <div class="q-py-md">
+                <div class="text-h4 text-primary">
+                  {{ t('subjects') }}
+                </div>
+              </div>
               <q-select
                 dense
                 outlined
@@ -123,6 +200,55 @@
                 multiple
                 :rules="[requireField]"
               ></q-select>
+              <q-card
+                v-for="(subject, index) in store.form.subjects"
+                :key="index"
+                class="q-mb-md shadow-3 rounded-card relative"
+              >
+                <q-card-section>
+                  <div class="row items-center">
+                    <div>
+                      <div class="text-h6 text-primary font-bold">
+                        {{ subject.name }}
+                      </div>
+                      <div class="text-subtitle2 text-grey-6">
+                        {{ t('credit : ')
+                        }}{{ subject.credit || 'No credit provided' }}
+                      </div>
+                    </div>
+
+                    <q-col class="q-ml-auto">
+                      <q-card-actions align="right">
+                        <q-btn
+                          align="right"
+                          flat
+                          color="negative"
+                          icon="close"
+                          @click="deleteSubject(index)"
+                          class="q-py-sm"
+                        /> </q-card-actions
+                    ></q-col>
+                  </div>
+                </q-card-section>
+
+                <q-card-section>
+                  <q-separator class="q-mb-md" />
+                  <div class="text-body1 q-pb-sm">
+                    <div
+                      class="text-subtitle2 text-grey-6 row items-center q-gutter-sm"
+                    >
+                      <div
+                        v-for="(item, idx) in subject.skillExpectedLevels"
+                        :key="idx"
+                      >
+                        <q-chip clickable color="primary" text-color="white">
+                          {{ item.skill?.name || 'No skill provided' }}
+                        </q-chip>
+                      </div>
+                    </div>
+                  </div>
+                </q-card-section>
+              </q-card>
             </q-tab-panel>
           </q-tab-panels>
         </template>
@@ -183,6 +309,18 @@ const qsplitterVModel = ref(10);
 const instructors = ref<Instructor[]>();
 const store = useCurriculumStore();
 const { t } = useI18n();
+
+function deleteCoordinator(index: number) {
+  if (store.form.coordinators) {
+    store.form.coordinators.splice(index, 1);
+  }
+}
+
+function deleteSubject(index: number) {
+  if (store.form.subjects) {
+    store.form.subjects.splice(index, 1);
+  }
+}
 
 function handleGo(val: string) {
   innerTab.value = val;
