@@ -8,6 +8,11 @@
         t('Right click to open menu of each row')
       }}
     </div>
+    <div class="q-py-md">
+      <q-icon name="info" class="q-mr-sm" />{{
+        t('Right click to open menu of each row')
+      }}
+    </div>
     <q-table
       flat
       bordered
@@ -36,31 +41,10 @@
           <q-td key="branch" :props="props">
             {{ props.row.branch.name }}
           </q-td>
-
-          <q-menu context-menu touch-position auto-close>
-            <q-list dense style="min-width: 100px">
-              <q-item
-                clickable
-                v-close-popup
-                @click="store.handleOpenDialog(props.row)"
-              >
-                <q-item-section>Edit</q-item-section>
-              </q-item>
-              <q-item
-                clickable
-                v-close-popup
-                @click="store.removeCurriculum(props.row.id)"
-              >
-                <q-item-section>Delete</q-item-section>
-              </q-item>
-              <q-item clickable>
-                <q-item-section side>
-                  <q-icon size="16px" name="close"></q-icon>
-                </q-item-section>
-                <q-item-section>{{ t('quit') }}</q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
+          <ContextMenu
+            :edit-fn="() => store.handleOpenDialog(props.row)"
+            :delete-fn="() => store.removeCurriculum(props.row.id)"
+          ></ContextMenu>
         </q-tr>
       </template>
     </q-table>
@@ -318,6 +302,7 @@ import { Branch } from 'src/types/branch';
 import { useGlobalStore } from 'src/stores/global';
 import { InstructorService } from 'src/services/instructor';
 import { Instructor } from 'src/types/instructor';
+import ContextMenu from 'src/components/ContextMenu.vue';
 const global = useGlobalStore();
 const search = ref();
 const route = useRoute();

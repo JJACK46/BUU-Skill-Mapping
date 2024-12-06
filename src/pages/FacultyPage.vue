@@ -20,61 +20,34 @@
             <q-td>
               <span class="text-body1">{{ props.node.name }}</span>
             </q-td>
-            <q-menu context-menu touch-position auto-close>
-              <q-list dense style="min-width: 100px">
-                <q-item
-                  v-show="props.node.isFaculty"
-                  clickable
-                  @click="
-                    store.toggleDialog({
-                      title: 'New Branch',
-                      form: props.node,
-                    })
-                  "
-                >
-                  <q-item-section side>
-                    <q-icon
-                      size="16px"
-                      name="subdirectory_arrow_right"
-                    ></q-icon>
-                  </q-item-section>
-                  <q-item-section>{{ t('newBranch') }}</q-item-section>
-                </q-item>
-                <q-item
-                  clickable
-                  @click="
-                    store.toggleDialog({
-                      form: props.node,
-                    })
-                  "
-                >
-                  <q-item-section side>
-                    <q-icon size="16px" name="edit"></q-icon>
-                  </q-item-section>
-                  <q-item-section>{{ t('edit') }}</q-item-section>
-                </q-item>
-                <q-item
-                  clickable
-                  @click="
-                    store.handleRemove({
-                      id: props.node.id,
-                      node: props.node,
-                    })
-                  "
-                >
-                  <q-item-section side>
-                    <q-icon size="16px" name="delete"></q-icon>
-                  </q-item-section>
-                  <q-item-section>{{ t('delete') }}</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section side>
-                    <q-icon size="16px" name="close"></q-icon>
-                  </q-item-section>
-                  <q-item-section>{{ t('quit') }}</q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
+            <ContextMenu
+              :custom-create="{
+                label: t('newBranch'),
+                icon: 'subdirectory_arrow_right',
+              }"
+              :create-fn="
+                () =>
+                  store.toggleDialog({
+                    title: 'New Branch',
+                    form: props.node,
+                  })
+              "
+              :edit-fn="
+                () => {
+                  store.toggleDialog({
+                    form: props.node,
+                  });
+                }
+              "
+              :delete-fn="
+                () => {
+                  store.handleRemove({
+                    id: props.node.id,
+                    node: props.node,
+                  });
+                }
+              "
+            ></ContextMenu>
           </q-tr>
         </template>
         <template #default-body="node">
@@ -163,9 +136,10 @@
 </template>
 
 <script lang="ts" setup>
+import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/Header/main-header.vue';
-import { useFacultyStore } from 'src/stores/faculty';
+import { useFacultyStore } from 'src/stores/faculty-branch';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';

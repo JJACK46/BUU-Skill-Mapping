@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { Dialog, Notify } from 'quasar';
 import { CurriculumService } from 'src/services/curriculums';
 import { InstructorService } from 'src/services/instructor';
 import { SubjectService } from 'src/services/subject';
@@ -19,6 +20,8 @@ export const useCurriculumStore = defineStore('curriculum', {
     tabsModel: 'main',
     titleForm: '' as TitleForm,
     router: useRouter(),
+    qDialog: Dialog,
+    qNotify: Notify,
   }),
   getters: {
     getCurriculums: (c) => c.curriculums,
@@ -40,12 +43,13 @@ export const useCurriculumStore = defineStore('curriculum', {
     },
 
     async handleSave() {
-      console.log(this.form);
-      await CurriculumService.createOne(this.form);
-      this.router.push('/curriculums');
-      location.reload();
-      this.dialogState = false;
-      this.resetForm();
+      const ok = await CurriculumService.createOne(this.form);
+      if (ok) {
+        this.qNotify.create({ type: 'ok', message: 'Curriculum created successfully' });
+        this.router.push('/curriculums');
+        this.dialogState = false;
+        this.resetForm();
+      }
     },
 
     async fetchCoordinatorsData() {
@@ -95,8 +99,11 @@ export const useCurriculumStore = defineStore('curriculum', {
       this.fetchSubjectsData();
     },
     async removeCurriculum(id: string) {
-      await CurriculumService.removeOne(id);
-      this.fetchData();
+      const ok = await CurriculumService.removeOne(id);
+      if (ok) {
+        this.qNotify.create({ type: 'ok', message: 'Curriculum removed successfully' });
+        this.fetchData();
+      }
     },
     resetForm() {
       this.form = {};
