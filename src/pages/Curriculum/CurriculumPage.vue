@@ -8,6 +8,11 @@
         t('Right click to open menu of each row')
       }}
     </div>
+    <div class="q-py-md">
+      <q-icon name="info" class="q-mr-sm" />{{
+        t('Right click to open menu of each row')
+      }}
+    </div>
     <q-table
       flat
       bordered
@@ -49,16 +54,20 @@
       :title="store.getDialogTitle"
       @save="store.handleSave"
       @vue:mounted="store.fetchAllCurriculums"
-      width="1000px"
+      width="800px"
     >
       <template #body>
         <q-tabs v-model="store.tabsModel">
-          <q-tab name="req" label="Required" />
-          <q-tab name="teach" label="teach" />
-          <q-tab name="sub" label="sub" />
+          <q-tab
+            name="main"
+            icon="collections_bookmark"
+            :label="t('curriculum')"
+          />
+          <q-tab name="coordinators" icon="group" :label="t('coordinators')" />
+          <q-tab name="subjects" icon="book" :label="t('subject')" />
         </q-tabs>
         <q-tab-panels v-model="store.tabsModel">
-          <q-tab-panel name="req" class="q-gutter-y-md">
+          <q-tab-panel name="main" class="q-gutter-y-md">
             <q-input
               dense
               outlined
@@ -74,6 +83,7 @@
               :rules="[requireField]"
             >
               <template #label></template>
+              <template #default></template>
             </q-input>
             <q-input
               dense
@@ -136,7 +146,7 @@
             ></q-select>
           </q-tab-panel>
           <q-tab-panel
-            name="teach"
+            name="coordinators"
             class="q-gutter-y-md"
             @vue:mounted="fetchInstructors"
           >
@@ -151,9 +161,58 @@
               multiple
               :rules="[requireField]"
             ></q-select>
+            <q-card
+              v-for="(coordinator, index) in store.form.coordinators"
+              :key="index"
+              class="q-mb-md shadow-3 rounded-card relative"
+            >
+              <q-card-section>
+                <div class="row items-center">
+                  <div>
+                    <div class="text-h6 text-primary font-bold">
+                      {{ coordinator.position }} - {{ coordinator.name }}
+                    </div>
+                    <div class="text-subtitle2 text-grey-6">
+                      {{ t('branch : ')
+                      }}{{ coordinator.branch || 'No branch provided' }}
+                    </div>
+                  </div>
+
+                  <q-col class="q-ml-auto">
+                    <q-card-actions align="right">
+                      <q-btn
+                        align="right"
+                        flat
+                        color="negative"
+                        icon="close"
+                        @click="deleteCoordinator(index)"
+                        class="q-py-sm"
+                      /> </q-card-actions
+                  ></q-col>
+                </div>
+              </q-card-section>
+
+              <q-card-section>
+                <q-separator class="q-mb-md" />
+                <div class="text-body1 q-pb-sm">
+                  <q-icon name="email" class="q-mr-sm text-primary" />&nbsp;
+                  <span class="text-grey-8">
+                    {{ t('email : ')
+                    }}{{ coordinator.email || 'No email provided' }}
+                  </span>
+                </div>
+                <div class="text-body1">
+                  <q-icon name="phone" class="q-mr-sm text-primary" />&nbsp;
+                  <span class="text-grey-8">
+                    {{ t('tel : ')
+                    }}{{ coordinator.tel || 'No phone provided' }}
+                  </span>
+                </div>
+              </q-card-section>
+            </q-card>
           </q-tab-panel>
           <q-tab-panel
-            name="sub"
+            name="subjects"
             class="q-gutter-y-md"
             @vue:mounted="fetchSubjects"
           >
@@ -168,6 +227,56 @@
               multiple
               :rules="[requireField]"
             ></q-select>
+
+            <q-card
+              v-for="(subject, index) in store.form.subjects"
+              :key="index"
+              class="q-mb-md shadow-3 rounded-card relative"
+            >
+              <q-card-section>
+                <div class="row items-center">
+                  <div>
+                    <div class="text-h6 text-primary font-bold">
+                      {{ subject.name }}
+                    </div>
+                    <div class="text-subtitle2 text-grey-6">
+                      {{ t('credit : ')
+                      }}{{ subject.credit || 'No credit provided' }}
+                    </div>
+                  </div>
+
+                  <q-col class="q-ml-auto">
+                    <q-card-actions align="right">
+                      <q-btn
+                        align="right"
+                        flat
+                        color="negative"
+                        icon="close"
+                        @click="deleteSubject(index)"
+                        class="q-py-sm"
+                      /> </q-card-actions
+                  ></q-col>
+                </div>
+              </q-card-section>
+
+              <q-card-section>
+                <q-separator class="q-mb-md" />
+                <div class="text-body1 q-pb-sm">
+                  <div
+                    class="text-subtitle2 text-grey-6 row items-center q-gutter-sm"
+                  >
+                    <div
+                      v-for="(item, idx) in subject.skillExpectedLevels"
+                      :key="idx"
+                    >
+                      <q-chip clickable color="primary" text-color="white">
+                        {{ item.skill?.name || 'No skill provided' }}
+                      </q-chip>
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+            </q-card>
           </q-tab-panel>
         </q-tab-panels>
       </template>
@@ -240,5 +349,17 @@ async function fetchInstructors() {
 
 async function fetchSubjects() {
   subjects.value = (await SubjectService.getAll()).data;
+}
+
+function deleteCoordinator(index: number) {
+  if (store.form.coordinators) {
+    store.form.coordinators.splice(index, 1);
+  }
+}
+
+function deleteSubject(index: number) {
+  if (store.form.subjects) {
+    store.form.subjects.splice(index, 1);
+  }
 }
 </script>

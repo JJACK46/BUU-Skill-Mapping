@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { Dialog, Notify } from 'quasar';
 import { CurriculumService } from 'src/services/curriculums';
+import { InstructorService } from 'src/services/instructor';
+import { SubjectService } from 'src/services/subject';
 import { Curriculum } from 'src/types/curriculum';
 import { PageParams } from 'src/types/pagination';
 import { useRouter } from 'vue-router';
@@ -15,7 +17,7 @@ export const useCurriculumStore = defineStore('curriculum', {
       limit: 10,
     } as PageParams,
     dialogState: false,
-    tabsModel: 'req',
+    tabsModel: 'main',
     titleForm: '' as TitleForm,
     router: useRouter(),
     qDialog: Dialog,
@@ -50,10 +52,51 @@ export const useCurriculumStore = defineStore('curriculum', {
       }
     },
 
+    async fetchCoordinatorsData() {
+      try {
+        if (this.form.coordinators?.length) {
+          const coordinatorsData = await Promise.all(
+            this.form.coordinators.map(async (coordinator) => {
+              const id = coordinator.id ?? 0;
+              return await InstructorService.getOne(id);
+            })
+          );
+          this.form.coordinators = coordinatorsData;
+          console.log('Updated Coordinators:', this.form.coordinators);
+        } else {
+          console.log('No coordinators found.');
+        }
+      } catch (error) {
+        console.error('Error fetching coordinator data:', error);
+      }
+    },
+
+    async fetchSubjectsData() {
+      try {
+        if (this.form.subjects?.length) {
+          const subjectsData = await Promise.all(
+            this.form.subjects.map(async (subject) => {
+              const id = subject.id ?? 0;
+              return await SubjectService.getOne(id);
+            })
+          );
+          this.form.subjects = subjectsData;
+          console.log('Updated Subjects:', this.form.subjects);
+        } else {
+          console.log('No subjects found.');
+        }
+      } catch (error) {
+        console.error('Error fetching subjects data:', error);
+      }
+    },
+
     handleOpenDialog(form?: Partial<Curriculum>) {
       this.dialogState = true;
       this.titleForm = 'Edit Curriculum';
       this.form = { ...form };
+      console.log(this.form);
+      this.fetchCoordinatorsData();
+      this.fetchSubjectsData();
     },
     async removeCurriculum(id: string) {
       const ok = await CurriculumService.removeOne(id);
