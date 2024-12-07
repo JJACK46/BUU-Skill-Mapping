@@ -96,7 +96,12 @@ onMounted(async () => {
               icon="edit"
               padding="none"
               flat
-              @click="store.toggleDialog(props.row)"
+              @click="
+                store.toggleDialog({
+                  form: props.row,
+                  title: 'Edit User',
+                })
+              "
             ></q-btn>
             <q-btn
               icon="delete"
