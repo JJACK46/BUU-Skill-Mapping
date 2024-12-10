@@ -70,12 +70,16 @@
             class="text-h5 text-bold"
             extended
           >
-            <q-tree :nodes="skillsExample" node-key="id" class="q-pa-sm">
+            <q-tree
+              :nodes="studentSkillTrees || skillsExample"
+              node-key="id"
+              class="q-pa-sm"
+            >
               <template v-slot:default-header="props">
                 <div class="text-h6">
                   {{ props.node.name }}
                 </div>
-                <div v-if="props.node.gainedLevel" style="padding-left: 20px">
+                <div v-if="props.node.expectedLevel" style="padding-left: 20px">
                   <q-badge
                     outline
                     align="middle"
@@ -86,7 +90,7 @@
                 </div>
               </template>
               <template v-slot:default-body="props">
-                <div class="text-body2" v-if="props.node.gainedLevel">
+                <div class="text-body2" v-if="props.node.expectedLevel">
                   <span style="padding-left: 10px">Gained:</span>
                   {{ props.node.gainedLevel }}
                   <span style="padding-left: 10px">Expected:</span>
@@ -103,6 +107,8 @@
 
 <script lang="ts" setup>
 import { useAuthStore } from 'src/stores/auth';
+import { useStudentStore } from 'src/stores/student';
+import { onMounted, ref } from 'vue';
 
 const skillsExample = [
   {
@@ -154,4 +160,12 @@ const skillsExample = [
 ];
 
 const usr = useAuthStore();
+const student = useStudentStore();
+
+const studentSkillTrees = ref([]);
+
+onMounted(async () => {
+  // example for testing show skilltree
+  studentSkillTrees.value = await student.getSkillTree(65160309);
+});
 </script>
