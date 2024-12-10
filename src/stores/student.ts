@@ -20,9 +20,10 @@ export const useStudentStore = defineStore('student', {
   },
   actions: {
     async fetchData() {
-      const { data } = await StudentService.fetchData(convertToPageParams(this.pagination));
+      const { data } = await StudentService.fetchData(
+        convertToPageParams(this.pagination)
+      );
       this.students = data;
-
     },
     async handleSave(form?: Partial<Student>) {
       if (form) {
@@ -33,6 +34,10 @@ export const useStudentStore = defineStore('student', {
       this.dialogState = false;
       await this.fetchData();
     },
+    async getSkillTree(id: number) {
+      const res = await StudentService.getSkillTree(id);
+      return res;
+    },
     toggleDialog(form?: Partial<Student>) {
       if (form) {
         this.formStudent = form;
@@ -41,10 +46,10 @@ export const useStudentStore = defineStore('student', {
         this.formStudent = {} as Student;
         this.titleForm = 'New Student';
       }
-      this.dialogState = !this.dialogState
+      this.dialogState = !this.dialogState;
     },
     toggleDialogImport() {
-      this.dialogImport = !this.dialogImport
-    }
-  }
+      this.dialogImport = !this.dialogImport;
+    },
+  },
 });
