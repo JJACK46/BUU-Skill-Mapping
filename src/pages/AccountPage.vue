@@ -15,6 +15,7 @@
                 />
               </q-avatar>
             </q-card-section>
+
             <q-card-section class="flex items-center text-body1">
               <q-list>
                 <q-item>
@@ -50,15 +51,49 @@
             </div>
           </q-card-section>
         </q-card>
+        <!-- <q-tree :nodes="treeData" node-key="id">
+          <template v-slot:body-story="prop">
+            <span style="padding-left: 20px">Gained:</span>
+            {{ prop.node.gainlevel }}
+            <span style="padding-left: 20px">Expected:</span>
+            {{ prop.node.expectedlevel }}
+          </template></q-tree
+        > -->
+        <q-card flat bordered class="q-animate--fade"> </q-card>
       </div>
+
       <q-card class="col-12 col-md" style="height: fit-content" flat bordered>
         <q-card-section>
-          <q-expansion-item icon="bookmark" label="Skill Collection">
-            <q-list>
-              <q-item v-for="i in 10" :key="i">
-                <q-item-section class="text-body1"> {{ i }} </q-item-section>
-              </q-item>
-            </q-list>
+          <q-expansion-item
+            label="Skill Collection"
+            icon="school"
+            class="text-h5 text-bold"
+            extended
+          >
+            <q-tree :nodes="skillsExample" node-key="id" class="q-pa-sm">
+              <template v-slot:default-header="props">
+                <div class="text-h6">
+                  {{ props.node.name }}
+                </div>
+                <div v-if="props.node.gainedLevel" style="padding-left: 20px">
+                  <q-badge
+                    outline
+                    align="middle"
+                    :color="props.node.passed ? 'positive' : 'negative'"
+                  >
+                    {{ props.node.passed ? 'Achieved' : 'Needs Improvement' }}
+                  </q-badge>
+                </div>
+              </template>
+              <template v-slot:default-body="props">
+                <div class="text-body2" v-if="props.node.gainedLevel">
+                  <span style="padding-left: 10px">Gained:</span>
+                  {{ props.node.gainedLevel }}
+                  <span style="padding-left: 10px">Expected:</span>
+                  {{ props.node.expectedLevel }}
+                </div>
+              </template>
+            </q-tree>
           </q-expansion-item>
         </q-card-section>
       </q-card>
@@ -68,6 +103,55 @@
 
 <script lang="ts" setup>
 import { useAuthStore } from 'src/stores/auth';
+
+const skillsExample = [
+  {
+    id: 1,
+    skillId: 101,
+    name: 'Frontend Development',
+    gainedLevel: 3,
+    expectedLevel: 5,
+    passed: false,
+    children: [
+      {
+        id: 2,
+        skillId: 102,
+        name: 'Vue.js',
+        gainedLevel: 2,
+        expectedLevel: 4,
+        passed: false,
+        children: [],
+      },
+    ],
+  },
+  {
+    id: 3,
+    skillId: 103,
+    name: 'Backend Development',
+
+    children: [
+      {
+        id: 4,
+        skillId: 104,
+        name: 'Node.js',
+        gainedLevel: 4,
+        expectedLevel: 4,
+        passed: true,
+        children: [
+          {
+            id: 5,
+            skillId: 105,
+            name: 'Nest.js',
+            gainedLevel: 4,
+            expectedLevel: 4,
+            passed: true,
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const usr = useAuthStore();
 </script>
