@@ -56,7 +56,6 @@ import { QTableColumn, useMeta } from 'quasar';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
-import { BranchService } from 'src/services/branches';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { Curriculum } from 'src/types/curriculum';
 import { Subject } from 'src/types/subject';
@@ -97,8 +96,4 @@ onMounted(async () => {
   curriculums.value = (await CurriculumService.getAll({ page: 1 })).data;
   subjects.value = (await SubjectService.getAll()).data;
 });
-
-async function fetchBranch() {
-  branchs.value = (await BranchService.getAll()).data;
-}
 </script>
