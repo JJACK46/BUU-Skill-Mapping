@@ -90,17 +90,16 @@ useMeta({
         <q-input
           v-show="store.parentId"
           v-model="store.parentId"
-          label="Parent ID"
-          hint="Readonly"
-          outlined
+          label="Parent ID - Readonly"
+          borderless
           readonly
         />
         <q-input
+          v-show="store.form.id"
           v-model="store.form.id"
-          label="ID"
-          outlined
+          label="ID - Readonly"
+          borderless
           readonly
-          hint="Readonly"
         />
         <q-input
           v-model="store.form.name"
