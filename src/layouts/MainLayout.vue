@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR lFf">
+  <q-layout view="lHh LpR lFf">
     <q-header>
       <q-toolbar>
         <q-btn
@@ -32,13 +32,7 @@
           <img
             draggable="false"
             :src="`${
-              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
-            } `"
-          />
-          <img
-            draggable="false"
-            :src="`${
-              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
+              profile?.avatarUrl || 'https://placehold.co/32x32?text=profile'
             } `"
           />
           <q-menu :offset="[-20, 0]" style="width: 160px" auto-close>
@@ -80,7 +74,13 @@
       </q-toolbar>
     </q-header>
     <!-- Left Drawer -->
-    <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" side="left">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      :width="250"
+      side="left"
+      bordered
+    >
       <q-list>
         <q-item-label header>
           <q-img

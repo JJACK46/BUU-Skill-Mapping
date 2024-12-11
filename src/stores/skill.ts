@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import SkillService from 'src/services/skill';
 import { Skill } from 'src/types/skill';
-import { Dialog, Notify, QTableProps } from 'quasar'
-import { calMaxPage, convertToPageParams } from 'src/utils/pagination';
+import { Dialog, Notify } from 'quasar'
+import { calMaxPage, convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 type TitleForm =
   | 'New Skill'
@@ -15,10 +15,7 @@ export const useSkillStore = defineStore('skill', {
     skills: [] as Skill[],
     form: {} as Partial<Skill>,
     dialogForm: false,
-    pagination: {
-      page: 1,
-      rowsPerPage: 10,
-    } as QTableProps['pagination'],
+    pagination: defaultPagination,
     search: '',
     titleForm: 'New Skill' as TitleForm,
     qDialog: Dialog,

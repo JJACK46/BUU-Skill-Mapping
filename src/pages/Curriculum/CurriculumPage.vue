@@ -8,11 +8,6 @@
         t('Right click to open menu of each row')
       }}
     </div>
-    <div class="q-py-md">
-      <q-icon name="info" class="q-mr-sm" />{{
-        t('Right click to open menu of each row')
-      }}
-    </div>
     <q-table
       flat
       bordered
