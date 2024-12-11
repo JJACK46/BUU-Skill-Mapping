@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import { QTableColumn, useMeta } from 'quasar';
+import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { UserRole } from 'src/enums/roles';
-// import { useAuthStore } from 'src/stores/auth';
+import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';
 import { useUserStore } from 'src/stores/user';
 import { requireField } from 'src/utils/field-rules';
 import { computed, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-const { t } = useI18n();
-// const auth = useAuthStore();
+const auth = useAuthStore();
 const store = useUserStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -81,45 +80,24 @@ useMeta({
           <div>
             {{ props.value ?? 'Unknown' }}
           </div>
-          <!-- <q-select
-            v-else
-            dense
-            :options="Object.values(UserRole)"
-            outlined
-            v-model="props.row.role"
-            label="Role"
-            @update:model-value="store.handleSave(props.row)"
-          /> -->
         </q-td>
-        <q-menu context-menu touch-position auto-close>
-          <q-list dense style="min-width: 100px">
-            <q-item
-              clickable
-              v-close-popup
-              @click="
-                store.toggleDialog({
-                  form: props.row,
-                  title: 'Edit User',
-                })
-              "
-            >
-              <q-item-section>Edit</q-item-section>
-            </q-item>
-            <q-item
-              clickable
-              v-close-popup
-              @click="store.handleRemove(props.row.id)"
-            >
-              <q-item-section>Delete</q-item-section>
-            </q-item>
-            <q-item clickable>
-              <q-item-section side>
-                <q-icon size="16px" name="close"></q-icon>
-              </q-item-section>
-              <q-item-section>{{ t('quit') }}</q-item-section>
-            </q-item>
-          </q-list>
-        </q-menu>
+        <ContextMenu
+          v-if="auth.isAdmin"
+          :edit-fn="
+            () => {
+              store.toggleDialog({
+                form: props.row,
+                title: 'Edit User',
+              });
+            }
+          "
+          :delete-fn="
+            () => {
+              store.handleRemove(props.row.id);
+            }
+          "
+        >
+        </ContextMenu>
       </template>
 
       <template v-slot:pagination="scope">

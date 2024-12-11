@@ -2,7 +2,7 @@
   <q-dialog v-model="dialogState" :full-width="fullWidth">
     <q-card
       class="dialog-form"
-      :style="{ width: width ? width : '500px', maxWidth: '1980px' }"
+      :style="{ width: width ? width : '500px', maxWidth: '1920px' }"
     >
       <q-form ref="formRef" @input="validateForm">
         <q-card-section>

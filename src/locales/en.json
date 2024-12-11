@@ -72,5 +72,12 @@
     "newCurriculum": "New Curriculum",
     "main": "Main",
     "next": "Next",
-    "back": "Back"
+    "back": "Back",
+    "notFound": "Not Found",
+    "notFoundPage": "Not Found Page, If you think this is a mistake, please contact the administrator",
+    "error": "Error",
+    "goHome": "Go Home",
+    "showOnlyWithSubSkill": "Show only skills with sub-skills",
+    "confirm": "Confirm",
+    "clear": "Clear"
 }

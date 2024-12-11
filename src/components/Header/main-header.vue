@@ -20,8 +20,8 @@
     <div class="row q-gutter-sm">
       <FilterBtn
         v-show="!hideFilter"
-        v-model:selected-branch="selectedBranch"
-        v-model:selected-faculty="selectedFaculty"
+        v-model="filterModel"
+        @confirm-filter="$emit('enterSearch')"
       />
       <q-input
         outlined
@@ -50,33 +50,32 @@
     </div>
   </div>
   <div
-    v-show="selectedBranch || selectedFaculty"
+    v-show="Object.keys(filterModel ?? {}).length > 0"
     class="q-animate--fade q-mt-sm"
   >
     <span>{{ t('filter') }}: </span>
     <q-chip
-      v-show="selectedFaculty"
-      :label="selectedFaculty"
+      v-show="filterModel?.facultyName"
+      :label="filterModel?.facultyName"
       removable
-      @remove="selectedFaculty = ''"
+      @remove="delete filterModel!.facultyName"
     />
     <q-chip
-      v-show="selectedBranch"
-      :label="selectedBranch"
+      v-show="filterModel?.branchName"
+      :label="filterModel?.branchName"
       removable
-      @remove="selectedBranch = ''"
+      @remove="delete filterModel!.branchName"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FilterBtn from './filter-btn.vue';
+import { FilterModel } from 'src/types/filter';
 
 const { t } = useI18n();
-const selectedFaculty = ref<string>('');
-const selectedBranch = ref<string>('');
 
 defineProps<{
   importBtn?: true;
@@ -93,6 +92,7 @@ const emit = defineEmits<{
 }>();
 
 const searchText = defineModel('searchText', { default: '' });
+const filterModel = defineModel<Partial<FilterModel>>('filterModel');
 
 // auto fetch data again after search empty
 watch(
@@ -102,5 +102,15 @@ watch(
       emit('enterSearch');
     }
   }
+);
+
+watch(
+  () => filterModel.value,
+  (v) => {
+    if (Object.keys(v ?? {}).length === 0 || !v) {
+      emit('enterSearch');
+    }
+  },
+  { deep: true }
 );
 </script>

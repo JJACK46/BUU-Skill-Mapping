@@ -106,8 +106,8 @@ const handleViewCourse = (id: string) => {
 
 const handleOpenDialog = async () => {
   store.dialogState = true;
-  subjects.value = await SubjectService.getAll();
-  teachers.value = await TeacherService.getAll();
+  subjects.value = (await SubjectService.getAll()).data;
+  teachers.value = (await InstructorService.getAll()).data;
 };
 
 const handlePopup = (id: string) => {
