@@ -6,5 +6,8 @@ export type PageParams = {
   search: string;
   columnId?: string;
   columnName?: string;
-  bySubject?: string;
+  subjectName?: string; //need backend change too
+  curriculumName?: string
+  facultyName?: string
+  branchName?: string
 };

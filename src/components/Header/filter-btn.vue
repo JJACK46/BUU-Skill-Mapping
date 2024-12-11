@@ -1,18 +1,6 @@
 <template>
-  <q-btn
-    icon="filter_list"
-    flat
-    :label="t('filter')"
-    color="primary"
-    dense
-    @click="filterDialog = !filterDialog"
-  >
-    <q-popup-edit
-      v-model="filterDialog"
-      :cover="false"
-      :offset="[0, 10]"
-      style="width: 400px"
-    >
+  <q-btn icon="filter_list" flat :label="t('filter')" color="primary" dense>
+    <q-popup-proxy v-model="proxyModel" style="width: 400px">
       <q-tabs v-model="filterMenu">
         <q-tab name="faculty" :label="t('faculty')" />
         <q-tab name="branch" :label="t('branch')" />
@@ -20,7 +8,7 @@
       <q-tab-panels v-model="filterMenu" animated>
         <q-tab-panel name="faculty">
           <q-select
-            :model-value="selectedFaculty"
+            :model-value="filterModel.facultyName"
             label="Select Faculty"
             filled
             use-input
@@ -44,7 +32,7 @@
         </q-tab-panel>
         <q-tab-panel name="branch">
           <q-select
-            :model-value="selectedBranch"
+            :model-value="filterModel.branchName"
             label="Select Branch"
             filled
             fill-input
@@ -52,6 +40,7 @@
             hide-selected
             input-debounce="0"
             @filter="filterBranch"
+            @input-value="setModelBranch"
             :options="branchOptions"
             hint="Type to search"
           >
@@ -62,23 +51,37 @@
                 </q-item-section>
               </q-item>
             </template>
-            <template #after></template>
           </q-select>
         </q-tab-panel>
       </q-tab-panels>
-    </q-popup-edit>
+      <div class="q-mx-auto q-pa-sm flex justify-end q-gutter-x-sm">
+        <q-btn
+          :label="t('clear')"
+          flat
+          color="negative"
+          @click="handleCloseMenu()"
+        ></q-btn>
+        <q-btn
+          :label="t('search')"
+          flat
+          color="primary"
+          @click="handleConfirm()"
+        ></q-btn>
+      </div>
+    </q-popup-proxy>
   </q-btn>
 </template>
 
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
 import { Faculty } from 'src/types/faculty';
+import { FilterModel } from 'src/types/filter';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const faculties = ref<Faculty[]>();
 const { t } = useI18n();
-const filterDialog = ref<boolean>();
+const proxyModel = ref<boolean>(false);
 const filterMenu = ref();
 const strFacultyOptions = ref<string[]>([]);
 const strBranchOptions = ref<string[]>([]);
@@ -99,11 +102,17 @@ const initOptions = async () => {
 
 onMounted(() => initOptions());
 
+const emit = defineEmits<{
+  (e: 'confirmFilter'): void;
+}>();
+
 const handleChangeFaculty = (val: string) => {
   const index = faculties.value?.findIndex((f) => f.name === val);
   if (index && index > -1) {
-    branchOptions.value =
+    strBranchOptions.value =
       faculties.value?.[index].branches?.map((b) => b.name || '') || [];
+  } else {
+    strBranchOptions.value = [];
   }
 };
 
@@ -121,7 +130,11 @@ function filterFaculty(
 }
 
 function setModelFaculty(val: string) {
-  selectedFaculty.value = val;
+  filterModel.value.facultyName = val;
+}
+
+function setModelBranch(val: string) {
+  filterModel.value.branchName = val;
 }
 function filterBranch(
   val: string,
@@ -136,6 +149,17 @@ function filterBranch(
   });
 }
 
-const selectedFaculty = defineModel('selectedFaculty', { default: '' });
-const selectedBranch = defineModel('selectedBranch', { default: '' });
+const filterModel = defineModel<Partial<FilterModel>>({
+  default: {} as FilterModel,
+});
+
+const handleCloseMenu = () => {
+  proxyModel.value = false;
+  filterModel.value = {} as FilterModel;
+};
+
+const handleConfirm = () => {
+  proxyModel.value = false;
+  emit('confirmFilter');
+};
 </script>

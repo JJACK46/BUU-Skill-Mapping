@@ -4,7 +4,8 @@ import { CurriculumService } from 'src/services/curriculums';
 import { InstructorService } from 'src/services/instructor';
 import { SubjectService } from 'src/services/subject';
 import { Curriculum } from 'src/types/curriculum';
-import { PageParams } from 'src/types/pagination';
+import { FilterModel } from 'src/types/filter';
+import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import { useRouter } from 'vue-router';
 type TitleForm = 'Edit Curriculum';
 export const useCurriculumStore = defineStore('curriculum', {
@@ -12,16 +13,15 @@ export const useCurriculumStore = defineStore('curriculum', {
     form: {} as Partial<Curriculum>,
     curriculums: [] as Curriculum[],
     curriculumsOptions: <Curriculum[]>[],
-    pageParams: {
-      page: 1,
-      limit: 10,
-    } as PageParams,
+    pagination: defaultPagination,
     dialogState: false,
     tabsModel: 'main',
     titleForm: '' as TitleForm,
     router: useRouter(),
     qDialog: Dialog,
     qNotify: Notify,
+    search: '',
+    filterModel: {} as Partial<FilterModel>,
   }),
   getters: {
     getCurriculums: (c) => c.curriculums,
@@ -29,7 +29,9 @@ export const useCurriculumStore = defineStore('curriculum', {
   },
   actions: {
     async fetchData() {
-      this.curriculums = (await CurriculumService.getAll(this.pageParams)).data;
+      const { data, total } = (await CurriculumService.getAll(convertToPageParams(this.pagination, this.search, this.filterModel)));
+      this.curriculums = data;
+      this.pagination!.rowsNumber = total || 0;
     },
 
     async fetchAllCurriculums() {
