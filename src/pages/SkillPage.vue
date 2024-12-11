@@ -35,9 +35,9 @@ useMeta({
         t('Right click to open menu of each row')
       }}
     </div>
-    <q-toggle v-model="store.onlyHaveSubs"
-      >Show only skills with sub-skills</q-toggle
-    >
+    <q-toggle v-model="store.onlyHaveSubs">{{
+      t('showOnlyWithSubSkill')
+    }}</q-toggle>
     <!-- Content -->
     <q-card flat bordered class="q-animate--fade">
       <q-tree :nodes="store.getSkills" node-key="id" class="q-pa-sm">
@@ -75,6 +75,7 @@ useMeta({
       <q-pagination
         class="q-mx-auto"
         v-model="store.pagination!.page!"
+        @update:model-value="store.fetchData()"
         :max="store.getMaxPage"
         direction-links
       />

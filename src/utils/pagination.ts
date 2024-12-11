@@ -19,3 +19,7 @@ export const convertToPageParams = (pag: QTableProps['pagination'], search?: str
         search: search || '',
     } as PageParams
 }
+
+export const calMaxPage = (totalItems: number, rowsPerPage: number | undefined) => {
+    return Math.ceil(totalItems / (rowsPerPage || 10))
+}
