@@ -4,7 +4,7 @@ import { BranchService } from 'src/services/branches';
 import { FacultyService } from 'src/services/faculty';
 import { Branch } from 'src/types/branch';
 import { Faculty } from 'src/types/faculty';
-import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
+import { calMaxPage, convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 type TitleForm = 'New Faculty' | 'Edit Faculty' | 'New Branch' | 'Edit Branch';
 
@@ -13,7 +13,6 @@ export const useFacultyStore = defineStore('faculty', {
     formFaculty: {} as Partial<Faculty>,
     formBranch: {} as Partial<Branch>,
     faculties: [] as Faculty[],
-    // branches: [] as Branch[],
     dialogState: false,
     pagination: defaultPagination,
     search: '',
@@ -21,8 +20,8 @@ export const useFacultyStore = defineStore('faculty', {
     qDialog: Dialog,
     qNotify: Notify,
   }),
-
   getters: {
+    getMaxPage: (s) => calMaxPage(s.pagination?.rowsNumber, s.pagination?.rowsPerPage),
     isFacultyForm: (state) =>
       state.titleForm === 'New Faculty' || state.titleForm === 'Edit Faculty',
     getNodes: (state) => {

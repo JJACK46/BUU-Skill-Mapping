@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import SkillService from 'src/services/skill';
 import { Skill } from 'src/types/skill';
-import { Dialog, Notify, QTableProps } from 'quasar'
-import { convertToPageParams } from 'src/utils/pagination';
+import { Dialog, Notify } from 'quasar'
+import { calMaxPage, convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 type TitleForm =
   | 'New Skill'
@@ -15,10 +15,7 @@ export const useSkillStore = defineStore('skill', {
     skills: [] as Skill[],
     form: {} as Partial<Skill>,
     dialogForm: false,
-    pagination: {
-      page: 1,
-      rowsPerPage: 10,
-    } as QTableProps['pagination'],
+    pagination: defaultPagination,
     search: '',
     titleForm: 'New Skill' as TitleForm,
     qDialog: Dialog,
@@ -30,7 +27,7 @@ export const useSkillStore = defineStore('skill', {
   getters: {
     getTitleForm: (state) => state.titleForm,
     getParentId: (state) => state.parentId,
-    getMaxPage: (state) => state.totalSkills / (state.pagination?.rowsPerPage || 10),
+    getMaxPage: (state) => calMaxPage(state.totalSkills, state.pagination!.rowsPerPage),
     getSkills: (state) => {
       if (state.onlyHaveSubs) {
         return state.skills.filter(skill => skill.children.length > 0)

@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR lFf">
+  <q-layout view="lHh LpR lFf">
     <q-header>
       <q-toolbar>
         <q-btn
@@ -32,16 +32,10 @@
           <img
             draggable="false"
             :src="`${
-              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
+              profile?.avatarUrl || 'https://placehold.co/32x32?text=profile'
             } `"
           />
-          <img
-            draggable="false"
-            :src="`${
-              profile?.avatarUrl || 'https://placehold.co/32x32?text=nopic'
-            } `"
-          />
-          <q-menu :offset="[-20, 0]" style="width: 160px" auto-close>
+          <q-menu :offset="[-20, 0]" style="width: 160px">
             <q-list>
               <q-item>
                 <q-item-section side>
@@ -52,7 +46,7 @@
                 </q-item-section>
               </q-item>
               <q-separator />
-              <q-item clickable @click="router.push('/account')">
+              <q-item v-close-popup clickable @click="router.push('/account')">
                 <q-item-section side>
                   <q-icon name="person"></q-icon>
                 </q-item-section>
@@ -60,13 +54,17 @@
                   {{ t('account') }}
                 </q-item-section>
               </q-item>
-              <q-item clickable @click="toggleRightDrawer('settings')">
+              <q-item
+                v-close-popup
+                clickable
+                @click="toggleRightDrawer('settings')"
+              >
                 <q-item-section side>
                   <q-icon name="settings"></q-icon>
                 </q-item-section>
                 <q-item-section> {{ t('settings') }} </q-item-section>
               </q-item>
-              <q-item clickable @click="store.logout">
+              <q-item v-close-popup clickable @click="store.logout">
                 <q-item-section side>
                   <q-icon name="logout"></q-icon>
                 </q-item-section>
@@ -80,7 +78,13 @@
       </q-toolbar>
     </q-header>
     <!-- Left Drawer -->
-    <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" side="left">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      :width="250"
+      side="left"
+      bordered
+    >
       <q-list>
         <q-item-label header>
           <q-img

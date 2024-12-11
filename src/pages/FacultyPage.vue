@@ -57,6 +57,16 @@
         </template>
       </q-tree>
     </q-card>
+    <!-- pagination -->
+    <div class="flex q-my-lg" v-show="store.getMaxPage > 1">
+      <q-pagination
+        class="q-mx-auto"
+        v-model="store.pagination!.page!"
+        @update:model-value="store.fetchData()"
+        :max="store.getMaxPage"
+        direction-links
+      />
+    </div>
     <!-- Dialog -->
     <DialogForm
       :title="store.titleForm"
