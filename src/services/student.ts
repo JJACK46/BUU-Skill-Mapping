@@ -2,7 +2,6 @@ import { Student } from 'src/types/student';
 import { api } from 'boot/axios';
 import { PageParams } from 'src/types/pagination';
 export class StudentService {
-
   static async postImportedStudents(items: unknown) {
     const res = await api.post(`${this.path}/import`, items);
     return res.data;
@@ -19,6 +18,11 @@ export class StudentService {
 
   static async getOne(id: number) {
     const res = await api.get(`${this.path}/${id}`);
+    return res.data;
+  }
+
+  static async getSkillTree(id: number) {
+    const res = await api.get(`${this.path}/skill-tree/${id}`);
     return res.data;
   }
 
