@@ -27,7 +27,6 @@ export const useSkillStore = defineStore('skill', {
     totalSkills: 0,
     qNotify: Notify,
     onlyHaveSubs: true,
-    onlyHaveSubs: true,
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
