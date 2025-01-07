@@ -165,26 +165,31 @@ useMeta({
     >
       <template #body>
         <q-input
+          v-model="store.form.id"
+          label="ID"
+          outlined
+          readonly
+          hint="Readonly"
+        />
+        <q-input
+          type="email"
           outlined
           v-model="store.form.email"
           label="Email *"
           :rules="[requireField]"
         />
-        <div>
-          <q-input
-            type="password"
-            outlined
-            v-model="store.form.password"
-            label="Password *"
-            :rules="[requireField]"
-          />
-        </div>
-
+        <q-input
+          type="password"
+          outlined
+          v-model="store.form.password"
+          label="Password *"
+          :rules="[requireField]"
+        />
         <q-select
-          :options="Object.values(UserRole)"
           outlined
           v-model="store.form.role"
           label="Role *"
+          :options="Object.values(UserRole)"
           :rules="[requireField]"
         />
       </template>
