@@ -8,7 +8,6 @@ import { useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { useI18n } from 'vue-i18n';
-import ContextMenu from 'src/components/ContextMenu.vue';
 
 const store = useSkillStore();
 const { t } = useI18n();
@@ -49,24 +48,53 @@ useMeta({
                 {{ props.node.name }}
               </span>
             </q-td>
-            <ContextMenu
-              :custom-create="{
-                label: t('insertSubSkill'),
-                icon: 'subdirectory_arrow_right',
-              }"
-              :create-fn="
-                () =>
-                  store.toggleDialog({
-                    title: 'Insert Sub-Skill',
-                    parentId: props.node.id,
-                  })
-              "
-              :edit-fn="
-                () =>
-                  store.toggleDialog({ form: props.node, title: 'Edit Skill' })
-              "
-              :delete-fn="() => store.handleRemove({ id: props.node.id })"
-            ></ContextMenu>
+            <!-- Context Menu -->
+            <q-menu context-menu touch-position auto-close>
+              <q-list dense style="min-width: 100px">
+                <q-item
+                  clickable
+                  @click="
+                    store.toggleDialog({
+                      title: 'Insert Sub-Skill',
+                      parentId: props.node.id,
+                    })
+                  "
+                >
+                  <q-item-section side>
+                    <q-icon
+                      size="16px"
+                      name="subdirectory_arrow_right"
+                    ></q-icon>
+                  </q-item-section>
+                  <q-item-section>{{ t('insertSubSkill') }}</q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="
+                    store.toggleDialog({
+                      form: props.node,
+                      title: 'Edit Skill',
+                    })
+                  "
+                >
+                  <q-item-section>Edit</q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="store.handleRemove({ id: props.node.id })"
+                >
+                  <q-item-section>Delete</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section side>
+                    <q-icon size="16px" name="close"></q-icon>
+                  </q-item-section>
+                  <q-item-section>{{ t('quit') }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
           </q-tr>
         </template>
       </q-tree>
