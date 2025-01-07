@@ -29,7 +29,9 @@ export const useCurriculumStore = defineStore('curriculum', {
   },
   actions: {
     async fetchData() {
-      const { data, total } = (await CurriculumService.getAll(convertToPageParams(this.pagination, this.search, this.filterModel)));
+      const { data, total } = await CurriculumService.getAll(
+        convertToPageParams(this.pagination, this.search, this.filterModel)
+      );
       this.curriculums = data;
       this.pagination!.rowsNumber = total || 0;
     },
@@ -47,7 +49,10 @@ export const useCurriculumStore = defineStore('curriculum', {
     async handleSave() {
       const ok = await CurriculumService.createOne(this.form);
       if (ok) {
-        this.qNotify.create({ type: 'ok', message: 'Curriculum created successfully' });
+        this.qNotify.create({
+          type: 'ok',
+          message: 'Curriculum created successfully',
+        });
         this.router.push('/curriculums');
         this.dialogState = false;
         this.resetForm();
@@ -103,7 +108,10 @@ export const useCurriculumStore = defineStore('curriculum', {
     async removeCurriculum(id: string) {
       const ok = await CurriculumService.removeOne(id);
       if (ok) {
-        this.qNotify.create({ type: 'ok', message: 'Curriculum removed successfully' });
+        this.qNotify.create({
+          type: 'ok',
+          message: 'Curriculum removed successfully',
+        });
         this.fetchData();
       }
     },

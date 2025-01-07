@@ -45,6 +45,10 @@
             :edit-fn="() => store.handleOpenDialog(props.row)"
             :delete-fn="() => store.removeCurriculum(props.row.id)"
           ></ContextMenu>
+          <ContextMenu
+            :edit-fn="() => store.handleOpenDialog(props.row)"
+            :delete-fn="() => store.removeCurriculum(props.row.id)"
+          ></ContextMenu>
         </q-tr>
       </template>
     </q-table>
