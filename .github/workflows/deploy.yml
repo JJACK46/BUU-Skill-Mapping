@@ -1,0 +1,47 @@
+name: Deploy Quasar Frontend
+
+on:
+  push:
+    branches:
+      - master  # Adjust for your deployment branch
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Quasar
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: production
+
+    steps:
+    # Checkout Code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Setup Bun
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+
+    # Install Dependencies
+    - name: Install dependencies
+      run: bun install
+
+    # Build Quasar
+    - name: Build Quasar
+      run: |
+        bunx quasar build -m pwa
+
+    # Deploy to Server
+    - name: Deploy Quasar to Server
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+        rsync -avz --delete dist/pwa/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/frontend
+        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo systemctl restart nginx"
