@@ -1,5 +1,5 @@
-import { Instructor } from 'src/types/instructor';
-import { PageParams } from 'src/types/pagination';
+import type { Instructor } from 'src/types/instructor';
+import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
 export class InstructorService {

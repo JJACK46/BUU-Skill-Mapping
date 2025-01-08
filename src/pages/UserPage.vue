@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { QTableColumn, useMeta } from 'quasar';
+import type { QTableColumn } from 'quasar';
+import { useMeta } from 'quasar';
 import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/Header/main-header.vue';
@@ -42,7 +43,7 @@ watch(
   () => store.search,
   () => {
     store.fetchData();
-  }
+  },
 );
 
 useMeta({
@@ -109,11 +110,13 @@ useMeta({
           dense
           flat
           :disable="scope.isFirstPage"
-          @click="() => {
-            store.pagination!.page! = 1
-            store.fetchData()
-            scope.firstPage
-          }"
+          @click="
+            () => {
+              store.pagination!.page! = 1;
+              store.fetchData();
+              scope.firstPage;
+            }
+          "
         />
         <q-btn
           icon="chevron_left"
@@ -122,11 +125,13 @@ useMeta({
           dense
           flat
           :disable="scope.isFirstPage"
-          @click="() => {
-          store.pagination!.page!--
-          store.fetchData()
-          scope.prevPage
-        }"
+          @click="
+            () => {
+              store.pagination!.page!--;
+              store.fetchData();
+              scope.prevPage;
+            }
+          "
         />
         <q-btn
           icon="chevron_right"
@@ -135,11 +140,13 @@ useMeta({
           dense
           flat
           :disable="scope.isLastPage"
-          @click="() => {
-          store.pagination!.page!++
-          store.fetchData()
-          scope.nextPage
-        }"
+          @click="
+            () => {
+              store.pagination!.page!++;
+              store.fetchData();
+              scope.nextPage;
+            }
+          "
         />
         <q-btn
           v-if="scope.pagesNumber > 2"
@@ -149,11 +156,13 @@ useMeta({
           dense
           flat
           :disable="scope.isLastPage"
-          @click="() => {
-            store.pagination!.page! = scope.pagesNumber
-            store.fetchData()
-            scope.lastPage
-          }"
+          @click="
+            () => {
+              store.pagination!.page! = scope.pagesNumber;
+              store.fetchData();
+              scope.lastPage;
+            }
+          "
         />
       </template>
     </q-table>
@@ -165,26 +174,31 @@ useMeta({
     >
       <template #body>
         <q-input
+          v-model="store.form.id"
+          label="ID"
+          outlined
+          readonly
+          hint="Readonly"
+        />
+        <q-input
+          type="email"
           outlined
           v-model="store.form.email"
           label="Email *"
           :rules="[requireField]"
         />
-        <div>
-          <q-input
-            type="password"
-            outlined
-            v-model="store.form.password"
-            label="Password *"
-            :rules="[requireField]"
-          />
-        </div>
-
+        <q-input
+          type="password"
+          outlined
+          v-model="store.form.password"
+          label="Password *"
+          :rules="[requireField]"
+        />
         <q-select
-          :options="Object.values(UserRole)"
           outlined
           v-model="store.form.role"
           label="Role *"
+          :options="Object.values(UserRole)"
           :rules="[requireField]"
         />
       </template>

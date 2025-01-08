@@ -119,13 +119,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { QTableColumn, useMeta } from 'quasar';
+import type { QTableColumn } from 'quasar';
+import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTeacherStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
 import { requireField } from 'src/utils/field-rules';
-import { Branch } from 'src/types/branch';
+import type { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/types/position.enum';
 import { useGlobalStore } from 'src/stores/global';
 import { BranchService } from 'src/services/branches';

@@ -7,7 +7,7 @@
         <q-icon name="push_pin"></q-icon> {{ t('courses') }}
       </div>
       <div class="row q-gutter-lg">
-        <CourseCard v-for="index in 3" :key="index" :course="({} as Course)" />
+        <CourseCard v-for="index in 3" :key="index" :course="{} as Course" />
       </div>
     </section>
     <q-separator class="q-my-md" />
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import CourseCard from 'src/components/CourseCard.vue';
 import { useAuthStore } from 'src/stores/auth';
-import { Course } from 'src/types/course';
+import type { Course } from 'src/types/course';
 import { useI18n } from 'vue-i18n';
 
 const user = useAuthStore();

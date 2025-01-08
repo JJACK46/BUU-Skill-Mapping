@@ -88,13 +88,13 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Faculty } from 'src/types/faculty';
-import { Branch } from 'src/types/branch';
-import { Curriculum } from 'src/types/curriculum';
-import { Subject } from 'src/types/subject';
-import { Skill } from 'src/types/skill';
+import type { Faculty } from 'src/types/faculty';
+import type { Branch } from 'src/types/branch';
+import type { Curriculum } from 'src/types/curriculum';
+import type { Subject } from 'src/types/subject';
+import type { Skill } from 'src/types/skill';
 import { api } from 'src/boot/axios';
-import { PageParams } from 'src/types/pagination';
+import type { PageParams } from 'src/types/pagination';
 
 const props = defineProps<{
   fetchData: (pageParams?: PageParams) => void;

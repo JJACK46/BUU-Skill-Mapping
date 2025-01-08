@@ -1,4 +1,4 @@
-import { QTableProps } from 'quasar';
+import type { QTableProps } from 'quasar';
 
 export const mockRows = [
   {

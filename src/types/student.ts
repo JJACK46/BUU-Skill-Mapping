@@ -1,7 +1,7 @@
-import { Branch } from './branch';
-import { CourseEnrollment } from './course';
-import { SkillCollection } from './skill-collection';
-import { SocialForm } from './social';
+import type { Branch } from './branch';
+import type { CourseEnrollment } from './course';
+import type { SkillCollection } from './skill-collection';
+import type { SocialForm } from './social';
 
 export interface Student {
   id?: number;

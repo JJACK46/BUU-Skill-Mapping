@@ -45,6 +45,10 @@
             :edit-fn="() => store.handleOpenDialog(props.row)"
             :delete-fn="() => store.removeCurriculum(props.row.id)"
           ></ContextMenu>
+          <ContextMenu
+            :edit-fn="() => store.handleOpenDialog(props.row)"
+            :delete-fn="() => store.removeCurriculum(props.row.id)"
+          ></ContextMenu>
         </q-tr>
       </template>
     </q-table>
@@ -52,13 +56,14 @@
 </template>
 
 <script lang="ts" setup>
-import { QTableColumn, useMeta } from 'quasar';
+import type { QTableColumn } from 'quasar';
+import { useMeta } from 'quasar';
 import MainHeader from 'src/components/Header/main-header.vue';
 import { CurriculumService } from 'src/services/curriculums';
 import { SubjectService } from 'src/services/subject';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { Curriculum } from 'src/types/curriculum';
-import { Subject } from 'src/types/subject';
+import type { Curriculum } from 'src/types/curriculum';
+import type { Subject } from 'src/types/subject';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';

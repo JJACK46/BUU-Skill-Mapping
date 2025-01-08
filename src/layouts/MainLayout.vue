@@ -140,9 +140,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import MenuLink, { LinkProps } from 'components/MenuLink.vue';
+import type { LinkProps } from 'components/MenuLink.vue';
+import MenuLink from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils/app';
-import { Payload } from 'src/types/payload';
+import type { Payload } from 'src/types/payload';
 import { useAuthStore } from 'src/stores/auth';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
@@ -156,7 +157,7 @@ watch(
   (val) => {
     dark.set(val);
     LocalStorage.set('theme', val ? 'dark' : 'light');
-  }
+  },
 );
 const auth = useAuthStore();
 const { t, locale } = useI18n();
@@ -176,7 +177,7 @@ function changeLocale() {
   }
 }
 const getThemeIcon = computed(() =>
-  dark.isActive ? 'dark_mode' : 'light_mode'
+  dark.isActive ? 'dark_mode' : 'light_mode',
 );
 
 const router = useRouter();

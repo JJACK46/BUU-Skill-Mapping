@@ -1,8 +1,8 @@
-import { Branch } from './branch';
-import { Course } from './course';
-import { Curriculum } from './curriculum';
-import { SocialForm } from './social';
-import { User } from './user';
+import type { Branch } from './branch';
+import type { Course } from './course';
+import type { Curriculum } from './curriculum';
+import type { SocialForm } from './social';
+import type { User } from './user';
 
 export interface Instructor {
   id?: number;

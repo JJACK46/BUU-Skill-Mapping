@@ -1,6 +1,6 @@
-import { Branch } from 'src/types/branch';
+import type { Branch } from 'src/types/branch';
 import { api } from 'boot/axios';
-import { PageParams } from 'src/types/pagination';
+import type { PageParams } from 'src/types/pagination';
 import { HttpStatusCode } from 'axios';
 export class BranchService {
   static path = 'branches';
@@ -21,7 +21,7 @@ export class BranchService {
     const dto = {
       facultyId: obj.faculty?.id,
       ...obj,
-    }
+    };
     const res = await api.post(this.path, dto);
     return res.status === HttpStatusCode.Created;
   }
@@ -30,7 +30,7 @@ export class BranchService {
     const dto = {
       facultyId: obj.faculty?.id,
       ...obj,
-    }
+    };
     const res = await api.patch(`${this.path}/${obj.id}`, dto);
     return res.status === HttpStatusCode.Ok;
   }

@@ -1,22 +1,33 @@
 <template>
-  <q-page class="flex flex-center bg-custom">
+  <q-page class="flex flex-center">
     <span>
-      <q-card class="q-animate--fade bg-transparent" flat dark>
-        <q-card-section class="justify-around items-center row q-gutter-x-lg">
+      <q-card
+        :class="`q-animate--fade q-pa-lg  ${
+          $q.screen.lt.md ? 'bg-transparent' : ''
+        }`"
+        flat
+        :style="{ borderRadius: '20px' }"
+      >
+        <q-card-section class="justify-around row q-gutter-x-lg">
           <q-card-section class="text-white">
-            <q-img
-              src="logos/buu-dark.png"
-              alt="buu"
-              height="200px"
-              width="300px"
-              fit="contain"
+            <div>
+              <q-img
+                src="logos/buu-dark.png"
+                alt="buu"
+                height="auto"
+                width="100px"
+                fit="contain"
+              >
+              </q-img>
+            </div>
+            <div
+              class="text-uppercase text-center"
+              :style="{ fontSize: $q.screen.lt.sm ? '2.6rem' : '3.5rem' }"
             >
-            </q-img>
-            <div class="q-mt-md text-h6" style="line-height: 1.1">
-              Skill Mapping <br />
-              <span class="text-caption">
-                {{ __APP_VERSION }}
-              </span>
+              Skill Mapping
+            </div>
+            <div>
+              {{ __APP_VERSION }}
             </div>
           </q-card-section>
 
@@ -83,8 +94,8 @@
           </q-card-section>
         </q-card-section>
       </q-card>
-      <p class="text-caption text-center">
-        &copy; 2024 Burapha University. All Rights Reserved.
+      <p class="text-center q-mt-lg">
+        &copy; 2025 Burapha University. All Rights Reserved.
       </p>
     </span>
   </q-page>
@@ -139,11 +150,11 @@ const handleLogin = () => {
   }
 }
 
-.bg-custom {
+/* .bg-custom {
   position: relative;
   background: linear-gradient(135deg, #3d3d3d, #1a1a1a, #face00);
   background-size: 200% 200%;
   animation: gradientMove 15s ease-in-out infinite;
   overflow: hidden;
-}
+} */
 </style>

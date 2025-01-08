@@ -74,8 +74,8 @@
 
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
-import { Faculty } from 'src/types/faculty';
-import { FilterModel } from 'src/types/filter';
+import type { Faculty } from 'src/types/faculty';
+import type { FilterModel } from 'src/types/filter';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -118,13 +118,13 @@ const handleChangeFaculty = (val: string) => {
 
 function filterFaculty(
   val: string,
-  callback: (updateFn: () => void) => void
+  callback: (updateFn: () => void) => void,
   // abort: () => void
 ): void {
   callback(() => {
     const needle = val.toLowerCase();
     facultyOptions.value = strFacultyOptions.value.filter(
-      (v) => v?.toLowerCase().indexOf(needle) > -1
+      (v) => v?.toLowerCase().indexOf(needle) > -1,
     );
   });
 }
@@ -138,13 +138,13 @@ function setModelBranch(val: string) {
 }
 function filterBranch(
   val: string,
-  callback: (updateFn: () => void) => void
+  callback: (updateFn: () => void) => void,
   // abort: () => void
 ): void {
   callback(() => {
     const needle = val.toLowerCase();
     branchOptions.value = strBranchOptions.value.filter(
-      (v) => v.toLowerCase().indexOf(needle) > -1
+      (v) => v.toLowerCase().indexOf(needle) > -1,
     );
   });
 }

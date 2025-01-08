@@ -200,7 +200,8 @@
 </template>
 
 <script lang="ts" setup>
-import { QTableColumn, useMeta } from 'quasar';
+import type { QTableColumn } from 'quasar';
+import { useMeta } from 'quasar';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import DialogForm from 'src/components/DialogForm.vue';
@@ -227,7 +228,7 @@ watch(
     } else {
       formValid.value = false;
     }
-  }
+  },
 );
 
 const columns = ref<QTableColumn[]>([

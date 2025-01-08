@@ -73,7 +73,7 @@
 import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FilterBtn from './filter-btn.vue';
-import { FilterModel } from 'src/types/filter';
+import type { FilterModel } from 'src/types/filter';
 
 const { t } = useI18n();
 
@@ -101,7 +101,7 @@ watch(
     if (!v || v.length === 0) {
       emit('enterSearch');
     }
-  }
+  },
 );
 
 watch(
@@ -111,6 +111,6 @@ watch(
       emit('enterSearch');
     }
   },
-  { deep: true }
+  { deep: true },
 );
 </script>

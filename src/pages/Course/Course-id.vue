@@ -152,32 +152,34 @@
               flat
               dense
               separator="cell"
-              :columns="([
-              {
-                name: 'name',
-                label: 'Name',
-                field: (s) => s.skillExpectedLevels?.skill?.name,
-                align: 'left'
-              },
-              {
-                name: 'level',
-                label: 'Gained Level',
-                field: (s) => s.gainedLevel ?? 0,
-                align: 'left'
-              },
-              {
-                name: 'exp-level',
-                label: 'Expected Level',
-                field: (s) => s.skillExpectedLevels.expectedLevel,
-                align: 'left'
-              },
-              {
-                name: 'result',
-                label: 'Result',
-                field: 'passed',
-                align: 'left'
-              },
-            ] as QTableColumn<SkillCollection>[])"
+              :columns="
+                [
+                  {
+                    name: 'name',
+                    label: 'Name',
+                    field: (s) => s.skillExpectedLevels?.skill?.name,
+                    align: 'left',
+                  },
+                  {
+                    name: 'level',
+                    label: 'Gained Level',
+                    field: (s) => s.gainedLevel ?? 0,
+                    align: 'left',
+                  },
+                  {
+                    name: 'exp-level',
+                    label: 'Expected Level',
+                    field: (s) => s.skillExpectedLevels.expectedLevel,
+                    align: 'left',
+                  },
+                  {
+                    name: 'result',
+                    label: 'Result',
+                    field: 'passed',
+                    align: 'left',
+                  },
+                ] as QTableColumn<SkillCollection>[]
+              "
               :rows="props.row.skillCollections || []"
               row-key="id"
             >
@@ -223,14 +225,14 @@
 </template>
 
 <script lang="ts" setup>
-import { QTableColumn } from 'quasar';
+import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { CourseService } from 'src/services/course';
 import { useCourseStore } from 'src/stores/course';
-import { CourseEnrollment } from 'src/types/course';
-import { SkillCollection } from 'src/types/skill-collection';
-import { SkillExpectedLevel } from 'src/types/skill-exp-lvl';
+import type { CourseEnrollment } from 'src/types/course';
+import type { SkillCollection } from 'src/types/skill-collection';
+import type { SkillExpectedLevel } from 'src/types/skill-exp-lvl';
 import { downloadTemplateForStudents } from 'src/utils/file-template';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -252,12 +254,12 @@ watch(
     if (evaluationMode.value) {
       expanded.value = Array.from(
         { length: enrollments.value.length },
-        (_, i) => i + 1
+        (_, i) => i + 1,
       );
     } else {
       expanded.value = [];
     }
-  }
+  },
 );
 
 const computeResult = computed(() => (sk: SkillCollection) => {
@@ -288,7 +290,7 @@ async function fetchCourse() {
     store.course = res;
   });
   await CourseService.getEnrollment(store.getCourseId).then(
-    (res) => (enrollments.value = res)
+    (res) => (enrollments.value = res),
   );
 }
 
@@ -300,10 +302,11 @@ const skillTree = ref();
 
 onMounted(async () => {
   filterStudent.value = '';
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   route.params.id && store.setCourseId(String(route.params.id));
   await fetchCourse();
   skillTree.value = makeSkillTree(
-    store.course.subject?.skillExpectedLevels || []
+    store.course.subject?.skillExpectedLevels || [],
   );
 });
 

@@ -1,22 +1,21 @@
 import { defineStore } from 'pinia';
-import { QTableProps } from 'quasar';
+import type { QTableProps } from 'quasar';
 import { InstructorService } from 'src/services/instructor';
-import { PageParams } from 'src/types/pagination';
-import { Instructor } from 'src/types/instructor';
+import type { PageParams } from 'src/types/pagination';
+import type { Instructor } from 'src/types/instructor';
 
 export const useTeacherStore = defineStore('teacher', {
   state: () => ({
     dialogState: false,
     search: '',
     pagination: {
-      rowsPerPage: 10
+      rowsPerPage: 10,
     } as QTableProps['pagination'],
     form: {} as Partial<Instructor>,
     teachers: [] as Instructor[],
   }),
 
-  getters: {
-  },
+  getters: {},
 
   actions: {
     async setup() {
@@ -34,7 +33,6 @@ export const useTeacherStore = defineStore('teacher', {
         search: this.search || '',
       } as PageParams;
       this.teachers = (await InstructorService.getAll(req)).data;
-
     },
 
     async handleSave() {
@@ -48,6 +46,5 @@ export const useTeacherStore = defineStore('teacher', {
     toggleDialog() {
       this.dialogState = !this.dialogState;
     },
-
   },
 });

@@ -1,7 +1,7 @@
-import { SkillCollection } from './skill-collection';
-import { Student } from './student';
-import { Subject } from './subject';
-import { Instructor } from './instructor';
+import type { SkillCollection } from './skill-collection';
+import type { Student } from './student';
+import type { Subject } from './subject';
+import type { Instructor } from './instructor';
 
 export interface Course {
   id?: string;
