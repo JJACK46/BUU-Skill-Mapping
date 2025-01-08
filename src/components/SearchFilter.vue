@@ -33,12 +33,12 @@
               clearable
               @update:model-value="handleChangeFaculty"
               @clear="
-                (selectedFaculty = null),
-                  (selectedBranch = null),
-                  (selectedCurriculum = null),
-                  (selectedSubject = null),
-                  (selectedSkill = null),
-                  fetchData({ ...pageParams, columnName: '', columnId: '' })
+                ((selectedFaculty = null),
+                (selectedBranch = null),
+                (selectedCurriculum = null),
+                (selectedSubject = null),
+                (selectedSkill = null),
+                fetchData({ ...pageParams, columnName: '', columnId: '' }))
               "
               outlined
               style="height: 55px; min-width: 150px"
@@ -53,11 +53,11 @@
               @update:model-value="handleChangeBranch"
               clearable
               @clear="
-                (selectedBranch = null),
-                  (selectedCurriculum = null),
-                  (selectedSubject = null),
-                  (selectedSkill = null),
-                  fetchData({ ...pageParams, columnName: '', columnId: '' })
+                ((selectedBranch = null),
+                (selectedCurriculum = null),
+                (selectedSubject = null),
+                (selectedSkill = null),
+                fetchData({ ...pageParams, columnName: '', columnId: '' }))
               "
               label="Branch"
               outlined
@@ -72,14 +72,14 @@
               @update:model-value="handleChangeCurriculum"
               clearable
               @clear="
-                (selectedCurriculum = null),
-                  (selectedSubject = null),
-                  (selectedSkill = null),
-                  fetchData({
-                    ...pageParams,
-                    columnName: 'branch',
-                    columnId: selectedBranch.id,
-                  })
+                ((selectedCurriculum = null),
+                (selectedSubject = null),
+                (selectedSkill = null),
+                fetchData({
+                  ...pageParams,
+                  columnName: 'branch',
+                  columnId: selectedBranch.id,
+                }))
               "
               label="Curriculum"
               outlined
@@ -94,13 +94,13 @@
               @update:model-value="handleChangeSubject"
               clearable
               @clear="
-                (selectedSubject = null),
-                  (selectedSkill = null),
-                  fetchData({
-                    ...pageParams,
-                    columnName: 'curriculum',
-                    columnId: selectedCurriculum.id,
-                  })
+                ((selectedSubject = null),
+                (selectedSkill = null),
+                fetchData({
+                  ...pageParams,
+                  columnName: 'curriculum',
+                  columnId: selectedCurriculum.id,
+                }))
               "
               label="Subject"
               outlined
@@ -114,13 +114,13 @@
               :option-label="(item) => `${item.name || ''}`"
               clearable
               @clear="
-                (selectedSubject = null),
-                  (selectedSkill = null),
-                  fetchData({
-                    ...pageParams,
-                    columnName: 'subject',
-                    columnId: selectedSubject.id,
-                  })
+                ((selectedSubject = null),
+                (selectedSkill = null),
+                fetchData({
+                  ...pageParams,
+                  columnName: 'subject',
+                  columnId: selectedSubject.id,
+                }))
               "
               label="Skill"
               outlined
@@ -190,13 +190,13 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Faculty } from 'src/types/faculty';
-import { Branch } from 'src/types/branch';
-import { Curriculum } from 'src/types/curriculum';
-import { Subject } from 'src/types/subject';
-import { Skill } from 'src/types/skill';
+import type { Faculty } from 'src/types/faculty';
+import type { Branch } from 'src/types/branch';
+import type { Curriculum } from 'src/types/curriculum';
+import type { Subject } from 'src/types/subject';
+import type { Skill } from 'src/types/skill';
 import { api } from 'src/boot/axios';
-import { PageParams } from 'src/types/pagination';
+import type { PageParams } from 'src/types/pagination';
 
 const props = defineProps<{
   fetchData: (pageParams?: PageParams) => void;

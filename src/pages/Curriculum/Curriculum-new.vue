@@ -294,13 +294,13 @@ import { InstructorService } from 'src/services/instructor';
 import { SubjectService } from 'src/services/subject';
 import { BranchService } from 'src/services/branches';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { Instructor } from 'src/types/instructor';
-import { Subject } from 'src/types/subject';
+import type { Instructor } from 'src/types/instructor';
+import type { Subject } from 'src/types/subject';
 import { onlyAlphabet, requireField } from 'src/utils/field-rules';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { Branch } from 'src/types/branch';
+import type { Branch } from 'src/types/branch';
 
 const router = useRouter();
 const subjects = ref<Subject[]>();

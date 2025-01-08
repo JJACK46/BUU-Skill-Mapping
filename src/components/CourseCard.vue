@@ -56,7 +56,7 @@
 
 <script lang="ts" setup>
 import { useGlobalStore } from 'src/stores/global';
-import { Course } from 'src/types/course';
+import type { Course } from 'src/types/course';
 import { useI18n } from 'vue-i18n';
 
 const global = useGlobalStore();

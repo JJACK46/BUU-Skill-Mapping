@@ -84,7 +84,7 @@
           label="Date Enrolled"
           readonly
           outlined
-          v-model="(store.formStudent.dateEnrollment as string)"
+          v-model="store.formStudent.dateEnrollment as string"
         >
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
@@ -112,13 +112,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { QTableColumn, useMeta } from 'quasar';
+import type { QTableColumn } from 'quasar';
+import { useMeta } from 'quasar';
 import { computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStudentStore } from 'src/stores/student';
 import { requireField } from 'src/utils/field-rules';
 import { BranchService } from 'src/services/branches';
-import { Branch } from 'src/types/branch';
+import type { Branch } from 'src/types/branch';
 import DialogForm from 'src/components/DialogForm.vue';
 import { StudentService } from 'src/services/student';
 

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { Dialog } from 'quasar';
 import { UserService } from 'src/services/user';
-import { User } from 'src/types/user';
+import type { User } from 'src/types/user';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 type TitleForm = 'New User' | 'Edit User' | 'Delete User';
 
@@ -21,7 +21,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async fetchData() {
       const { data, total } = await UserService.getAll(
-        convertToPageParams(this.pagination, this.search)
+        convertToPageParams(this.pagination, this.search),
       );
       this.users = data;
       this.pagination = { ...this.pagination, rowsNumber: total };

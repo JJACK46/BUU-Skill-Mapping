@@ -77,8 +77,8 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue';
-import { QTreeProps } from 'quasar';
-import { Skill } from 'src/types/skill';
+import type { QTreeProps } from 'quasar';
+import type { Skill } from 'src/types/skill';
 
 const props = defineProps<{
   skills: Skill[];
@@ -111,7 +111,7 @@ const options = <QTreeProps['nodes']>[
 
 const formatToNodes = (skills: Skill[]): QTreeProps['nodes'] => {
   return skills.map((skill) => {
-    let node = {
+    const node = {
       label: skill.name,
       children: [] as QTreeProps['nodes'], // Initialize children as empty
     };
@@ -132,6 +132,6 @@ watch(
   () => props.skills,
   (val) => {
     nodes.value = formatToNodes(val);
-  }
+  },
 );
 </script>

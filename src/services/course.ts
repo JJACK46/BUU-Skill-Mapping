@@ -1,6 +1,6 @@
-import { Course } from 'src/types/course';
+import type { Course } from 'src/types/course';
 import { api } from 'boot/axios';
-import { PageParams } from 'src/types/pagination';
+import type { PageParams } from 'src/types/pagination';
 
 export class CourseService {
   static path = 'courses';
@@ -8,7 +8,7 @@ export class CourseService {
   static async importStudents(id: string, studentListId: string[]) {
     const res = await api.patch(
       `${this.path}/${id}/import-students`,
-      studentListId
+      studentListId,
     );
     return res.data;
   }

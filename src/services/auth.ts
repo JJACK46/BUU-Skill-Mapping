@@ -1,6 +1,6 @@
 import { api } from 'boot/axios';
-import { AxiosResponse } from 'axios';
-import { Payload } from 'src/types/payload';
+import type { AxiosResponse } from 'axios';
+import type { Payload } from 'src/types/payload';
 
 class AuthService {
   static async login(email: string, password: string): Promise<AxiosResponse> {

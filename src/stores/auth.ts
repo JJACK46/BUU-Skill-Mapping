@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { UserRole } from 'src/enums/roles';
 import AuthService from 'src/services/auth';
-import { Payload } from 'src/types/payload';
+import type { Payload } from 'src/types/payload';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({

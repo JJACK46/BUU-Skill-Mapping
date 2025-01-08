@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -62,17 +62,6 @@ const routes: RouteRecordRaw[] = [
         path: 'new',
         name: 'New Curriculum',
         component: () => import('src/pages/Curriculum/Curriculum-new.vue'),
-      },
-    ],
-  },
-  {
-    path: '/addcurriculums',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '',
-        name: 'ADD Curriculum',
-        component: () => import('pages/Curriculum/AddCurriculumPage.vue'),
       },
     ],
   },

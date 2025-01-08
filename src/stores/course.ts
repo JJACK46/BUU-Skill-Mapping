@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { CourseService } from 'src/services/course';
-import { Course } from 'src/types/course';
+import type { Course } from 'src/types/course';
 
 export const useCourseStore = defineStore('course', {
   state: () => ({
@@ -13,7 +13,7 @@ export const useCourseStore = defineStore('course', {
   getters: {
     getCourseId(state) {
       return state.course.id || '';
-    }
+    },
   },
   actions: {
     async fetchData() {
@@ -30,6 +30,6 @@ export const useCourseStore = defineStore('course', {
     },
     setCourseId(id: string) {
       this.course.id = id;
-    }
+    },
   },
 });

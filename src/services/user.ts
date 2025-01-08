@@ -1,5 +1,5 @@
-import { User } from 'src/types/user';
-import { PageParams } from 'src/types/pagination';
+import type { User } from 'src/types/user';
+import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 
 export class UserService {

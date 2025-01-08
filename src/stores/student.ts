@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { StudentService } from 'src/services/student';
-import { Student } from 'src/types/student';
+import type { Student } from 'src/types/student';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 type TitleForm = 'New Student' | 'Edit Student';
@@ -21,7 +21,7 @@ export const useStudentStore = defineStore('student', {
   actions: {
     async fetchData() {
       const { data } = await StudentService.fetchData(
-        convertToPageParams(this.pagination)
+        convertToPageParams(this.pagination),
       );
       this.students = data;
     },

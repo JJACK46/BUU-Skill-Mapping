@@ -1,6 +1,6 @@
-import { PageParams } from 'src/types/pagination';
+import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
-import { Subject } from 'src/types/subject';
+import type { Subject } from 'src/types/subject';
 import { HttpStatusCode } from 'axios';
 
 export class SubjectService {
@@ -29,7 +29,7 @@ export class SubjectService {
       const res = await api.patch(`${this.path}/${obj.id}`, obj);
       return res.status === HttpStatusCode.Ok;
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 

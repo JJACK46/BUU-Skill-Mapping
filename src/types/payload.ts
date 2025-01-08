@@ -1,8 +1,8 @@
-import { UserRole } from 'src/enums/roles';
+import type { UserRole } from 'src/enums/roles';
 
 export interface Payload {
   id: string;
-  name: string
+  name: string;
   email: string;
   role: UserRole;
   avatarUrl: string;

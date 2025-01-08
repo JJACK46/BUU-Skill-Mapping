@@ -1,5 +1,5 @@
-import { SkillExpectedLevel } from './skill-exp-lvl';
-import { SubjectType } from './subjectType.enum';
+import type { SkillExpectedLevel } from './skill-exp-lvl';
+import type { SubjectType } from './subjectType.enum';
 
 export interface Subject {
   id?: number;

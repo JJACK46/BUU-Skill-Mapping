@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import SkillService from 'src/services/skill';
-import { Skill } from 'src/types/skill';
+import type { Skill } from 'src/types/skill';
 import { Dialog, Notify } from 'quasar';
 import {
   calMaxPage,
@@ -43,7 +43,7 @@ export const useSkillStore = defineStore('skill', {
   actions: {
     async fetchData() {
       const { data, total } = await SkillService.getAll(
-        convertToPageParams(this.pagination, this.search)
+        convertToPageParams(this.pagination, this.search),
       );
       this.skills = data;
       this.totalSkills = total;

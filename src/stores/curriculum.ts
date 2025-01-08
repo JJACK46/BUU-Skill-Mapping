@@ -3,8 +3,8 @@ import { Dialog, Notify } from 'quasar';
 import { CurriculumService } from 'src/services/curriculums';
 import { InstructorService } from 'src/services/instructor';
 import { SubjectService } from 'src/services/subject';
-import { Curriculum } from 'src/types/curriculum';
-import { FilterModel } from 'src/types/filter';
+import type { Curriculum } from 'src/types/curriculum';
+import type { FilterModel } from 'src/types/filter';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import { useRouter } from 'vue-router';
 type TitleForm = 'Edit Curriculum';
@@ -30,7 +30,7 @@ export const useCurriculumStore = defineStore('curriculum', {
   actions: {
     async fetchData() {
       const { data, total } = await CurriculumService.getAll(
-        convertToPageParams(this.pagination, this.search, this.filterModel)
+        convertToPageParams(this.pagination, this.search, this.filterModel),
       );
       this.curriculums = data;
       this.pagination!.rowsNumber = total || 0;
@@ -66,7 +66,7 @@ export const useCurriculumStore = defineStore('curriculum', {
             this.form.coordinators.map(async (coordinator) => {
               const id = coordinator.id ?? 0;
               return await InstructorService.getOne(id);
-            })
+            }),
           );
           this.form.coordinators = coordinatorsData;
           console.log('Updated Coordinators:', this.form.coordinators);
@@ -85,7 +85,7 @@ export const useCurriculumStore = defineStore('curriculum', {
             this.form.subjects.map(async (subject) => {
               const id = subject.id ?? 0;
               return await SubjectService.getOne(id);
-            })
+            }),
           );
           this.form.subjects = subjectsData;
           console.log('Updated Subjects:', this.form.subjects);

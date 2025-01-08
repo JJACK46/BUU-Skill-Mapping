@@ -1,6 +1,6 @@
-import { Branch } from './branch';
-import { Subject } from './subject';
-import { Instructor } from './instructor';
+import type { Branch } from './branch';
+import type { Subject } from './subject';
+import type { Instructor } from './instructor';
 export interface Curriculum {
   id: string;
   name: string;

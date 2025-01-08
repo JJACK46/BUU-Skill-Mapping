@@ -56,13 +56,14 @@
 
 <script lang="ts" setup>
 import { StudentService } from 'src/services/student';
-import { Student } from 'src/types/student';
+import type { Student } from 'src/types/student';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const student = ref<Student>({} as Student);
 
 onMounted(async () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   route.params.id && (student.value.id = Number(route.params.id));
   student.value = await StudentService.getOne(student.value.id ?? 0);
 });

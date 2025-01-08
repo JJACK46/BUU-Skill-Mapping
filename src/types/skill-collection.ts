@@ -1,6 +1,6 @@
-import { Skill } from './skill';
-import { SkillExpectedLevel } from './skill-exp-lvl';
-import { Subject } from './subject';
+import type { Skill } from './skill';
+import type { SkillExpectedLevel } from './skill-exp-lvl';
+import type { Subject } from './subject';
 
 export interface SkillCollection {
   id?: number;
@@ -10,7 +10,6 @@ export interface SkillCollection {
   gainedLevel: number;
   passed: boolean | null;
 }
-
 
 // export enum SkillLevel {
 //   Cognitive1 = '1 - Remember',

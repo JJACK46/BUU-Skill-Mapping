@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { QTableColumn } from 'quasar';
+import type { QTableColumn } from 'quasar';
 import { ref } from 'vue';
 import { read, utils, type WorkSheet } from 'xlsx';
 
@@ -79,8 +79,8 @@ const getRowsCols = (data: DataSet, sheetName: string): RowCol => {
 
 const makeDisplay =
   (col: number): RowCB =>
-    (row: Row) =>
-      `<span
+  (row: Row) =>
+    `<span
   style="user-select: none; display: block"
   onblur="endEdit(event)" ondblclick="startEdit(event)"
   position="${Math.floor(cell++ / columns.value.length)}.${col}"
@@ -165,7 +165,7 @@ function selectSheet(sheet: string): void {
 
 function dropBlankRow(rows: Row[]): Row[] {
   return rows.filter((row) =>
-    Object.values(row).some((v) => v !== null && v !== '')
+    Object.values(row).some((v) => v !== null && v !== ''),
   );
 }
 
@@ -177,10 +177,9 @@ defineProps<{
   hasTemplate?: true;
 }>();
 
-
 defineEmits<{
-  downloadTemplate: []
-}>()
+  downloadTemplate: [];
+}>();
 
 const dropZoneRef = ref<HTMLElement | null>(null);
 const isOverDropZone = ref(false);
@@ -213,24 +212,39 @@ function onDragLeave(event: DragEvent) {
     isOverDropZone.value = false;
   }
 }
-
-
 </script>
 
 <template>
   <div class="text-center" v-show="!currSheet">
-    <div class="text-blue-10 cursor-pointer q-my-md" @click="$emit('downloadTemplate')">
+    <div
+      class="text-blue-10 cursor-pointer q-my-md"
+      @click="$emit('downloadTemplate')"
+    >
       Example Template <q-icon name="download" />
     </div>
-    <div ref="dropZoneRef" style="border: 1px dashed #ccc;" :class="isOverDropZone ? 'bg-blue-1' : ''"
-      @dragenter="onDragEnter" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop" id="dropzone">
+    <div
+      ref="dropZoneRef"
+      style="border: 1px dashed #ccc"
+      :class="isOverDropZone ? 'bg-blue-1' : ''"
+      @dragenter="onDragEnter"
+      @dragover="onDragOver"
+      @dragleave="onDragLeave"
+      @drop="onDrop"
+      id="dropzone"
+    >
       <label for="upload" class="fit cursor-pointer">
         <div class="text-body1">
           <div>Drop item here or click</div>
           <q-icon name="upload_file" class="q-mr-xs q-mt-sm"></q-icon>
         </div>
       </label>
-      <input id="upload" class="hidden" type="file" @change="importFile" accept=".csv,.xlsx,.xlsb" />
+      <input
+        id="upload"
+        class="hidden"
+        type="file"
+        @change="importFile"
+        accept=".csv,.xlsx,.xlsb"
+      />
     </div>
     <!-- <div v-else class="q-mx-auto">
       <q-btn-dropdown color="secondary" label="Export" v-if="currFileName">
@@ -252,11 +266,24 @@ function onDragLeave(event: DragEvent) {
   </div>
 
   <div class="flex flex-center" v-show="currSheet.length > 0">
-    <q-select v-model="currSheet" :options="sheets" outlined @update:model-value="selectSheet" label="Select Sheet"
-      style="width: 300px" />
+    <q-select
+      v-model="currSheet"
+      :options="sheets"
+      outlined
+      @update:model-value="selectSheet"
+      label="Select Sheet"
+      style="width: 300px"
+    />
   </div>
-  <q-table v-show="currSheet" separator="cell" class="q-mt-sm" :rows="rows.slice(1)" :columns="buildHeaderItems()"
-    hide-bottom flat>
+  <q-table
+    v-show="currSheet"
+    separator="cell"
+    class="q-mt-sm"
+    :rows="rows.slice(1)"
+    :columns="buildHeaderItems()"
+    hide-bottom
+    flat
+  >
     <template #top>
       <div class="text-h6">Preview : {{ currSheet }}</div>
     </template>

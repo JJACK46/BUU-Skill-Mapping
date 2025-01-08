@@ -2,9 +2,13 @@ import { defineStore } from 'pinia';
 import { Dialog, Notify } from 'quasar';
 import { BranchService } from 'src/services/branches';
 import { FacultyService } from 'src/services/faculty';
-import { Branch } from 'src/types/branch';
-import { Faculty } from 'src/types/faculty';
-import { calMaxPage, convertToPageParams, defaultPagination } from 'src/utils/pagination';
+import type { Branch } from 'src/types/branch';
+import type { Faculty } from 'src/types/faculty';
+import {
+  calMaxPage,
+  convertToPageParams,
+  defaultPagination,
+} from 'src/utils/pagination';
 
 type TitleForm = 'New Faculty' | 'Edit Faculty' | 'New Branch' | 'Edit Branch';
 
@@ -21,7 +25,8 @@ export const useFacultyStore = defineStore('faculty', {
     qNotify: Notify,
   }),
   getters: {
-    getMaxPage: (s) => calMaxPage(s.pagination?.rowsNumber, s.pagination?.rowsPerPage),
+    getMaxPage: (s) =>
+      calMaxPage(s.pagination?.rowsNumber, s.pagination?.rowsPerPage),
     isFacultyForm: (state) =>
       state.titleForm === 'New Faculty' || state.titleForm === 'Edit Faculty',
     getNodes: (state) => {
@@ -39,7 +44,7 @@ export const useFacultyStore = defineStore('faculty', {
     async fetchData() {
       this.faculties = (
         await FacultyService.getAll(
-          convertToPageParams(this.pagination, this.search)
+          convertToPageParams(this.pagination, this.search),
         )
       ).data;
     },

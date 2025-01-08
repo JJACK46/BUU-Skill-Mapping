@@ -1,6 +1,6 @@
 import { api } from 'src/boot/axios';
-import { PageParams } from 'src/types/pagination';
-import { Faculty } from 'src/types/faculty';
+import type { PageParams } from 'src/types/pagination';
+import type { Faculty } from 'src/types/faculty';
 
 export class FacultyService {
   static path = 'faculties';
