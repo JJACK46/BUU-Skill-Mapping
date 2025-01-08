@@ -39,9 +39,19 @@ jobs:
         DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
       run: |
+        # Setup SSH
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
-        rsync -avz --delete dist/pwa/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/frontend
-        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo systemctl restart nginx"
+    
+        # Deploy files to the correct path
+        rsync -avz --delete dist/pwa/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+    
+        # Set permissions and restart Apache
+        ssh $DEPLOY_USER@$DEPLOY_HOST << 'EOF'
+          sudo chown -R www-data:www-data $DEPLOY_PATH
+          sudo chmod -R 755 $DEPLOY_PATH
+          sudo systemctl restart apache2
+        EOF
+
