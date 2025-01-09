@@ -17,5 +17,38 @@
     "*.css": "css",
     "css": "css",
     "plyconfig.json": "jsonc"
-  }
+  },
+  // TODO HIGHLIGHT
+  "todohighlight.keywords": [
+    {
+      "text": "JACK:",
+      "color": "purple",
+      "backgroundColor": "orange"
+    },
+    {
+      "text": "MENG:",
+      "color": "white",
+      "backgroundColor": "green"
+    },
+    {
+      "text": "ICE",
+      "color": "white",
+      "backgroundColor": "blue"
+    },
+    {
+      "text": "STAMP:",
+      "color": "black",
+      "backgroundColor": "#FBF0DC"
+    },
+    {
+      "text": "FAH:",
+      "color": "black",
+      "backgroundColor": "#41BEEC"
+    },
+    {
+      "text": "ARM:",
+      "color": "blue",
+      "backgroundColor": "white"
+    }
+  ]
 }

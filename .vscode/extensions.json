@@ -5,12 +5,19 @@
     "esbenp.prettier-vscode",
     "editorconfig.editorconfig",
     "simonhe.common-intellisense",
-    "hossaini.quasar-intellisense"
+    "hossaini.quasar-intellisense",
+    "wayou.vscode-todo-highlight",
+    "mhutchie.git-graph",
+    "huizhou.githd",
+    "vincaslt.highlight-matching-tag"
   ],
   "unwantedRecommendations": [
     "octref.vetur",
     "hookyqr.beautify",
     "dbaeumer.jshint",
-    "ms-vscode.vscode-typescript-tslint-plugin"
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    // not bad but too duplicate with git-graph
+    "donjayamanne.githistory",
+    "eamodio.gitlens"
   ]
 }

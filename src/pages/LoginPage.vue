@@ -1,18 +1,12 @@
 <template>
-  <q-page class="flex flex-center">
-    <span>
-      <q-card
-        :class="`q-animate--fade q-pa-lg  ${
-          $q.screen.lt.md ? 'bg-transparent' : ''
-        }`"
-        flat
-        :style="{ borderRadius: '20px' }"
-      >
+  <q-page class="flex fullscreen">
+    <div class="q-mx-auto q-my-auto">
+      <q-card id="login-card" flat>
         <q-card-section class="justify-around row q-gutter-x-lg">
-          <q-card-section class="text-white">
+          <q-card-section>
             <div>
               <q-img
-                src="logos/buu-dark.png"
+                src="logos/buu-light.png"
                 alt="buu"
                 height="auto"
                 width="100px"
@@ -31,12 +25,9 @@
             </div>
           </q-card-section>
 
-          <q-separator v-if="$q.screen.gt.sm" vertical dark />
+          <q-separator v-if="$q.screen.gt.sm" vertical />
           <q-card-section class="q-pa-none q-mb-md">
             <q-input
-              dark
-              label-color="white"
-              color="accent"
               class="full-width q-mt-md"
               v-model="refForm.username"
               outlined
@@ -48,8 +39,6 @@
               </template>
             </q-input>
             <q-input
-              dark
-              color="accent"
               class="full-width q-mt-md"
               v-model="refForm.password"
               outlined
@@ -72,15 +61,10 @@
               </template>
             </q-input>
             <div class="q-mt-lg">
-              <q-btn unelevated class="full-width" color="accent" dark>
+              <q-btn unelevated class="full-width" color="accent">
                 <span class="text-black"> login</span>
               </q-btn>
-              <q-btn
-                dark
-                outline
-                class="full-width q-mt-md"
-                @click="handleLogin"
-              >
+              <q-btn outline class="full-width q-mt-md" @click="handleLogin">
                 <q-img
                   src="~assets/google-logo.svg"
                   width="24px"
@@ -88,7 +72,7 @@
                   class="q-mr-sm"
                   alt="google"
                 />
-                <span class="text-white"> Sign in with Google </span>
+                <span> Sign in with Google </span>
               </q-btn>
             </div>
           </q-card-section>
@@ -97,7 +81,7 @@
       <p class="text-center q-mt-lg">
         &copy; 2025 Burapha University. All Rights Reserved.
       </p>
-    </span>
+    </div>
   </q-page>
 </template>
 
@@ -137,24 +121,10 @@ const handleLogin = () => {
 };
 </script>
 
-<style scoped>
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
+<style scoped lang="scss">
+#login-card {
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 1rem;
 }
-
-/* .bg-custom {
-  position: relative;
-  background: linear-gradient(135deg, #3d3d3d, #1a1a1a, #face00);
-  background-size: 200% 200%;
-  animation: gradientMove 15s ease-in-out infinite;
-  overflow: hidden;
-} */
 </style>

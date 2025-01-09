@@ -14,8 +14,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
-$typography-font-family: 'Sarabun', sans-serif !default;
-
 // COLORS
 $primary: #1e509b;
 $secondary: #5b8acb;
@@ -43,3 +41,6 @@ $button-border-radius: 8px;
 
 // GENERIC
 $generic-border-radius: 8px;
+$body-font-size: var(--q-theme-font-size, 16px);
+$typography-font-family: 'Sarabun', sans-serif !default;
+$button-font-size: var(--q-theme-btn-font-size, 15px);
