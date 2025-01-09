@@ -6,7 +6,7 @@ import { LearningDomain } from 'src/types/learning-domain.enum';
 import { requireField } from 'src/utils/field-rules';
 import { useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
-import MainHeader from 'src/components/Header/main-header.vue';
+import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
 import ContextMenu from 'src/components/ContextMenu.vue';
 

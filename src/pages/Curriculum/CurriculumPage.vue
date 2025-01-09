@@ -1,104 +1,135 @@
 <template>
   <q-page padding>
-    <MainHeader
-      v-model:search-text="store.search"
-      v-model:filter-model="store.filterModel"
-      @open-dialog="handleAddBtn"
-      @enter-search="store.fetchData"
-    />
-    <q-separator class="q-my-md" />
-    <div class="q-py-md">
-      <q-icon name="info" class="q-mr-sm" />{{
-        t('Right click to open menu of each row')
-      }}
-    </div>
-    <q-table
-      flat
-      bordered
-      :loading="global.getLoadingState"
-      class="q-mt-md q-animate--fade"
-      :rows="store.getCurriculums"
-      :pagination="store.pagination"
-      :columns="columns"
-      row-key="id"
-      wrap-cells
-      separator="cell"
-    >
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="id" :props="props">
-            {{ props.row.id }}
-          </q-td>
-          <q-td key="name" :props="props">
-            {{ props.row.name }}
-          </q-td>
-          <q-td key="degree" :props="props">
-            {{ props.row.degree }}
-          </q-td>
-          <q-td key="period" :props="props">
-            {{ props.row.period }} &nbsp; ปี
-          </q-td>
-          <q-td key="branch" :props="props">
-            {{ props.row.branch.name }}
-          </q-td>
-          <ContextMenu
-            :edit-fn="() => store.handleOpenDialog(props.row)"
-            :delete-fn="() => store.removeCurriculum(props.row.id)"
-          ></ContextMenu>
-          <ContextMenu
-            :edit-fn="() => store.handleOpenDialog(props.row)"
-            :delete-fn="() => store.removeCurriculum(props.row.id)"
-          ></ContextMenu>
-        </q-tr>
-      </template>
-    </q-table>
+    <q-card flat bordered class="q-pa-md q-animate--fade container">
+      <q-splitter v-model="qsplitterVModel" :limits="[10]">
+        <template #before>
+          <q-tabs v-model="innerTab" vertical class="text-primary">
+            <q-tab
+              name="main"
+              icon="collections_bookmark"
+              :label="t('curriculum')"
+            />
+            <q-tab
+              name="coordinators"
+              icon="group"
+              :label="t('coordinators')"
+            />
+            <q-tab name="skills" icon="code" :label="t('skills')" />
+            <q-tab name="subjects" icon="book" :label="t('subject')" />
+            <q-tab name="plos" icon="book" :label="t('plos')" />
+          </q-tabs>
+        </template>
+        <template #after>
+          <q-tab-panels
+            v-model="innerTab"
+            animated
+            transition-next="slide-up"
+            transition-prev="slide-down"
+          >
+            <q-tab-panel name="main" class="q-gutter-y-md">
+              <CurriculumsMainTab />
+            </q-tab-panel>
+            <q-tab-panel
+              name="skills"
+              @vue:mounted="fetchInstructors"
+              class="q-gutter-y-md"
+            >
+              <SkillTab />
+            </q-tab-panel>
+            <q-tab-panel
+              name="plos"
+              @vue:mounted="fetchInstructors"
+              class="q-gutter-y-md"
+            >
+              <PloTab />
+            </q-tab-panel>
+            <q-tab-panel
+              name="coordinators"
+              @vue:mounted="fetchInstructors"
+              class="q-gutter-y-md"
+            >
+              <CoordinatorsTab />
+            </q-tab-panel>
+            <q-tab-panel
+              name="subjects"
+              @vue:mounted="fetchSubjects"
+              class="q-gutter-y-md"
+            >
+              <SubjectTab />
+            </q-tab-panel>
+          </q-tab-panels>
+        </template>
+      </q-splitter>
+      <q-card-actions align="right">
+        <div v-if="innerTab === 'subjects'" class="q-gutter-x-md">
+          <q-btn flat @click="handleCancel" color="red" :label="t('cancel')" />
+          <q-btn flat @click="handleGo('main')" :label="t('back')" />
+          <q-btn
+            color="primary"
+            unelevated
+            :label="t('save')"
+            @click="store.handleSave"
+            style="width: 80px"
+          />
+        </div>
+        <div v-if="innerTab === 'main'">
+          <q-btn
+            color="primary"
+            unelevated
+            :label="t('next')"
+            @click="handleGo('coordinators')"
+            style="width: 80px"
+          />
+        </div>
+        <div v-if="innerTab === 'coordinators'">
+          <q-btn
+            color="primary"
+            unelevated
+            :label="t('next')"
+            @click="handleGo('subjects')"
+            style="width: 80px"
+          />
+        </div>
+      </q-card-actions>
+    </q-card>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import type { QTableColumn } from 'quasar';
-import { useMeta } from 'quasar';
-import MainHeader from 'src/components/Header/main-header.vue';
-import { CurriculumService } from 'src/services/curriculums';
+import { InstructorService } from 'src/services/instructor';
 import { SubjectService } from 'src/services/subject';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import type { Curriculum } from 'src/types/curriculum';
+import type { Instructor } from 'src/types/instructor';
 import type { Subject } from 'src/types/subject';
-import { computed, onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import { useGlobalStore } from 'src/stores/global';
-import ContextMenu from 'src/components/ContextMenu.vue';
-const global = useGlobalStore();
-const route = useRoute();
+import { useRouter } from 'vue-router';
+import CurriculumsMainTab from './CurriculumsMainTab.vue';
+import CoordinatorsTab from './CoordinatorsTab.vue';
+import SubjectTab from './SubjectTab.vue';
+import SkillTab from './SkillTab.vue';
+import PloTab from './PloTab.vue';
+
 const router = useRouter();
-const title = computed(() => route.matched[1].name as string);
-const store = useCurriculumStore();
-const curriculums = ref<Curriculum[]>();
 const subjects = ref<Subject[]>();
+const innerTab = ref('main');
+const qsplitterVModel = ref(10);
+const instructors = ref<Instructor[]>();
+const store = useCurriculumStore();
 const { t } = useI18n();
-const columns = ref<QTableColumn[]>([
-  { name: 'id', label: 'ID', field: 'id', align: 'left' },
-  { name: 'name', label: 'Name', field: 'name', align: 'left' },
-  { name: 'degree', label: 'Degree', field: 'degree', align: 'left' },
-  { name: 'period', label: 'Period', field: 'period', align: 'left' },
-  { name: 'branch', label: 'Branch', field: 'branch', align: 'left' },
-]);
 
-onMounted(async () => {
-  await store.fetchData();
-});
+function handleGo(val: string) {
+  innerTab.value = val;
+}
 
-const handleAddBtn = () => {
-  router.push({ name: 'New Curriculum' });
-  store.resetForm();
-};
+function handleCancel() {
+  router.push('/curriculums');
+}
 
-useMeta({
-  title: title.value,
-});
-onMounted(async () => {
-  curriculums.value = (await CurriculumService.getAll({ page: 1 })).data;
+async function fetchSubjects() {
   subjects.value = (await SubjectService.getAll()).data;
-});
+}
+async function fetchInstructors() {
+  instructors.value = (await InstructorService.getAll()).data;
+}
 </script>

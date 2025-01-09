@@ -148,7 +148,7 @@
 <script lang="ts" setup>
 import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
-import MainHeader from 'src/components/Header/main-header.vue';
+import MainHeader from 'src/components/PageHeader.vue';
 import { useFacultyStore } from 'src/stores/faculty-branch';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { onMounted } from 'vue';

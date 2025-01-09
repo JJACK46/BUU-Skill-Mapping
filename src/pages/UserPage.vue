@@ -3,7 +3,7 @@ import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
 import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
-import MainHeader from 'src/components/Header/main-header.vue';
+import MainHeader from 'src/components/PageHeader.vue';
 import { UserRole } from 'src/enums/roles';
 import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';

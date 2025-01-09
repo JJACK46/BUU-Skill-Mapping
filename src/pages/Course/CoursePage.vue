@@ -87,7 +87,7 @@ import type { Instructor } from 'src/types/instructor';
 import { requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import MainHeader from 'src/components/Header/main-header.vue';
+import MainHeader from 'src/components/PageHeader.vue';
 
 const $q = useQuasar();
 const route = useRoute();

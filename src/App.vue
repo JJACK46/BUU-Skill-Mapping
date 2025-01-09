@@ -5,8 +5,10 @@
 <script setup lang="ts">
 import { useMeta } from 'quasar';
 import { ref, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const token = ref();
+const { t } = useI18n();
 
 const handleToken = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -29,7 +31,7 @@ useMeta({
   // sets document title
   title: '',
   // optional; sets final title as "Index Page - My Website", useful for multiple level meta
-  titleTemplate: (title) => `${title} - Skill Mapping`,
+  titleTemplate: (title) => `${t(title)} - Skill Mapping`,
 
   // meta tags
   meta: {
@@ -83,77 +85,3 @@ useMeta({
   },
 });
 </script>
-
-<style lang="scss">
-.body--light {
-  .q-page {
-    background-color: $surface-light;
-  }
-
-  .q-table {
-    // height: calc(100vh - 280px);
-
-    .q-table__top,
-    thead tr:first-child th {
-      background-color: $primary;
-      color: white;
-    }
-
-    thead tr th {
-      position: sticky;
-      z-index: 1;
-    }
-
-    thead tr:first-child th {
-      top: 0;
-    }
-
-    tr:nth-child(odd) {
-      background-color: #f5f5f5;
-    }
-
-    tr:nth-child(even) {
-      background-color: #e6e6e6;
-    }
-  }
-
-  .q-table__bottom,
-  .q-table__bottom .q-table__control .q-field__native,
-  .q-table__bottom .q-table__control .q-field__append {
-    background-color: $primary;
-    color: white;
-  }
-}
-
-.body--dark {
-  .q-toolbar {
-    background-color: $primary-dark;
-  }
-
-  .q-table {
-    .q-table__top,
-    thead tr:first-child th {
-      background-color: $primary-dark;
-      color: white;
-    }
-
-    thead tr th {
-      position: sticky;
-      z-index: 1;
-    }
-
-    thead tr:first-child th {
-      top: 0;
-    }
-  }
-
-  .q-table__bottom {
-    background-color: $primary-dark;
-    color: white;
-  }
-
-  .q-field__control {
-    color: $accent;
-  }
-}
-</style>

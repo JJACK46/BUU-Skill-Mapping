@@ -9,7 +9,8 @@
     "wayou.vscode-todo-highlight",
     "mhutchie.git-graph",
     "huizhou.githd",
-    "vincaslt.highlight-matching-tag"
+    "vincaslt.highlight-matching-tag",
+    "usernamehw.errorlens"
   ],
   "unwantedRecommendations": [
     "octref.vetur",

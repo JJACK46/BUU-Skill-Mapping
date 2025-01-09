@@ -1,1 +1,88 @@
 // app global css in SCSS form
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.body--light {
+  .q-header {
+    background-color: white;
+    color: $accent-2;
+  }
+
+  .q-page {
+    background-color: $surface-light;
+  }
+
+  .q-table {
+    // height: calc(100vh - 280px);
+
+    .q-table__top,
+    thead tr:first-child th {
+      background-color: $surface-secondary;
+      font-weight: bold;
+    }
+
+    thead tr th {
+      position: sticky;
+      z-index: 1;
+      font-size: 15px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    thead tr:first-child th {
+      top: 0;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #f4f4f4;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+  }
+
+  .q-table__bottom,
+  .q-table__bottom .q-table__control .q-field__native,
+  .q-table__bottom .q-table__control .q-field__append {
+    background-color: $surface-secondary;
+    font-size: 13px;
+  }
+}
+
+.body--dark {
+  .q-toolbar {
+    background-color: $primary-dark;
+  }
+
+  .q-table {
+    .q-table__top,
+    thead tr:first-child th {
+      background-color: $primary-dark;
+      color: white;
+    }
+
+    thead tr th {
+      position: sticky;
+      z-index: 1;
+    }
+
+    thead tr:first-child th {
+      top: 0;
+    }
+  }
+
+  .q-table__bottom {
+    background-color: $primary-dark;
+    color: white;
+  }
+
+  .q-field__control {
+    color: $accent;
+  }
+}

@@ -130,7 +130,7 @@ import type { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/types/position.enum';
 import { useGlobalStore } from 'src/stores/global';
 import { BranchService } from 'src/services/branches';
-import MainHeader from 'src/components/Header/main-header.vue';
+import MainHeader from 'src/components/PageHeader.vue';
 
 const global = useGlobalStore();
 const branches = ref<Branch[]>([]);

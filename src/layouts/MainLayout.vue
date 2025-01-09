@@ -1,101 +1,16 @@
 <template>
-  <q-layout view="lHh LpR lFf">
-    <q-header>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-        <q-toolbar-title> Skill Mapping App </q-toolbar-title>
-        <!-- Locale -->
-        <q-btn
-          flat
-          padding="none"
-          class="q-mr-md text-bold"
-          @click="changeLocale"
-          >{{ getCurrentLocale }}</q-btn
-        >
-        <!-- Notifications Btn -->
-        <div class="q-gutter-md q-mr-md">
-          <q-btn
-            icon="notifications"
-            flat
-            padding="none"
-            @click="toggleRightDrawer('notifications')"
-          />
-        </div>
-        <!-- Profile -->
-        <q-avatar class="cursor-pointer">
-          <img
-            draggable="false"
-            :src="`${
-              profile?.avatarUrl || 'https://placehold.co/32x32?text=profile'
-            } `"
-          />
-          <q-menu :offset="[-20, 0]" style="width: 160px">
-            <q-list>
-              <q-item>
-                <q-item-section side>
-                  <q-icon color="primary" name="accessibility"></q-icon>
-                </q-item-section>
-                <q-item-section class="text-primary text-bold">
-                  {{ auth.getRole ?? 'Unknown' }}
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item v-close-popup clickable @click="router.push('/account')">
-                <q-item-section side>
-                  <q-icon name="person"></q-icon>
-                </q-item-section>
-                <q-item-section>
-                  {{ t('account') }}
-                </q-item-section>
-              </q-item>
-              <q-item
-                v-close-popup
-                clickable
-                @click="toggleRightDrawer('settings')"
-              >
-                <q-item-section side>
-                  <q-icon name="settings"></q-icon>
-                </q-item-section>
-                <q-item-section> {{ t('settings') }} </q-item-section>
-              </q-item>
-              <q-item v-close-popup clickable @click="store.logout">
-                <q-item-section side>
-                  <q-icon name="logout"></q-icon>
-                </q-item-section>
-                <q-item-section>
-                  {{ t('logout') }}
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
-        </q-avatar>
-      </q-toolbar>
-    </q-header>
+  <q-layout view="hHh lpR fFf">
+    <AppHeader />
     <!-- Left Drawer -->
     <q-drawer
-      v-model="leftDrawerOpen"
+      v-model="app.leftDrawerOpen"
       show-if-above
       :width="250"
       side="left"
       bordered
     >
       <q-list>
-        <q-item-label header>
-          <q-img
-            :src="
-              $q.dark.isActive ? 'logos/buu-dark.png' : 'logos/buu-light.png'
-            "
-            alt="BUU"
-            height="64px"
-            fit="contain"
-          />
-        </q-item-label>
+        <q-item-label header> </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
       <q-space />
@@ -106,23 +21,23 @@
     </q-drawer>
 
     <!-- Right Drawer -->
-    <q-drawer v-model="rightDrawerOpen" :width="250" side="right" bordered>
+    <q-drawer v-model="app.rightDrawerOpen" :width="250" side="right" bordered>
       <q-list>
         <q-item>
           <q-item-section class="text-capitalize">
-            {{ getHeaderText }}
+            {{ app.currentTab }}
           </q-item-section>
           <q-item-section side>
             <q-btn
               padding="none"
               icon="close"
               flat
-              @click="toggleRightDrawer()"
+              @click="app.toggleRightDrawer()"
             ></q-btn>
           </q-item-section>
         </q-item>
         <q-separator />
-        <q-item v-show="currentTabModel === 'settings'">
+        <q-item v-show="app.currentTab === 'settings'">
           <q-toggle v-model="darkRef" :icon="getThemeIcon">
             {{ t('darkMode') }}
             <q-badge color="secondary">beta</q-badge>
@@ -139,17 +54,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { LinkProps } from 'components/MenuLink.vue';
 import MenuLink from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils/app';
-import type { Payload } from 'src/types/payload';
-import { useAuthStore } from 'src/stores/auth';
 import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
 import { LocalStorage } from 'quasar';
 import { useI18n } from 'vue-i18n';
+import AppHeader from 'src/components/AppHeader.vue';
+import { useGlobalStore } from 'src/stores/global';
 
+const app = useGlobalStore();
 const darkRef = ref(false);
 
 watch(
@@ -159,42 +74,13 @@ watch(
     LocalStorage.set('theme', val ? 'dark' : 'light');
   },
 );
-const auth = useAuthStore();
-const { t, locale } = useI18n();
-const getCurrentLocale = computed(() => {
-  const cur = locale.value.split('-')[0];
-  if (cur === 'th') {
-    return 'EN';
-  } else {
-    return 'TH';
-  }
-});
-function changeLocale() {
-  if (locale.value === 'en-US') {
-    locale.value = 'th-TH';
-  } else {
-    locale.value = 'en-US';
-  }
-}
+const { t } = useI18n();
+
 const getThemeIcon = computed(() =>
   dark.isActive ? 'dark_mode' : 'light_mode',
 );
 
-const router = useRouter();
 const { dark } = useQuasar();
-const store = useAuthStore();
-const profile = ref<Payload | null>(null);
-
-onMounted(async () => {
-  if (LocalStorage.getItem('theme') === 'dark') {
-    dark.set(true);
-    darkRef.value = true;
-  } else {
-    dark.set(false);
-    darkRef.value = false;
-  }
-  profile.value = await store.getProfile();
-});
 
 defineOptions({
   name: 'MainLayout',
@@ -252,22 +138,4 @@ const linksList: LinkProps[] = [
     link: '/about',
   },
 ];
-
-const leftDrawerOpen = ref(false);
-const rightDrawerOpen = ref(false);
-const getHeaderText = computed(() => {
-  return t(currentTabModel.value || 'settings');
-});
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-const currentTabModel = ref<Tabs>();
-type Tabs = 'notifications' | 'settings';
-function toggleRightDrawer(tab?: Tabs) {
-  if (tab) {
-    currentTabModel.value = tab;
-  }
-  rightDrawerOpen.value = !rightDrawerOpen.value;
-}
 </script>

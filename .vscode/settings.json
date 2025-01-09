@@ -6,7 +6,7 @@
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["awaitstore"],
+  "cSpell.words": ["awaitstore", "plos"],
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -18,6 +18,8 @@
     "css": "css",
     "plyconfig.json": "jsonc"
   },
+  // Ignore thai lang check
+  "cSpell.ignoreRegExpList": ["/[\\u0E00-\\u0E7F]/g"],
   // TODO HIGHLIGHT
   "todohighlight.keywords": [
     {

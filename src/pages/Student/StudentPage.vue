@@ -126,7 +126,7 @@ import { StudentService } from 'src/services/student';
 import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useGlobalStore } from 'src/stores/global';
 import { downloadTemplateForStudents } from 'src/utils/file-template';
-import MainHeader from 'src/components/Header/main-header.vue';
+import MainHeader from 'src/components/PageHeader.vue';
 
 const global = useGlobalStore();
 const router = useRouter();

@@ -56,15 +56,44 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Curriculums Management',
-        component: () => import('src/pages/Curriculum/CurriculumPage.vue'),
-      },
-      {
-        path: 'new',
-        name: 'New Curriculum',
-        component: () => import('src/pages/Curriculum/Curriculum-new.vue'),
+        component: () => import('src/pages/Curriculum/CurriculumsPage.vue'),
       },
     ],
   },
+  {
+    path: '/curriculum',
+    component: () => import('layouts/CurriculumLayout.vue'),
+    children: [
+      {
+        path: 'new',
+        name: 'New Curriculum',
+        component: () => import('src/pages/Curriculum/CurriculumPage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/curriculum',
+    component: () => import('layouts/CurriculumLayout.vue'),
+    children: [
+      {
+        path: 'edit',
+        name: 'Edit Curriculum',
+        component: () => import('src/pages/Curriculum/CurriculumPage.vue'),
+      },
+    ],
+  },
+  // {
+  //   path: '/curriculum',
+  //   component: () => import('layouts/CurriculumLayout.vue'),
+  //   children: [
+  //     {
+  //       path: ':id',
+  //       name: 'Curriculum Detail',
+  //       component: () =>
+  //         import('src/pages/Curriculum/CurriculumDetailPage.vue'),
+  //     },
+  //   ],
+  // },
   {
     path: '/courses',
     component: () => import('layouts/MainLayout.vue'),
@@ -104,7 +133,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':id',
         name: 'Student Detail',
-        component: () => import('src/pages/Student/Student-id.vue'),
+        component: () => import('src/pages/Student/Student_ID.vue'),
       },
     ],
   },
