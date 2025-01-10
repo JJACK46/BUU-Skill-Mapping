@@ -31,27 +31,102 @@ jobs:
       run: |
         bunx quasar build -m pwa
 
-    # Deploy to Server
-    - name: Deploy Quasar to Server
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+     # Set up L2TP/IPsec VPN connection
+    - name: Setup VPN
       run: |
-        # Setup SSH
-        mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
-    
-        # Deploy files to the correct path
-        rsync -avz --delete dist/pwa/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-    
-        # Set permissions and restart Apache
-        ssh $DEPLOY_USER@$DEPLOY_HOST << 'EOF'
-          sudo chown -R www-data:www-data $DEPLOY_PATH
-          sudo chmod -R 755 $DEPLOY_PATH
-          sudo systemctl restart apache2
+        sudo apt-get update
+        sudo apt-get install -y strongswan xl2tpd
+        
+        # Configure IPsec
+        sudo tee /etc/ipsec.conf > /dev/null <<EOF
+        config setup
+          charondebug="ike 2, knl 2, cfg 2, net 2, esp 2, dmn 2"
+        
+        conn L2TP/IPsec
+          keyexchange=ikev1
+          authby=secret
+          auto=add
+          type=transport
+          left=%defaultroute
+          leftprotoport=17/1701
+          right=${{ secrets.VPN_HOST }}
+          rightprotoport=17/1701
+          ike=aes256-sha1-modp1024
+          esp=aes256-sha1
+          forceencaps=yes
         EOF
+        
+        # Add PSK
+        sudo tee /etc/ipsec.secrets > /dev/null <<EOF
+        %any : PSK "${{ secrets.VPN_PSK }}"
+        EOF
+        
+        # Configure xl2tpd
+        sudo tee /etc/xl2tpd/xl2tpd.conf > /dev/null <<EOF
+        [lac vpn]
+        lns = ${{ secrets.VPN_HOST }}
+        ppp debug = yes
+        pppoptfile = /etc/ppp/options.l2tpd.client
+        length bit = yes
+        EOF
+        
+        # Configure PPP
+        sudo tee /etc/ppp/options.l2tpd.client > /dev/null <<EOF
+        ipcp-accept-local
+        ipcp-accept-remote
+        refuse-eap
+        require-mschap-v2
+        noccp
+        noauth
+        mtu 1400
+        mru 1400
+        defaultroute
+        usepeerdns
+        debug
+        connect-delay 5000
+        name "${{ secrets.VPN_USER }}"
+        password "${{ secrets.VPN_PASSWORD }}"
+        EOF
+        
+        # Start services
+        sudo systemctl restart strongswan
+        sudo systemctl restart xl2tpd
+        
+        # Establish connection
+        sudo ipsec up L2TP/IPsec
+        echo "c vpn" | sudo tee /var/run/xl2tpd/l2tp-control
+        
+        # Wait for connection
+        sleep 10
+
+   # Deploy to remote server
+    - name: Deploy
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "dist/pwa/*"
+        target: "/var/www/html"
+        strip_components: 2
+        
+    # Cleanup and restart services if needed
+    - name: Post-deploy tasks
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          systemctl restart apache2
+          # Add any other necessary commands
+          
+    # Disconnect VPN
+    - name: Disconnect VPN
+      if: always()
+      run: |
+        echo "d vpn" | sudo tee /var/run/xl2tpd/l2tp-control
+        sudo ipsec down L2TP/IPsec
+        sudo systemctl stop xl2tpd
+        sudo systemctl stop strongswan
 
