@@ -128,7 +128,7 @@ jobs:
         source: "dist/pwa/*"
         target: "/var/www/html/buu"
         strip_components: 2
-        timeout: 300s
+        timeout: 900s
         
     # Cleanup and restart Apache2
     - name: Post-deploy tasks
