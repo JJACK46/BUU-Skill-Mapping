@@ -31,7 +31,7 @@ jobs:
       run: |
         bunx quasar build -m pwa
 
-     # Set up L2TP/IPsec VPN connection
+   # Set up L2TP/IPsec VPN connection
     - name: Setup VPN
       run: |
         sudo apt-get update
@@ -71,6 +71,7 @@ jobs:
         EOF
         
         # Configure PPP
+        sudo mkdir -p /etc/ppp
         sudo tee /etc/ppp/options.l2tpd.client > /dev/null <<EOF
         ipcp-accept-local
         ipcp-accept-remote
@@ -88,16 +89,34 @@ jobs:
         password "${{ secrets.VPN_PASSWORD }}"
         EOF
         
-        # Start services
-        sudo systemctl restart strongswan
-        sudo systemctl restart xl2tpd
+        # Start services with proper names and error checking
+        sudo systemctl restart strongswan-starter || {
+          echo "Failed to restart strongswan-starter"
+          exit 1
+        }
         
-        # Establish connection
-        sudo ipsec up L2TP/IPsec
+        sudo systemctl restart xl2tpd || {
+          echo "Failed to restart xl2tpd"
+          exit 1
+        }
+        
+        # Establish connection with error checking
+        sudo ipsec up L2TP/IPsec || {
+          echo "Failed to bring up IPsec connection"
+          exit 1
+        }
+        
+        # Create control file directory if it doesn't exist
+        sudo mkdir -p /var/run/xl2tpd
+        
         echo "c vpn" | sudo tee /var/run/xl2tpd/l2tp-control
         
-        # Wait for connection
+        # Wait for connection and verify
         sleep 10
+        if ! ip link show ppp0 >/dev/null 2>&1; then
+          echo "VPN connection failed - ppp0 interface not found"
+          exit 1
+        fi
 
    # Deploy to remote server
     - name: Deploy
@@ -107,10 +126,10 @@ jobs:
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "dist/pwa/*"
-        target: "/var/www/html"
+        target: "/var/www/html/buu"
         strip_components: 2
         
-    # Cleanup and restart services if needed
+    # Cleanup and restart Apache2
     - name: Post-deploy tasks
       uses: appleboy/ssh-action@master
       with:
@@ -118,15 +137,27 @@ jobs:
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          systemctl restart apache2
-          # Add any other necessary commands
+          # Set proper permissions for Apache
+          sudo chown -R www-data:www-data /var/www/html/buu
+          sudo chmod -R 755 /var/www/html/buu
           
-    # Disconnect VPN
+          # Restart Apache2
+          sudo systemctl restart apache2
+          
+          # Check if Apache2 is running successfully
+          if ! sudo systemctl is-active --quiet apache2; then
+            echo "Apache2 failed to restart"
+            exit 1
+          fi
+          
+     # Disconnect VPN
     - name: Disconnect VPN
       if: always()
       run: |
-        echo "d vpn" | sudo tee /var/run/xl2tpd/l2tp-control
-        sudo ipsec down L2TP/IPsec
+        if [ -f "/var/run/xl2tpd/l2tp-control" ]; then
+          echo "d vpn" | sudo tee /var/run/xl2tpd/l2tp-control
+        fi
+        sudo ipsec down L2TP/IPsec || true
         sudo systemctl stop xl2tpd
-        sudo systemctl stop strongswan
+        sudo systemctl stop strongswan-starter
 
