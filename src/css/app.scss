@@ -20,7 +20,7 @@
 
     .q-table__top,
     thead tr:first-child th {
-      background-color: $surface-secondary;
+      // background-color: $surface-secondary;
       font-weight: bold;
     }
 
@@ -39,7 +39,7 @@
     }
 
     tr:nth-child(odd) {
-      background-color: #f4f4f4;
+      background-color: #fcfcfc;
     }
 
     tr:nth-child(even) {
@@ -50,7 +50,7 @@
   .q-table__bottom,
   .q-table__bottom .q-table__control .q-field__native,
   .q-table__bottom .q-table__control .q-field__append {
-    background-color: $surface-secondary;
+    // background-color: $surface-secondary;
     font-size: 13px;
   }
 }

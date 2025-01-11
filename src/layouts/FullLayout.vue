@@ -7,13 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 defineComponent({
   name: 'FullLayout',
-
-  setup() {
-    const leftDrawer = ref(false);
-    return { leftDrawer };
-  },
 });
 </script>

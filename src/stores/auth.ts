@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { UserRole } from 'src/enums/roles';
+import { EnumUserRole } from 'src/enums/roles';
 import AuthService from 'src/services/auth';
 import type { Payload } from 'src/types/payload';
 
@@ -10,7 +10,7 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isSignIn: (s) => !!s.profile,
-    isAdmin: (s) => s.profile?.role === UserRole.Admin,
+    isAdmin: (s) => s.profile?.role === EnumUserRole.ADMIN,
     getRole: (s) => s.profile?.role,
   },
 

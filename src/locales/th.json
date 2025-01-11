@@ -1,5 +1,6 @@
 {
   "home": "หน้าหลัก",
+  "dashboard": "แดชบอร์ด",
   "skills": "ทักษะ",
   "branch": "สาขา",
   "courses": "คอร์ส",
@@ -10,7 +11,7 @@
   "subjectId": "รหัสวิชา",
   "curriculums": "หลักสูตร",
   "allCurriculums": "หลักสูตรทั้งหมด",
-  "user": "ผู้ใช้งาน",
+  "users": "ผู้ใช้งาน",
   "instructor": "ผู้สอน",
   "students": "นิสิต",
   "about": "เกี่ยวกับ",

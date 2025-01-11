@@ -2,6 +2,7 @@
   <q-header reveal :reveal-offset="0" bordered class="q-px-sm">
     <q-toolbar>
       <q-btn
+        v-if="!landing"
         flat
         dense
         icon="menu"
@@ -30,7 +31,7 @@
         >{{ getCurrentLocale }}</q-btn
       >
       <!-- Notifications Btn -->
-      <div class="q-gutter-md q-mr-md">
+      <div class="q-gutter-md q-mr-md" v-if="!landing">
         <q-btn
           icon="notifications"
           flat
@@ -39,7 +40,7 @@
         />
       </div>
       <!-- Profile -->
-      <q-avatar class="cursor-pointer">
+      <q-avatar class="cursor-pointer" v-if="!landing">
         <img
           draggable="false"
           :src="`${
@@ -86,6 +87,14 @@
           </q-list>
         </q-menu>
       </q-avatar>
+      <q-btn
+        v-if="landing"
+        label="login"
+        to="/login"
+        flat
+        class="bg-primary text-bold"
+        color="white"
+      />
     </q-toolbar>
     <slot name="additional"> </slot>
   </q-header>
@@ -98,6 +107,10 @@ import type { Payload } from 'src/types/payload';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+
+const props = defineProps<{
+  landing?: boolean | false;
+}>();
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -125,6 +138,8 @@ function changeLocale() {
 const profile = ref<Payload | null>(null);
 
 onMounted(async () => {
-  profile.value = await store.getProfile();
+  if (!props.landing) {
+    profile.value = await store.getProfile();
+  }
 });
 </script>

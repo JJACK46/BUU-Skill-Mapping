@@ -4,7 +4,7 @@ import { useMeta } from 'quasar';
 import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
-import { UserRole } from 'src/enums/roles';
+import { EnumUserRole } from 'src/enums/roles';
 import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';
 import { useUserStore } from 'src/stores/user';
@@ -198,7 +198,7 @@ useMeta({
           outlined
           v-model="store.form.role"
           label="Role *"
-          :options="Object.values(UserRole)"
+          :options="Object.values(EnumUserRole)"
           :rules="[requireField]"
         />
       </template>

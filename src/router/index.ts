@@ -8,6 +8,7 @@ import {
 
 import routes from './routes';
 import AuthService from 'src/services/auth';
+import { EnumUserRole } from 'src/enums/roles';
 
 /*
  * If not building with SSR mode, you can
@@ -22,8 +23,8 @@ export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === 'history'
-    ? createWebHistory
-    : createWebHashHistory;
+      ? createWebHistory
+      : createWebHashHistory;
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -36,26 +37,48 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach(async (to, from, next) => {
-    const publicRoute = to.meta?.public || false;
-    const isAuthenticated = await AuthService.fetchProfile();
+    const isPublic = to.meta?.public || false;
+    const requiredRole = to.meta?.role || null;
 
-    // Avoid redirect loops by checking the destination route
-    if (to.path === '/login' && isAuthenticated) {
-      // If already authenticated, no need to go to login page, redirect to the home page
-      return next('/');
+    try {
+      // Fetch authentication and user role status
+      const isAuthenticated = await AuthService.isAuthenticated();
+      const userRole = isAuthenticated ? await AuthService.getUserRole() : null;
+
+      if (to.path === '/' && isAuthenticated) {
+        return next(`${userRole}/dashboard`);
+      }
+
+      if (to.path === '/' && !isAuthenticated) {
+        return next('/landing');
+      }
+
+      // Allow Admin users access to all /admin routes
+      if (userRole === EnumUserRole.ADMIN && to.path.startsWith('/admin')) {
+        return next(); // Allow navigation for Admin
+      }
+
+      // Redirect authenticated users away from the login page
+      if (to.path === '/login' && isAuthenticated) {
+        return next('/');
+      }
+
+      // Redirect unauthenticated users away from protected routes
+      if (!isPublic && !isAuthenticated) {
+        return next('/login');
+      }
+
+      // Check if the route requires a specific role
+      if (requiredRole && userRole !== requiredRole) {
+        return next('/forbidden'); // Redirect unauthorized users to a forbidden page
+      }
+
+      // Proceed to the route
+      next();
+    } catch (error) {
+      console.error('Error during route guard execution:', error);
+      next('/error'); // Redirect to a generic error page if something goes wrong
     }
-
-    if (to.path === '/' && !isAuthenticated) {
-      return next('/login');
-    }
-
-    // If the route is not public and the user is not authenticated, redirect to forbidden page
-    if (!publicRoute && !isAuthenticated && to.path !== '/forbidden') {
-      return next('/forbidden');
-    }
-
-    // Proceed to the next route
-    next();
   });
 
   return Router;

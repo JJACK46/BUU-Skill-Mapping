@@ -1,5 +1,6 @@
 {
   "home": "Home",
+  "dashboard": "Dashboard",
   "skills": "Skills",
   "branch": "Branch",
   "courses": "Courses",
@@ -8,7 +9,7 @@
   "subjects": "Subjects",
   "curriculums": "Curriculums",
   "allCurriculums": "Curriculums",
-  "user": "User",
+  "users": "Users",
   "instructor": "Instructor",
   "students": "Students",
   "about": "About",

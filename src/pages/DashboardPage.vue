@@ -1,6 +1,8 @@
 <template>
   <q-page padding>
-    <div class="text-h4">{{ t('hello') }} {{ user.profile?.email }}</div>
+    <div class="text-h4">
+      {{ t('hello') }} {{ user.profile?.name ?? user.profile?.email }}
+    </div>
     <q-separator class="q-my-md" />
     <section name="courses">
       <div class="text-h6 q-mb-md">
@@ -32,6 +34,6 @@ const user = useAuthStore();
 const { t } = useI18n();
 
 defineOptions({
-  name: 'IndexPage',
+  name: 'DashboardPage',
 });
 </script>

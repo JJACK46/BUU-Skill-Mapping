@@ -63,6 +63,7 @@ import { LocalStorage } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import AppHeader from 'src/components/AppHeader.vue';
 import { useGlobalStore } from 'src/stores/global';
+import { EnumUserRole } from 'src/enums/roles';
 
 const app = useGlobalStore();
 const darkRef = ref(false);
@@ -83,54 +84,54 @@ const getThemeIcon = computed(() =>
 const { dark } = useQuasar();
 
 defineOptions({
-  name: 'MainLayout',
+  name: 'AdminLayout',
 });
 
 const linksList: LinkProps[] = [
   {
-    title: 'home',
+    title: 'dashboard',
     icon: 'home',
-    link: '/',
+    link: `/${EnumUserRole.ADMIN}/dashboard`,
   },
   {
     title: 'skills',
     icon: 'code',
-    link: '/skills',
+    link: `/${EnumUserRole.ADMIN}/skills`,
   },
   {
     title: 'subjects',
     icon: 'book',
-    link: '/subjects',
+    link: `/${EnumUserRole.ADMIN}/subjects`,
   },
   {
     title: 'curriculums',
     icon: 'collections_bookmark',
-    link: '/curriculums',
+    link: `/${EnumUserRole.ADMIN}/curriculums`,
   },
   {
     title: 'faculties & branches',
     icon: 'groups',
-    link: '/faculties',
+    link: `/${EnumUserRole.ADMIN}/faculties`,
   },
   {
     title: 'courses',
     icon: 'play_lesson',
-    link: '/courses',
+    link: `/${EnumUserRole.ADMIN}/courses`,
   },
   {
-    title: 'user',
+    title: 'users',
     icon: 'manage_accounts',
-    link: '/users',
+    link: `/${EnumUserRole.ADMIN}/users`,
   },
   {
     title: 'instructor',
     icon: 'group',
-    link: '/instructors',
+    link: `/${EnumUserRole.ADMIN}/instructors`,
   },
   {
     title: 'students',
     icon: 'school',
-    link: '/students',
+    link: `/${EnumUserRole.ADMIN}/students`,
   },
   {
     title: 'about',
