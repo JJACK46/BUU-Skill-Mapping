@@ -8,11 +8,15 @@ export const useGlobalStore = defineStore('global', {
     rightDrawerOpen: false,
     isLoading: false,
     currentTab: '' as Tabs,
+    debugMode: false,
   }),
   getters: {
     getLoadingState: (s) => s.isLoading,
   },
   actions: {
+    toggleDebugMode() {
+      this.debugMode = !this.debugMode;
+    },
     setLoading(state: boolean) {
       this.isLoading = state;
     },

@@ -37,6 +37,7 @@ import { __APP_VERSION } from 'src/utils/app';
 import AppHeader from 'src/components/AppHeader.vue';
 import { useGlobalStore } from 'src/stores/global';
 import AppRightDrawer from 'src/components/AppRightDrawer.vue';
+import { EnumUserRole } from 'src/enums/roles';
 
 const app = useGlobalStore();
 
@@ -48,22 +49,17 @@ const linksList: LinkProps[] = [
   {
     title: 'home',
     icon: 'home',
-    link: '/',
+    link: `/${EnumUserRole.STUDENT}/dashboard`,
   },
   {
     title: 'skills',
     icon: 'code',
-    link: '/skills',
-  },
-  {
-    title: 'curriculums',
-    icon: 'collections_bookmark',
-    link: '/curriculums',
+    link: `/${EnumUserRole.STUDENT}/skills`,
   },
   {
     title: 'courses',
     icon: 'play_lesson',
-    link: '/courses',
+    link: `/${EnumUserRole.STUDENT}/courses`,
   },
   {
     title: 'about',

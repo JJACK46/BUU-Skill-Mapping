@@ -5,7 +5,7 @@ import type { Payload } from 'src/types/payload';
 class AuthService {
   static async getUserRole() {
     const profile = await this.fetchProfile();
-    return profile.role;
+    return profile.role.toLocaleLowerCase();
   }
   static async login(email: string, password: string): Promise<AxiosResponse> {
     const { data } = await api.post('/auth/login', { email, password });

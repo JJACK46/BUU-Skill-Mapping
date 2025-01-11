@@ -5,11 +5,11 @@ import type { Payload } from 'src/types/payload';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    profile: {} as Payload | null,
+    profile: null as Payload | null,
   }),
 
   getters: {
-    isSignIn: (s) => !!s.profile,
+    isSignedIn: (s) => !!s.profile,
     isAdmin: (s) => s.profile?.role === EnumUserRole.ADMIN,
     getRole: (s) => s.profile?.role,
   },

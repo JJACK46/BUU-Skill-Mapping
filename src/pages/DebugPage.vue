@@ -1,10 +1,20 @@
 <template>
-  <div class="flex">
-    <q-btn label="admin"></q-btn>
-    <q-btn label="coordinator"></q-btn>
-    <q-btn label="instructor"></q-btn>
-    <q-btn label="student"></q-btn>
+  <div class="flex q-pa-xl">
+    <q-btn
+      :label="`debug mode: ${app.debugMode}`"
+      :color="app.debugMode ? 'positive' : 'negative'"
+      @click="app.toggleDebugMode"
+    ></q-btn>
+    <q-btn label="admin" :to="`${EnumUserRole.ADMIN}`"></q-btn>
+    <q-btn label="coordinator" :to="`${EnumUserRole.COORDINATOR}`"></q-btn>
+    <q-btn label="instructor" :to="`${EnumUserRole.INSTRUCTOR}`"></q-btn>
+    <q-btn label="student" :to="`${EnumUserRole.STUDENT}`"></q-btn>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { EnumUserRole } from 'src/enums/roles';
+import { useGlobalStore } from 'src/stores/global';
+
+const app = useGlobalStore();
+</script>

@@ -12,7 +12,6 @@ export const adminRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: 'dashboard',
-        name: 'Dashboard',
         component: () => import('pages/DashboardPage.vue'),
       },
       {

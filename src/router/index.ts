@@ -9,6 +9,7 @@ import {
 import routes from './routes';
 import AuthService from 'src/services/auth';
 import { EnumUserRole } from 'src/enums/roles';
+import { useGlobalStore } from 'src/stores/global';
 
 /*
  * If not building with SSR mode, you can
@@ -39,14 +40,19 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach(async (to, from, next) => {
     const isPublic = to.meta?.public || false;
     const requiredRole = to.meta?.role || null;
+    const app = useGlobalStore();
 
     try {
+      if (app.debugMode) {
+        return next();
+      }
       // Fetch authentication and user role status
       const isAuthenticated = await AuthService.isAuthenticated();
       const userRole = isAuthenticated ? await AuthService.getUserRole() : null;
 
       if (to.path === '/' && isAuthenticated) {
-        return next(`${userRole}/dashboard`);
+        console.log('Redirect');
+        return next(`/${userRole}/dashboard`);
       }
 
       if (to.path === '/' && !isAuthenticated) {
@@ -54,7 +60,10 @@ export default route(function (/* { store, ssrContext } */) {
       }
 
       // Allow Admin users access to all /admin routes
-      if (userRole === EnumUserRole.ADMIN && to.path.startsWith('/admin')) {
+      if (
+        userRole === EnumUserRole.ADMIN &&
+        to.path.startsWith(`/${EnumUserRole.ADMIN}`)
+      ) {
         return next(); // Allow navigation for Admin
       }
 

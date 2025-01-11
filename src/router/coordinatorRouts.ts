@@ -1,13 +1,13 @@
 import { EnumUserRole } from 'src/enums/roles';
 import type { RouteRecordRaw } from 'vue-router';
 
-export const studentRoutes: RouteRecordRaw[] = [
+export const coordinatorRoutes: RouteRecordRaw[] = [
   {
-    path: `/${EnumUserRole.STUDENT}`,
-    name: EnumUserRole.STUDENT,
-    component: () => import('src/layouts/StudentLayout.vue'),
+    path: `/${EnumUserRole.COORDINATOR}`,
+    name: EnumUserRole.COORDINATOR,
+    component: () => import('src/layouts/CoordinatorLayout.vue'),
     meta: {
-      role: EnumUserRole.STUDENT,
+      role: EnumUserRole.COORDINATOR,
     },
     children: [
       {
@@ -15,8 +15,8 @@ export const studentRoutes: RouteRecordRaw[] = [
         component: () => import('pages/DashboardPage.vue'),
       },
       {
-        path: 'skills',
-        component: () => import('pages/SkillPage.vue'),
+        path: 'curriculums',
+        component: () => import('src/pages/Curriculum/CurriculumsPage.vue'),
       },
       {
         path: 'courses',

@@ -110,7 +110,9 @@
     </section>
   </q-page>
   <footer class="q-py-md bg-grey-4">
-    <div class="text-center">© 2025 Burapha University. Skill Mapping</div>
+    <div class="text-center">
+      © 2025 Burapha University. Skill Mapping. All Rights Reserved.
+    </div>
   </footer>
 </template>
 

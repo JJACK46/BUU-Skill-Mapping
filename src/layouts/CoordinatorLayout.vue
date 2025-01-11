@@ -49,12 +49,17 @@ const linksList: LinkProps[] = [
   {
     title: 'home',
     icon: 'home',
-    link: `/${EnumUserRole.INSTRUCTOR}/dashboard`,
+    link: `/${EnumUserRole.COORDINATOR}/dashboard`,
+  },
+  {
+    title: 'curriculums',
+    icon: 'collections_bookmark',
+    link: `/${EnumUserRole.COORDINATOR}/curriculums`,
   },
   {
     title: 'courses',
     icon: 'play_lesson',
-    link: `/${EnumUserRole.INSTRUCTOR}/courses`,
+    link: `/${EnumUserRole.COORDINATOR}/courses`,
   },
   {
     title: 'about',

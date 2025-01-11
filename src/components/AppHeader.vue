@@ -44,7 +44,7 @@
         <img
           draggable="false"
           :src="`${
-            profile?.avatarUrl || 'https://placehold.co/32x32?text=profile'
+            auth.profile?.avatarUrl || 'https://placehold.co/32x32?text=profile'
           } `"
         />
         <q-menu :offset="[-20, 0]" style="width: 160px">
@@ -76,7 +76,7 @@
               </q-item-section>
               <q-item-section> {{ t('settings') }} </q-item-section>
             </q-item>
-            <q-item v-close-popup clickable @click="store.logout">
+            <q-item v-close-popup clickable @click="auth.logout">
               <q-item-section side>
                 <q-icon name="logout"></q-icon>
               </q-item-section>
@@ -88,9 +88,17 @@
         </q-menu>
       </q-avatar>
       <q-btn
-        v-if="landing"
+        v-if="landing && !auth.isSignedIn"
         label="login"
         to="/login"
+        flat
+        class="bg-primary text-bold"
+        color="white"
+      />
+      <q-btn
+        v-if="landing && auth.isSignedIn"
+        label="app"
+        to="/"
         flat
         class="bg-primary text-bold"
         color="white"
@@ -103,8 +111,7 @@
 <script lang="ts" setup>
 import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';
-import type { Payload } from 'src/types/payload';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -113,9 +120,8 @@ const props = defineProps<{
 }>();
 
 const router = useRouter();
-const auth = useAuthStore();
 const { t, locale } = useI18n();
-const store = useAuthStore();
+const auth = useAuthStore();
 
 const app = useGlobalStore();
 
@@ -135,11 +141,10 @@ function changeLocale() {
   }
 }
 
-const profile = ref<Payload | null>(null);
-
 onMounted(async () => {
   if (!props.landing) {
-    profile.value = await store.getProfile();
+    if (auth.profile) return;
+    auth.profile = await auth.getProfile();
   }
 });
 </script>
