@@ -3,12 +3,7 @@
     <q-card flat bordered>
       <q-card-section>
         <div class="text-h6 text-bold">About Application 🚀</div>
-        <p class="text-body2">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto
-          itaque ea voluptates animi sit repellendus laudantium magnam excepturi
-          illum et mollitia saepe, fuga libero obcaecati accusantium facilis
-          aliquid accusamus doloremque!
-        </p>
+        <p class="text-body2"></p>
       </q-card-section>
     </q-card>
     <q-card flat bordered>
