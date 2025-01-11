@@ -38,6 +38,10 @@ export const useStudentStore = defineStore('student', {
       const res = await StudentService.getSkillTree(id);
       return res;
     },
+    async getSkillTree(id: number) {
+      const res = await StudentService.getSkillTree(id);
+      return res;
+    },
     toggleDialog(form?: Partial<Student>) {
       if (form) {
         this.formStudent = form;
@@ -47,9 +51,14 @@ export const useStudentStore = defineStore('student', {
         this.titleForm = 'New Student';
       }
       this.dialogState = !this.dialogState;
+      this.dialogState = !this.dialogState;
     },
     toggleDialogImport() {
       this.dialogImport = !this.dialogImport;
     },
   },
+      this.dialogImport = !this.dialogImport;
+    },
+  },
 });
+
