@@ -5,7 +5,9 @@ import type { Payload } from 'src/types/payload';
 class AuthService {
   static async getUserRole() {
     const profile = await this.fetchProfile();
-    return profile.role.toLocaleLowerCase();
+    if (profile) {
+      return profile.role.toLocaleLowerCase();
+    }
   }
   static async login(email: string, password: string): Promise<AxiosResponse> {
     const { data } = await api.post('/auth/login', { email, password });
@@ -25,7 +27,6 @@ class AuthService {
     try {
       const res = await api.post('/auth/logout', { withCredentials: true });
       localStorage.removeItem('token');
-      window.location.replace('/login');
       return res.data;
     } catch (error) {
       console.error(error);

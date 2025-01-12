@@ -76,7 +76,12 @@
               </q-item-section>
               <q-item-section> {{ t('settings') }} </q-item-section>
             </q-item>
-            <q-item v-close-popup clickable @click="auth.logout">
+            <q-item
+              v-close-popup
+              clickable
+              @click="async () => await auth.logout()"
+              to="/login"
+            >
               <q-item-section side>
                 <q-icon name="logout"></q-icon>
               </q-item-section>

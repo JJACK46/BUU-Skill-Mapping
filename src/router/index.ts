@@ -38,55 +38,63 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach(async (to, from, next) => {
-    const isPublic = to.meta?.public || false;
-    const requiredRole = to.meta?.role || null;
+    const { meta, path } = to;
+    const isPublic = meta?.public || false;
+    const requiredRole = meta?.role || null;
     const app = useGlobalStore();
 
     try {
-      if (app.debugMode) {
-        return next();
-      }
-      // Fetch authentication and user role status
+      if (app.debugMode) return next();
+
       const isAuthenticated = await AuthService.isAuthenticated();
       const userRole = isAuthenticated ? await AuthService.getUserRole() : null;
 
-      if (to.path === '/' && isAuthenticated) {
-        console.log('Redirect');
-        return next(`/${userRole}/dashboard`);
+      // Handle public routes first
+      if (isPublic && !isAuthenticated) {
+        return next(); // Allow access to public routes
       }
 
-      if (to.path === '/' && !isAuthenticated) {
-        return next('/landing');
-      }
-
-      // Allow Admin users access to all /admin routes
-      if (
-        userRole === EnumUserRole.ADMIN &&
-        to.path.startsWith(`/${EnumUserRole.ADMIN}`)
-      ) {
-        return next(); // Allow navigation for Admin
+      // Handle '/' route
+      if (path === '/') {
+        const redirectPath = userRole ? `/${userRole}/dashboard` : '/landing';
+        return next(redirectPath);
       }
 
       // Redirect authenticated users away from the login page
-      if (to.path === '/login' && isAuthenticated) {
+      if (path === '/login' && userRole) {
         return next('/');
       }
 
-      // Redirect unauthenticated users away from protected routes
-      if (!isPublic && !isAuthenticated) {
+      // Redirect unauthenticated users from protected routes
+      if (!isPublic && !userRole) {
         return next('/login');
       }
 
-      // Check if the route requires a specific role
-      if (requiredRole && userRole !== requiredRole) {
-        return next('/forbidden'); // Redirect unauthorized users to a forbidden page
+      // Redirect users lacking the required role
+      if (requiredRole && (!userRole || userRole !== requiredRole)) {
+        return next('/forbidden');
+      }
+
+      // Allow Admin access to `/admin` routes
+      if (
+        path.startsWith(`/${EnumUserRole.ADMIN}`) &&
+        userRole === EnumUserRole.ADMIN
+      ) {
+        return next();
       }
 
       // Proceed to the route
       next();
     } catch (error) {
       console.error('Error during route guard execution:', error);
-      next('/error'); // Redirect to a generic error page if something goes wrong
+
+      // Ensure not to redirect to `/error` if already there
+      if (path !== '/error') {
+        return next('/error');
+      }
+
+      // Proceed to `/error` route without recursion
+      next();
     }
   });
 
