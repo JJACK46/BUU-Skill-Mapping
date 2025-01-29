@@ -1,3 +1,4 @@
+import type { Curriculum } from './curriculum';
 import type { LearningDomain } from './learning-domain.enum';
 
 export type Skill = {
@@ -8,4 +9,5 @@ export type Skill = {
   parent?: Skill[];
   children: Skill[];
   techSkills: Skill[];
+  curriculum?: Curriculum;
 };
