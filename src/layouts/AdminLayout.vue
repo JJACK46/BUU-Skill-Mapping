@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import type { LinkProps } from 'components/MenuLink.vue';
+import type { MenuProps } from 'components/MenuLink.vue';
 import MenuLink from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils/app';
 import { useQuasar } from 'quasar';
@@ -87,7 +87,7 @@ defineOptions({
   name: 'AdminLayout',
 });
 
-const linksList: LinkProps[] = [
+const linksList: MenuProps[] = [
   {
     title: 'dashboard',
     icon: 'home',

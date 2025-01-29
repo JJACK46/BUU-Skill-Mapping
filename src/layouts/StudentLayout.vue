@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkProps } from 'components/MenuLink.vue';
+import type { MenuProps } from 'components/MenuLink.vue';
 import MenuLink from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils/app';
 import AppHeader from 'src/components/AppHeader.vue';
@@ -45,7 +45,7 @@ defineOptions({
   name: 'StudentLayout',
 });
 
-const linksList: LinkProps[] = [
+const linksList: MenuProps[] = [
   {
     title: 'home',
     icon: 'home',

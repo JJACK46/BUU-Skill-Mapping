@@ -30,38 +30,6 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import('src/pages/Curriculum/CurriculumsPage.vue'),
       },
       {
-        path: 'curriculum/:id',
-        name: 'Curriculum',
-        component: () => import('src/pages/Curriculum/CurriculumPage.vue'),
-        children: [
-          {
-            path: 'coordinators',
-            name: 'Coordinators of Curriculum',
-            component: () => import('src/pages/Curriculum/CoordinatorsTab.vue'),
-          },
-          {
-            path: 'plos',
-            name: 'PLOs',
-            component: () => import('src/pages/Curriculum/PloTab.vue'),
-          },
-          {
-            path: 'skills',
-            name: 'Skills of Curriculum',
-            component: () => import('src/pages/Curriculum/SkillTab.vue'),
-          },
-          {
-            path: 'clos',
-            name: 'ClOs',
-            component: () => import('src/pages/Curriculum/CloTab.vue'),
-          },
-          {
-            path: 'summary',
-            name: 'Summary of Curriculum',
-            component: () => import('src/pages/Curriculum/SubjectTab.vue'),
-          },
-        ],
-      },
-      {
         path: 'courses',
         component: () => import('pages/Course/CoursePage.vue'),
         children: [

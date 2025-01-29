@@ -83,5 +83,6 @@
   "goHome": "Go Home",
   "showOnlyWithSubSkill": "Show only skills with sub-skills",
   "confirm": "Confirm",
-  "clear": "Clear"
+  "clear": "Clear",
+  "summary": "Summary"
 }

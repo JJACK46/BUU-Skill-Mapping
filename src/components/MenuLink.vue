@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable :to="link" active-class="bg-primary text-white text-bold">
+  <q-item clickable :to="link" active-class="text-primary text-bold">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
@@ -19,14 +19,14 @@ defineOptions({
   name: 'EssentialLink',
 });
 
-export interface LinkProps {
+export interface MenuProps {
   title: string;
   caption?: string;
   link?: string;
   icon?: string;
 }
 
-withDefaults(defineProps<LinkProps>(), {
+withDefaults(defineProps<MenuProps>(), {
   caption: '',
   link: '#',
   icon: '',

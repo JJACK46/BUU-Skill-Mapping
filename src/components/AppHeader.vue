@@ -2,7 +2,7 @@
   <q-header reveal :reveal-offset="0" bordered class="q-px-sm">
     <q-toolbar>
       <q-btn
-        v-if="!landing"
+        v-if="!landing && !hideToggle"
         flat
         dense
         icon="menu"
@@ -11,16 +11,22 @@
       />
 
       <q-toolbar-title>
-        <q-img
-          src="logos/buu-light.png"
-          alt="logo"
-          height="auto"
-          width="50px"
-          fit="contain"
+        <router-link
+          to="/"
+          class="cursor-pointer text-grey-10"
+          style="text-decoration: none"
         >
-          <template #loading></template>
-        </q-img>
-        <span class="q-ml-sm text-weight-medium">Skill Mapping</span>
+          <q-img
+            src="logos/buu-light.png"
+            alt="logo"
+            height="auto"
+            width="50px"
+            fit="contain"
+          >
+            <template #loading></template>
+          </q-img>
+          <span class="q-ml-sm text-weight-medium">Skill Mapping</span>
+        </router-link>
       </q-toolbar-title>
       <!-- Locale -->
       <q-btn
@@ -122,6 +128,7 @@ import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   landing?: boolean | false;
+  hideToggle?: true;
 }>();
 
 const router = useRouter();

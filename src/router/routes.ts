@@ -4,6 +4,7 @@ import { adminRoutes } from './adminRoutes';
 import { studentRoutes } from './studentRoutes';
 import { instructorRoutes } from './instructorRoutes';
 import { coordinatorRoutes } from './coordinatorRouts';
+import { curriculumRoutes } from './curriculumRoutes';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -12,6 +13,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/layouts/RootLayout.vue'),
     meta: { public: true },
   },
+  ...curriculumRoutes,
   ...publicRoutes,
   ...adminRoutes,
   ...coordinatorRoutes,
