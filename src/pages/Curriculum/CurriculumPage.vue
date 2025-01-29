@@ -17,6 +17,7 @@
             <q-tab name="skills" icon="code" :label="t('skills')" />
             <q-tab name="subjects" icon="book" :label="t('subject')" />
             <q-tab name="plos" icon="book" :label="t('plos')" />
+            <q-tab name="summary" icon="book" :label="t('summary')" />
           </q-tabs>
         </template>
         <template #after>
@@ -57,6 +58,13 @@
             >
               <SubjectTab />
             </q-tab-panel>
+            <q-tab-panel
+              name="summary"
+              @vue:mounted="fetchSubjects"
+              class="q-gutter-y-md"
+            >
+              <SummaryTab
+            /></q-tab-panel>
           </q-tab-panels>
         </template>
       </q-splitter>
@@ -109,6 +117,7 @@ import CoordinatorsTab from './CoordinatorsTab.vue';
 import SubjectTab from './SubjectTab.vue';
 import SkillTab from './SkillTab.vue';
 import PloTab from './PloTab.vue';
+import SummaryTab from './SummaryTab.vue';
 
 const router = useRouter();
 const subjects = ref<Subject[]>();
