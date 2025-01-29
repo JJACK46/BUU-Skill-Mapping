@@ -6,6 +6,12 @@ import { instructorRoutes } from './instructorRoutes';
 import { coordinatorRoutes } from './coordinatorRouts';
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'root',
+    component: () => import('src/layouts/RootLayout.vue'),
+    meta: { public: true },
+  },
   ...publicRoutes,
   ...adminRoutes,
   ...coordinatorRoutes,

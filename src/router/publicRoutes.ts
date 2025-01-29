@@ -2,12 +2,6 @@ import type { RouteRecordRaw } from 'vue-router';
 
 export const publicRoutes: RouteRecordRaw[] = [
   {
-    path: '/',
-    name: 'root',
-    component: () => import('src/layouts/FullLayout.vue'),
-    meta: { public: true },
-  },
-  {
     path: '/landing',
     component: () => import('src/layouts/FullLayout.vue'),
     meta: { public: true },

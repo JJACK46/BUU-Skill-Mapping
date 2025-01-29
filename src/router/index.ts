@@ -49,15 +49,15 @@ export default route(function (/* { store, ssrContext } */) {
       const isAuthenticated = await AuthService.isAuthenticated();
       const userRole = isAuthenticated ? await AuthService.getUserRole() : null;
 
-      // Handle public routes first
-      if (isPublic && !isAuthenticated) {
-        return next(); // Allow access to public routes
-      }
-
-      // Handle '/' route
+      // Handle '/' route, first order
       if (path === '/') {
         const redirectPath = userRole ? `/${userRole}/dashboard` : '/landing';
         return next(redirectPath);
+      }
+
+      // Handle public routes first
+      if (isPublic && !isAuthenticated) {
+        return next(); // Allow access to public routes
       }
 
       // Redirect authenticated users away from the login page
