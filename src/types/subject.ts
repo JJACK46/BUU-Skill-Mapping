@@ -1,4 +1,4 @@
-import type { SkillExpectedLevel } from './skill-exp-lvl';
+import type { Curriculum } from './curriculum';
 import type { SubjectType } from './subjectType.enum';
 
 export interface Subject {
@@ -8,7 +8,5 @@ export interface Subject {
   description: string;
   credit: string;
   type: SubjectType;
-  skillExpectedLevels?: Partial<SkillExpectedLevel>[];
-  // clos:Clo[]
-  // courses:Course[]
+  curriculum?: Curriculum;
 }
