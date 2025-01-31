@@ -97,13 +97,18 @@ export const useCurriculumStore = defineStore('curriculum', {
       }
     },
 
-    handleOpenDialog(form?: Partial<Curriculum>) {
-      this.dialogState = true;
-      this.titleForm = 'Edit Curriculum';
+    handleOpenEdit(form?: Partial<Curriculum>) {
       this.form = { ...form };
       console.log(this.form);
       this.fetchCoordinatorsData();
       this.fetchSubjectsData();
+    },
+    handleOpenDialog(form?: Partial<Curriculum>) {
+      if (form) {
+        this.titleForm = 'Delete Curriculum';
+        this.form = { ...form };
+      }
+      this.dialogState = true;
     },
     async removeCurriculum(id: string) {
       const ok = await CurriculumService.removeOne(id);
