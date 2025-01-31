@@ -76,6 +76,15 @@
     :rules="[requireField]"
     @vue:mounted="fetchBranch"
   ></q-select>
+  <div class="text-right">
+    <q-btn
+      color="primary"
+      unelevated
+      :label="t('save')"
+      @click="store.handleSave"
+      style="width: 80px"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
