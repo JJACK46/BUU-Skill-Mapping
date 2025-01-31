@@ -7,6 +7,11 @@ export const curriculumRoutes: RouteRecordRaw[] = [
     component: () => import('src/layouts/CurriculumLayout.vue'),
     children: [
       {
+        path: '',
+        name: 'Curriculum Id',
+        component: () => import('src/pages/Curriculum/CurriculumTab.vue'),
+      },
+      {
         path: 'coordinators',
         name: 'Coordinators of Curriculum',
         component: () => import('src/pages/Curriculum/CoordinatorsTab.vue'),

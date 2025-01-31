@@ -112,7 +112,6 @@ import type { Subject } from 'src/types/subject';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import CurriculumsMainTab from './CurriculumsMainTab.vue';
 import CoordinatorsTab from './CoordinatorsTab.vue';
 import SubjectTab from './SubjectTab.vue';
 import SkillTab from './SkillTab.vue';
