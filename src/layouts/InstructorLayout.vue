@@ -2,13 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <AppHeader />
     <!-- Left Drawer -->
-    <q-drawer
-      v-model="app.leftDrawerOpen"
-      show-if-above
-      :width="250"
-      side="left"
-      bordered
-    >
+    <AppDrawer>
       <q-list>
         <q-item-label header> </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
@@ -18,7 +12,7 @@
       <q-list class="flex justify-between q-px-md">
         <div>{{ __APP_VERSION }}</div>
       </q-list>
-    </q-drawer>
+    </AppDrawer>
 
     <!-- Right Drawer -->
     <AppRightDrawer />
@@ -35,11 +29,9 @@ import type { MenuProps } from 'components/MenuLink.vue';
 import MenuLink from 'components/MenuLink.vue';
 import { __APP_VERSION } from 'src/utils/app';
 import AppHeader from 'src/components/AppHeader.vue';
-import { useGlobalStore } from 'src/stores/global';
 import AppRightDrawer from 'src/components/AppRightDrawer.vue';
 import { EnumUserRole } from 'src/enums/roles';
-
-const app = useGlobalStore();
+import AppDrawer from 'src/components/AppDrawer.vue';
 
 defineOptions({
   name: 'InstructorLayout',

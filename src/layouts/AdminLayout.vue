@@ -2,13 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <AppHeader />
     <!-- Left Drawer -->
-    <q-drawer
-      v-model="app.leftDrawerOpen"
-      show-if-above
-      :width="250"
-      side="left"
-      bordered
-    >
+    <AppDrawer>
       <q-list>
         <q-item-label header> </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
@@ -18,7 +12,7 @@
       <q-list class="flex justify-between q-px-md">
         <div>{{ __APP_VERSION }}</div>
       </q-list>
-    </q-drawer>
+    </AppDrawer>
 
     <!-- Right Drawer -->
     <q-drawer v-model="app.rightDrawerOpen" :width="250" side="right" bordered>
@@ -64,6 +58,7 @@ import { useI18n } from 'vue-i18n';
 import AppHeader from 'src/components/AppHeader.vue';
 import { useGlobalStore } from 'src/stores/global';
 import { EnumUserRole } from 'src/enums/roles';
+import AppDrawer from 'src/components/AppDrawer.vue';
 
 const app = useGlobalStore();
 const darkRef = ref(false);

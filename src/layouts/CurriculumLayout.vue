@@ -1,19 +1,13 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <AppHeader hide-toggle> </AppHeader>
-    <q-drawer
-      show-if-above
-      :width="200"
-      :breakpoint="500"
-      bordered
-      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
-    >
+    <AppDrawer>
       <q-scroll-area class="fit">
         <q-list>
           <MenuLink v-for="link in menuList" :key="link.title" v-bind="link" />
         </q-list>
       </q-scroll-area>
-    </q-drawer>
+    </AppDrawer>
     <q-page-container>
       <q-toolbar>
         <q-breadcrumbs>
@@ -30,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import { QDrawer } from 'quasar';
+import AppDrawer from 'src/components/AppDrawer.vue';
 import AppHeader from 'src/components/AppHeader.vue';
 import MenuLink, { type MenuProps } from 'src/components/MenuLink.vue';
 import { useI18n } from 'vue-i18n';
