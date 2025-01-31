@@ -38,18 +38,36 @@
           <q-td key="branch" :props="props">
             {{ props.row.branch.name }}
           </q-td>
-          <ContextMenu
-            :edit-fn="() => store.handleOpenDialog(props.row)"
-            :delete-fn="() => store.removeCurriculum(props.row.id)"
-          ></ContextMenu>
-          <ContextMenu
-            :edit-fn="() => store.handleOpenDialog(props.row)"
-            :delete-fn="() => store.removeCurriculum(props.row.id)"
-          ></ContextMenu>
+          <q-td>
+            <q-btn
+              flat
+              dense
+              round
+              color="primary"
+              icon="edit"
+              @click="handleEditBtn(props.row)" />
+            <q-btn
+              flat
+              dense
+              round
+              color="negative"
+              icon="delete"
+              @click="store.handleOpenDialog(props.row)"
+          /></q-td>
         </q-tr>
       </template>
     </q-table>
   </q-page>
+
+  <DialogForm
+    v-model="store.dialogState"
+    :title="store.getDialogTitle"
+    ref="formRef"
+  >
+    <template #body>
+      <p>ต้องการลบ {{ store.form.id }}</p>
+    </template>
+  </DialogForm>
 </template>
 
 <script lang="ts" setup>
@@ -64,7 +82,7 @@ import type { Subject } from 'src/types/subject';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGlobalStore } from 'src/stores/global';
-import ContextMenu from 'src/components/ContextMenu.vue';
+import DialogForm from 'src/components/DialogForm.vue';
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
@@ -79,6 +97,7 @@ const columns = ref<QTableColumn[]>([
   { name: 'degree', label: 'Degree', field: 'degree', align: 'left' },
   { name: 'period', label: 'Period', field: 'period', align: 'left' },
   { name: 'branch', label: 'Branch', field: 'branch', align: 'left' },
+  { name: 'actions', label: 'Actions', field: 'actions', align: 'left' },
 ]);
 
 onMounted(async () => {
@@ -89,6 +108,12 @@ const handleAddBtn = () => {
   // for demo
   router.push('/curriculum/1');
   store.resetForm();
+};
+
+const handleEditBtn = (row) => {
+  console.log('Selected row data:', row);
+  store.handleOpenEdit(row);
+  router.push(`/curriculum/${row.id}`);
 };
 
 useMeta({
