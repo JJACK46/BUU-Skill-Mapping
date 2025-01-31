@@ -20,10 +20,13 @@
     >
       <template v-slot:body="props">
         <q-tr :props="props">
+          <q-td>
+            {{ props.rowIndex + 1 }}
+          </q-td>
           <q-td key="id" :props="props">
             {{ props.row.id }}
           </q-td>
-          <q-td key="name" :props="props">
+          <q-td key="name" :props="props" width="400px">
             {{ props.row.name }}
           </q-td>
           <q-td key="degree" :props="props">
@@ -70,6 +73,7 @@ const store = useCurriculumStore();
 const curriculums = ref<Curriculum[]>();
 const subjects = ref<Subject[]>();
 const columns = ref<QTableColumn[]>([
+  { name: 'no', label: 'No.', field: 'no', align: 'left' },
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
   { name: 'name', label: 'Name', field: 'name', align: 'left' },
   { name: 'degree', label: 'Degree', field: 'degree', align: 'left' },
@@ -82,7 +86,8 @@ onMounted(async () => {
 });
 
 const handleAddBtn = () => {
-  router.push({ name: 'New Curriculum' });
+  // for demo
+  router.push('/curriculum/1');
   store.resetForm();
 };
 
