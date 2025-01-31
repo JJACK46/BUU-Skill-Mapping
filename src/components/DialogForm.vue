@@ -1,5 +1,11 @@
 <template>
-  <q-dialog v-model="dialogState" :full-width="fullWidth">
+  <q-dialog
+    transition-duration="100"
+    transition-hide="fade"
+    transition-show="fade"
+    v-model="dialogState"
+    :full-width="fullWidth"
+  >
     <q-card
       class="dialog-form"
       :style="{ width: width ? width : '500px', maxWidth: '1920px' }"
@@ -8,7 +14,7 @@
         <q-card-section>
           <div class="text-h6">{{ title }}</div>
           <q-separator class="q-my-md"></q-separator>
-          <span class="q-gutter-y-sm">
+          <span class="q-gutter-y-md">
             <slot name="body" />
           </span>
         </q-card-section>

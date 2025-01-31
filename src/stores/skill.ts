@@ -12,7 +12,8 @@ type TitleForm =
   | 'New Skill'
   | 'Edit Skill'
   | 'Delete Skill'
-  | 'Insert Sub-Skill';
+  | 'Insert Sub-Skill'
+  | 'View';
 
 export const useSkillStore = defineStore('skill', {
   state: () => ({
