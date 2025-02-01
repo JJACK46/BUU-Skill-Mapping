@@ -104,9 +104,10 @@ onMounted(async () => {
   await store.fetchData();
 });
 
-const handleAddBtn = () => {
+const handleAddBtn = async () => {
   // for demo
-  router.push('/curriculum/1');
+  const id = await store.fetchInsertId();
+  router.push(`/curriculums/${id}`);
   store.resetForm();
 };
 
