@@ -28,6 +28,10 @@ export const useCurriculumStore = defineStore('curriculum', {
     getDialogTitle: (c) => c.titleForm,
   },
   actions: {
+    async fetchInsertId() {
+      const res = await CurriculumService.getInsertId();
+      return res.data;
+    },
     async fetchData() {
       const { data, total } = await CurriculumService.getAll(
         convertToPageParams(this.pagination, this.search, this.filterModel),

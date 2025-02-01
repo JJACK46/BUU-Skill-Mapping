@@ -91,13 +91,19 @@
 import { BranchService } from 'src/services/branches';
 import { onlyAlphabet, requireField } from 'src/utils/field-rules';
 import type { Branch } from 'src/types/branch';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 const store = useCurriculumStore();
 const branches = ref<Branch[]>();
 const { t } = useI18n();
+const route = useRoute();
+
+onMounted(() => {
+  store.form.id = route.params.id as string;
+});
 
 async function fetchBranch() {
   branches.value = (await BranchService.getAll()).data;
