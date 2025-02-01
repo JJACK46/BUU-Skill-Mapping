@@ -130,4 +130,7 @@ useMeta({
 .hover-row:hover {
   color: $secondary;
 }
+.hover-row1:hover {
+  color: $secondary;
+}
 </style>
