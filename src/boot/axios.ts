@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Notify } from 'quasar';
+import { useRoute } from 'vue-router';
 
 const api = axios.create({
   baseURL: process.env.BACKEND_API,
@@ -31,6 +32,8 @@ api.interceptors.response.use(
     return response;
   },
   function (e) {
+    const route = useRoute();
+    if (route.path === '/login' || route.path === '/landing') return;
     Notify.create({
       type: 'negative',
       message: e + ' | ' + e.response.data.message,
