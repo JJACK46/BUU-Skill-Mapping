@@ -33,10 +33,12 @@ api.interceptors.response.use(
   },
   function (e) {
     const route = useRoute();
-    if (route.path === '/login' || route.path === '/landing') return;
+    if (route) {
+      if (route.path === '/login' || route.path === '/landing') return;
+    }
     Notify.create({
       type: 'negative',
-      message: e + ' | ' + e.response.data.message,
+      message: e + ' | ' + e.response?.data.message,
       timeout: 5000,
       progress: true,
     });
