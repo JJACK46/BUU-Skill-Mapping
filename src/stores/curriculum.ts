@@ -18,19 +18,18 @@ export const useCurriculumStore = defineStore('curriculum', {
     tabsModel: 'main',
     titleForm: '' as TitleForm,
     router: useRouter(),
-    qDialog: Dialog,
-    qNotify: Notify,
     search: '',
     filterModel: {} as Partial<FilterModel>,
   }),
   getters: {
     getCurriculums: (c) => c.curriculums,
     getDialogTitle: (c) => c.titleForm,
+    getInsertId: (c) => c.form.id,
   },
   actions: {
     async fetchInsertId() {
       const res = await CurriculumService.getInsertId();
-      return res.data;
+      return res;
     },
     async fetchData() {
       const { data, total } = await CurriculumService.getAll(
@@ -114,10 +113,18 @@ export const useCurriculumStore = defineStore('curriculum', {
       }
       this.dialogState = true;
     },
+    handleDelete(id: string) {
+      Dialog.create({
+        title: 'Confirm Deletion',
+        message: 'Are you sure you want to delete this curriculum?',
+        cancel: true,
+        persistent: true,
+      }).onOk(() => this.removeCurriculum(id));
+    },
     async removeCurriculum(id: string) {
       const ok = await CurriculumService.removeOne(id);
       if (ok) {
-        this.qNotify.create({
+        Notify.create({
           type: 'ok',
           message: 'Curriculum removed successfully',
         });
