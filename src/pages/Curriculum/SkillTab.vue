@@ -4,7 +4,7 @@ import { useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import { LearningDomain } from 'src/types/learning-domain.enum';
 import { requireField } from 'src/utils/field-rules';
-import { useMeta } from 'quasar';
+import { QTree, useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import type { Skill } from 'src/types/skill';
@@ -38,6 +38,20 @@ const mock = ref<Skill[]>([
   },
 ]);
 
+// Get all node IDs to expand initially
+const expandedNodes = computed(() => {
+  const getAllNodeIds = (nodes) =>
+    nodes.reduce(
+      (ids, node) => [
+        ...ids,
+        node.id,
+        ...(node.children ? getAllNodeIds(node.children) : []),
+      ],
+      [],
+    );
+  return getAllNodeIds(mock.value);
+});
+
 useMeta({
   title: title.value,
 });
@@ -46,20 +60,12 @@ useMeta({
 <template>
   <q-page>
     <!-- Page Title -->
-    <div class="text-h4 q-mb-lg">{{ t('Skill Management') }}</div>
+    <div class="text-h4 text-primary">
+      {{ t('Skill Management') }}
+    </div>
     <!-- Operator -->
-    <div class="flex justify-between">
-      <div>
-        <q-btn
-          @click="store.toggleDialog({ title: 'New Skill' })"
-          color="primary"
-          :label="t('add')"
-          style="width: 80px"
-          unelevated
-        >
-        </q-btn>
-      </div>
-      <div>
+    <div class="flex justify-end">
+      <div class="flex q-gutter-x-sm">
         <q-input
           outlined
           clearable
@@ -76,12 +82,25 @@ useMeta({
             <q-icon name="search"></q-icon>
           </template>
         </q-input>
+        <q-btn
+          @click="store.toggleDialog({ title: 'New Skill' })"
+          color="primary"
+          :label="t('add')"
+          style="width: 80px"
+          unelevated
+        >
+        </q-btn>
       </div>
     </div>
 
     <!-- Content -->
     <q-card flat bordered class="q-animate--fade q-my-md">
-      <q-tree :nodes="mock" node-key="id" class="q-pa-sm" default-expand-all>
+      <q-tree
+        :nodes="mock"
+        node-key="id"
+        class="q-pa-sm"
+        :expanded="expandedNodes"
+      >
         <template v-slot:default-header="props">
           <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
             <!-- Header -->
@@ -144,19 +163,6 @@ useMeta({
           :label="t('description') + ' *'"
           outlined
           type="textarea"
-          :rules="[requireField]"
-        />
-        <q-select
-          :options="
-            mock
-              .filter((item) => item.id !== store.form.id)
-              .concat(mock.flatMap((item) => item.children))
-          "
-          multiple
-          v-model="store.form.children"
-          option-label="name"
-          label="Sub-Skills"
-          outlined
           :rules="[requireField]"
         />
       </template>
