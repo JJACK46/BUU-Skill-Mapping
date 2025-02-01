@@ -53,7 +53,7 @@ export const useCurriculumStore = defineStore('curriculum', {
           type: 'ok',
           message: 'Curriculum created successfully',
         });
-        this.router.push('/curriculums');
+        this.router.push('/');
         this.dialogState = false;
         this.resetForm();
       }
