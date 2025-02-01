@@ -36,7 +36,7 @@
             {{ props.row.period }} &nbsp; ปี
           </q-td>
           <q-td key="branch" :props="props">
-            {{ props.row.branch.name }}
+            {{ props.row.branch?.name }}
           </q-td>
           <q-td>
             <q-btn
@@ -52,22 +52,12 @@
               round
               color="negative"
               icon="delete"
-              @click="store.handleOpenDialog(props.row)"
+              @click="store.handleDelete(props.row.id)"
           /></q-td>
         </q-tr>
       </template>
     </q-table>
   </q-page>
-
-  <DialogForm
-    v-model="store.dialogState"
-    :title="store.getDialogTitle"
-    ref="formRef"
-  >
-    <template #body>
-      <p>ต้องการลบ {{ store.form.id }}</p>
-    </template>
-  </DialogForm>
 </template>
 
 <script lang="ts" setup>
@@ -82,7 +72,6 @@ import type { Subject } from 'src/types/subject';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGlobalStore } from 'src/stores/global';
-import DialogForm from 'src/components/DialogForm.vue';
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
@@ -105,7 +94,6 @@ onMounted(async () => {
 });
 
 const handleAddBtn = async () => {
-  // for demo
   const id = await store.fetchInsertId();
   router.push(`/curriculums/${id}`);
   store.resetForm();
@@ -114,7 +102,7 @@ const handleAddBtn = async () => {
 const handleEditBtn = (row) => {
   console.log('Selected row data:', row);
   store.handleOpenEdit(row);
-  router.push(`/curriculum/${row.id}`);
+  router.push(`/curriculums/${row.id}`);
 };
 
 useMeta({
