@@ -12,6 +12,11 @@ export class CurriculumService {
     };
   }
 
+  static async getInsertId() {
+    const res = await api.get(`${this.path}/auto_id`);
+    return res.data;
+  }
+
   static async getOne(id: string) {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;

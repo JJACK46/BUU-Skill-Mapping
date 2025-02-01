@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 export const curriculumRoutes: RouteRecordRaw[] = [
   {
-    path: '/curriculum/:id',
+    path: '/curriculums/:id',
     name: 'Curriculum',
     component: () => import('src/layouts/CurriculumLayout.vue'),
     children: [

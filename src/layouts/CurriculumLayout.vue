@@ -33,7 +33,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const { t } = useI18n();
 
-const basePath = `/curriculum/${route.params.id}`;
+const basePath = `/curriculums/${route.params.id}`;
 
 const menuList: MenuProps[] = [
   {
