@@ -126,7 +126,7 @@ import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-const props = defineProps<{
+defineProps<{
   landing?: boolean | false;
   hideToggle?: true;
 }>();
@@ -154,9 +154,10 @@ function changeLocale() {
 }
 
 onMounted(async () => {
-  if (!props.landing) {
-    if (auth.profile) return;
-    auth.profile = await auth.getProfile();
-  }
+  auth.profile = await auth.getProfile();
+
+  // if (!props.landing) {
+  //   if (auth.profile) return;
+  // }
 });
 </script>
