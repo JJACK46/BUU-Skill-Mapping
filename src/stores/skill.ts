@@ -116,7 +116,8 @@ export const useSkillStore = defineStore('skill', {
       this.titleForm = title || 'New Skill';
       this.parentId = parentId || null;
       if (form) {
-        this.form = form;
+        // copy form
+        this.form = JSON.parse(JSON.stringify(form));
       } else {
         this.resetForm();
       }

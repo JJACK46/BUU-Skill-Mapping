@@ -87,5 +87,6 @@
   "showOnlyWithSubSkill": "แสดงเฉพาะทักษะที่มีทักษะรอง",
   "confirm": "ยืนยัน",
   "clear": "ล้างค่า",
-  "summary": "สรุป"
+  "summary": "สรุป",
+  "noData": "ไม่พบข้อมูล"
 }
