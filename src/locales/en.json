@@ -85,5 +85,6 @@
   "showOnlyWithSubSkill": "Show only skills with sub-skills",
   "confirm": "Confirm",
   "clear": "Clear",
-  "summary": "Summary"
+  "summary": "Summary",
+  "noData": "No Data"
 }
