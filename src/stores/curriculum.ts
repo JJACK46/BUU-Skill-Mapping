@@ -25,11 +25,16 @@ export const useCurriculumStore = defineStore('curriculum', {
     getCurriculums: (c) => c.curriculums,
     getDialogTitle: (c) => c.titleForm,
     getInsertId: (c) => c.form.id,
+    getSkills: (c) => c.form.skills || [],
   },
   actions: {
     async fetchInsertId() {
       const res = await CurriculumService.getInsertId();
       return res;
+    },
+    async fetchOne(id: string) {
+      const res = await CurriculumService.getOne(id);
+      this.form = res;
     },
     async fetchData() {
       const { data, total } = await CurriculumService.getAll(
@@ -104,7 +109,6 @@ export const useCurriculumStore = defineStore('curriculum', {
 
     handleOpenEdit(form?: Partial<Curriculum>) {
       this.form = { ...form };
-      console.log(this.form);
       this.fetchCoordinatorsData();
       this.fetchSubjectsData();
     },
