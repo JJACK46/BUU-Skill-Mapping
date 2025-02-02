@@ -11,7 +11,7 @@
     :pagination="store.pagination"
     class="q-animate--fade q-mt-lg"
     separator="cell"
-    :rows="mock"
+    :rows="curr.form.coordinators || []"
     row-key="id"
     :loading="global.getLoadingState"
     :columns="columns"
@@ -127,6 +127,7 @@ import { useGlobalStore } from 'src/stores/global';
 import { BranchService } from 'src/services/branches';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
+import { useCurriculumStore } from 'src/stores/curriculum';
 
 const { t } = useI18n();
 const global = useGlobalStore();
@@ -134,7 +135,7 @@ const branches = ref<Branch[]>([]);
 const store = useTeacherStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const mock = [];
+const curr = useCurriculumStore();
 
 const columns: QTableColumn[] = [
   {
