@@ -19,15 +19,24 @@
           </span>
         </q-card-section>
         <q-card-actions class="justify-end q-pa-md">
-          <q-btn flat :label="t('cancel')" @click="dialogState = false"></q-btn>
-          <q-btn
-            :disable="!isFormValid || !formValid"
-            color="primary"
-            unelevated
-            :label="t('save')"
-            style="width: 80px"
-            @click="handleSave"
-          ></q-btn>
+          <div v-if="title !== 'View'">
+            <q-btn
+              flat
+              :label="t('cancel')"
+              @click="dialogState = false"
+            ></q-btn>
+            <q-btn
+              :disable="!isFormValid || !formValid"
+              color="primary"
+              unelevated
+              :label="t('save')"
+              style="width: 80px"
+              @click="handleSave"
+            ></q-btn>
+          </div>
+          <div v-else>
+            <q-btn flat :label="t('ok')" @click="dialogState = false"></q-btn>
+          </div>
         </q-card-actions>
       </q-form>
     </q-card>
