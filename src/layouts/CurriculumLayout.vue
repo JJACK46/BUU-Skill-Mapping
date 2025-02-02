@@ -45,7 +45,7 @@ onMounted(() => {
 const menuList: MenuProps[] = [
   {
     icon: 'home',
-    title: t('curriculum'),
+    title: 'curriculum',
     link: basePath,
   },
   {
@@ -55,22 +55,22 @@ const menuList: MenuProps[] = [
   },
   {
     icon: 'groups',
-    title: t('coordinators'),
+    title: 'coordinators',
     link: `${basePath}/coordinators`,
   },
   {
     icon: 'books',
-    title: t('subjects'),
+    title: 'subjects',
     link: `${basePath}/subjects`,
   },
   {
     icon: 'code',
-    title: t('skills'),
+    title: 'skills',
     link: `${basePath}/skills`,
   },
   {
     icon: 'check',
-    title: t('summary'),
+    title: 'summary',
     link: `${basePath}/summary`,
   },
 ];

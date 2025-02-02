@@ -77,6 +77,7 @@
   "New Curriculum": "หลักสูตรใหม่",
   "Skill Management": "จัดการทักษะ",
   "Curriculums Management": "จัดการหลักสูตร",
+  "Subject Management": "จัดการรายวิชา",
   "main": "หลัก",
   "next": "ต่อไป",
   "back": "ย้อนกลับ",
@@ -88,5 +89,8 @@
   "confirm": "ยืนยัน",
   "clear": "ล้างค่า",
   "summary": "สรุป",
-  "noData": "ไม่พบข้อมูล"
+  "noData": "ไม่พบข้อมูล",
+  "branches": "สาขา",
+  "id": "ID",
+  "code": "รหัส"
 }
