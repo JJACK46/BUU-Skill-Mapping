@@ -7,36 +7,15 @@ import { requireField } from 'src/utils/field-rules';
 import { QTree, useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useCurriculumStore } from 'src/stores/curriculum';
 import type { Skill } from 'src/types/skill';
 
 const store = useSkillStore();
+const curr = useCurriculumStore();
 const { t } = useI18n();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const searchText = ref('');
-
-const mock = ref<Skill[]>([
-  {
-    id: 1,
-    name: 'Skill 1',
-    domain: LearningDomain.Psychomotor,
-    description: 'some info 1',
-    children: [
-      {
-        id: 2,
-        name: 'Sub-Skill 1',
-        domain: LearningDomain.Psychomotor,
-        description: 'some info 2',
-      },
-      {
-        id: 3,
-        name: 'Sub-Skill 3',
-        domain: LearningDomain.Psychomotor,
-        description: 'some info 3',
-      },
-    ],
-  },
-]);
 
 // Get all node IDs to expand initially
 const expandedNodes = computed(() => {
@@ -49,8 +28,19 @@ const expandedNodes = computed(() => {
       ],
       [],
     );
-  return getAllNodeIds(mock.value);
+  return getAllNodeIds(curr.getSkills);
 });
+
+const insertSkill = (sk: Skill) => {
+  if (!curr.form.skills) {
+    curr.form.skills = [];
+  }
+  if (curr.form.skills.find((s) => s.id === sk.id)) {
+    return;
+  }
+  curr.form.skills.push(sk);
+  store.toggleDialog({});
+};
 
 useMeta({
   title: title.value,
@@ -96,9 +86,10 @@ useMeta({
     <!-- Content -->
     <q-card flat bordered class="q-animate--fade q-my-md">
       <q-tree
-        :nodes="mock"
+        :nodes="curr.getSkills"
         node-key="id"
         class="q-pa-sm"
+        :no-nodes-label="t('noData')"
         :expanded="expandedNodes"
       >
         <template v-slot:default-header="props">
@@ -138,15 +129,25 @@ useMeta({
         </template>
       </q-tree>
     </q-card>
+    <div class="flex justify-end">
+      {{ curr.form }}
+      <q-btn
+        :label="t('save')"
+        @click="curr.handleSave()"
+        color="primary"
+        unelevated
+      ></q-btn>
+    </div>
+
     <!-- All in One Dialog -->
     <DialogForm
       :title="store.getTitleForm"
-      @save="store.handleSave()"
+      @save="insertSkill(store.form as Skill)"
       v-model="store.dialogForm"
     >
       <template #body>
         <q-input
-          v-model="store.form.id"
+          v-model="store.form.name"
           :label="t('name') + ' *'"
           outlined
           :rules="[requireField]"

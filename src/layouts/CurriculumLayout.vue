@@ -27,13 +27,20 @@
 import AppDrawer from 'src/components/AppDrawer.vue';
 import AppHeader from 'src/components/AppHeader.vue';
 import MenuLink, { type MenuProps } from 'src/components/MenuLink.vue';
+import { useCurriculumStore } from 'src/stores/curriculum';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
+const store = useCurriculumStore();
 const route = useRoute();
 const { t } = useI18n();
 
 const basePath = `/curriculums/${route.params.id}`;
+
+onMounted(() => {
+  store.fetchOne(route.params.id as string);
+});
 
 const menuList: MenuProps[] = [
   {
