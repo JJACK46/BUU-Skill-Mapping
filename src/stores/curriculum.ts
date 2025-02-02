@@ -57,13 +57,15 @@ export const useCurriculumStore = defineStore('curriculum', {
     async handleSave() {
       const ok = await CurriculumService.updateOne(this.form);
       if (ok) {
-        this.qNotify.create({
+        Notify.create({
           type: 'ok',
           message: 'Curriculum created successfully',
         });
         this.router.push('/');
         this.dialogState = false;
-        this.resetForm();
+        setTimeout(() => {
+          this.resetForm();
+        }, 1000);
       }
     },
 
