@@ -42,6 +42,7 @@ export const useSkillStore = defineStore('skill', {
     },
   },
   actions: {
+    // independent skill
     async fetchData() {
       const { data, total } = await SkillService.getAll(
         convertToPageParams(this.pagination, this.search),
@@ -49,6 +50,7 @@ export const useSkillStore = defineStore('skill', {
       this.skills = data;
       this.totalSkills = total;
     },
+    // independent skill
     async handleSave() {
       if (this.parentId) {
         const ok = await SkillService.addSubSkill(this.parentId, this.form);
@@ -79,6 +81,7 @@ export const useSkillStore = defineStore('skill', {
       this.resetForm();
       this.parentId = null;
     },
+    // independent skill
     async handleRemove({
       id,
       subSkillId,
