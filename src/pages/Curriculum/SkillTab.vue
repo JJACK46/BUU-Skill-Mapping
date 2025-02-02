@@ -4,12 +4,13 @@ import { useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import { LearningDomain } from 'src/types/learning-domain.enum';
 import { requireField } from 'src/utils/field-rules';
-import { QTree, useMeta } from 'quasar';
+import { QTree, useMeta, useQuasar } from 'quasar';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import type { Skill } from 'src/types/skill';
 
+const q = useQuasar();
 const store = useSkillStore();
 const curr = useCurriculumStore();
 const { t } = useI18n();
@@ -35,11 +36,57 @@ const insertSkill = (sk: Skill) => {
   if (!curr.form.skills) {
     curr.form.skills = [];
   }
-  if (curr.form.skills.find((s) => s.id === sk.id)) {
-    return;
+  const index = curr.form.skills.findIndex((s) => s.id === sk.id);
+  if (index >= 0) {
+    curr.form.skills.splice(index, 1, sk);
+  } else {
+    curr.form.skills.push(sk);
   }
-  curr.form.skills.push(sk);
-  store.toggleDialog({});
+};
+
+const insertSubSkill = (sk: Skill, parentId: number) => {
+  const index = curr.form.skills.findIndex((s) => s.id === parentId);
+  if (index >= 0) {
+    const parent = curr.form.skills[index];
+    if (parent.children) {
+      curr.form.skills[index].children.push(sk);
+    } else {
+      curr.form.skills[index].children = [sk];
+    }
+  }
+};
+
+const handleSave = (title: string) => {
+  if (title === 'Insert Sub-Skill') {
+    insertSubSkill(store.form as Skill, store.parentId as number);
+  }
+  if (title === 'New Skill') {
+    insertSkill(store.form as Skill);
+  }
+  store.dialogForm = false;
+};
+
+const handleRemove = (id: number) => {
+  const deepFilter = (skills, idToRemove) => {
+    return skills.reduce((acc, skill) => {
+      if (skill.id !== idToRemove) {
+        if (skill.children) {
+          skill.children = deepFilter(skill.children, idToRemove);
+        }
+        acc.push(skill);
+      }
+      return acc;
+    }, []);
+  };
+
+  q.dialog({
+    title: 'Confirm',
+    message: 'Are you sure you want to delete this item?',
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    curr.form.skills = deepFilter(curr.form.skills, id);
+  });
 };
 
 useMeta({
@@ -110,6 +157,18 @@ useMeta({
               ></q-btn>
               <q-btn
                 @click="
+                  store.toggleDialog({
+                    parentId: props.node.id,
+                    title: 'Insert Sub-Skill',
+                  })
+                "
+                icon="arrow_left"
+                padding="none"
+                class="hover-btn"
+                flat
+              ></q-btn>
+              <q-btn
+                @click="
                   store.toggleDialog({ form: props.node, title: 'Edit Skill' })
                 "
                 icon="edit"
@@ -118,7 +177,7 @@ useMeta({
                 flat
               ></q-btn>
               <q-btn
-                @click="store.handleRemove({ id: props.node.id })"
+                @click="handleRemove(props.node.id)"
                 icon="delete"
                 padding="none"
                 class="hover-btn"
@@ -130,7 +189,6 @@ useMeta({
       </q-tree>
     </q-card>
     <div class="flex justify-end">
-      {{ curr.form }}
       <q-btn
         :label="t('save')"
         @click="curr.handleSave()"
@@ -142,7 +200,7 @@ useMeta({
     <!-- All in One Dialog -->
     <DialogForm
       :title="store.getTitleForm"
-      @save="insertSkill(store.form as Skill)"
+      @save="handleSave(store.getTitleForm)"
       v-model="store.dialogForm"
     >
       <template #body>
