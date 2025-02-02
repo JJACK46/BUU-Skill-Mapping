@@ -75,6 +75,7 @@
   "New Curriculum": "New Curriculum",
   "Skill Management": "Skill Management",
   "Curriculums Management": "Curriculums Management",
+  "Subject Management": "Subjects Management",
   "main": "Main",
   "next": "Next",
   "back": "Back",
@@ -86,5 +87,8 @@
   "confirm": "Confirm",
   "clear": "Clear",
   "summary": "Summary",
-  "noData": "No Data"
+  "noData": "No Data",
+  "branches": "Branches",
+  "id": "ID",
+  "code": "Code"
 }
