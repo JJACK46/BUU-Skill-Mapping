@@ -22,7 +22,7 @@
   <DialogForm
     title="New Instructor"
     v-model="store.dialogState"
-    @save="store.handleSave"
+    @save="handleSave()"
   >
     <template #body>
       <q-select
@@ -118,7 +118,7 @@ import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useTeacherStore } from 'src/stores/instructor';
+import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
 import { requireField } from 'src/utils/field-rules';
 import type { Branch } from 'src/types/branch';
@@ -128,11 +128,12 @@ import { BranchService } from 'src/services/branches';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
 import { useCurriculumStore } from 'src/stores/curriculum';
+import type { Coordinator } from 'src/types/coordinator';
 
 const { t } = useI18n();
 const global = useGlobalStore();
 const branches = ref<Branch[]>([]);
-const store = useTeacherStore();
+const store = useInstructorStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const curr = useCurriculumStore();
@@ -189,6 +190,14 @@ function fetchBranches() {
     branches.value = res.data;
   });
 }
+
+const handleSave = () => {
+  if (!curr.form.coordinators) {
+    curr.form.coordinators = [];
+  }
+  curr.form.coordinators.push(store.form as Coordinator);
+  store.dialogState = false;
+};
 
 useMeta({
   title: title.value,

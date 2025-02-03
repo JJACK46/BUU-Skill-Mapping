@@ -1,9 +1,9 @@
 import type { Branch } from './branch';
 import type { Subject } from './subject';
-import type { Instructor } from './instructor';
 import type { Plo } from './plo';
 import type { Skill } from './skill';
 import type { CourseSpec } from './course-spec';
+import type { Coordinator } from './coordinator';
 export interface Curriculum {
   id: string;
   name: string;
@@ -13,7 +13,7 @@ export interface Curriculum {
   description: string;
   period: number;
   minimumGrade: number;
-  coordinators: Instructor[];
+  coordinators: Coordinator[];
   plos?: Plo[];
   subjects: Subject[];
   courseSpecs?: CourseSpec[];
