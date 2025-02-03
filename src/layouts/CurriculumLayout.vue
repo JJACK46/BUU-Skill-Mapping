@@ -20,6 +20,27 @@
         <router-view />
       </div>
     </q-page-container>
+    <q-footer class="bg-grey-2 q-py-sm">
+      <q-toolbar>
+        <q-toolbar-title> </q-toolbar-title>
+        <div class="q-gutter-x-sm">
+          <q-btn
+            color="negative"
+            unelevated
+            :label="t('cancel')"
+            @click="$router.push('/')"
+            style="width: 80px"
+          />
+          <q-btn
+            color="primary"
+            unelevated
+            :label="t('save')"
+            @click="store.handleSave()"
+            style="width: 80px"
+          />
+        </div>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
