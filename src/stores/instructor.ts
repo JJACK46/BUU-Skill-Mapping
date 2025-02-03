@@ -4,7 +4,7 @@ import { InstructorService } from 'src/services/instructor';
 import type { PageParams } from 'src/types/pagination';
 import type { Instructor } from 'src/types/instructor';
 
-export const useTeacherStore = defineStore('teacher', {
+export const useInstructorStore = defineStore('instructor', {
   state: () => ({
     dialogState: false,
     search: '',

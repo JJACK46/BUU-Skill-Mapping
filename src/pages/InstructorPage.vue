@@ -123,7 +123,7 @@ import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useTeacherStore } from 'src/stores/instructor';
+import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
 import { requireField } from 'src/utils/field-rules';
 import type { Branch } from 'src/types/branch';
@@ -134,7 +134,7 @@ import MainHeader from 'src/components/PageHeader.vue';
 
 const global = useGlobalStore();
 const branches = ref<Branch[]>([]);
-const store = useTeacherStore();
+const store = useInstructorStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const columns: QTableColumn[] = [
