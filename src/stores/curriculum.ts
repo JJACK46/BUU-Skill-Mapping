@@ -61,7 +61,7 @@ export const useCurriculumStore = defineStore('curriculum', {
           type: 'ok',
           message: 'Curriculum created successfully',
         });
-        this.router.push('/');
+        this.router.push('/administer/curriculums');
         this.dialogState = false;
         setTimeout(() => {
           this.resetForm();
