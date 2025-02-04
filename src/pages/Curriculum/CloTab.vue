@@ -13,19 +13,34 @@
     ref="formRef"
   >
     <template #body>
-      <div class="row">
+      <div class="row justify-between">
         <div class="col-6">
           <q-input
-            v-model="store.form.id"
+            v-model="store.form.name"
             outlined
             dense
             :label="t('Name')"
-            mask="########"
-            :rules="[requireField]"
           />
         </div>
+        <div class="col-5">
+          <q-select
+            v-model="store.form.expectedLevel"
+            :options="[1, 2, 3, 4, 5]"
+            outlined
+            dense
+            :label="t('Expected Level')"
+          />
+
+          <!-- <q-input
+            v-model="store.form.expectedLevel"
+            outlined
+            dense
+            :label="t('expectedLevel')"
+            mask="########"
+          /> -->
+        </div>
       </div>
-      <div class="row">
+      <div class="row justify-between">
         <div class="col-6">
           <q-input
             v-model="store.form.id"
@@ -33,10 +48,9 @@
             dense
             :label="t('PLO ID')"
             mask="########"
-            :rules="[requireField]"
           />
         </div>
-        <div class="col-6">
+        <div class="col-5">
           <q-input
             v-model="store.form.id"
             outlined
@@ -46,7 +60,7 @@
           />
         </div>
       </div>
-      <div class="row">
+      <div class="row justify-between">
         <div class="col-6">
           <q-input
             v-model="store.form.id"
@@ -54,10 +68,9 @@
             dense
             :label="t('Skill ID')"
             mask="########"
-            :rules="[requireField]"
           />
         </div>
-        <div class="col-6">
+        <div class="col-5">
           <q-input
             v-model="store.form.id"
             outlined
@@ -75,7 +88,6 @@
             outlined
             v-model="store.form.description"
             :label="t('description') + ' *'"
-            :rules="[requireField]"
           />
         </div>
       </div>
@@ -130,7 +142,7 @@ import { useClostore } from 'src/stores/clos';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
-import { requireField } from 'src/utils/field-rules';
+// import { requireField } from 'src/utils/field-rules';
 
 const { t } = useI18n();
 const global = useGlobalStore();
@@ -153,16 +165,25 @@ const rows = ref([
     id: 1,
     name: 'CLOs 1',
     description: 'description',
+    expectedLevel: 2,
+    plo: 1,
+    skill: 1,
   },
   {
     id: 2,
     name: 'CLOs 2',
     description: 'description',
+    expectedLevel: 2,
+    plo: 1,
+    skill: 1,
   },
   {
     id: 3,
     name: 'CLOs 3',
     description: 'description',
+    expectedLevel: 2,
+    plo: 1,
+    skill: 1,
   },
 ]);
 </script>
