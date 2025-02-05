@@ -24,95 +24,89 @@
       v-model="store.dialogState"
       @save="store.handleSave"
     >
-      <template #body>
-        <q-select
-          outlined
-          dense
-          v-model="store.form.branch"
-          :options="branches"
-          option-label="name"
-          label="Branch *"
-          options-dense
-          :rules="[requireField]"
-          @vue:mounted="fetchBranches"
-        >
-        </q-select>
-        <q-input
-          outlined
-          dense
-          v-model="store.form.email"
-          label="Email *"
-          type="email"
-          clearable
-          :rules="[requireField]"
-        />
-        <q-input
-          outlined
-          v-model="store.form.name"
-          label="Name *"
-          clearable
-          dense
-          :rules="[requireField]"
-        />
-        <q-input
-          outlined
-          dense
-          v-model="store.form.engName"
-          label="English Name *"
-          clearable
-          :rules="[requireField]"
-        />
-        <q-select
-          outlined
-          dense
-          v-model="store.form.position"
-          :options="[...Object.values(AcademicRank)]"
-          label="Position *"
-          options-dense
-          :rules="[requireField]"
-        />
-        <q-select
-          outlined
-          dense
-          v-model="store.form.specialists"
-          :options="[
-            'Machine Learning',
-            'Deep Learning',
-            'Software Engineering',
-          ]"
-          label="Specialists"
-          hint="Optional"
-          options-dense
-          clearable
-          multiple
-        />
-        <q-input
-          outlined
-          dense
-          v-model="store.form.tel"
-          label="Telephone *"
-          clearable
-          :rules="[(val) => val.length == 10 || 'Field not correct format']"
-          mask="###-###-####"
-          unmasked-value
-        />
-        <q-input
-          outlined
-          dense
-          v-model="store.form.officeRoom"
-          label="Office Room *"
-          :rules="[requireField]"
-          clearable
-        />
-        <q-input
-          outlined
-          dense
-          v-model="store.form.bio"
-          label="Bio"
-          hint="Optional"
-          type="textarea"
-        />
-      </template>
+      <q-select
+        outlined
+        dense
+        v-model="store.form.branch"
+        :options="branches"
+        option-label="name"
+        label="Branch *"
+        options-dense
+        :rules="[requireField]"
+        @vue:mounted="fetchBranches"
+      >
+      </q-select>
+      <q-input
+        outlined
+        dense
+        v-model="store.form.email"
+        label="Email *"
+        type="email"
+        clearable
+        :rules="[requireField]"
+      />
+      <q-input
+        outlined
+        v-model="store.form.name"
+        label="Name *"
+        clearable
+        dense
+        :rules="[requireField]"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.engName"
+        label="English Name *"
+        clearable
+        :rules="[requireField]"
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.position"
+        :options="[...Object.values(AcademicRank)]"
+        label="Position *"
+        options-dense
+        :rules="[requireField]"
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.specialists"
+        :options="['Machine Learning', 'Deep Learning', 'Software Engineering']"
+        label="Specialists"
+        hint="Optional"
+        options-dense
+        clearable
+        multiple
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.tel"
+        label="Telephone *"
+        clearable
+        :rules="[(val) => val.length == 10 || 'Field not correct format']"
+        mask="###-###-####"
+        unmasked-value
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.officeRoom"
+        label="Office Room *"
+        :rules="[requireField]"
+        clearable
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.bio"
+        label="Bio"
+        hint="Optional"
+        type="textarea"
+      />
     </DialogForm>
   </q-page>
 </template>

@@ -12,24 +12,22 @@
     :title="store.getDialogTitle"
     ref="formRef"
   >
-    <template #body>
-      <q-input
-        v-model="store.form.id"
-        outlined
-        dense
-        :label="t('name')"
-        mask="########"
-        :rules="[requireField]"
-      />
-      <q-input
-        dense
-        type="textarea"
-        outlined
-        v-model="store.form.description"
-        :label="t('description') + ' *'"
-        :rules="[requireField]"
-      />
-    </template>
+    <q-input
+      v-model="store.form.id"
+      outlined
+      dense
+      :label="t('name')"
+      mask="########"
+      :rules="[requireField]"
+    />
+    <q-input
+      dense
+      type="textarea"
+      outlined
+      v-model="store.form.description"
+      :label="t('description') + ' *'"
+      :rules="[requireField]"
+    />
   </DialogForm>
   <q-table
     flat

@@ -172,36 +172,34 @@ useMeta({
       :title="store.titleForm"
       @save="store.handleSave"
     >
-      <template #body>
-        <q-input
-          v-model="store.form.id"
-          label="ID"
-          outlined
-          readonly
-          hint="Readonly"
-        />
-        <q-input
-          type="email"
-          outlined
-          v-model="store.form.email"
-          label="Email *"
-          :rules="[requireField]"
-        />
-        <q-input
-          type="password"
-          outlined
-          v-model="store.form.password"
-          label="Password *"
-          :rules="[requireField]"
-        />
-        <q-select
-          outlined
-          v-model="store.form.role"
-          label="Role *"
-          :options="Object.values(EnumUserRole)"
-          :rules="[requireField]"
-        />
-      </template>
+      <q-input
+        v-model="store.form.id"
+        label="ID"
+        outlined
+        readonly
+        hint="Readonly"
+      />
+      <q-input
+        type="email"
+        outlined
+        v-model="store.form.email"
+        label="Email *"
+        :rules="[requireField]"
+      />
+      <q-input
+        type="password"
+        outlined
+        v-model="store.form.password"
+        label="Password *"
+        :rules="[requireField]"
+      />
+      <q-select
+        outlined
+        v-model="store.form.role"
+        label="Role *"
+        :options="Object.values(EnumUserRole)"
+        :rules="[requireField]"
+      />
     </DialogForm>
   </q-page>
 </template>

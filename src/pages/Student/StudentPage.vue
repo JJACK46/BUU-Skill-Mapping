@@ -50,62 +50,60 @@
       v-model="store.dialogState"
       @save="store.handleSave"
     >
-      <template #body>
-        <q-select
-          :options="branches"
-          option-label="name"
-          @vue:mounted="
-            async () => {
-              const { data } = await BranchService.getAll();
-              branches = data;
-            }
-          "
-          outlined
-          v-model="store.formStudent.branch"
-          label="Branch *"
-          clearable
-          :rules="[requireField]"
-        />
-        <q-input
-          outlined
-          v-model="store.formStudent.name"
-          label="Name *"
-          clearable
-          :rules="[requireField]"
-        />
-        <q-input
-          outlined
-          v-model="store.formStudent.engName"
-          label="English Name *"
-          clearable
-          :rules="[requireField]"
-        />
-        <q-input
-          label="Date Enrolled"
-          readonly
-          outlined
-          v-model="store.formStudent.dateEnrollment as string"
-        >
-          <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy
-                cover
-                transition-show="scale"
-                transition-hide="scale"
+      <q-select
+        :options="branches"
+        option-label="name"
+        @vue:mounted="
+          async () => {
+            const { data } = await BranchService.getAll();
+            branches = data;
+          }
+        "
+        outlined
+        v-model="store.formStudent.branch"
+        label="Branch *"
+        clearable
+        :rules="[requireField]"
+      />
+      <q-input
+        outlined
+        v-model="store.formStudent.name"
+        label="Name *"
+        clearable
+        :rules="[requireField]"
+      />
+      <q-input
+        outlined
+        v-model="store.formStudent.engName"
+        label="English Name *"
+        clearable
+        :rules="[requireField]"
+      />
+      <q-input
+        label="Date Enrolled"
+        readonly
+        outlined
+        v-model="store.formStudent.dateEnrollment as string"
+      >
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-date
+                v-model="store.formStudent.dateEnrollment"
+                mask="YYYY-MM-DD"
               >
-                <q-date
-                  v-model="store.formStudent.dateEnrollment"
-                  mask="YYYY-MM-DD"
-                >
-                  <div class="row items-left justify-end">
-                    <q-btn v-close-popup label="Close" color="primary" flat />
-                  </div>
-                </q-date>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
-      </template>
+                <div class="row items-left justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
     </DialogForm>
   </q-page>
 </template>

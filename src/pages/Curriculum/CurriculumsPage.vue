@@ -3,7 +3,7 @@
     <MainHeader
       v-model:search-text="store.search"
       v-model:filter-model="store.filterModel"
-      @open-dialog="handleAddBtn"
+      @open-dialog="handleOpenDialog"
       @enter-search="store.fetchData"
     />
     <q-table
@@ -57,6 +57,81 @@
         </q-tr>
       </template>
     </q-table>
+    <!-- Dialog -->
+    <DialogForm v-model="store.dialogState" :title="store.titleForm">
+      <q-input
+        dense
+        outlined
+        v-model="store.form.id"
+        :label="t('id') + ' *'"
+        :rules="[requireField]"
+      />
+      <q-input
+        dense
+        outlined
+        v-model="store.form.name"
+        :label="t('name') + ' *'"
+        :rules="[requireField]"
+      />
+      <q-input
+        dense
+        outlined
+        v-model="store.form.engName"
+        :label="t('engName') + ' *'"
+        :rules="[requireField, onlyAlphabet]"
+      />
+      <q-input
+        dense
+        type="textarea"
+        outlined
+        v-model="store.form.description"
+        :label="t('description') + ' *'"
+        :rules="[requireField]"
+      />
+      <q-input
+        dense
+        outlined
+        v-model="store.form.degree"
+        :label="t('degree') + ' *'"
+        :rules="[requireField, onlyAlphabet]"
+      />
+      <q-input
+        dense
+        outlined
+        v-model="store.form.engDegree"
+        :label="t('engDegree') + ' *'"
+        :rules="[requireField, onlyAlphabet]"
+      />
+
+      <q-input
+        dense
+        type="number"
+        outlined
+        v-model.number="store.form.period"
+        :label="t('period') + ' *'"
+        :rules="[requireField]"
+      >
+      </q-input>
+      <q-input
+        dense
+        type="number"
+        outlined
+        v-model.number="store.form.minimumGrade"
+        :label="t('minimumGrade') + ' *'"
+        :rules="[requireField]"
+      />
+      <q-select
+        dense
+        outlined
+        v-model="store.form.branch"
+        :options="branches"
+        :label="t('branches') + ' *'"
+        use-chips
+        option-label="name"
+        :rules="[requireField]"
+        @vue:mounted="fetchBranches"
+      ></q-select>
+    </DialogForm>
   </q-page>
 </template>
 
@@ -72,6 +147,11 @@ import type { Subject } from 'src/types/subject';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGlobalStore } from 'src/stores/global';
+import DialogForm from 'src/components/DialogForm.vue';
+import { onlyAlphabet, requireField } from 'src/utils/field-rules';
+import { useI18n } from 'vue-i18n';
+import { BranchService } from 'src/services/branches';
+import type { Branch } from 'src/types/branch';
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
@@ -88,15 +168,24 @@ const columns = ref<QTableColumn[]>([
   { name: 'branch', label: 'Branch', field: 'branch', align: 'left' },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'left' },
 ]);
+const { t } = useI18n();
+const branches = ref<Branch[]>([]);
+
+function fetchBranches() {
+  BranchService.getAll().then((res) => {
+    branches.value = res.data;
+  });
+}
 
 onMounted(async () => {
   await store.fetchData();
 });
 
-const handleAddBtn = async () => {
-  const id = await store.fetchInsertId();
-  router.push(`/curriculums/${id}`);
+const handleOpenDialog = async () => {
+  // const id = await store.fetchInsertId();
+  // router.push(`/curriculums/${id}`);
   store.resetForm();
+  store.handleOpenDialog();
 };
 
 const handleEditBtn = (row) => {

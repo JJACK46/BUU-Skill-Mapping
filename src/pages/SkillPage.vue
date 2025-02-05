@@ -86,42 +86,40 @@ useMeta({
       @save="store.handleSave"
       v-model="store.dialogForm"
     >
-      <template #body>
-        <q-input
-          v-show="store.parentId"
-          v-model="store.parentId"
-          label="Parent ID - Readonly"
-          borderless
-          readonly
-        />
-        <q-input
-          v-show="store.form.id"
-          v-model="store.form.id"
-          label="ID - Readonly"
-          borderless
-          readonly
-        />
-        <q-input
-          v-model="store.form.name"
-          :label="t('name') + ' *'"
-          outlined
-          :rules="[requireField]"
-        />
-        <q-select
-          :options="Object.values(LearningDomain)"
-          v-model="store.form.domain"
-          label="Domain *"
-          outlined
-          :rules="[requireField]"
-        />
-        <q-input
-          v-model="store.form.description"
-          :label="t('description') + ' *'"
-          outlined
-          type="textarea"
-          :rules="[requireField]"
-        />
-      </template>
+      <q-input
+        v-show="store.parentId"
+        v-model="store.parentId"
+        label="Parent ID - Readonly"
+        borderless
+        readonly
+      />
+      <q-input
+        v-show="store.form.id"
+        v-model="store.form.id"
+        label="ID - Readonly"
+        borderless
+        readonly
+      />
+      <q-input
+        v-model="store.form.name"
+        :label="t('name') + ' *'"
+        outlined
+        :rules="[requireField]"
+      />
+      <q-select
+        :options="Object.values(LearningDomain)"
+        v-model="store.form.domain"
+        label="Domain *"
+        outlined
+        :rules="[requireField]"
+      />
+      <q-input
+        v-model="store.form.description"
+        :label="t('description') + ' *'"
+        outlined
+        type="textarea"
+        :rules="[requireField]"
+      />
     </DialogForm>
   </q-page>
 </template>
