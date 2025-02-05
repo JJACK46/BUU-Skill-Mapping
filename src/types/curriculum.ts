@@ -6,6 +6,7 @@ import type { CourseSpec } from './course-spec';
 import type { Coordinator } from './coordinator';
 export interface Curriculum {
   id: string;
+  curriculumId: string;
   name: string;
   engName: string;
   degree: string;

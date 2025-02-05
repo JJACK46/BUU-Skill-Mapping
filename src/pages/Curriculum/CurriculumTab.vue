@@ -14,6 +14,13 @@
   <q-input
     dense
     outlined
+    v-model="store.form.curriculumId"
+    :label="t('curriculum ID') + ' *'"
+    :rules="[requireField]"
+  />
+  <q-input
+    dense
+    outlined
     v-model="store.form.name"
     :label="t('name') + ' *'"
     :rules="[requireField]"
