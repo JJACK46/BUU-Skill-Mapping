@@ -13,13 +13,13 @@
       <q-form ref="formRef" @input="validateForm">
         <q-card-section>
           <div class="text-h6">{{ title }}</div>
-          <q-separator class="q-my-md"></q-separator>
+          <q-separator class="q-my-sm"></q-separator>
           <span class="q-gutter-y-md">
             <slot name="body" />
           </span>
         </q-card-section>
-        <q-card-actions class="justify-end q-pa-md">
-          <div v-if="title !== 'View'">
+        <q-card-actions class="justify-end">
+          <div v-if="title !== 'View'" class="q-gutter-x-sm">
             <q-btn
               flat
               :label="t('cancel')"
