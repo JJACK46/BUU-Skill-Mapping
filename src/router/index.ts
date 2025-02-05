@@ -44,7 +44,8 @@ export default route(function (/* { store, ssrContext } */) {
     const app = useGlobalStore();
 
     try {
-      // app.debugMode = true;
+      // bypass for now
+      app.debugMode = true;
       if (app.debugMode) return next();
 
       // const isAuthenticated = await AuthService.isAuthenticated();
