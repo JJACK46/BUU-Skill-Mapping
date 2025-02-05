@@ -26,6 +26,18 @@ export const publicRoutes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/students/:id',
+    component: () => import('src/layouts/FullLayout.vue'),
+    meta: { public: true },
+    children: [
+      {
+        path: '',
+        name: 'Transcript of Student',
+        component: () => import('pages/Student/StudentId.vue'),
+      },
+    ],
+  },
+  {
     path: '/about',
     component: () => import('src/layouts/FullLayout.vue'),
     meta: { public: true },
