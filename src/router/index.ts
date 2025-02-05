@@ -7,7 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
-import AuthService from 'src/services/auth';
+// import AuthService from 'src/services/auth';
 import { EnumUserRole } from 'src/enums/roles';
 import { useGlobalStore } from 'src/stores/global';
 
@@ -44,12 +44,14 @@ export default route(function (/* { store, ssrContext } */) {
     const app = useGlobalStore();
 
     try {
-      // bypass for now
-      app.debugMode = true;
+      // app.debugMode = true;
       if (app.debugMode) return next();
 
-      const isAuthenticated = await AuthService.isAuthenticated();
-      const userRole = isAuthenticated ? await AuthService.getUserRole() : null;
+      // const isAuthenticated = await AuthService.isAuthenticated();
+      // const userRole = isAuthenticated ? await AuthService.getUserRole() : null;
+      // Bypass now
+      const isAuthenticated = true;
+      const userRole = EnumUserRole.ADMIN;
 
       // Handle '/' route, first order
       if (path === '/') {
