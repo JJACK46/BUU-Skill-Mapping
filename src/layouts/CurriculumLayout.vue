@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import AppDrawer from 'src/components/AppDrawer.vue';
+import AppDrawer from 'src/components/AppLeftDrawer.vue';
 import AppHeader from 'src/components/AppHeader.vue';
 import MenuLink, { type MenuProps } from 'src/components/MenuLink.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';

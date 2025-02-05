@@ -31,7 +31,7 @@ import { __APP_VERSION } from 'src/utils/app';
 import AppHeader from 'src/components/AppHeader.vue';
 import AppRightDrawer from 'src/components/AppRightDrawer.vue';
 import { EnumUserRole } from 'src/enums/roles';
-import AppDrawer from 'src/components/AppDrawer.vue';
+import AppDrawer from 'src/components/AppLeftDrawer.vue';
 
 defineOptions({
   name: 'InstructorLayout',

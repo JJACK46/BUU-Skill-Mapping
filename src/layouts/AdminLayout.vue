@@ -58,7 +58,7 @@ import { useI18n } from 'vue-i18n';
 import AppHeader from 'src/components/AppHeader.vue';
 import { useGlobalStore } from 'src/stores/global';
 import { EnumUserRole } from 'src/enums/roles';
-import AppDrawer from 'src/components/AppDrawer.vue';
+import AppDrawer from 'src/components/AppLeftDrawer.vue';
 
 const app = useGlobalStore();
 const darkRef = ref(false);
