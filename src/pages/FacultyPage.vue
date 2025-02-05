@@ -73,74 +73,72 @@
       v-model="store.dialogState"
       @save="store.handleSave"
     >
-      <template #body>
-        <!-- Faculty -->
-        <q-input
-          v-if="store.isFacultyForm"
-          outlined
-          dense
-          label="Name *"
-          v-model="store.formFaculty.name"
-          :rules="[requireField, onlyThai]"
-        />
-        <q-input
-          v-if="store.isFacultyForm"
-          outlined
-          dense
-          label="English Name *"
-          v-model="store.formFaculty.engName"
-          :rules="[requireField, onlyEnglish]"
-        />
-        <q-input
-          v-if="store.isFacultyForm"
-          outlined
-          dense
-          label="Description"
-          hint="Optional"
-          v-model="store.formFaculty.description"
-        />
-        <q-input
-          v-if="store.isFacultyForm"
-          outlined
-          dense
-          label="Abbreviation"
-          hint="Optional"
-          v-model="store.formFaculty.abbrev"
-        />
-        <!-- Branch -->
-        <q-input
-          v-if="!store.isFacultyForm"
-          outlined
-          dense
-          label="Name *"
-          v-model="store.formBranch.name"
-          :rules="[requireField, onlyThai]"
-        />
-        <q-input
-          v-if="!store.isFacultyForm"
-          outlined
-          dense
-          label="English Name *"
-          v-model="store.formBranch.engName"
-          :rules="[requireField, onlyEnglish]"
-        />
-        <q-input
-          v-if="!store.isFacultyForm"
-          outlined
-          dense
-          label="Description"
-          hint="Optional"
-          v-model="store.formBranch.description"
-        />
-        <q-input
-          v-if="!store.isFacultyForm"
-          outlined
-          dense
-          label="Abbreviation"
-          hint="Optional"
-          v-model="store.formBranch.abbrev"
-        />
-      </template>
+      <!-- Faculty -->
+      <q-input
+        v-if="store.isFacultyForm"
+        outlined
+        dense
+        label="Name *"
+        v-model="store.formFaculty.name"
+        :rules="[requireField, onlyThai]"
+      />
+      <q-input
+        v-if="store.isFacultyForm"
+        outlined
+        dense
+        label="English Name *"
+        v-model="store.formFaculty.engName"
+        :rules="[requireField, onlyEnglish]"
+      />
+      <q-input
+        v-if="store.isFacultyForm"
+        outlined
+        dense
+        label="Description"
+        hint="Optional"
+        v-model="store.formFaculty.description"
+      />
+      <q-input
+        v-if="store.isFacultyForm"
+        outlined
+        dense
+        label="Abbreviation"
+        hint="Optional"
+        v-model="store.formFaculty.abbrev"
+      />
+      <!-- Branch -->
+      <q-input
+        v-if="!store.isFacultyForm"
+        outlined
+        dense
+        label="Name *"
+        v-model="store.formBranch.name"
+        :rules="[requireField, onlyThai]"
+      />
+      <q-input
+        v-if="!store.isFacultyForm"
+        outlined
+        dense
+        label="English Name *"
+        v-model="store.formBranch.engName"
+        :rules="[requireField, onlyEnglish]"
+      />
+      <q-input
+        v-if="!store.isFacultyForm"
+        outlined
+        dense
+        label="Description"
+        hint="Optional"
+        v-model="store.formBranch.description"
+      />
+      <q-input
+        v-if="!store.isFacultyForm"
+        outlined
+        dense
+        label="Abbreviation"
+        hint="Optional"
+        v-model="store.formBranch.abbrev"
+      />
     </DialogForm>
   </q-page>
 </template>

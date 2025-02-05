@@ -16,112 +16,110 @@
       v-model:form-valid="formValid"
       @vue:mounted="store.fetchAllSkills"
     >
-      <template #body>
-        <q-tabs v-model="store.tabsModel">
-          <q-tab name="req" label="Required" />
-          <q-tab name="add" label="Skills" />
-        </q-tabs>
-        <q-tab-panels v-model="store.tabsModel">
-          <q-tab-panel name="req" class="q-gutter-y-md">
-            <q-input
-              v-model="store.form.id"
-              outlined
-              dense
-              label="ID *"
-              mask="########"
-              :rules="[requireField]"
-            />
-            <q-select
-              v-model="store.form.type"
-              outlined
-              dense
-              label="Type *"
-              :options="Object.values(SubjectType)"
-              :rules="[requireField]"
-            />
-            <q-input
-              v-model="store.form.name"
-              outlined
-              dense
-              label="Name *"
-              :rules="[requireField, onlyThai]"
-            />
-            <q-input
-              v-model="store.form.engName"
-              outlined
-              dense
-              label="Eng Name *"
-              :rules="[requireField, onlyEnglish]"
-            />
-            <q-input
-              v-model="store.form.description"
-              outlined
-              dense
-              type="textarea"
-              label="Description *"
-              :rules="[requireField]"
-            />
-            <q-input
-              v-model="store.form.credit"
-              outlined
-              dense
-              label="Credit *"
-              mask="# (#-#-#)"
-              :rules="[requireField]"
-            />
-          </q-tab-panel>
-          <q-tab-panel name="add">
-            <q-list>
-              <q-item
-                v-for="(s, i) in store.form.skillExpectedLevels"
-                :key="i"
-                class="rounded-borders"
-              >
-                <q-item-section avatar> {{ i + 1 }}. </q-item-section>
-                <q-item-section>
-                  <q-select
-                    label="Skill"
-                    dense
-                    v-model="s.skill"
-                    outlined
-                    :options="store.getSkillOptions"
-                    @update:model-value="store.handleDuplicate"
-                    option-label="name"
-                  ></q-select>
-                </q-item-section>
-                <q-item-section>
-                  <q-select
-                    label="Level"
-                    dense
-                    v-model="s.expectedLevel"
-                    outlined
-                    :options="[1, 2, 3, 4, 5]"
-                  ></q-select>
-                </q-item-section>
-                <q-item-section side>
-                  <q-btn
-                    flat
-                    round
-                    dense
-                    icon="close"
-                    @click="store.handleRemoveSkill(i)"
-                    onmouseenter="this.style.color='red'"
-                    onmouseleave="this.style.color=''"
-                  />
-                </q-item-section>
-              </q-item>
-            </q-list>
-            <q-btn
-              class="q-mx-auto flex"
-              icon-right="add"
-              dense
-              flat
-              label="add"
-              @click="store.handleAddSkill"
-            />
-          </q-tab-panel>
-        </q-tab-panels>
-      </template>
+      <q-tabs v-model="store.tabsModel">
+        <q-tab name="req" label="Required" />
+        <q-tab name="add" label="Skills" />
+      </q-tabs>
+      <q-tab-panels v-model="store.tabsModel">
+        <q-tab-panel name="req" class="q-gutter-y-md">
+          <q-input
+            v-model="store.form.id"
+            outlined
+            dense
+            label="ID *"
+            mask="########"
+            :rules="[requireField]"
+          />
+          <q-select
+            v-model="store.form.type"
+            outlined
+            dense
+            label="Type *"
+            :options="Object.values(SubjectType)"
+            :rules="[requireField]"
+          />
+          <q-input
+            v-model="store.form.name"
+            outlined
+            dense
+            label="Name *"
+            :rules="[requireField, onlyThai]"
+          />
+          <q-input
+            v-model="store.form.engName"
+            outlined
+            dense
+            label="Eng Name *"
+            :rules="[requireField, onlyEnglish]"
+          />
+          <q-input
+            v-model="store.form.description"
+            outlined
+            dense
+            type="textarea"
+            label="Description *"
+            :rules="[requireField]"
+          />
+          <q-input
+            v-model="store.form.credit"
+            outlined
+            dense
+            label="Credit *"
+            mask="# (#-#-#)"
+            :rules="[requireField]"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="add">
+          <q-list>
+            <q-item
+              v-for="(s, i) in store.form.skillExpectedLevels"
+              :key="i"
+              class="rounded-borders"
+            >
+              <q-item-section avatar> {{ i + 1 }}. </q-item-section>
+              <q-item-section>
+                <q-select
+                  label="Skill"
+                  dense
+                  v-model="s.skill"
+                  outlined
+                  :options="store.getSkillOptions"
+                  @update:model-value="store.handleDuplicate"
+                  option-label="name"
+                ></q-select>
+              </q-item-section>
+              <q-item-section>
+                <q-select
+                  label="Level"
+                  dense
+                  v-model="s.expectedLevel"
+                  outlined
+                  :options="[1, 2, 3, 4, 5]"
+                ></q-select>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="close"
+                  @click="store.handleRemoveSkill(i)"
+                  onmouseenter="this.style.color='red'"
+                  onmouseleave="this.style.color=''"
+                />
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <q-btn
+            class="q-mx-auto flex"
+            icon-right="add"
+            dense
+            flat
+            label="add"
+            @click="store.handleAddSkill"
+          />
+        </q-tab-panel>
+      </q-tab-panels>
     </DialogForm>
     <!-- Table -->
     <q-table
