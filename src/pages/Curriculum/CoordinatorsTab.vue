@@ -18,6 +18,24 @@
     :filter="store.search"
     @update:pagination="store.fetchData"
   >
+    <template #body-cell-number="props">
+      <q-td>
+        {{ props.rowIndex + 1 }}
+      </q-td>
+    </template>
+    <template #body-cell-actions="props">
+      <q-td>
+        <q-btn flat dense round icon="edit" @click="handleEditBtn(props.row)" />
+        <q-btn
+          flat
+          dense
+          round
+          icon="delete"
+          class="q-ml-sm"
+          @click="handleDeleteBtn(props.row)"
+        />
+      </q-td>
+    </template>
   </q-table>
   <DialogForm
     title="New Instructor"
@@ -130,7 +148,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import type { QTableColumn } from 'quasar';
-import { useMeta } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useInstructorStore } from 'src/stores/instructor';
@@ -152,6 +170,7 @@ const store = useInstructorStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const curr = useCurriculumStore();
+const q = useQuasar();
 
 const columns: QTableColumn[] = [
   {
@@ -199,6 +218,12 @@ const columns: QTableColumn[] = [
     field: 'tel',
     align: 'left',
   },
+  {
+    name: 'actions',
+    label: 'Actions',
+    field: () => {},
+    align: 'left',
+  },
 ];
 function fetchBranches() {
   BranchService.getAll().then((res) => {
@@ -212,6 +237,24 @@ const handleSave = () => {
   }
   curr.form.coordinators.push(store.form as Coordinator);
   store.dialogState = false;
+};
+
+const handleEditBtn = (item: Coordinator) => {
+  store.form = JSON.parse(JSON.stringify(item));
+  store.toggleDialog();
+};
+
+const handleDeleteBtn = (item: Coordinator) => {
+  q.dialog({
+    title: 'Confirm',
+    message: 'Are you sure?',
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    curr.form.coordinators = curr.form.coordinators.filter(
+      (c) => c.id !== item.id,
+    );
+  });
 };
 
 useMeta({
