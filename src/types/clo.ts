@@ -8,7 +8,7 @@ export type Clo = {
   description: string;
   expectedLevel: 1 | 2 | 3 | 4 | 5;
   courseSpec: CourseSpec;
-  plo?: Plo;
-  skill?: Skill;
+  plos?: Plo;
+  skills?: Skill;
   // skillexpectedlevels: SkillExpectedLevel[]; ถ้า skill สามารถยืมจากคณะอื่่นได้ จำเป็นที่จะต้องกำหนด ตัวกลาง ระหว่าง skill กับ curriculumn เหมือน coursespec
 };
