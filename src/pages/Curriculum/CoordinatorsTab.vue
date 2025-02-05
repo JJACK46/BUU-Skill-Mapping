@@ -43,89 +43,99 @@
     @save="handleSave()"
     width="60%"
   >
-    <q-select
-      outlined
-      dense
-      v-model="store.form.branch"
-      :options="branches"
-      option-label="name"
-      label="Branch *"
-      options-dense
-      :rules="[requireField]"
-      @vue:mounted="fetchBranches"
-    >
-    </q-select>
-    <q-input
-      outlined
-      dense
-      v-model="store.form.email"
-      label="Email *"
-      type="email"
-      clearable
-      :rules="[requireField]"
-    />
-    <q-input
-      outlined
-      v-model="store.form.name"
-      label="Name *"
-      clearable
-      dense
-      :rules="[requireField]"
-    />
-    <q-input
-      outlined
-      dense
-      v-model="store.form.engName"
-      label="English Name *"
-      clearable
-      :rules="[requireField]"
-    />
-    <q-select
-      outlined
-      dense
-      v-model="store.form.position"
-      :options="[...Object.values(AcademicRank)]"
-      label="Position *"
-      options-dense
-      :rules="[requireField]"
-    />
-    <q-select
-      outlined
-      dense
-      v-model="store.form.specialists"
-      :options="['Machine Learning', 'Deep Learning', 'Software Engineering']"
-      label="Specialists"
-      hint="Optional"
-      options-dense
-      clearable
-      multiple
-    />
-    <q-input
-      outlined
-      dense
-      v-model="store.form.tel"
-      label="Telephone *"
-      clearable
-      :rules="[(val) => val.length == 10 || 'Field not correct format']"
-      mask="###-###-####"
-      unmasked-value
-    />
-    <q-input
-      outlined
-      dense
-      v-model="store.form.officeRoom"
-      label="Office Room *"
-      :rules="[requireField]"
-      clearable
-    />
-    <q-input
-      outlined
-      dense
-      v-model="store.form.bio"
-      label="Bio"
-      hint="Optional"
-      type="textarea"
-    />
+    <div class="flex q-gutter-md">
+      <q-select
+        outlined
+        dense
+        v-model="store.form.branch"
+        :options="branches"
+        option-label="name"
+        label="Branch *"
+        options-dense
+        :rules="[requireField]"
+        @vue:mounted="fetchBranches"
+        style="width: 400px"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.email"
+        label="Email *"
+        type="email"
+        clearable
+        :rules="[requireField]"
+        style="width: 370px"
+      />
+      <q-input
+        outlined
+        v-model="store.form.name"
+        label="Name *"
+        clearable
+        dense
+        :rules="[requireField]"
+        style="width: 250px"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.engName"
+        label="English Name *"
+        clearable
+        :rules="[requireField]"
+        style="width: 250px"
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.position"
+        :options="[...Object.values(AcademicRank)]"
+        label="Position *"
+        options-dense
+        :rules="[requireField]"
+        style="width: 250px"
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.specialists"
+        :options="['Machine Learning', 'Deep Learning', 'Software Engineering']"
+        label="Specialists"
+        hint="Optional"
+        options-dense
+        clearable
+        multiple
+        style="width: 250px"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.tel"
+        label="Telephone *"
+        clearable
+        :rules="[(val) => val.length == 10 || 'Field not correct format']"
+        mask="###-###-####"
+        unmasked-value
+        style="width: 250px"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.officeRoom"
+        label="Office Room *"
+        :rules="[requireField]"
+        clearable
+        style="width: 250px"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.bio"
+        label="Bio"
+        hint="Optional"
+        type="textarea"
+        style="width: 100%"
+      />
+    </div>
   </DialogForm>
 </template>
 
