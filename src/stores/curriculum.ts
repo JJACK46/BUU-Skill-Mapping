@@ -26,6 +26,7 @@ export const useCurriculumStore = defineStore('curriculum', {
     getDialogTitle: (c) => c.titleForm,
     getInsertId: (c) => c.form.id,
     getSkills: (c) => c.form.skills || [],
+    getCurriculum: (c) => c.form,
   },
   actions: {
     async fetchOne(id: string) {

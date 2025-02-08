@@ -66,9 +66,6 @@
   "engDegree": "ชื่อระดับภาษาอังกฤษ",
   "period": "ระยะเวลา",
   "minimumGrade": "เกรดขั้นต่ํา",
-  "coordinator": "ผู้ประสาน",
-  "coordinators": "ผู้ประสาน",
-  "coordinatorsManagement": "การจัดการผู้ประสาน",
   "coordinator": "ผู้รับผิดชอบหลักสูตร",
   "coordinators": "ผู้รับผิดชอบหลักสูตร",
   "coordinatorsManagement": "การจัดการผู้รับผิดชอบหลักสูตร",
@@ -96,5 +93,8 @@
   "branches": "สาขา",
   "id": "ID",
   "code": "รหัส",
-  "curriculumCode": "รหัสหลักสูตร"
+  "curriculumCode": "รหัสหลักสูตร",
+  "subjectCode": "รหัสวิชา",
+  "details": "รายละเอียด",
+  "specialists": "ความชำนาญ"
 }

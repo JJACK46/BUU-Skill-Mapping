@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
     <q-tree
-      v-if="skills.length > 0"
+      v-if="skills && skills.length > 0"
       :nodes="nodes"
       node-key="label"
       default-expand-all
@@ -110,7 +110,7 @@ const options = <QTreeProps['nodes']>[
 ];
 
 const formatToNodes = (skills: Skill[]): QTreeProps['nodes'] => {
-  return skills.map((skill) => {
+  return skills?.map((skill) => {
     const node = {
       label: skill.name,
       children: [] as QTreeProps['nodes'], // Initialize children as empty

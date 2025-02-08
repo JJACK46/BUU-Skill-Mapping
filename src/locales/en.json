@@ -91,5 +91,8 @@
   "branches": "Branches",
   "id": "ID",
   "code": "Code",
-  "curriculumCode": "Curriculum Code"
+  "curriculumCode": "Curriculum Code",
+  "subjectCode": "Subject Code",
+  "details": "Details",
+  "specialists": "Specialists"
 }
