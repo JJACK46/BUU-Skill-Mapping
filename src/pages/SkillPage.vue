@@ -58,7 +58,7 @@ useMeta({
                 () =>
                   store.toggleDialog({
                     title: 'Insert Sub-Skill',
-                    parentId: props.node.id,
+                    parent: props.node.id,
                   })
               "
               :edit-fn="
@@ -87,8 +87,8 @@ useMeta({
       v-model="store.dialogForm"
     >
       <q-input
-        v-show="store.parentId"
-        v-model="store.parentId"
+        v-show="store.getParentId"
+        v-model="store.parent.id"
         label="Parent ID - Readonly"
         borderless
         readonly

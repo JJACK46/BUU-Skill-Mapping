@@ -8,7 +8,7 @@ import {
   defaultPagination,
 } from 'src/utils/pagination';
 
-type TitleForm =
+export type TitleFormSkill =
   | 'New Skill'
   | 'Edit Skill'
   | 'Delete Skill'
@@ -22,16 +22,17 @@ export const useSkillStore = defineStore('skill', {
     dialogForm: false,
     pagination: defaultPagination,
     search: '',
-    titleForm: 'New Skill' as TitleForm,
+    titleForm: 'New Skill' as TitleFormSkill,
     qDialog: Dialog,
-    parentId: null as number | null,
+    parent: {} as Skill,
     totalSkills: 0,
     qNotify: Notify,
     onlyHaveSubs: true,
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
-    getParentId: (state) => state.parentId,
+    getParentId: (state) => state.parent.id,
+    getParentName: (s) => s.parent.name,
     getMaxPage: (state) =>
       calMaxPage(state.totalSkills, state.pagination!.rowsPerPage),
     getSkills: (state) => {
@@ -110,14 +111,14 @@ export const useSkillStore = defineStore('skill', {
     async toggleDialog({
       form,
       title,
-      parentId,
+      parent,
     }: {
       form?: Partial<Skill>;
-      title?: TitleForm;
-      parentId?: number;
+      title?: TitleFormSkill;
+      parent?: Partial<Skill>;
     }) {
       this.titleForm = title || 'New Skill';
-      this.parentId = parentId || null;
+      this.parent = parent || null;
       if (form) {
         // copy form
         this.form = JSON.parse(JSON.stringify(form));

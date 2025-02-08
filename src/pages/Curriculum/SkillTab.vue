@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useSkillStore } from 'src/stores/skill';
+import { type TitleFormSkill, useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import { LearningDomain } from 'src/types/learning-domain.enum';
 import { requireField } from 'src/utils/field-rules';
@@ -24,7 +24,7 @@ const expandedNodes = computed(() => {
     nodes.reduce(
       (ids, node) => [
         ...ids,
-        node.id,
+        node.name,
         ...(node.children ? getAllNodeIds(node.children) : []),
       ],
       [],
@@ -36,7 +36,7 @@ const insertSkill = (sk: Skill) => {
   if (!curr.form.skills) {
     curr.form.skills = [];
   }
-  const index = curr.form.skills.findIndex((s) => s.id === sk.id);
+  const index = curr.form.skills.findIndex((s) => s.name === sk.name);
   if (index >= 0) {
     curr.form.skills.splice(index, 1, sk);
   } else {
@@ -44,21 +44,21 @@ const insertSkill = (sk: Skill) => {
   }
 };
 
-const insertSubSkill = (sk: Skill, parentId: number) => {
-  const index = curr.form.skills.findIndex((s) => s.id === parentId);
-  if (index >= 0) {
+const insertSubSkill = (sk: Skill, parentName: string) => {
+  const index = curr.form.skills.findIndex((s) => s.name === parentName);
+  if (index > -1) {
     const parent = curr.form.skills[index];
     if (parent.children) {
       curr.form.skills[index].children.push(sk);
     } else {
-      curr.form.skills[index].children = [sk];
+      parent.children = [sk];
     }
   }
 };
 
-const handleSave = (title: string) => {
+const handleAdd = (title: TitleFormSkill) => {
   if (title === 'Insert Sub-Skill') {
-    insertSubSkill(store.form as Skill, store.parentId as number);
+    insertSubSkill(store.form as Skill, store.getParentName);
   }
   if (title === 'New Skill') {
     insertSkill(store.form as Skill);
@@ -66,18 +66,18 @@ const handleSave = (title: string) => {
   store.dialogForm = false;
 };
 
-const handleRemove = (id: number) => {
-  const deepFilter = (skills, idToRemove) => {
-    return skills.reduce((acc, skill) => {
-      if (skill.id !== idToRemove) {
-        if (skill.children) {
-          skill.children = deepFilter(skill.children, idToRemove);
-        }
-        acc.push(skill);
-      }
-      return acc;
-    }, []);
-  };
+const handleRemove = (name: string) => {
+  if (!Array.isArray(curr.form.skills)) return;
+
+  const deepFilter = (skills: Skill[], nameToRemove: string): Skill[] =>
+    skills
+      .map((skill) => ({
+        ...skill,
+        children: skill.children
+          ? deepFilter(skill.children, nameToRemove)
+          : [],
+      }))
+      .filter((skill) => skill.name !== nameToRemove);
 
   q.dialog({
     title: 'Confirm',
@@ -85,7 +85,8 @@ const handleRemove = (id: number) => {
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    curr.form.skills = deepFilter(curr.form.skills, id);
+    const filteredSkills = deepFilter(curr.form.skills, name);
+    curr.form.skills.splice(0, curr.form.skills.length, ...filteredSkills);
   });
 };
 
@@ -97,7 +98,7 @@ useMeta({
 <template>
   <q-page>
     <!-- Page Title -->
-    <div class="text-h4 text-primary">
+    <div class="text-h4 text-primary q-py-md">
       {{ t('Skill Management') }}
     </div>
     <!-- Operator -->
@@ -134,7 +135,7 @@ useMeta({
     <q-card flat bordered class="q-animate--fade q-my-md">
       <q-tree
         :nodes="curr.getSkills"
-        node-key="id"
+        node-key="name"
         class="q-pa-sm"
         :no-nodes-label="t('noData')"
         :expanded="expandedNodes"
@@ -158,7 +159,7 @@ useMeta({
               <q-btn
                 @click="
                   store.toggleDialog({
-                    parentId: props.node.id,
+                    parent: props.node,
                     title: 'Insert Sub-Skill',
                   })
                 "
@@ -177,7 +178,7 @@ useMeta({
                 flat
               ></q-btn>
               <q-btn
-                @click="handleRemove(props.node.id)"
+                @click="handleRemove(props.node.name)"
                 icon="delete"
                 padding="none"
                 class="hover-btn"
@@ -188,19 +189,11 @@ useMeta({
         </template>
       </q-tree>
     </q-card>
-    <div class="flex justify-end">
-      <q-btn
-        :label="t('save')"
-        @click="curr.handleSave()"
-        color="primary"
-        unelevated
-      ></q-btn>
-    </div>
 
     <!-- All in One Dialog -->
     <DialogForm
       :title="store.getTitleForm"
-      @save="handleSave(store.getTitleForm)"
+      @save="handleAdd(store.getTitleForm)"
       v-model="store.dialogForm"
     >
       <q-input
