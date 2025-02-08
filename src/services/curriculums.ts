@@ -12,22 +12,17 @@ export class CurriculumService {
     };
   }
 
-  static async getInsertId() {
-    const res = await api.get(`${this.path}/auto_id`);
-    return res.data;
-  }
-
-  static async getOne(id: string) {
-    const res = await api.get(`${this.path}/${id}`);
+  static async getOneByCode(code: string) {
+    const res = await api.get(`${this.path}/${code}`);
     return res.data;
   }
 
   static async createOne(obj: Partial<Curriculum>) {
     const dto = {
       ...obj,
-      branchId: obj.branch?.id ? String(obj.branch.id) : undefined,
-      coordinatorListId: obj.coordinators?.map((c) => String(c.id)),
-      subjectListId: obj.subjects?.map((s) => String(s.id)),
+      branchId: obj.branch?.id,
+      coordinatorListId: obj.coordinators?.map((c) => c.id),
+      subjectListId: obj.subjects?.map((s) => s.id),
     };
 
     delete dto.branch;

@@ -5,7 +5,7 @@ import type { Skill } from './skill';
 import type { CourseSpec } from './course-spec';
 import type { Coordinator } from './coordinator';
 export interface Curriculum {
-  id: string;
+  id: number;
   code: string;
   name: string;
   engName: string;

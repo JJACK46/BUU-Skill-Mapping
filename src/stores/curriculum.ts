@@ -28,12 +28,8 @@ export const useCurriculumStore = defineStore('curriculum', {
     getSkills: (c) => c.form.skills || [],
   },
   actions: {
-    async fetchInsertId() {
-      const res = await CurriculumService.getInsertId();
-      return res;
-    },
     async fetchOne(id: string) {
-      const res = await CurriculumService.getOne(id);
+      const res = await CurriculumService.getOneByCode(id);
       this.form = res;
     },
     async fetchData() {
@@ -53,13 +49,24 @@ export const useCurriculumStore = defineStore('curriculum', {
       }
       this.dialogState = !this.dialogState;
     },
+    async handleAdd() {
+      const ok = await CurriculumService.createOne(this.form);
+      if (ok) {
+        Notify.create({
+          type: 'ok',
+          message: 'Curriculum created successfully',
+        });
+        this.dialogState = false;
+        this.resetForm();
+      }
+    },
 
     async handleSave() {
       const ok = await CurriculumService.updateOne(this.form);
       if (ok) {
         Notify.create({
           type: 'ok',
-          message: 'Curriculum created successfully',
+          message: 'Curriculum saved successfully',
         });
         this.router.push('/administer/curriculums');
         this.dialogState = false;

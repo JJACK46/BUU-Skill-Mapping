@@ -61,7 +61,7 @@
     <DialogForm
       v-model="store.dialogState"
       :title="store.titleForm"
-      @save="store.handleSave"
+      @save="store.handleAdd()"
       width="60%"
     >
       <div class="q-py-md">
@@ -203,15 +203,13 @@ onMounted(async () => {
 
 const handleOpenDialog = async () => {
   // const id = await store.fetchInsertId();
-  // router.push(`/curriculums/${id}`);
-  store.resetForm();
   store.handleOpenDialog();
 };
 
 const handleEditBtn = (row) => {
-  console.log('Selected row data:', row);
-  store.handleOpenEdit(row);
-  router.push(`/curriculums/${row.id}`);
+  // console.log('Selected row data:', row);
+  // store.handleOpenEdit(row);
+  router.push(`/curriculums/${row.code}`);
 };
 
 useMeta({

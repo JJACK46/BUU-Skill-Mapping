@@ -93,7 +93,7 @@ const { t } = useI18n();
 const route = useRoute();
 
 onMounted(() => {
-  store.form.id = route.params.id as string;
+  store.form.id = Number(route.params.id);
 });
 
 async function fetchBranch() {
