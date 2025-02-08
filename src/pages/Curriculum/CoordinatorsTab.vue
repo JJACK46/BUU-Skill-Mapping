@@ -44,6 +44,53 @@
     width="60%"
   >
     <div class="flex q-gutter-md">
+      <q-input
+        outlined
+        dense
+        v-model="store.form.code"
+        label="Code *"
+        clearable
+        :rules="[requireField]"
+        style="width: 340px"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.email"
+        label="Email *"
+        type="email"
+        clearable
+        :rules="[requireField]"
+        style="width: 340px"
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.position"
+        :options="[...Object.values(AcademicRank)]"
+        label="Position *"
+        options-dense
+        :rules="[requireField]"
+        style="width: 340px"
+      />
+      <q-input
+        outlined
+        v-model="store.form.name"
+        label="Name *"
+        clearable
+        dense
+        :rules="[requireField]"
+        style="width: 340px"
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.engName"
+        label="English Name *"
+        clearable
+        :rules="[requireField]"
+        style="width: 340px"
+      />
       <q-select
         outlined
         dense
@@ -54,45 +101,7 @@
         options-dense
         :rules="[requireField]"
         @vue:mounted="fetchBranches"
-        style="width: 400px"
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.email"
-        label="Email *"
-        type="email"
-        clearable
-        :rules="[requireField]"
-        style="width: 370px"
-      />
-      <q-input
-        outlined
-        v-model="store.form.name"
-        label="Name *"
-        clearable
-        dense
-        :rules="[requireField]"
-        style="width: 250px"
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.engName"
-        label="English Name *"
-        clearable
-        :rules="[requireField]"
-        style="width: 250px"
-      />
-      <q-select
-        outlined
-        dense
-        v-model="store.form.position"
-        :options="[...Object.values(AcademicRank)]"
-        label="Position *"
-        options-dense
-        :rules="[requireField]"
-        style="width: 250px"
+        style="width: 340px"
       />
       <q-select
         outlined
@@ -104,7 +113,7 @@
         options-dense
         clearable
         multiple
-        style="width: 250px"
+        style="width: 340px"
       />
       <q-input
         outlined
@@ -115,7 +124,7 @@
         :rules="[(val) => val.length == 10 || 'Field not correct format']"
         mask="###-###-####"
         unmasked-value
-        style="width: 250px"
+        style="width: 200px"
       />
       <q-input
         outlined
@@ -124,7 +133,7 @@
         label="Office Room *"
         :rules="[requireField]"
         clearable
-        style="width: 250px"
+        style="width: 480px"
       />
       <q-input
         outlined
@@ -175,9 +184,9 @@ const columns: QTableColumn[] = [
     sortable: true,
   },
   {
-    name: 'id',
-    label: 'ID',
-    field: 'id',
+    name: 'code',
+    label: 'Code',
+    field: 'code',
     align: 'center',
     sortable: true,
   },
@@ -193,12 +202,12 @@ const columns: QTableColumn[] = [
     field: 'name',
     align: 'left',
   },
-  // {
-  //   name: 'engName',
-  //   label: 'EngName',
-  //   field: 'engName',
-  //   align: 'left',
-  // },
+  {
+    name: 'engName',
+    label: 'EngName',
+    field: 'engName',
+    align: 'left',
+  },
   {
     name: 'email',
     label: 'Email',
@@ -246,7 +255,7 @@ const handleDeleteBtn = (item: Coordinator) => {
     persistent: true,
   }).onOk(() => {
     curr.form.coordinators = curr.form.coordinators.filter(
-      (c) => c.id !== item.id,
+      (c) => c.code !== item.code,
     );
   });
 };

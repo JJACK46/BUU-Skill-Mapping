@@ -6,6 +6,7 @@ import type { User } from './user';
 
 export interface Instructor {
   id?: number;
+  code: string;
   name: string;
   engName: string;
   tel: string;
