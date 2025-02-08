@@ -18,13 +18,8 @@
             <slot />
           </span>
         </q-card-section>
-<<<<<<< HEAD
         <q-card-actions class="justify-end">
           <div v-if="title !== 'View'" class="q-gutter-x-sm">
-=======
-        <q-card-actions class="justify-end q-pa-md">
-          <div v-if="title !== 'View'">
->>>>>>> 29be10b (update insert sub)
             <q-btn
               flat
               :label="t('cancel')"

@@ -7,8 +7,8 @@
   <q-input
     dense
     outlined
-    v-model="store.form.id"
-    :label="t('id') + ' *'"
+    v-model="store.form.code"
+    :label="t('curriculumCode') + ' *'"
     :rules="[requireField]"
   />
   <q-input

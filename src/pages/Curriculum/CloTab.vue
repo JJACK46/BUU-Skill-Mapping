@@ -32,7 +32,9 @@
             dense
             :label="t('Expected Level')"
             behavior="menu"
-          />
+          >
+            <template #before-options></template>
+          </q-select>
         </div>
       </div>
 

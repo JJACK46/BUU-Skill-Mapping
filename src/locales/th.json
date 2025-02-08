@@ -95,5 +95,6 @@
   "noData": "ไม่พบข้อมูล",
   "branches": "สาขา",
   "id": "ID",
-  "code": "รหัส"
+  "code": "รหัส",
+  "curriculumCode": "รหัสหลักสูตร"
 }
