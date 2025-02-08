@@ -26,9 +26,6 @@
           <q-td key="id" :props="props">
             {{ props.row.id }}
           </q-td>
-          <q-td key="id" :props="props">
-            {{ props.row.curriculumId }}
-          </q-td>
           <q-td key="name" :props="props" width="400px">
             {{ props.row.name }}
           </q-td>
@@ -165,12 +162,6 @@ const subjects = ref<Subject[]>();
 const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
-  {
-    name: 'curriculumId',
-    label: 'Curriculum ID',
-    field: 'curriculumId',
-    align: 'left',
-  },
   { name: 'name', label: 'Name', field: 'name', align: 'left' },
   { name: 'degree', label: 'Degree', field: 'degree', align: 'left' },
   { name: 'period', label: 'Period', field: 'period', align: 'left' },
