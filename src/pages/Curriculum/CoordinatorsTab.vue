@@ -12,7 +12,7 @@
     class="q-animate--fade q-mt-lg"
     separator="cell"
     :rows="curr.form.coordinators || []"
-    row-key="id"
+    row-key="code"
     :loading="global.getLoadingState"
     :columns="columns"
     :filter="store.search"
@@ -25,14 +25,20 @@
     </template>
     <template #body-cell-actions="props">
       <q-td>
-        <q-btn flat dense round icon="edit" @click="handleEditBtn(props.row)" />
+        <q-btn
+          flat
+          dense
+          round
+          icon="edit"
+          @click="handleEditBtn(props.rowIndex, props.row)"
+        />
         <q-btn
           flat
           dense
           round
           icon="delete"
           class="q-ml-sm"
-          @click="handleDeleteBtn(props.row)"
+          @click="handleDeleteBtn(props.rowIndex)"
         />
       </q-td>
     </template>
@@ -174,6 +180,7 @@ const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const curr = useCurriculumStore();
 const q = useQuasar();
+const rowIndex = ref(-1);
 
 const columns: QTableColumn[] = [
   {
@@ -235,28 +242,30 @@ function fetchBranches() {
 }
 
 const handleSave = () => {
-  if (!curr.form.coordinators) {
-    curr.form.coordinators = [];
+  const index = rowIndex.value;
+  if (index === -1) {
+    curr.form.coordinators?.push(store.form as Coordinator);
+  } else {
+    curr.form.coordinators?.splice(index, 1, store.form as Coordinator);
   }
-  curr.form.coordinators.push(store.form as Coordinator);
+  rowIndex.value = -1;
   store.dialogState = false;
 };
 
-const handleEditBtn = (item: Coordinator) => {
+const handleEditBtn = (index: number, item: Coordinator) => {
+  rowIndex.value = index;
   store.form = JSON.parse(JSON.stringify(item));
   store.toggleDialog();
 };
 
-const handleDeleteBtn = (item: Coordinator) => {
+const handleDeleteBtn = (index: number) => {
   q.dialog({
     title: 'Confirm',
     message: 'Are you sure?',
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    curr.form.coordinators = curr.form.coordinators.filter(
-      (c) => c.code !== item.code,
-    );
+    curr.form.coordinators?.splice(index, 1);
   });
 };
 
