@@ -25,7 +25,7 @@ export const useSubjectStore = defineStore('subject', {
     qNotify: Notify,
     qDialog: Dialog,
     filterModel: {} as Partial<FilterModel>,
-    curriculumId: '',
+    curriculumId: 0,
     router: useRouter(),
   }),
   getters: {
@@ -71,7 +71,7 @@ export const useSubjectStore = defineStore('subject', {
     async fetchAllSkills() {
       this.skillOptions = (await SkillService.getAll()).data; // need to update for fetch only options
     },
-    async fetchSubjectsByCurriculum(id: string) {
+    async fetchSubjectsByCurriculum(id: number) {
       this.currsubjects = (await SubjectService.getSubjectByCurriculums(id)).data;
       if (this.subjects) {
         console.log('fetch subjects')
@@ -127,7 +127,7 @@ export const useSubjectStore = defineStore('subject', {
     handleAddSkill() {
       this.form.skillExpectedLevels = this.form.skillExpectedLevels || [];
       this.form.skillExpectedLevels.push({
-        subject: { id: this.form.id }, //at least subject id is required
+        subject: { code: this.form.code }, //at least subject id is required
         expectedLevel: 1,
       });
     },
