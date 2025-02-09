@@ -154,8 +154,7 @@ function changeLocale() {
 }
 
 onMounted(async () => {
-  auth.profile = await auth.getProfile();
-
+  // auth.profile = await auth.getProfile();
   // if (!props.landing) {
   //   if (auth.profile) return;
   // }
