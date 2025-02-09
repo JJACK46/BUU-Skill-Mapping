@@ -6,69 +6,13 @@
   <MainHeader
     v-model:search-text="store.search"
     v-model:filter-model="store.filterModel"
-    @open-dialog="store.handleOpenDialog"
+    @open-dialog="coursespec.handleOpenDialog"
     hide-filter
   />
-
-  <!-- <q-select
-    dense
-    outlined
-    v-model="store.form.subjects"
-    :options="subjects"
-    :label="t('subjects') + ' *'"
-    use-chips
-    option-label="name"
-    multiple
-    :rules="[requireField]"
-  ></q-select>
-  <q-card
-    v-for="(subject, index) in store.form.subjects"
-    :key="index"
-    class="q-mb-md shadow-3 rounded-card relative"
-  >
-    <q-card-section>
-      <div class="row items-center">
-        <div>
-          <div class="text-h6 text-primary font-bold">
-            {{ subject.name }}
-          </div>
-          <div class="text-subtitle2 text-grey-6">
-            {{ t('credit : ') }}{{ subject.credit || 'No credit provided' }}
-          </div>
-        </div>
-
-        <q-col class="q-ml-auto">
-          <q-card-actions align="right">
-            <q-btn
-              align="right"
-              flat
-              color="negative"
-              icon="close"
-              @click="deleteSubject(index)"
-              class="q-py-sm"
-            /> </q-card-actions
-        ></q-col>
-      </div>
-    </q-card-section>
-
-    <q-card-section>
-      <q-separator class="q-mb-md" />
-      <div class="text-body1 q-pb-sm">
-        <div class="text-subtitle2 text-grey-6 row items-center q-gutter-sm">
-          <div v-for="(item, idx) in subject.skillExpectedLevels" :key="idx">
-            <q-chip clickable color="primary" text-color="white">
-              {{ item.skill?.name || 'No skill provided' }}
-            </q-chip>
-          </div>
-        </div>
-      </div>
-    </q-card-section>
-  </q-card> -->
   <!-- Add & Edit Dialog -->
-
   <DialogForm
-    v-model="store.dialogState"
-    :title="store.getDialogTitle"
+    v-model="coursespec.dialogState"
+    :title="coursespec.getDialogTitle"
     v-model:form-valid="formValid"
     ref="formRef"
     @save="handleSave"
@@ -77,57 +21,67 @@
       filled
       outlined
       dense
-      v-model="store.form.id"
-      @update:model-value="(val) => (store.form.id = val?.id ?? null)"
+      v-model="coursespec.form.subjectCode"
+      @update:model-value="updateSubjectCode"
       use-input
       hide-selected
       label="Search ID"
-      :options="filteredOptions"
-      option-value="id"
+      :options="store.getSubjects"
+      option-value="subjectCode"
       :option-label="computedLabel"
       @filter="filterFn"
       :popup-offset="[0, 5]"
     />
     <q-input
-      v-model="store.form.id"
+      v-model="coursespec.form.subjectCode"
       outlined
       dense
       label="ID *"
       mask="########"
-      :rules="[requireField]"
+      :rules="[(val) => !!val || 'Required']"
     />
     <q-select
-      v-model="store.form.type"
+      v-model="coursespec.form.type"
       outlined
       dense
       label="Type *"
       :options="Object.values(SubjectType)"
       :rules="[requireField]"
-    />
+    >
+      <template #before-options></template>
+    </q-select>
     <q-input
-      v-model="store.form.name"
+      v-model="coursespec.form.thaiName"
       outlined
       dense
       label="Name *"
       :rules="[requireField, onlyThai]"
     />
     <q-input
-      v-model="store.form.engName"
+      v-model="coursespec.form.engName"
       outlined
       dense
       label="Eng Name *"
       :rules="[requireField, onlyEnglish]"
     />
     <q-input
-      v-model="store.form.description"
+      v-model="coursespec.form.thaiDescription"
       outlined
       dense
       type="textarea"
       label="Description *"
-      :rules="[requireField]"
+      :rules="[requireField, onlyThai]"
     />
     <q-input
-      v-model="store.form.credit"
+      v-model="coursespec.form.engDescription"
+      outlined
+      dense
+      type="textarea"
+      label="Description *"
+      :rules="[requireField, onlyEnglish]"
+    />
+    <q-input
+      v-model="coursespec.form.credit"
       outlined
       dense
       label="Credit *"
@@ -141,12 +95,12 @@
     bordered
     class="q-animate--fade q-mt-lg"
     separator="cell"
-    :rows="curr.form.subjects || store.getSubjectsByCu"
+    :rows="curr.form.courseSpecs || coursespec.getSubjects"
     row-key="id"
     :pagination="store.pagination"
     :loading="global.getLoadingState"
     :columns="subjectColumns"
-    @update:pagination="store.fetchSubjectsByCurriculum(store.curriculumId)"
+    @update:pagination="coursespec.fetchData()"
   >
     <template #body-cell-number="props">
       <q-td>
@@ -191,10 +145,10 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DialogForm from 'src/components/DialogForm.vue';
 import { SubjectType } from 'src/types/subjectType.enum';
-import type { Subject } from 'src/types/subject';
+// import type { Subject } from 'src/types/subject';
 import { useRouter } from 'vue-router';
 
-// const subjects = ref<Subject[]>();
+// const subjects = ref<CourseSpec[]>();
 const store = useSubjectStore();
 const curriculumStore = useCurriculumStore();
 const { t } = useI18n();
@@ -202,6 +156,7 @@ const global = useGlobalStore();
 const curr = useCurriculumStore();
 const q = useQuasar();
 const formRef = ref();
+const coursespec = useCourseSpecStore();
 const subjectColumns: QTableColumn[] = [
   {
     name: 'number',
@@ -218,9 +173,9 @@ const subjectColumns: QTableColumn[] = [
     sortable: true,
   },
   {
-    name: 'name',
+    name: 'thaiName',
     label: 'Name',
-    field: 'name',
+    field: 'thaiName',
     align: 'left',
   },
   {
@@ -257,24 +212,23 @@ const subjectColumns: QTableColumn[] = [
 
 const formValid = computed(() => {
   return !!(
-    store.form.id &&
-    store.form.type &&
-    store.form.name &&
-    store.form.engName &&
-    store.form.description &&
-    store.form.credit
+    coursespec.form.subjectCode &&
+    coursespec.form.type &&
+    coursespec.form.thaiName &&
+    coursespec.form.engName &&
+    coursespec.form.thaiDescription &&
+    coursespec.form.engDescription &&
+    coursespec.form.credit
   );
 });
 onMounted(async () => {
   await store.fetchData();
+  await coursespec.fetchData();
   await curriculumStore.fetchData();
   await curriculumStore.fetchSubjectsData();
   const curriculumId = curriculumStore.getInsertId;
   console.log(curriculumId);
   store.curriculumId = curriculumId;
-  // await store.fetchSubjectsByCurriculum(curriculumId);
-  console.log(store.getSubjectsByCu);
-
   // console.log(a);
   // if (auth.isAdmin) {
   //   columns.value.push({
@@ -286,42 +240,63 @@ onMounted(async () => {
   // }
 });
 import { watchEffect } from 'vue';
+import { useCourseSpecStore } from 'src/stores/couse-spec';
+import type { CourseSpec } from 'src/types/course-spec';
 
 watchEffect(() => {
   console.log('Updated curriculumId:', curriculumStore.getInsertId);
   store.curriculumId = curriculumStore.getInsertId;
 });
 const handleSave = () => {
-  if (!curr.form.subjects) {
-    curr.form.subjects = [];
+  if (coursespec.getSubjects) {
+    curr.form.courseSpecs = [...coursespec.getSubjects];
+  } else if (!curr.form.courseSpecs) {
+    curr.form.courseSpecs = [];
   }
-  const existingSubjectIndex = curr.form.subjects.findIndex(
-    (subject) => subject.id === store.form.id,
+  const existingSubjectIndex = curr.form.courseSpecs.findIndex(
+    (subject) => subject.subjectCode === coursespec.form.subjectCode,
   );
   console.log(existingSubjectIndex);
   if (existingSubjectIndex !== -1) {
-    curr.form.subjects[existingSubjectIndex] = store.form as Subject;
+    curr.form.courseSpecs[existingSubjectIndex] = coursespec.form as CourseSpec;
   } else {
-    curr.form.subjects.push(store.form as Subject);
+    curr.form.courseSpecs.push(coursespec.form as CourseSpec);
   }
 
-  store.dialogState = false;
+  coursespec.dialogState = false;
 };
-const handleOpenDialog = (item: Subject) => {
-  store.form = JSON.parse(JSON.stringify(item));
-  store.dialogState = true;
+const handleOpenDialog = (item: CourseSpec) => {
+  coursespec.form = JSON.parse(JSON.stringify(item));
+  coursespec.dialogState = true;
 };
-const handleRemove = (item: Subject) => {
+const handleRemove = (item: CourseSpec) => {
   q.dialog({
     title: 'Confirm',
     message: 'Are you sure?',
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    curr.form.subjects = curr.form.subjects.filter((c) => c.id !== item.id);
+    curr.form.courseSpecs = curr.form.courseSpecs.filter(
+      (c) => c.subjectCode !== item.subjectCode,
+    );
   });
 };
 const filteredOptions = ref(store.getSubjects);
+// const selectedSubject = ref('');
+
+const updateSubjectCode = (val) => {
+  if (val) {
+    coursespec.form.subjectCode = val.id;
+    // ใช้ id ของ option ที่เลือก
+  } else {
+    coursespec.form.subjectCode = ''; // ถ้าเป็น null ให้เคลียร์ค่า
+  }
+  console.log('Selected subjectCode:', coursespec.form.subjectCode);
+};
+
+const computedLabel = (option) => {
+  return `${option.id} - ${option.name}`;
+};
 
 const filterFn = (val, update) => {
   if (val === '') {
@@ -338,9 +313,6 @@ const filterFn = (val, update) => {
     );
   });
 };
-const computedLabel = computed(() => {
-  return (option: any) => `${option.id} - ${option.name}`;
-});
 const router = useRouter();
 const handleClo = (row) => {
   console.log(
@@ -348,7 +320,7 @@ const handleClo = (row) => {
     `/curriculums/${store.curriculumId}/subjects/${1}/clos`,
   );
   router
-    .push(`/curriculums/${store.curriculumId}/subjects/${row.id}/clos`)
+    .push(`/curriculums/${store.curriculumId}/subjects/${row.subjectCode}/clos`)
     .then(() => {
       console.log('Navigation succeeded');
     })

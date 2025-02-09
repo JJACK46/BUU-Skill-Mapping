@@ -14,16 +14,15 @@
       @save="store.handleSave"
       ref="formRef"
       v-model:form-valid="formValid"
-      @vue:mounted="store.fetchAllSkills"
     >
       <q-tabs v-model="store.tabsModel">
-        <q-tab name="req" label="Required" />
-        <q-tab name="add" label="Skills" />
+        <!-- <q-tab name="req" label="Required" /> -->
+        <!-- <q-tab name="add" label="Skills" /> -->
       </q-tabs>
       <q-tab-panels v-model="store.tabsModel">
         <q-tab-panel name="req" class="q-gutter-y-md">
           <q-input
-            v-model="store.form.id"
+            v-model="store.form.code"
             outlined
             dense
             label="ID *"
@@ -69,7 +68,7 @@
             :rules="[requireField]"
           />
         </q-tab-panel>
-        <q-tab-panel name="add">
+        <!-- <q-tab-panel name="add">
           <q-list>
             <q-item
               v-for="(s, i) in store.form.skillExpectedLevels"
@@ -118,7 +117,7 @@
             label="add"
             @click="store.handleAddSkill"
           />
-        </q-tab-panel>
+        </q-tab-panel> -->
       </q-tab-panels>
     </DialogForm>
     <!-- Table -->
@@ -145,7 +144,7 @@
           {{ props.value }}
         </q-td>
       </template>
-      <template #body-cell-skills="props">
+      <!-- <template #body-cell-skills="props">
         <q-td>
           <q-btn
             :disable="props.value === undefined || props.value.length === 0"
@@ -176,7 +175,7 @@
             </q-popup-proxy>
           </q-btn>
         </q-td>
-      </template>
+      </template> -->
       <template #body-cell-actions="props">
         <q-td class="q-gutter-x-sm" style="min-width: 100px">
           <q-btn
@@ -208,7 +207,7 @@ import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useAuthStore } from 'src/stores/auth';
-import { SubjectType } from 'src/data/subject_type';
+import { SubjectType } from 'src/types/subjectType.enum';
 
 const global = useGlobalStore();
 const route = useRoute();
