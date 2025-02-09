@@ -34,11 +34,11 @@ export class CurriculumService {
   }
 
   static async updateOne(obj: Partial<Curriculum>) {
-    if (!obj.id) {
-      console.error('Update failed: Missing ID');
+    if (!obj.code) {
+      console.error('Update failed: Missing Code');
       return false;
     }
-    const res = await api.patch(`${this.path}/${obj.id}`, obj);
+    const res = await api.patch(`${this.path}/${obj.code}`, obj);
     return res.status === HttpStatusCode.Ok;
   }
 
