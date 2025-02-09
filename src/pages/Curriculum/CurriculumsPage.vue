@@ -43,14 +43,14 @@
               flat
               dense
               round
-              color="primary"
+              color="grey-8"
               icon="edit"
               @click="handleEditBtn(props.row)" />
             <q-btn
               flat
               dense
               round
-              color="negative"
+              color="grey-8"
               icon="delete"
               @click="store.handleDelete(props.row.id)"
           /></q-td>

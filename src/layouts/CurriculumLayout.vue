@@ -12,7 +12,10 @@
       <q-toolbar>
         <q-breadcrumbs>
           <q-breadcrumbs-el :label="t('home')" icon="home" to="/" />
-          <q-breadcrumbs-el :label="`${t('curriculum')}`" />
+          <q-breadcrumbs-el
+            :label="`${t('curriculum')}`"
+            :to="`/${auth.getRole || 'administer'}/curriculums`"
+          />
           <q-breadcrumbs-el :label="`${$route.params.id}`" />
         </q-breadcrumbs>
       </q-toolbar>
@@ -52,10 +55,12 @@ import { useCurriculumStore } from 'src/stores/curriculum';
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import { useAuthStore } from 'src/stores/auth';
 
 const store = useCurriculumStore();
 const route = useRoute();
 const { t } = useI18n();
+const auth = useAuthStore();
 
 const basePath = `/curriculums/${route.params.id}`;
 
