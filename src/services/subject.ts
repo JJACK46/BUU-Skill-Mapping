@@ -37,4 +37,12 @@ export class SubjectService {
     const res = await api.delete(`${this.path}/${id}`);
     return res.status === HttpStatusCode.Ok;
   }
+
+  static async getSubjectByCurriculums(id: string) {
+    const { data } = await api.get(`${this.path}/filters/${id}`);
+    return {
+      data: data[0],
+      total: data[1],
+    };
+  }
 }
