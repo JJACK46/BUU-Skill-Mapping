@@ -199,7 +199,7 @@
 <script lang="ts" setup>
 import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import DialogForm from 'src/components/DialogForm.vue';
 import { useSubjectStore } from 'src/stores/subject';
@@ -217,16 +217,16 @@ const formRef = ref();
 const formValid = ref<boolean>(false);
 const auth = useAuthStore();
 
-watch(
-  () => store.form.skillExpectedLevels?.length,
-  (newVal) => {
-    if (newVal && newVal > 0) {
-      formValid.value = true;
-    } else {
-      formValid.value = false;
-    }
-  },
-);
+// watch(
+//   () => store.form.skillExpectedLevels?.length,
+//   (newVal) => {
+//     if (newVal && newVal > 0) {
+//       formValid.value = true;
+//     } else {
+//       formValid.value = false;
+//     }
+//   },
+// );
 
 const columns = ref<QTableColumn[]>([
   { name: 'id', label: 'ID', field: 'id', align: 'left' },

@@ -232,7 +232,6 @@ import { CourseService } from 'src/services/course';
 import { useCourseStore } from 'src/stores/course';
 import type { CourseEnrollment } from 'src/types/course';
 import type { SkillCollection } from 'src/types/skill-collection';
-import type { SkillExpectedLevel } from 'src/types/skill-exp-lvl';
 import { downloadTemplateForStudents } from 'src/utils/file-template';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -294,9 +293,9 @@ async function fetchCourse() {
   );
 }
 
-function makeSkillTree(skills: Partial<SkillExpectedLevel>[]) {
-  return skills.map((s) => ({ ...s.skill, level: s.expectedLevel }));
-}
+// function makeSkillTree(skills: Partial<SkillExpectedLevel>[]) {
+//   return skills.map((s) => ({ ...s.skill, level: s.expectedLevel }));
+// }
 
 const skillTree = ref();
 
@@ -305,9 +304,9 @@ onMounted(async () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   route.params.id && store.setCourseId(String(route.params.id));
   await fetchCourse();
-  skillTree.value = makeSkillTree(
-    store.course.subject?.skillExpectedLevels || [],
-  );
+  // skillTree.value = makeSkillTree(
+  //   store.course.subject?.skillExpectedLevels || [],
+  // );
 });
 
 const columns: QTableColumn<CourseEnrollment>[] = [
