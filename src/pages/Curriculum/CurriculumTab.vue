@@ -23,7 +23,7 @@
     outlined
     v-model="store.form.engName"
     :label="t('engName') + ' *'"
-    :rules="[requireField, onlyAlphabet]"
+    :rules="[requireField]"
   />
   <q-input
     dense
