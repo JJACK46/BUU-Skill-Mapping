@@ -29,6 +29,7 @@
           flat
           dense
           round
+          color="grey-8"
           icon="edit"
           @click="handleEditBtn(props.rowIndex, props.row)"
         />
@@ -36,6 +37,7 @@
           flat
           dense
           round
+          color="grey-8"
           icon="delete"
           class="q-ml-sm"
           @click="handleDeleteBtn(props.rowIndex)"

@@ -96,11 +96,6 @@ const menuList: MenuProps[] = [
     link: `${basePath}/skills`,
   },
   {
-    icon: 'code',
-    title: 'CLOS',
-    link: `${basePath}/Clos`,
-  },
-  {
     icon: 'check',
     title: 'summary',
     link: `${basePath}/summary`,
