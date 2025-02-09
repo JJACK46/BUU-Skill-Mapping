@@ -127,7 +127,7 @@ export const useCurriculumStore = defineStore('curriculum', {
       }
       this.dialogState = true;
     },
-    handleDelete(id: string) {
+    handleDelete(id: number) {
       Dialog.create({
         title: 'Confirm Deletion',
         message: 'Are you sure you want to delete this curriculum?',
@@ -135,7 +135,7 @@ export const useCurriculumStore = defineStore('curriculum', {
         persistent: true,
       }).onOk(() => this.removeCurriculum(id));
     },
-    async removeCurriculum(id: string) {
+    async removeCurriculum(id: number) {
       const ok = await CurriculumService.removeOne(id);
       if (ok) {
         Notify.create({
