@@ -6,8 +6,7 @@ export type Skill = {
   name: string;
   description: string;
   domain: LearningDomain;
-  parent?: Skill[];
+  parent?: Skill;
   children?: Skill[];
-  techSkills?: Skill[];
   curriculum?: Curriculum;
 };
