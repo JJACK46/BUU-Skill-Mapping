@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { EnumUserRole } from 'src/enums/roles';
+import { EnumUserRole } from 'src/data/roles';
 import AuthService from 'src/services/auth';
 import type { Payload } from 'src/types/payload';
 

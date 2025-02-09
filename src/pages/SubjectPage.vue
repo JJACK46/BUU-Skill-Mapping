@@ -208,7 +208,7 @@ import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useAuthStore } from 'src/stores/auth';
-import { SubjectType } from 'src/types/subjectType.enum';
+import { SubjectType } from 'src/data/subject_type';
 
 const global = useGlobalStore();
 const route = useRoute();

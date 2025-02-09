@@ -2,7 +2,7 @@
 import { computed, onMounted } from 'vue';
 import { useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
-import { LearningDomain } from 'src/types/learning-domain.enum';
+import { LearningDomain } from 'src/data/learning_domain';
 import { requireField } from 'src/utils/field-rules';
 import { useMeta } from 'quasar';
 import { useRoute } from 'vue-router';

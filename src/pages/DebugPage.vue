@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { EnumUserRole } from 'src/enums/roles';
+import { EnumUserRole } from 'src/data/roles';
 import { useGlobalStore } from 'src/stores/global';
 
 const app = useGlobalStore();

@@ -1,4 +1,4 @@
-import type { EnumUserRole } from 'src/enums/roles';
+import type { EnumUserRole } from 'src/data/roles';
 import type { Student } from './student';
 import type { Instructor } from './instructor';
 

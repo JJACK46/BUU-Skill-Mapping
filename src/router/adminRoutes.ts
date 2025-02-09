@@ -1,4 +1,4 @@
-import { EnumUserRole } from 'src/enums/roles';
+import { EnumUserRole } from 'src/data/roles';
 import type { RouteRecordRaw } from 'vue-router';
 
 export const adminRoutes: RouteRecordRaw[] = [

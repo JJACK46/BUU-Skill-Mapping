@@ -4,7 +4,7 @@ import { useMeta } from 'quasar';
 import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
-import { EnumUserRole } from 'src/enums/roles';
+import { EnumUserRole } from 'src/data/roles';
 import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';
 import { useUserStore } from 'src/stores/user';

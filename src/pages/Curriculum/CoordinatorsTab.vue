@@ -164,7 +164,7 @@ import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
 import { requireField } from 'src/utils/field-rules';
 import type { Branch } from 'src/types/branch';
-import { AcademicRank } from 'src/types/position.enum';
+import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
 import { BranchService } from 'src/services/branches';
 import MainHeader from 'src/components/PageHeader.vue';

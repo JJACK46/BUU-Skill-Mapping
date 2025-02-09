@@ -1,5 +1,5 @@
+import type { LearningDomain } from 'src/data/learning_domain';
 import type { Curriculum } from './curriculum';
-import type { LearningDomain } from './learning-domain.enum';
 
 export type Skill = {
   id: number;

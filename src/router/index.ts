@@ -8,7 +8,7 @@ import {
 
 import routes from './routes';
 // import AuthService from 'src/services/auth';
-import { EnumUserRole } from 'src/enums/roles';
+import { EnumUserRole } from 'src/data/roles';
 import { useGlobalStore } from 'src/stores/global';
 
 /*

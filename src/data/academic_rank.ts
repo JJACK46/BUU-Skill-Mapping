@@ -10,14 +10,3 @@ export enum AcademicRank {
   VisitingProfessor = 'ศาสตราจารย์รับเชิญ',
   EmeritusProfessor = 'ศาสตราจารย์กิตติคุณ',
 }
-
-// Lecturer - อาจารย์ผู้บรรยาย
-// Instructor - ผู้สอน
-// Adjunct Professor - ศาสตราจารย์พิเศษ
-// Assistant Professor - ผู้ช่วยศาสตราจารย์
-// Associate Professor - รองศาสตราจารย์
-// Professor - ศาสตราจารย์
-// Senior Lecturer - อาจารย์อาวุโส
-// Research Professor - ศาสตราจารย์วิจัย
-// Visiting Professor - ศาสตราจารย์รับเชิญ
-// Emeritus Professor - ศาสตราจารย์กิตติคุณ
