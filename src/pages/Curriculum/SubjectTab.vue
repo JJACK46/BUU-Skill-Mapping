@@ -120,11 +120,13 @@
           icon="edit"
           padding="none"
           flat
+          color="grey-8"
           @click="handleOpenDialog(props.row)"
         ></q-btn>
         <q-btn
           icon="delete"
           padding="none"
+          color="grey-8"
           flat
           @click="handleRemove(props.row)"
         ></q-btn>

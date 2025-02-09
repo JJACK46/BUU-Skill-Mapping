@@ -55,12 +55,12 @@
           {{ props.row.description }}
         </q-td>
         <q-td>
-          <q-btn flat dense round color="primary" icon="edit" />
+          <q-btn flat dense round color="grey-8" icon="edit" />
           <q-btn
             flat
             dense
             round
-            color="negative"
+            color="grey-8"
             icon="delete"
             class="q-ml-sm"
           />
