@@ -27,7 +27,7 @@ export const curriculumRoutes: RouteRecordRaw[] = [
         component: () => import('src/pages/Curriculum/SkillTab.vue'),
       },
       {
-        path: ':id/clos',
+        path: ':id/subjects/:subjectId/clos',
         name: 'ClOs',
         component: () => import('src/pages/Curriculum/CloTab.vue'),
       },
