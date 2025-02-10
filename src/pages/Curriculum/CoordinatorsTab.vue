@@ -196,7 +196,7 @@ const columns: QTableColumn[] = [
     name: 'code',
     label: 'Code',
     field: 'code',
-    align: 'center',
+    align: 'left',
     sortable: true,
   },
   {
@@ -208,12 +208,12 @@ const columns: QTableColumn[] = [
   {
     name: 'name',
     label: 'Name',
-    field: 'name',
+    field: 'thaiName',
     align: 'left',
   },
   {
     name: 'engName',
-    label: 'EngName',
+    label: 'English Name',
     field: 'engName',
     align: 'left',
   },
