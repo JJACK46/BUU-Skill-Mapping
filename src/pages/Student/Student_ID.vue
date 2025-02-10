@@ -27,7 +27,7 @@
             <q-list>
               <q-item v-for="(s, i) in student.skillCollection" :key="i">
                 <q-item-section>
-                  {{ i + 1 }}. {{ s.skill?.name ?? 'Unknown' }} / Level:
+                  {{ i + 1 }}. {{ s.skill?.thaiName ?? 'Unknown' }} / Level:
                   {{ s.gainedLevel }} / {{ s.passed ? 'Passed' : 'Failed' }}
                 </q-item-section>
               </q-item>

@@ -101,7 +101,7 @@ useMeta({
         readonly
       />
       <q-input
-        v-model="store.form.name"
+        v-model="store.form.thaiName"
         :label="t('name') + ' *'"
         outlined
         :rules="[requireField]"
@@ -114,7 +114,7 @@ useMeta({
         :rules="[requireField]"
       />
       <q-input
-        v-model="store.form.description"
+        v-model="store.form.thaiDescription"
         :label="t('description') + ' *'"
         outlined
         type="textarea"

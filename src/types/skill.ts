@@ -3,8 +3,10 @@ import type { Curriculum } from './curriculum';
 
 export type Skill = {
   id: number;
-  name: string;
-  description: string;
+  thaiName: string;
+  engName: string;
+  thaiDescription: string;
+  engDescription: string;
   domain: LearningDomain;
   parent?: Skill;
   children?: Skill[];

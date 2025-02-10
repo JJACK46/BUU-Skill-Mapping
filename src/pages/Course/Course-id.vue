@@ -157,7 +157,7 @@
                   {
                     name: 'name',
                     label: 'Name',
-                    field: (s) => s.skillExpectedLevels?.skill?.name,
+                    field: (s) => s.skillExpectedLevels?.skill?.thaiName,
                     align: 'left',
                   },
                   {
