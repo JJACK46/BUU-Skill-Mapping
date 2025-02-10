@@ -113,7 +113,7 @@
     bordered
     class="q-animate--fade q-mt-lg"
     separator="cell"
-    :rows="curr.getListSubject || []"
+    :rows="courseSpecStore.getData || []"
     row-key="code"
     :loading="global.getLoadingState"
     :columns="subjectColumns"
@@ -131,7 +131,7 @@
           color="blue"
           unelevated
           style="width: 50px"
-          @click="openCloDialog(props.row)"
+          @click="handleClo(props.row)"
         ></q-btn>
         <q-btn
           icon="edit"
@@ -232,7 +232,7 @@ import MainHeader from 'src/components/PageHeader.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useGlobalStore } from 'src/stores/global';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DialogForm from 'src/components/DialogForm.vue';
 
@@ -255,32 +255,32 @@ const subjectColumns: QTableColumn[] = [
   {
     name: 'code',
     label: 'Code',
-    field: 'code',
+    field: (row) => row.subject?.code,
     align: 'left',
     sortable: true,
   },
   {
     name: 'thaiName',
     label: 'Name',
-    field: 'thaiName',
+    field: (row) => row.subject?.thaiName,
     align: 'left',
   },
   {
     name: 'engName',
     label: 'English Name',
-    field: 'engName',
+    field: (row) => row.subject?.engName,
     align: 'left',
   },
   {
     name: 'credit',
     label: 'Credit',
-    field: 'credit',
+    field: (row) => row.subject?.credit,
     align: 'left',
   },
   {
     name: 'type',
     label: 'Type',
-    field: 'type',
+    field: (row) => row.subject?.type,
     align: 'left',
   },
   {
@@ -290,7 +290,9 @@ const subjectColumns: QTableColumn[] = [
     align: 'left',
   },
 ];
-
+watchEffect(() => {
+  console.log('Updated formSubject:', courseSpecStore.formSubject);
+});
 const formValid = computed(() => {
   return !!(
     courseSpecStore.formSubject &&
@@ -300,15 +302,23 @@ const formValid = computed(() => {
 });
 onMounted(async () => {
   curr.fetchOne(String(code));
+  courseSpecStore.fetchData();
 });
 import { useCourseSpecStore } from 'src/stores/couse-spec';
 import type { CourseSpec } from 'src/types/course-spec';
 import type { Clo } from 'src/types/clo';
 import { OptionSubjectType } from 'src/data/subject_type';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import type { Subject } from 'src/types/subject';
 const curr = useCurriculumStore();
-
+// watch(
+//   () => courseSpecStore.formSubject.code,
+//   (newVal) => {
+//     if (courseSpecStore.formCourseSpec.subject) {
+//       courseSpecStore.formCourseSpec.subject.code = newVal;
+//     }
+//   },
+// );
 // subject add into course spec
 const handleAdd = (subject: Subject) => {
   // if no array course specs, create empty array (prevent error)
@@ -322,13 +332,13 @@ const handleAdd = (subject: Subject) => {
     curriculumId: curr.form.id,
   } as CourseSpec;
   // handle duplicate subject in course specs
-  const exist = curr.form.courseSpecs.findIndex(
+  const existIndex = curr.form.courseSpecs.findIndex(
     (subject) =>
       subject.subjectCode === courseSpecStore.formCourseSpec.subjectCode,
   );
   // if exist, update
-  if (exist !== -1) {
-    curr.form.courseSpecs[exist] = courseSpec;
+  if (existIndex !== -1) {
+    curr.form.courseSpecs.splice(existIndex, 1, courseSpec);
   } else {
     // if not exist, push
     curr.form.courseSpecs.push(courseSpec);
@@ -336,12 +346,26 @@ const handleAdd = (subject: Subject) => {
   // insert subject into course specs array
   // close dialog
   courseSpecStore.dialogState = false;
+  courseSpecStore.formSubject = {} as Subject;
 };
-const handleOpenDialog = (item: CourseSpec) => {
-  courseSpecStore.formCourseSpec = JSON.parse(JSON.stringify(item));
-  courseSpecStore.dialogState = true;
+const handleOpenDialog = (item?: CourseSpec) => {
+  if (item) {
+    // Edit Mode: ใช้ค่าของ item ที่ถูกส่งเข้ามา
+    courseSpecStore.titleForm = 'Edit Subject';
+    courseSpecStore.formSubject = JSON.parse(JSON.stringify(item.subject));
+  } else {
+    // Add Mode: รีเซ็ตค่าให้เป็น object เปล่า
+    courseSpecStore.titleForm = 'Edit Subject';
+  }
+  courseSpecStore.dialogState = true; // เปิด dialog
 };
+
 const handleRemove = (item: CourseSpec) => {
+  if (!item.subject.code) {
+    console.error('Cannot delete: subjectCode is undefined');
+    return;
+  }
+
   q.dialog({
     title: 'Confirm',
     message: 'Are you sure?',
@@ -349,10 +373,12 @@ const handleRemove = (item: CourseSpec) => {
     persistent: true,
   }).onOk(() => {
     curr.form.courseSpecs = curr.form.courseSpecs.filter(
-      (c) => c.subjectCode !== item.subjectCode,
+      (c) => c.subject.code !== item.subject.code,
     );
+    console.log('Deleted:', item.subject.code);
   });
 };
+
 // const filteredOptions = ref(store.getSubjects);
 // const selectedSubject = ref('');
 
@@ -389,11 +415,11 @@ const handleRemove = (item: CourseSpec) => {
 //   });
 // };
 
-const openCloDialog = (clo: Clo) => {
-  formCLO.value = { ...clo };
-  courseSpecStore.dialogState = false;
-  dialogClo.value = true;
-};
+// const openCloDialog = (clo: Clo) => {
+//   formCLO.value = { ...clo };
+//   courseSpecStore.dialogState = false;
+//   dialogClo.value = true;
+// };
 
 const saveClo = () => {
   dialogClo.value = false;
@@ -402,19 +428,17 @@ const saveClo = () => {
     courseSpecStore.formCourseSpec.clos = [];
   courseSpecStore.formCourseSpec.clos.push(formCLO.value);
 };
-// const router = useRouter();
-// const handleClo = (row) => {
-//   console.log(
-//     'Navigating to:',
-//     `/curriculums/${store.curriculumId}/subjects/${1}/clos`,
-//   );
-//   router
-//     .push(`/curriculums/${store.curriculumId}/subjects/${row.subjectCode}/clos`)
-//     .then(() => {
-//       console.log('Navigation succeeded');
-//     })
-//     .catch((error) => {
-//       console.log('Navigation error:', error);
-//     });
-// };
+const router = useRouter();
+const handleClo = (row) => {
+  router
+    .push(
+      `/curriculums/${courseSpecStore.curriculumId}/subjects/${row.subject.code}/clos`,
+    )
+    .then(() => {
+      console.log('Navigation succeeded');
+    })
+    .catch((error) => {
+      console.log('Navigation error:', error);
+    });
+};
 </script>
