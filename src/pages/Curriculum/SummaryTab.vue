@@ -2,7 +2,7 @@
   <q-page class="q-pa-sm">
     <!-- Curriculum Header -->
     <div class="text-h4 q-mb-lg text-primary" style="line-height: 1.5">
-      {{ curr.thaiName }}
+      {{ store.form.thaiName }}
     </div>
 
     <!-- Curriculum Details -->
@@ -29,8 +29,8 @@
       <q-card-section>
         <div class="text-h6">PLOs</div>
         <q-separator class="q-my-md"></q-separator>
-        <q-list v-if="curr.plos?.length">
-          <q-item v-for="(plo, index) in curr.plos" :key="plo.id">
+        <q-list v-if="store.form.plos?.length">
+          <q-item v-for="(plo, index) in store.form.plos" :key="plo.id">
             <div class="row full-width items-start">
               <q-item-section side class="col-1">
                 <q-item-label caption class="text-black">
@@ -55,7 +55,7 @@
         <div class="text-h6">{{ t('subject') }}</div>
         <q-separator class="q-my-md"></q-separator>
         <q-list separator>
-          <q-item v-for="subject in curr.subjects" :key="subject.id">
+          <q-item v-for="subject in store.form.subjects" :key="subject.id">
             <div class="row full-width q-py-sm items-start">
               <!-- Subject ID and Details Column -->
               <div class="col-12 col-md-2">
@@ -89,7 +89,7 @@
       <q-card-section>
         <div class="text-h6">{{ t('skills') }}</div>
         <q-separator class="q-my-md"></q-separator>
-        <CustomTreeSkill :skills="curr.skills" readonly></CustomTreeSkill>
+        <CustomTreeSkill :skills="store.form.skills" readonly></CustomTreeSkill>
       </q-card-section>
     </q-card>
 
@@ -100,7 +100,7 @@
         <q-separator class="q-my-md"></q-separator>
         <q-list>
           <q-item
-            v-for="coordinator in curr.coordinators"
+            v-for="coordinator in store.form.coordinators"
             :key="coordinator.id"
           >
             <q-item-section avatar class="q-mr-sm">
@@ -134,24 +134,54 @@
         </q-list>
       </q-card-section>
     </q-card>
+    <!-- JSON -->
+    <q-card flat bordered>
+      <q-card-section>
+        <q-expansion-item label="View JSON" v-model="expandJSON">
+          <q-separator class="q-my-sm"></q-separator>
+          <div class="row justify-end">
+            <q-btn
+              flat
+              padding="xs"
+              :icon="alreadyCopied ? 'check' : matContentCopy"
+              @click="copyToClipboard"
+            >
+              <q-tooltip> {{ alreadyCopied ? 'Copied' : 'Copy' }}</q-tooltip>
+            </q-btn>
+          </div>
+          <vue-json-pretty :data="store.form"></vue-json-pretty>
+        </q-expansion-item>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import VueJsonPretty from 'vue-json-pretty';
+import { matContentCopy } from '@quasar/extras/material-icons';
 
-const curr = useCurriculumStore().getCurriculum;
+const store = useCurriculumStore();
+const expandJSON = ref(false);
+
+const alreadyCopied = ref(false);
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(JSON.stringify(store.form));
+  alreadyCopied.value = true;
+};
 
 const { t } = useI18n();
 const details = [
-  { label: t('engName'), value: curr.engName },
-  { label: t('degree'), value: `${curr.thaiDegree} ${curr.engDegree}` },
-  { label: t('description'), value: curr.thaiDescription },
-  { label: t('period'), value: curr.period },
-  { label: t('minimumGrade'), value: curr.minimumGrade },
+  { label: t('engName'), value: store.form.engName },
+  {
+    label: t('degree'),
+    value: `${store.form.thaiDegree} ${store.form.engDegree}`,
+  },
+  { label: t('description'), value: store.form.thaiDescription },
+  { label: t('period'), value: store.form.period },
+  { label: t('minimumGrade'), value: store.form.minimumGrade },
 ];
 </script>
-
-<style scoped></style>
