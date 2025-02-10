@@ -17,35 +17,38 @@ const { t } = useI18n();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const searchText = ref('');
+const selectedItem = ref<Skill | null>(null);
 
 // Get all node IDs to expand initially
-const expandedNodes = computed(() => {
-  const getAllNodeIds = (nodes) =>
-    nodes.reduce(
-      (ids, node) => [
-        ...ids,
-        node.name,
-        ...(node.children ? getAllNodeIds(node.children) : []),
-      ],
-      [],
-    );
-  return getAllNodeIds(curr.getSkills);
-});
+// const expandedNodes = computed(() => {
+//   const getAllNodeIds = (nodes) =>
+//     nodes.reduce(
+//       (ids, node) => [
+//         ...ids,
+//         node.thaiName,
+//         ...(node.children ? getAllNodeIds(node.children) : []),
+//       ],
+//       [],
+//     );
+//   return getAllNodeIds(curr.getSkills);
+// });
 
-const insertSkill = (sk: Skill) => {
+const rowIndex = ref(-1);
+
+const saveSkill = (sk: Skill, rowIndex: number) => {
   if (!curr.form.skills) {
     curr.form.skills = [];
   }
-  const index = curr.form.skills.findIndex((s) => s.name === sk.name);
-  if (index >= 0) {
-    curr.form.skills.splice(index, 1, sk);
+  if (rowIndex >= 0) {
+    curr.form.skills.splice(rowIndex, 1, sk);
+    selectedItem.value = sk;
   } else {
     curr.form.skills.push(sk);
   }
 };
 
-const insertSubSkill = (sk: Skill, parentName: string) => {
-  const index = curr.form.skills.findIndex((s) => s.name === parentName);
+const saveSubSkill = (sk: Skill, parentName: string) => {
+  const index = curr.form.skills.findIndex((s) => s.thaiName === parentName);
   if (index > -1) {
     const parent = curr.form.skills[index];
     if (parent.children) {
@@ -56,12 +59,12 @@ const insertSubSkill = (sk: Skill, parentName: string) => {
   }
 };
 
-const handleAdd = (title: TitleFormSkill) => {
+const handleAdd = (title: TitleFormSkill, rowIndex: number) => {
   if (title === 'Insert Sub-Skill') {
-    insertSubSkill(store.form as Skill, store.getParentName);
+    saveSubSkill(store.form as Skill, store.getParentName);
   }
-  if (title === 'New Skill') {
-    insertSkill(store.form as Skill);
+  if (title === 'New Skill' || title === 'Edit Skill') {
+    saveSkill(store.form as Skill, rowIndex);
   }
   store.dialogForm = false;
 };
@@ -77,7 +80,7 @@ const handleRemove = (name: string) => {
           ? deepFilter(skill.children, nameToRemove)
           : [],
       }))
-      .filter((skill) => skill.name !== nameToRemove);
+      .filter((skill) => skill.thaiName !== nameToRemove);
 
   q.dialog({
     title: 'Confirm',
@@ -132,30 +135,29 @@ useMeta({
     </div>
 
     <!-- Content -->
-    <q-card flat bordered class="q-animate--fade q-my-md">
+    <div class="row q-mt-md">
       <q-tree
         :nodes="curr.getSkills"
-        node-key="name"
-        class="q-pa-sm"
+        node-key="thaiName"
+        class="q-pa-sm col q-animate--fade q-mr-lg"
         :no-nodes-label="t('noData')"
-        :expanded="expandedNodes"
       >
         <template v-slot:default-header="props">
-          <q-tr class="full-width q-py-xs hover-row" style="cursor: pointer">
+          <q-tr
+            class="justify-between full-width flex hover-row"
+            style="cursor: pointer"
+            @click="selectedItem = props.node"
+          >
             <!-- Header -->
             <q-td style="user-select: none">
-              <span class="text-body1">
-                {{ props.node.name }}
-              </span>
+              <div class="text-body1">
+                {{ props.node.thaiName ?? 'No Thai Name' }}
+              </div>
+              <div class="text-caption">
+                {{ props.node.engName ?? 'No Eng Name' }}
+              </div>
             </q-td>
-            <q-td class="q-gutter-x-sm">
-              <q-btn
-                @click="store.toggleDialog({ form: props.node, title: 'View' })"
-                icon="info"
-                padding="none"
-                class="hover-btn"
-                flat
-              ></q-btn>
+            <q-td class="q-gutter-x-sm flex">
               <q-btn
                 @click="
                   store.toggleDialog({
@@ -170,7 +172,11 @@ useMeta({
               ></q-btn>
               <q-btn
                 @click="
-                  store.toggleDialog({ form: props.node, title: 'Edit Skill' })
+                  (store.toggleDialog({
+                    form: props.node,
+                    title: 'Edit Skill',
+                  }),
+                  (rowIndex = props.node.index))
                 "
                 icon="edit"
                 padding="none"
@@ -188,17 +194,25 @@ useMeta({
           </q-tr>
         </template>
       </q-tree>
-    </q-card>
-
+      <q-card class="col bg-grey-1 q-pa-md" flat>
+        {{ selectedItem }}
+      </q-card>
+    </div>
     <!-- All in One Dialog -->
     <DialogForm
       :title="store.getTitleForm"
-      @save="handleAdd(store.getTitleForm)"
+      @save="handleAdd(store.getTitleForm, rowIndex)"
       v-model="store.dialogForm"
     >
       <q-input
-        v-model="store.form.name"
+        v-model="store.form.thaiName"
         :label="t('name') + ' *'"
+        outlined
+        :rules="[requireField]"
+      />
+      <q-input
+        v-model="store.form.engName"
+        :label="t('engName') + ' *'"
         outlined
         :rules="[requireField]"
       />
@@ -210,8 +224,15 @@ useMeta({
         :rules="[requireField]"
       />
       <q-input
-        v-model="store.form.description"
+        v-model="store.form.thaiDescription"
         :label="t('description') + ' *'"
+        outlined
+        type="textarea"
+        :rules="[requireField]"
+      />
+      <q-input
+        v-model="store.form.engDescription"
+        :label="t('engDescription') + ' *'"
         outlined
         type="textarea"
         :rules="[requireField]"

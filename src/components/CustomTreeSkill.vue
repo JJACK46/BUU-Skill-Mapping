@@ -112,7 +112,7 @@ const options = <QTreeProps['nodes']>[
 const formatToNodes = (skills: Skill[]): QTreeProps['nodes'] => {
   return skills?.map((skill) => {
     const node = {
-      label: skill.name,
+      label: skill.thaiName,
       children: [] as QTreeProps['nodes'], // Initialize children as empty
     };
 

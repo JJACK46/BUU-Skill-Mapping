@@ -32,7 +32,7 @@ export const useSkillStore = defineStore('skill', {
   getters: {
     getTitleForm: (state) => state.titleForm,
     getParentId: (state) => state.parent.id,
-    getParentName: (s) => s.parent.name,
+    getParentName: (s) => s.parent.thaiName,
     getMaxPage: (state) =>
       calMaxPage(state.totalSkills, state.pagination!.rowsPerPage),
     getSkills: (state) => {
