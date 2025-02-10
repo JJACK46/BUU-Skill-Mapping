@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { Dialog, Notify } from 'quasar';
 import type { FilterModel } from 'src/types/filter';
-import type { Subject } from 'src/types/subject';
 import { useRouter } from 'vue-router';
 // import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import type { CourseSpec } from 'src/types/course-spec';
@@ -9,15 +8,16 @@ import type { CourseSpec } from 'src/types/course-spec';
 import { CourseSpecService } from 'src/services/couse-spec';
 import { useCurriculumStore } from 'src/stores/curriculum';
 
+import type { Subject } from 'src/types/subject';
+
 type TitleForm = 'New Subject' | 'Edit Subject';
 
 export const useCourseSpecStore = defineStore('course-spec', {
   state: () => ({
     dialogState: false,
-    subjects: <Subject[]>[],
-    currsubjects: <Subject[]>[],
     courseSpec: <CourseSpec[]>[],
-    form: <Partial<CourseSpec>>{},
+    formCourseSpec: <Partial<CourseSpec>>{},
+    formSubject: <Partial<Subject>>{},
     tabsModel: 'req',
     editMode: true,
     titleForm: '' as TitleForm,
@@ -32,20 +32,17 @@ export const useCourseSpecStore = defineStore('course-spec', {
   }),
   getters: {
     getDialogTitle: (s) => s.titleForm,
-    getSubjects: (s) => s.courseSpec,
-    getSubjectsByCu: (s) => s.currsubjects
   },
   actions: {
     async fetchData() {
-      this.curriculumId = this.currStore.getInsertId;
-      console.log('fetch id curr:', this.curriculumId);
-
       if (!this.curriculumId) {
         console.error('curriculumId is undefined or invalid!');
         return;
       }
       try {
-        this.courseSpec = await CourseSpecService.fetchSubjectByCurriculums(this.curriculumId);
+        this.courseSpec = await CourseSpecService.fetchSubjectByCurriculums(
+          this.curriculumId,
+        );
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -59,19 +56,19 @@ export const useCourseSpecStore = defineStore('course-spec', {
             message: 'Subject updated successfully',
           });
       } else {
-        this.form.curriculumId = this.curriculumId
-        this.curriculumId = this.currStore.getInsertId
-        console.log(this.curriculumId)
-        console.log("Before Create:", this.form);
+        this.form.curriculumId = this.curriculumId;
+        this.curriculumId = this.currStore.getInsertId;
+        console.log(this.curriculumId);
+        console.log('Before Create:', this.form);
         const ok = await CourseSpecService.createOne(this.form);
-        console.log(ok)
+        console.log(ok);
         if (ok)
           this.qNotify.create({
             type: 'ok',
             message: 'Subject created successfully',
           });
       }
-      console.log(this.curriculumId)
+      console.log(this.curriculumId);
       // this.subjects = (await SubjectService.getSubjectByCurriculums(this.curriculumId)).data;
       this.courseSpec = (await CourseSpecService.getAll()).data;
       this.dialogState = false;
@@ -131,5 +128,4 @@ export const useCourseSpecStore = defineStore('course-spec', {
       this.form = {};
     },
   },
-
 });

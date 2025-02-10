@@ -70,13 +70,13 @@
 
               <!-- Subject Names Column -->
               <div class="col-12 col-md-4">
-                <div class="text-weight-medium">{{ subject.name }}</div>
+                <div class="text-weight-medium">{{ subject.thaiName }}</div>
                 <div class="text-grey-8">{{ subject.engName }}</div>
               </div>
 
               <!-- Description Column -->
               <div class="col-12 col-md-6">
-                <div>{{ subject.description }}</div>
+                <div>{{ subject.thaiDescription }}</div>
               </div>
             </div>
           </q-item>
