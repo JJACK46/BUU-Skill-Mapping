@@ -65,7 +65,7 @@
           mask="# (#-#-#)"
           :rules="[requireField]"
         />
-        <div class="row col-grow">
+        <div class="row col-12">
           <q-input
             class="col q-mr-sm"
             style="min-width: 200px"
@@ -117,7 +117,6 @@
     row-key="code"
     :loading="global.getLoadingState"
     :columns="subjectColumns"
-    @update:pagination="courseSpecStore.fetchData()"
   >
     <template #body-cell-number="props">
       <q-td>
