@@ -1,8 +1,10 @@
 import type { Clo } from './clo';
 
 export type Plo = {
-  id: string;
+  id: number;
   name: string;
-  description: string;
+  thaiDescription: string;
+  engDescription: string;
+  type: string | null;
   clos?: Clo[]; // CLOs
 };

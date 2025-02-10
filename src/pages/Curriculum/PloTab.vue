@@ -1,3 +1,58 @@
+<script lang="ts" setup>
+import type { QTableColumn } from 'quasar';
+import { useGlobalStore } from 'src/stores/global';
+import { ref } from 'vue';
+import { usePlostore } from 'src/stores/plos';
+import DialogForm from 'src/components/DialogForm.vue';
+import MainHeader from 'src/components/PageHeader.vue';
+import { useI18n } from 'vue-i18n';
+import { requireField } from 'src/utils/field-rules';
+
+const { t } = useI18n();
+const global = useGlobalStore();
+const store = usePlostore();
+const columns = ref<QTableColumn[]>([
+  { name: 'no', label: 'No.', field: 'no', align: 'left' },
+  { name: 'id', label: 'ID', field: 'id', align: 'left' },
+  { name: 'name', label: 'Name', field: 'name', align: 'left' },
+  {
+    name: 'Type',
+    label: 'type',
+    field: 'name',
+    align: 'left',
+  },
+
+  {
+    name: 'description',
+    label: 'Dscription',
+    field: 'description',
+    align: 'left',
+  },
+  { name: 'actions', label: 'Actions', field: 'actions', align: 'left' },
+]);
+
+const rows = ref([
+  {
+    id: 1,
+    name: 'PLO 1',
+    learningDomain: 'ทักษะ',
+    description: '1',
+  },
+  {
+    id: 2,
+    name: 'PLO 2',
+    learningDomain: 'คุณลักษะณะบุคคล',
+    description: '1',
+  },
+  {
+    id: 3,
+    name: 'PLO 3',
+    learningDomain: 'คุณลักษะณะบุคคล',
+    description: '1',
+  },
+]);
+</script>
+
 <template>
   <div class="q-py-md">
     <div class="text-h4 text-primary">PLO</div>
@@ -10,6 +65,7 @@
   <DialogForm
     v-model="store.dialogState"
     :title="store.getDialogTitle"
+    @save="store.handleSave()"
     ref="formRef"
   >
     <q-input
@@ -51,6 +107,9 @@
         <q-td key="name" :props="props" width="400px">
           {{ props.row.name }}
         </q-td>
+        <q-td key="LearningDomain" :props="props" width="400px">
+          {{ props.row.learningDomain }}
+        </q-td>
         <q-td key="description" :props="props">
           {{ props.row.description }}
         </q-td>
@@ -69,48 +128,3 @@
     </template>
   </q-table>
 </template>
-
-<script lang="ts" setup>
-import type { QTableColumn } from 'quasar';
-import { useGlobalStore } from 'src/stores/global';
-import { ref } from 'vue';
-import { usePlostore } from 'src/stores/plos';
-import DialogForm from 'src/components/DialogForm.vue';
-import MainHeader from 'src/components/PageHeader.vue';
-import { useI18n } from 'vue-i18n';
-import { requireField } from 'src/utils/field-rules';
-
-const { t } = useI18n();
-const global = useGlobalStore();
-const store = usePlostore();
-const columns = ref<QTableColumn[]>([
-  { name: 'no', label: 'No.', field: 'no', align: 'left' },
-  { name: 'id', label: 'ID', field: 'id', align: 'left' },
-  { name: 'name', label: 'Name', field: 'name', align: 'left' },
-  {
-    name: 'description',
-    label: 'Dscription',
-    field: 'description',
-    align: 'left',
-  },
-  { name: 'actions', label: 'Actions', field: 'actions', align: 'left' },
-]);
-
-const rows = ref([
-  {
-    id: 1,
-    name: 'PLO 1',
-    description: '1',
-  },
-  {
-    id: 2,
-    name: 'PLO 2',
-    description: '1',
-  },
-  {
-    id: 3,
-    name: 'PLO 3',
-    description: '1',
-  },
-]);
-</script>

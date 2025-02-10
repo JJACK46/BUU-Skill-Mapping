@@ -10,6 +10,7 @@ export const usePlostore = defineStore('plo', {
   state: () => ({
     dialogState: false,
     form: <Partial<Plo>>{},
+    plos: [] as Plo[],
     tabsModel: 'req',
     pagination: defaultPagination,
     editMode: true,
@@ -58,6 +59,11 @@ export const usePlostore = defineStore('plo', {
       this.fetchData();
       this.dialogForm = false;
       this.resetForm();
+    },
+    async createOne() {
+      await PloService.addPlo(this.form as Plo);
+      this.dialogState = false;
+      window.location.reload();
     },
     async handleRemove(id: string) {
       this.qDialog
