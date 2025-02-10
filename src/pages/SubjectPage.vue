@@ -34,11 +34,11 @@
             outlined
             dense
             label="Type *"
-            :options="Object.values(SubjectType)"
+            :options="OptionSubjectType"
             :rules="[requireField]"
           />
           <q-input
-            v-model="store.form.name"
+            v-model="store.form.thaiName"
             outlined
             dense
             label="Name *"
@@ -52,7 +52,7 @@
             :rules="[requireField, onlyEnglish]"
           />
           <q-input
-            v-model="store.form.description"
+            v-model="store.form.thaiDescription"
             outlined
             dense
             type="textarea"
@@ -207,7 +207,7 @@ import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useAuthStore } from 'src/stores/auth';
-import { SubjectType } from 'src/types/subjectType.enum';
+import { OptionSubjectType } from 'src/data/subject_type';
 
 const global = useGlobalStore();
 const route = useRoute();

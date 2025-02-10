@@ -24,10 +24,10 @@
             {{ t('subjectId') }} : {{ store.course.subject?.id }}
           </div>
           <div class="text-h5">
-            {{ store.course.subject?.name }}
+            {{ store.course.subject?.thaiName }}
           </div>
           <div class="text-body2 q-mt-sm">
-            {{ store.course.subject?.description }}
+            {{ store.course.subject?.thaiDescription }}
           </div>
         </q-card-section>
       </q-card>
