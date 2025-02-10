@@ -14,7 +14,7 @@
   <q-input
     dense
     outlined
-    v-model="store.form.name"
+    v-model="store.form.thaiName"
     :label="t('name') + ' *'"
     :rules="[requireField]"
   />
@@ -29,14 +29,14 @@
     dense
     type="textarea"
     outlined
-    v-model="store.form.description"
+    v-model="store.form.thaiDescription"
     :label="t('description') + ' *'"
     :rules="[requireField]"
   />
   <q-input
     dense
     outlined
-    v-model="store.form.degree"
+    v-model="store.form.thaiDegree"
     :label="t('degree') + ' *'"
     :rules="[requireField, onlyAlphabet]"
   />

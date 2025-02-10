@@ -83,8 +83,8 @@
       />
       <q-input
         outlined
-        v-model="store.form.name"
-        label="Name *"
+        v-model="store.form.thaiName"
+        label="Thai Name *"
         clearable
         dense
         :rules="[requireField]"

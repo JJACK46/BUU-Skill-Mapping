@@ -27,10 +27,10 @@
             {{ props.row.code }}
           </q-td>
           <q-td key="name" :props="props" width="400px">
-            {{ props.row.name }}
+            {{ props.row.thaiName }}
           </q-td>
           <q-td key="degree" :props="props">
-            {{ props.row.degree }}
+            {{ props.row.thaiDegree }}
           </q-td>
           <q-td key="period" :props="props">
             {{ props.row.period }} &nbsp; ปี
@@ -81,7 +81,7 @@
         <q-input
           dense
           outlined
-          v-model="store.form.name"
+          v-model="store.form.thaiName"
           :label="t('name') + ' *'"
           :rules="[requireField]"
           style="width: 100%"
@@ -97,7 +97,7 @@
         <q-input
           dense
           outlined
-          v-model="store.form.degree"
+          v-model="store.form.thaiDegree"
           :label="t('degree') + ' *'"
           :rules="[requireField, onlyAlphabet]"
           style="width: 48%"
@@ -145,7 +145,7 @@
           dense
           type="textarea"
           outlined
-          v-model="store.form.description"
+          v-model="store.form.thaiDescription"
           :label="t('description') + ' *'"
           :rules="[requireField]"
           style="width: 100%"
