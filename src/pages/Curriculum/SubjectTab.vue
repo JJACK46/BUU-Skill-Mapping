@@ -93,7 +93,7 @@
           dense
           type="textarea"
           label="Description *"
-          :rules="[requireField, onlyThai]"
+          :rules="[requireField]"
         />
         <q-input
           class="col-12"
@@ -102,7 +102,7 @@
           dense
           type="textarea"
           label="English Description *"
-          :rules="[requireField, onlyEnglish]"
+          :rules="[requireField]"
         />
       </div>
     </div>
