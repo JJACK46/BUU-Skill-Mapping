@@ -47,7 +47,11 @@
     }
 
     tr:nth-child(even) {
-      background-color: #fafafa;
+      background-color: #f6f6f6;
+    }
+
+    tr:hover {
+      background-color: #e3eafb;
     }
   }
 
