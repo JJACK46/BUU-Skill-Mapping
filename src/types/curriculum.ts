@@ -7,11 +7,11 @@ import type { Coordinator } from './coordinator';
 export interface Curriculum {
   id: number;
   code: string;
-  name: string;
+  thaiName: string;
   engName: string;
-  degree: string;
+  thaiDegree: string;
   engDegree: string;
-  description: string;
+  thaiDescription: string;
   period: number;
   minimumGrade: number;
   coordinators: Coordinator[];

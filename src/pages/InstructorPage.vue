@@ -47,7 +47,7 @@
       />
       <q-input
         outlined
-        v-model="store.form.name"
+        v-model="store.form.thaiName"
         label="Name *"
         clearable
         dense
