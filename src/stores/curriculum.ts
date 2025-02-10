@@ -25,7 +25,9 @@ export const useCurriculumStore = defineStore('curriculum', {
     getCurriculums: (c) => c.curriculums,
     getDialogTitle: (c) => c.titleForm,
     getInsertId: (c) => c.form.id,
-    getSkills: (c) => c.form.skills || [],
+    getSkills: (c) => {
+      return c.form.skills?.map((skill, index) => ({ ...skill, index })) || [];
+    },
     getCurriculum: (c) => c.form,
     getListSubject: (c) => c.form.courseSpecs?.flatMap((c) => c.subject) || [],
   },

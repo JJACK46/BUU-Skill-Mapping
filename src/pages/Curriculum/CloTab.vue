@@ -71,7 +71,7 @@
               @remove="removeSkill(skill)"
               class="q-mr-sm"
             >
-              {{ skill.name }}
+              {{ skill.thaiName }}
             </q-chip>
           </div>
         </div>
@@ -240,7 +240,7 @@ const filterSkills = (val: string, update: (cb: () => void) => void) => {
   const searchVal = val.toLowerCase();
   update(() => {
     filteredSkills.value = skillStore.skills.filter((skill) =>
-      skill.name.toLowerCase().includes(searchVal),
+      skill.thaiName.toLowerCase().includes(searchVal),
     );
   });
 };
