@@ -32,16 +32,18 @@ export const useCourseSpecStore = defineStore('course-spec', {
   }),
   getters: {
     getDialogTitle: (s) => s.titleForm,
+    getData: (s) => s.currStore.form.courseSpecs,
   },
   actions: {
     async fetchData() {
+      this.curriculumId = this.currStore.form.id
       if (!this.curriculumId) {
         console.error('curriculumId is undefined or invalid!');
         return;
       }
       try {
-        this.courseSpec = await CourseSpecService.fetchSubjectByCurriculums(
-          this.curriculumId,
+        this.currStore.form.courseSpecs = await CourseSpecService.fetchSubjectByCurriculums(
+          this.curriculumId
         );
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -82,7 +84,7 @@ export const useCourseSpecStore = defineStore('course-spec', {
     //     console.log('Not found')
     //   }
     // },
-    handleOpenDialog(form?: Partial<CourseSpec>) {
+    handleOpenDialog(form?: Partial<Subject>) {
       if (form) {
         this.titleForm = 'Edit Subject';
         this.form = { ...form };
@@ -125,7 +127,7 @@ export const useCourseSpecStore = defineStore('course-spec', {
         });
     },
     resetForm() {
-      this.form = {};
+      this.formSubject = {};
     },
   },
 });
