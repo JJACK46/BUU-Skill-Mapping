@@ -19,7 +19,6 @@ import type { Subject } from './subject';
 
 export interface CourseSpec {
   subject: Subject;
-  subjectCode: string;
-  curriculumId: number;
-  clos: Clo[];
+  curriculumId?: number;
+  clos?: Clo[];
 }

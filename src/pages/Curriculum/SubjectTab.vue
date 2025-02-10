@@ -3,20 +3,27 @@
     {{ t('subjects') }}
   </div>
 
-  <MainHeader
+  <!-- <MainHeader
     v-model:search-text="courseSpecStore.search"
     v-model:filter-model="courseSpecStore.filterModel"
     @open-dialog="courseSpecStore.handleOpenDialog"
     hide-filter
-  />
+  /> -->
+  <div class="justify-end flex q-mt-sm">
+    <q-btn
+      color="primary"
+      unelevated
+      :label="t('add')"
+      @click="handleOpenDialog(null, -1)"
+    ></q-btn>
+  </div>
   <!-- Add & Edit Dialog Subject -->
   <DialogForm
-    v-model="courseSpecStore.dialogState"
-    :title="courseSpecStore.getDialogTitle"
-    v-model:form-valid="formValid"
+    v-model="dialogCS"
+    :title="titleForm"
     ref="formRef"
     width="60%"
-    @save="handleAdd(courseSpecStore.formSubject as Subject)"
+    @save="handleAdd(formCourseSpec.subject, rowIndexCS)"
   >
     <div class="row q-gutter-x-sm">
       <div class="row q-gutter-sm">
@@ -24,7 +31,7 @@
           filled
           outlined
           dense
-          v-model="courseSpecStore.formSubject"
+          v-model="formCourseSpec.subject"
           @update:model-value="updateSubjectCode"
           use-input
           hide-selected
@@ -37,7 +44,7 @@
         <q-input
           class="col"
           style="min-width: 200px"
-          v-model="courseSpecStore.formSubject.code"
+          v-model="formCourseSpec.subject.code"
           outlined
           dense
           label="Code *"
@@ -47,7 +54,7 @@
         <q-select
           style="min-width: 200px"
           class="col"
-          v-model="courseSpecStore.formSubject.type"
+          v-model="formCourseSpec.subject.type"
           outlined
           dense
           label="Type *"
@@ -56,7 +63,7 @@
         >
         </q-select>
         <q-input
-          v-model="courseSpecStore.formSubject.credit"
+          v-model="formCourseSpec.subject.credit"
           outlined
           dense
           style="max-width: 200px"
@@ -69,7 +76,7 @@
           <q-input
             class="col q-mr-sm"
             style="min-width: 200px"
-            v-model="courseSpecStore.formSubject.thaiName"
+            v-model="formCourseSpec.subject.thaiName"
             outlined
             dense
             label="Thai Name *"
@@ -78,7 +85,7 @@
           <q-input
             class="col"
             style="min-width: 200px"
-            v-model="courseSpecStore.formSubject.engName"
+            v-model="formCourseSpec.subject.engName"
             outlined
             dense
             label="Eng Name *"
@@ -88,7 +95,7 @@
 
         <q-input
           class="col-12"
-          v-model="courseSpecStore.formSubject.thaiDescription"
+          v-model="formCourseSpec.subject.thaiDescription"
           outlined
           dense
           type="textarea"
@@ -97,7 +104,7 @@
         />
         <q-input
           class="col-12"
-          v-model="courseSpecStore.formSubject.engDescription"
+          v-model="formCourseSpec.subject.engDescription"
           outlined
           dense
           type="textarea"
@@ -111,7 +118,7 @@
   <q-table
     flat
     bordered
-    class="q-animate--fade q-mt-lg"
+    class="q-animate--fade q-mt-md"
     separator="cell"
     :rows="courseSpecStore.getData || []"
     row-key="code"
@@ -126,19 +133,19 @@
     <template #body-cell-actions="props">
       <q-td class="q-gutter-x-sm" style="min-width: 100px">
         <q-btn
-          label="Clos"
+          label="CLOs"
           padding="none"
           color="blue"
           unelevated
           style="width: 50px"
-          @click="handleClo(props.row)"
+          @click="handleOpenCloDialogTable(props.rowIndex)"
         ></q-btn>
         <q-btn
           icon="edit"
           padding="none"
           flat
           color="grey-8"
-          @click="handleOpenDialog(props.row)"
+          @click="handleOpenDialog(props.row, props.rowIndex)"
         ></q-btn>
         <q-btn
           icon="delete"
@@ -150,11 +157,51 @@
       </q-td>
     </template>
   </q-table>
-  <DialogForm v-model="dialogClo" @save="saveClo" title="CLO" ref="formRefCLO">
+  <!-- CLOs Dialog -->
+  <q-dialog v-model="dialogCloTable">
+    <q-card style="min-width: 1000px; min-height: 500px">
+      <!-- CLOs Table -->
+      <q-table
+        id="clo-table"
+        :rows="computedListCLO"
+        :columns="cloColumns"
+        row-key="name"
+        hide-pagination
+        bordered
+        separator="cell"
+        class="q-pa-md"
+      >
+        <template #top-left>
+          <div class="text-h6">CLOs</div>
+        </template>
+        <template #top-right>
+          <q-btn
+            :label="t('add')"
+            unelevated
+            color="primary"
+            @click="handleOpenCloDialogForm()"
+          ></q-btn>
+        </template>
+      </q-table>
+      <!-- CLOs Form -->
+    </q-card>
+  </q-dialog>
+  <DialogForm
+    v-model="dialogCloForm"
+    @save="
+      saveClo({
+        rowIndexCS: rowIndexCS,
+        rowIndexCLO: rowIndexCLO,
+        formCLO: formCLO,
+      })
+    "
+    title="CLOs"
+    ref="formRefCLO"
+  >
     <!-- Main Clo -->
-    <div class="row q-gutter-x-md">
-      <div class="col">
-        <q-input v-model="formCLO.name" outlined dense :label="t('Name')" />
+    <div class="row">
+      <div class="col-6 q-mr-md">
+        <q-input v-model="formCLO.name" outlined dense :label="t('name')" />
       </div>
       <div class="col">
         <q-select
@@ -177,73 +224,39 @@
         />
       </div>
     </div>
-
     <div class="row justify-between">
       <div class="col-12">
-        <q-select v-model="formCLO.plos" outlined dense :label="t('PLO')" />
+        <q-select v-model="formCLO.plos" outlined dense label="PLOs" />
       </div>
     </div>
-    <!-- Skill Section ? -->
-    <!-- <div class="row justify-between">
-      <div class="col-6">
-        <div class="q-mt-md">
-          <q-chip
-            v-for="(skill, index) in selectedSkills"
-            :key="index"
-            removable
-            @remove="removeSkill(skill)"
-            class="q-mr-sm"
-          >
-            {{ skill.name }}
-          </q-chip>
-        </div>
-      </div>
-      <div class="col-5">
-        <q-select
-          v-model="selectedSkills"
-          :options="filteredSkills"
-          outlined
-          dense
-          multiple
-          use-input
-          hide-selected
-          fill-input
-          input-debounce="300"
-          @filter="filterSkills"
-          :label="t('Search Skill')"
-          option-value="id"
-          option-label="name"
-          clearable
-          behavior="menu"
-        >
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-select>
-      </div>
-    </div> -->
   </DialogForm>
 </template>
 
 <script lang="ts" setup>
 import { useQuasar, type QTableColumn } from 'quasar';
-import MainHeader from 'src/components/PageHeader.vue';
-
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useGlobalStore } from 'src/stores/global';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DialogForm from 'src/components/DialogForm.vue';
+import type { CourseSpec } from 'src/types/course-spec';
+import type { Clo } from 'src/types/clo';
+import { OptionSubjectType } from 'src/data/subject_type';
+import type { Subject } from 'src/types/subject';
 
-const route = useRoute();
-const code = route.params.id;
-const dialogClo = ref<boolean>(false);
+const dialogCloTable = ref<boolean>(false);
+const dialogCloForm = ref<boolean>(false);
 const { t } = useI18n();
 const global = useGlobalStore();
 const q = useQuasar();
-const courseSpecStore = useCourseSpecStore();
+const dialogCS = ref(false);
+const formCourseSpec = ref<CourseSpec>({} as CourseSpec);
 const formCLO = ref<Clo>({} as Clo);
+const rowIndexCS = ref(-1);
+const rowIndexCLO = ref(-1);
+const curr = useCurriculumStore();
+const titleForm = ref('');
 const subjectColumns: QTableColumn[] = [
   {
     name: 'number',
@@ -290,82 +303,68 @@ const subjectColumns: QTableColumn[] = [
     align: 'left',
   },
 ];
-watchEffect(() => {
-  console.log('Updated formSubject:', courseSpecStore.formSubject);
-});
-const formValid = computed(() => {
-  return !!(
-    courseSpecStore.formSubject &&
-    courseSpecStore.formSubject &&
-    courseSpecStore.formSubject
-  );
-});
-onMounted(async () => {
-  curr.fetchOne(String(code));
-  courseSpecStore.fetchData();
-});
-import { useCourseSpecStore } from 'src/stores/couse-spec';
-import type { CourseSpec } from 'src/types/course-spec';
-import type { Clo } from 'src/types/clo';
-import { OptionSubjectType } from 'src/data/subject_type';
-import { useRoute, useRouter } from 'vue-router';
-import type { Subject } from 'src/types/subject';
-const curr = useCurriculumStore();
-// watch(
-//   () => courseSpecStore.formSubject.code,
-//   (newVal) => {
-//     if (courseSpecStore.formCourseSpec.subject) {
-//       courseSpecStore.formCourseSpec.subject.code = newVal;
-//     }
-//   },
-// );
-// subject add into course spec
-const handleAdd = (subject: Subject) => {
-  // if no array course specs, create empty array (prevent error)
-  if (!curr.form.courseSpecs) {
-    curr.form.courseSpecs = [];
+const cloColumns: QTableColumn[] = [
+  {
+    name: 'name',
+    label: 'Name',
+    field: 'name',
+    align: 'left',
+  },
+  {
+    name: 'expectedLevel',
+    label: 'Expected Level',
+    field: 'expectedLevel',
+    align: 'left',
+  },
+  {
+    name: 'description',
+    label: 'Description',
+    field: 'description',
+    align: 'left',
+  },
+];
+
+const computedListCLO = computed(() => {
+  if (rowIndexCS.value > -1) {
+    return curr.form.courseSpecs[rowIndexCS.value].clos;
   }
-  // create object
-  const courseSpec = {
+  return [];
+});
+
+// subject add into course spec
+const handleAdd = (subject: Subject, rowIndex: number) => {
+  // pre-object
+  const cs = {
     subject,
-    subjectCode: subject.code,
     curriculumId: curr.form.id,
+    clos: [],
   } as CourseSpec;
-  // handle duplicate subject in course specs
-  const existIndex = curr.form.courseSpecs.findIndex(
-    (subject) =>
-      subject.subjectCode === courseSpecStore.formCourseSpec.subjectCode,
-  );
   // if exist, update
-  if (existIndex !== -1) {
-    curr.form.courseSpecs.splice(existIndex, 1, courseSpec);
+  if (rowIndex !== -1) {
+    curr.form.courseSpecs[rowIndex] = cs;
   } else {
     // if not exist, push
-    curr.form.courseSpecs.push(courseSpec);
+    curr.form.courseSpecs = curr.form.courseSpecs || [];
+    curr.form.courseSpecs.push(cs);
   }
-  // insert subject into course specs array
   // close dialog
-  courseSpecStore.dialogState = false;
-  courseSpecStore.formSubject = {} as Subject;
+  dialogCS.value = false;
 };
-const handleOpenDialog = (item?: CourseSpec) => {
-  if (item) {
-    // Edit Mode: ใช้ค่าของ item ที่ถูกส่งเข้ามา
-    courseSpecStore.titleForm = 'Edit Subject';
-    courseSpecStore.formSubject = JSON.parse(JSON.stringify(item.subject));
+const handleOpenDialog = (subject: Subject, rowIndex: number) => {
+  if (subject) {
+    titleForm.value = 'Edit Subject';
+    formCourseSpec.value = {
+      subject: JSON.parse(JSON.stringify(subject)),
+      curriculumId: curr.form.id,
+    };
+    rowIndexCS.value = rowIndex;
   } else {
-    // Add Mode: รีเซ็ตค่าให้เป็น object เปล่า
-    courseSpecStore.titleForm = 'Edit Subject';
+    titleForm.value = 'New Subject';
+    formCourseSpec.value = {} as CourseSpec;
   }
-  courseSpecStore.dialogState = true; // เปิด dialog
+  dialogCS.value = true;
 };
-
-const handleRemove = (item: CourseSpec) => {
-  if (!item.subject.code) {
-    console.error('Cannot delete: subjectCode is undefined');
-    return;
-  }
-
+const handleRemove = (item: Subject) => {
   q.dialog({
     title: 'Confirm',
     message: 'Are you sure?',
@@ -373,70 +372,49 @@ const handleRemove = (item: CourseSpec) => {
     persistent: true,
   }).onOk(() => {
     curr.form.courseSpecs = curr.form.courseSpecs.filter(
-      (c) => c.subject.code !== item.subject.code,
+      (c) => c.subject.code !== item.code,
     );
     console.log('Deleted:', item.subject.code);
   });
 };
-
-// const filteredOptions = ref(store.getSubjects);
-// const selectedSubject = ref('');
-
-// const updateSubjectCode = (val) => {
-//   if (val) {
-//     courseSpecStore.formCourseSpec.subjectCode = val.id;
-//     // ใช้ id ของ option ที่เลือก
-//   } else {
-//     courseSpecStore.formCourseSpec.subjectCode = ''; // ถ้าเป็น null ให้เคลียร์ค่า
-//   }
-//   console.log(
-//     'Selected subjectCode:',
-//     courseSpecStore.formCourseSpec.subjectCode,
-//   );
-// };
-
-// const computedLabel = (option) => {
-//   return `${option.id} - ${option.name}`;
-// };
-
-// const filterFn = (val, update) => {
-//   if (val === '') {
-//     update(() => {
-//       filteredOptions.value = store.getSubjects;
-//     });
-//     return;
-//   }
-
-//   const needle = val.toLowerCase();
-//   update(() => {
-//     filteredOptions.value = store.getSubjects.filter((subject) =>
-//       subject.thaiName.toLowerCase().includes(needle),
-//     );
-//   });
-// };
-
-// const openCloDialog = (clo: Clo) => {
-//   formCLO.value = { ...clo };
-//   courseSpecStore.dialogState = false;
-//   dialogClo.value = true;
-// };
-
-const saveClo = () => {
-  dialogClo.value = false;
-  if (!formCLO.value) return;
-  if (!courseSpecStore.formCourseSpec.clos)
-    courseSpecStore.formCourseSpec.clos = [];
-  courseSpecStore.formCourseSpec.clos.push(formCLO.value);
+const handleOpenCloDialogForm = () => {
+  dialogCloForm.value = true;
 };
-const router = useRouter();
-const handleClo = (row) => {
-  router
-    .push(`/curriculums/${curr.form.code}/subjects/${row.subject.code}/clos`)
-    .then(() => {
-      console.log('Navigation succeeded');
-    })
-    .catch((error) => {
-      console.log('Navigation error:', error);
-    });
+const handleOpenCloDialogTable = (rowIndex: number) => {
+  // ensure they must have array
+  curr.form.courseSpecs.forEach((cs) => {
+    cs.clos = cs.clos || [];
+  });
+
+  rowIndexCS.value = rowIndex;
+  dialogCloTable.value = true;
 };
+
+function saveClo({
+  rowIndexCS,
+  rowIndexCLO,
+  formCLO,
+}: {
+  rowIndexCS: number;
+  rowIndexCLO?: number;
+  formCLO: Clo;
+}) {
+  dialogCloForm.value = false;
+
+  const courseSpec = curr.form.courseSpecs[rowIndexCS];
+
+  // Initialize clos array if it doesn't exist
+  if (!courseSpec.clos) {
+    courseSpec.clos = [];
+  }
+
+  // Update or add the formCLO
+  if (rowIndexCLO === undefined || rowIndexCLO === -1) {
+    // Add new CLO
+    courseSpec.clos.push(formCLO);
+  } else {
+    // Update existing CLO
+    courseSpec.clos[rowIndexCLO] = formCLO;
+  }
+}
 </script>
