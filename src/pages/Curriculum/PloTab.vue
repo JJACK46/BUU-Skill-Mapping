@@ -74,7 +74,7 @@
 import type { QTableColumn } from 'quasar';
 import { useGlobalStore } from 'src/stores/global';
 import { ref } from 'vue';
-import { usePlostore } from 'src/stores/pols';
+import { usePlostore } from 'src/stores/plos';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
