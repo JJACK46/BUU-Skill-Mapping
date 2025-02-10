@@ -7,7 +7,7 @@ export type PageParams = {
   columnId?: string;
   columnName?: string;
   subjectName?: string; //need backend change too
-  curriculumName?: string
-  facultyName?: string
-  branchName?: string
+  curriculumName?: string;
+  facultyName?: string;
+  branchName?: string;
 };
