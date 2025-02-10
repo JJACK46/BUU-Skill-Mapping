@@ -23,7 +23,7 @@ export class CourseSpecService {
 
   static async updateOne(obj: Partial<CourseSpec>) {
     try {
-      const res = await api.patch(`${this.path}/${obj.subjectCode}`, obj);
+      const res = await api.patch(`${this.path}/${obj.subject.code}`, obj);
       return res.status === HttpStatusCode.Ok;
     } catch (error) {
       console.error(error);
@@ -45,6 +45,7 @@ export class CourseSpecService {
 
   static async fetchSubjectByCurriculums(curriculumId: number) {
     const res = await api.get(`${this.path}/curriculumId/${curriculumId}`);
+    console.log(res.data)
     return res.data;
   }
 }
