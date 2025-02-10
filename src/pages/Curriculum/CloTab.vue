@@ -14,104 +14,92 @@
     :title="store.getDialogTitle"
     ref="formRef"
   >
-    <template #body>
-      <div class="row justify-between">
-        <div class="col-6">
-          <q-input
-            v-model="store.form.name"
-            outlined
-            dense
-            :label="t('Name')"
-          />
-        </div>
-        <div class="col-5">
-          <q-select
-            v-model="store.form.expectedLevel"
-            :options="[1, 2, 3, 4, 5]"
-            outlined
-            dense
-            :label="t('Expected Level')"
-            behavior="menu"
+    <div class="row justify-between">
+      <div class="col-6">
+        <q-input v-model="store.form.name" outlined dense :label="t('Name')" />
+      </div>
+      <div class="col-5">
+        <q-select
+          v-model="store.form.expectedLevel"
+          :options="[1, 2, 3, 4, 5]"
+          outlined
+          dense
+          :label="t('Expected Level')"
+          behavior="menu"
+        >
+          <template #before-options></template>
+        </q-select>
+      </div>
+    </div>
+
+    <div class="row justify-between">
+      <div class="col-6">
+        <q-input v-model="selectedPloNames" outlined dense :label="t('PLO')" />
+      </div>
+      <div class="col-5">
+        <q-input
+          v-model="searchPlos"
+          outlined
+          clearable
+          @keyup.enter="$emit('enterSearch')"
+          :label="t('search')"
+          class="col rounded-borders"
+          dense
+          debounce="500"
+        />
+      </div>
+    </div>
+
+    <div class="row justify-between">
+      <div class="col-6">
+        <div class="q-mt-md">
+          <q-chip
+            v-for="(skill, index) in selectedSkills"
+            :key="index"
+            removable
+            @remove="removeSkill(skill)"
+            class="q-mr-sm"
           >
-            <template #before-options></template>
-          </q-select>
+            {{ skill.thaiName }}
+          </q-chip>
         </div>
       </div>
+      <div class="col-5">
+        <q-select
+          v-model="selectedSkills"
+          :options="filteredSkills"
+          outlined
+          dense
+          multiple
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="300"
+          @filter="filterSkills"
+          :label="t('Search Skill')"
+          option-value="id"
+          option-label="name"
+          clearable
+          behavior="menu"
+        >
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-select>
+      </div>
+    </div>
 
-      <div class="row justify-between">
-        <div class="col-6">
-          <q-input
-            v-model="selectedPloNames"
-            outlined
-            dense
-            :label="t('PLO')"
-          />
-        </div>
-        <div class="col-5">
-          <q-input
-            v-model="searchPlos"
-            outlined
-            clearable
-            @keyup.enter="$emit('enterSearch')"
-            :label="t('search')"
-            class="col rounded-borders"
-            dense
-            debounce="500"
-          />
-        </div>
+    <div class="row">
+      <div class="col-12">
+        <q-input
+          v-model="store.form.description"
+          dense
+          type="textarea"
+          outlined
+          :label="t('description') + ' *'"
+        />
       </div>
-
-      <div class="row justify-between">
-        <div class="col-6">
-          <div class="q-mt-md">
-            <q-chip
-              v-for="(skill, index) in selectedSkills"
-              :key="index"
-              removable
-              @remove="removeSkill(skill)"
-              class="q-mr-sm"
-            >
-              {{ skill.thaiName }}
-            </q-chip>
-          </div>
-        </div>
-        <div class="col-5">
-          <q-select
-            v-model="selectedSkills"
-            :options="filteredSkills"
-            outlined
-            dense
-            multiple
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="300"
-            @filter="filterSkills"
-            :label="t('Search Skill')"
-            option-value="id"
-            option-label="name"
-            clearable
-            behavior="menu"
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-          <q-input
-            v-model="store.form.description"
-            dense
-            type="textarea"
-            outlined
-            :label="t('description') + ' *'"
-          />
-        </div>
-      </div>
-    </template>
+    </div>
   </DialogForm>
 
   <q-table
@@ -220,15 +208,6 @@ const selectedPloNames = computed(() =>
   selectedRow.value ? selectedRow.value.plos.map((p) => p.name).join(', ') : '',
 );
 
-// const filterSkills = (val, update) => {
-//   update(() => {
-//     filteredSkills.value = val
-//       ? skillStore.skills.filter((skill) =>
-//           skill.name.toLowerCase().includes(val.toLowerCase()),
-//         )
-//       : [...skillStore.skills];
-//   });
-// };
 const filterSkills = (val: string, update: (cb: () => void) => void) => {
   if (!val.trim()) {
     update(() => {

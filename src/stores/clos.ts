@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { Dialog, Notify } from 'quasar';
 import { ClosService } from 'src/services/clos';
-import SkillService from 'src/services/skill';
+import { useSkillStore } from './skill';
 import type { Clo } from 'src/types/clo';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
@@ -17,6 +17,7 @@ export const useClostore = defineStore('clo', {
     search: '',
     qNotify: Notify,
     qDialog: Dialog,
+    skillStore: useSkillStore(),
   }),
   getters: {
     getClos: (c) => c.clos,
@@ -25,7 +26,7 @@ export const useClostore = defineStore('clo', {
   },
   actions: {
     async handleOpenDialog(form?: Partial<Clo>) {
-      await SkillService.getAll();
+      await this.skillStore.fetchData();
       if (form) {
         this.titleForm = 'Edit CLO';
         this.form = { ...form };
