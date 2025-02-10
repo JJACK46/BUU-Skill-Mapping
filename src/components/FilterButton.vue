@@ -1,5 +1,12 @@
 <template>
-  <q-btn icon="filter_list" flat :label="t('filter')" color="primary" dense>
+  <q-btn
+    icon="filter_list"
+    flat
+    :label="t('filter')"
+    color="primary"
+    dense
+    @click="initOptions"
+  >
     <q-popup-proxy v-model="proxyModel" style="width: 400px">
       <q-tabs v-model="filterMenu">
         <q-tab name="faculty" :label="t('faculty')" />
@@ -76,7 +83,7 @@
 import { api } from 'src/boot/axios';
 import type { Faculty } from 'src/types/faculty';
 import type { FilterModel } from 'src/types/filter';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const faculties = ref<Faculty[]>();
@@ -99,8 +106,6 @@ const initOptions = async () => {
       .map((b) => b?.name || '');
   }
 };
-
-onMounted(() => initOptions());
 
 const emit = defineEmits<{
   (e: 'confirmFilter'): void;
