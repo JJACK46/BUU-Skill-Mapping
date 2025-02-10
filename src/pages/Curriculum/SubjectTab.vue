@@ -232,7 +232,7 @@ import MainHeader from 'src/components/PageHeader.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useGlobalStore } from 'src/stores/global';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
-import { computed, onMounted, ref, watch, watchEffect } from 'vue';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DialogForm from 'src/components/DialogForm.vue';
 
@@ -431,9 +431,7 @@ const saveClo = () => {
 const router = useRouter();
 const handleClo = (row) => {
   router
-    .push(
-      `/curriculums/${courseSpecStore.curriculumId}/subjects/${row.subject.code}/clos`,
-    )
+    .push(`/curriculums/${curr.form.code}/subjects/${row.subject.code}/clos`)
     .then(() => {
       console.log('Navigation succeeded');
     })
