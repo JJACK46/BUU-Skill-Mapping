@@ -42,7 +42,6 @@ api.interceptors.response.use(
       timeout: 5000,
       progress: true,
     });
-    console.error(e);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return Promise.reject(e);
