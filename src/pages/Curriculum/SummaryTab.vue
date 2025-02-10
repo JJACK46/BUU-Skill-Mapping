@@ -2,7 +2,7 @@
   <q-page class="q-pa-sm">
     <!-- Curriculum Header -->
     <div class="text-h4 q-mb-lg text-primary" style="line-height: 1.5">
-      {{ curr.name }}
+      {{ curr.thaiName }}
     </div>
 
     <!-- Curriculum Details -->
@@ -110,7 +110,7 @@
             </q-item-section>
             <q-item-section>
               <q-item-label
-                >{{ coordinator.name }} ({{
+                >{{ coordinator.thaiName }} ({{
                   coordinator.engName
                 }})</q-item-label
               >
@@ -147,8 +147,8 @@ const curr = useCurriculumStore().getCurriculum;
 const { t } = useI18n();
 const details = [
   { label: t('engName'), value: curr.engName },
-  { label: t('degree'), value: `${curr.degree} ${curr.engDegree}` },
-  { label: t('description'), value: curr.description },
+  { label: t('degree'), value: `${curr.thaiDegree} ${curr.engDegree}` },
+  { label: t('description'), value: curr.thaiDescription },
   { label: t('period'), value: curr.period },
   { label: t('minimumGrade'), value: curr.minimumGrade },
 ];
