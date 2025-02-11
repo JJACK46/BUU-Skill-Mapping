@@ -25,7 +25,7 @@
           />
         </div>
         <div class="col-5">
-          <q-select
+          <!-- <q-select
             v-model="store.form.expectedLevel"
             :options="[1, 2, 3, 4, 5]"
             outlined
@@ -33,8 +33,7 @@
             :label="t('Expected Level')"
             behavior="menu"
           >
-            <template #before-options></template>
-          </q-select>
+          </q-select> -->
         </div>
       </div>
 
@@ -103,7 +102,7 @@
       <div class="row">
         <div class="col-12">
           <q-input
-            v-model="store.form.description"
+            v-model="store.form.thaiDescription"
             dense
             type="textarea"
             outlined
