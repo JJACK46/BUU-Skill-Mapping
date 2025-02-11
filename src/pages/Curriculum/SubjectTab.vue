@@ -13,6 +13,7 @@
     <q-btn
       color="primary"
       unelevated
+      style="width: 100px"
       :label="t('add')"
       @click="handleOpenDialog(null, -1)"
     ></q-btn>
@@ -158,55 +159,12 @@
     </template>
   </q-table>
   <!-- CLOs Dialog -->
-  <q-dialog v-model="dialogCloTable">
-    <q-card class="q-pa-sm">
-      <!-- CLOs Table -->
-      <q-table
-        id="clo-table"
-        :rows="computedListCLO"
-        :columns="cloColumns"
-        row-key="name"
-        hide-pagination
-        bordered
-        separator="cell"
-        class="q-pa-md"
-      >
-        <template #top-left>
-          <div class="text-h6">CLOs</div>
-        </template>
-        <template #top-right>
-          <q-btn
-            :label="t('add')"
-            unelevated
-            color="primary"
-            @click="handleOpenCloDialogForm()"
-          ></q-btn>
-        </template>
-        <template #body-cell-actions="props">
-          <q-td class="q-gutter-x-sm" style="min-width: 100px">
-            <q-btn
-              flat
-              padding="none"
-              unelevated
-              icon="edit"
-              color="grey-8"
-              @click="handleOpenCloDialogForm(props.row, props.rowIndex)"
-            />
-            <q-btn
-              flat
-              padding="none"
-              unelevated
-              icon="delete"
-              color="grey-8"
-              @click="handleRemoveCLO(props.rowIndex)"
-            />
-          </q-td>
-        </template>
-      </q-table>
-      <q-card-actions class="justify-end">
-        <q-btn label="ok" unelevated flat color="primary"></q-btn>
-      </q-card-actions>
-    </q-card>
+  <q-dialog v-model="dialogCloTable" maximized>
+    <CloDialog
+      v-model="dialogCloTable"
+      :curr-id="curr.form.id"
+      :subject="curr.form.courseSpecs[rowIndexCS].subject"
+    />
   </q-dialog>
   <!-- CLOs Form -->
   <DialogForm
@@ -275,6 +233,7 @@ import type { CourseSpec } from 'src/types/course-spec';
 import type { Clo } from 'src/types/clo';
 import { OptionSubjectType } from 'src/data/subject_type';
 import type { Subject } from 'src/types/subject';
+import CloDialog from './CloDialog.vue';
 
 const dialogCloTable = ref<boolean>(false);
 const dialogCloForm = ref<boolean>(false);
@@ -334,52 +293,6 @@ const subjectColumns: QTableColumn[] = [
     align: 'left',
   },
 ];
-const cloColumns: QTableColumn[] = [
-  {
-    name: 'plo',
-    label: 'PLO',
-    field: (clo: Clo) => clo.plo?.name,
-    align: 'left',
-  },
-  {
-    name: 'name',
-    label: 'Name',
-    field: 'name',
-    align: 'left',
-  },
-  // {
-  //   name: 'expectedLevel',
-  //   label: 'Expected Level',
-  //   field: 'expectedLevel',
-  //   align: 'left',
-  // },
-  {
-    name: 'description',
-    label: 'Description',
-    field: 'thaiDescription',
-    align: 'left',
-  },
-  {
-    name: 'description',
-    label: 'English Description',
-    field: 'engDescription',
-    align: 'left',
-  },
-  {
-    name: 'actions',
-    label: 'Actions',
-    field: '',
-    align: 'left',
-  },
-];
-
-const computedListCLO = computed(() => {
-  if (rowIndexCS.value > -1) {
-    return curr.form.courseSpecs[rowIndexCS.value].clos;
-  }
-  return [];
-});
-
 const computedListPLO = computed(() => {
   return curr.form.plos;
 });
@@ -432,15 +345,15 @@ const handleRemove = (item: Subject) => {
 };
 
 // CLO
-const handleOpenCloDialogForm = (clo?: Clo, rowIndex?: number) => {
-  rowIndexCLO.value = rowIndex;
-  if (clo) {
-    formCLO.value = JSON.parse(JSON.stringify(clo));
-  } else {
-    formCLO.value = {} as Clo;
-  }
-  dialogCloForm.value = true;
-};
+// const handleOpenCloDialogForm = (clo?: Clo, rowIndex?: number) => {
+//   rowIndexCLO.value = rowIndex;
+//   if (clo) {
+//     formCLO.value = JSON.parse(JSON.stringify(clo));
+//   } else {
+//     formCLO.value = {} as Clo;
+//   }
+//   dialogCloForm.value = true;
+// };
 const handleOpenCloDialogTable = (indexCS: number) => {
   // ensure they must have array
   curr.form.courseSpecs.forEach((cs) => {
@@ -451,9 +364,9 @@ const handleOpenCloDialogTable = (indexCS: number) => {
   dialogCloTable.value = true;
 };
 
-const handleRemoveCLO = (index: number) => {
-  curr.form.courseSpecs[rowIndexCS.value].clos.splice(index, 1);
-};
+// const handleRemoveCLO = (index: number) => {
+//   curr.form.courseSpecs[rowIndexCS.value].clos.splice(index, 1);
+// };
 
 function handleAddClo({
   rowIndexCS,
