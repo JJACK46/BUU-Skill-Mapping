@@ -120,7 +120,7 @@
     bordered
     class="q-animate--fade q-mt-md"
     separator="cell"
-    :rows="courseSpecStore.getData || []"
+    :rows="curr.form.courseSpecs || []"
     row-key="code"
     :loading="global.getLoadingState"
     :columns="subjectColumns"
@@ -374,7 +374,7 @@ const handleRemove = (item: Subject) => {
     curr.form.courseSpecs = curr.form.courseSpecs.filter(
       (c) => c.subject.code !== item.code,
     );
-    console.log('Deleted:', item.subject.code);
+    console.log('Deleted:', item.code);
   });
 };
 const handleOpenCloDialogForm = () => {
