@@ -145,7 +145,7 @@
           padding="none"
           flat
           color="grey-8"
-          @click="handleOpenDialog(props.row, props.rowIndex)"
+          @click="handleOpenDialog(props.row.subject, props.rowIndex)"
         ></q-btn>
         <q-btn
           icon="delete"
@@ -159,7 +159,7 @@
   </q-table>
   <!-- CLOs Dialog -->
   <q-dialog v-model="dialogCloTable">
-    <q-card style="min-width: 1000px; min-height: 500px">
+    <q-card class="q-pa-sm">
       <!-- CLOs Table -->
       <q-table
         id="clo-table"
@@ -182,14 +182,37 @@
             @click="handleOpenCloDialogForm()"
           ></q-btn>
         </template>
+        <template #body-cell-actions="props">
+          <q-td class="q-gutter-x-sm" style="min-width: 100px">
+            <q-btn
+              flat
+              padding="none"
+              unelevated
+              icon="edit"
+              color="grey-8"
+              @click="handleOpenCloDialogForm(props.row, props.rowIndex)"
+            />
+            <q-btn
+              flat
+              padding="none"
+              unelevated
+              icon="delete"
+              color="grey-8"
+              @click="handleRemoveCLO(props.rowIndex)"
+            />
+          </q-td>
+        </template>
       </q-table>
-      <!-- CLOs Form -->
+      <q-card-actions class="justify-end">
+        <q-btn label="ok" unelevated flat color="primary"></q-btn>
+      </q-card-actions>
     </q-card>
   </q-dialog>
+  <!-- CLOs Form -->
   <DialogForm
     v-model="dialogCloForm"
     @save="
-      saveClo({
+      handleAddClo({
         rowIndexCS: rowIndexCS,
         rowIndexCLO: rowIndexCLO,
         formCLO: formCLO,
@@ -204,7 +227,20 @@
         <q-input v-model="formCLO.name" outlined dense :label="t('name')" />
       </div>
       <div class="col">
-        <q-select
+        <div class="row justify-between">
+          <div class="col-12">
+            <q-select
+              :options="computedListPLO"
+              option-label="name"
+              v-model="formCLO.plo"
+              outlined
+              dense
+              label="PLO"
+            />
+          </div>
+        </div>
+        <!-- Backend not yet -->
+        <!-- <q-select
           v-model="formCLO.expectedLevel"
           :options="[1, 2, 3, 4, 5]"
           outlined
@@ -212,21 +248,16 @@
           :label="t('Expected Level')"
           behavior="menu"
         >
-        </q-select>
+        </q-select> -->
       </div>
       <div class="col-12 q-mt-md">
         <q-input
-          v-model="formCLO.description"
+          v-model="formCLO.thaiDescription"
           dense
           type="textarea"
           outlined
           :label="t('description') + ' *'"
         />
-      </div>
-    </div>
-    <div class="row justify-between">
-      <div class="col-12">
-        <q-select v-model="formCLO.plos" outlined dense label="PLOs" />
       </div>
     </div>
   </DialogForm>
@@ -305,21 +336,39 @@ const subjectColumns: QTableColumn[] = [
 ];
 const cloColumns: QTableColumn[] = [
   {
+    name: 'plo',
+    label: 'PLO',
+    field: (clo: Clo) => clo.plo?.name,
+    align: 'left',
+  },
+  {
     name: 'name',
     label: 'Name',
     field: 'name',
     align: 'left',
   },
+  // {
+  //   name: 'expectedLevel',
+  //   label: 'Expected Level',
+  //   field: 'expectedLevel',
+  //   align: 'left',
+  // },
   {
-    name: 'expectedLevel',
-    label: 'Expected Level',
-    field: 'expectedLevel',
+    name: 'description',
+    label: 'Description',
+    field: 'thaiDescription',
     align: 'left',
   },
   {
     name: 'description',
-    label: 'Description',
-    field: 'description',
+    label: 'English Description',
+    field: 'engDescription',
+    align: 'left',
+  },
+  {
+    name: 'actions',
+    label: 'Actions',
+    field: '',
     align: 'left',
   },
 ];
@@ -331,7 +380,11 @@ const computedListCLO = computed(() => {
   return [];
 });
 
-// subject add into course spec
+const computedListPLO = computed(() => {
+  return curr.form.plos;
+});
+
+// Subject
 const handleAdd = (subject: Subject, rowIndex: number) => {
   // pre-object
   const cs = {
@@ -377,20 +430,32 @@ const handleRemove = (item: Subject) => {
     console.log('Deleted:', item.code);
   });
 };
-const handleOpenCloDialogForm = () => {
+
+// CLO
+const handleOpenCloDialogForm = (clo?: Clo, rowIndex?: number) => {
+  rowIndexCLO.value = rowIndex;
+  if (clo) {
+    formCLO.value = JSON.parse(JSON.stringify(clo));
+  } else {
+    formCLO.value = {} as Clo;
+  }
   dialogCloForm.value = true;
 };
-const handleOpenCloDialogTable = (rowIndex: number) => {
+const handleOpenCloDialogTable = (indexCS: number) => {
   // ensure they must have array
   curr.form.courseSpecs.forEach((cs) => {
     cs.clos = cs.clos || [];
   });
 
-  rowIndexCS.value = rowIndex;
+  rowIndexCS.value = indexCS;
   dialogCloTable.value = true;
 };
 
-function saveClo({
+const handleRemoveCLO = (index: number) => {
+  curr.form.courseSpecs[rowIndexCS.value].clos.splice(index, 1);
+};
+
+function handleAddClo({
   rowIndexCS,
   rowIndexCLO,
   formCLO,
@@ -407,7 +472,7 @@ function saveClo({
   if (!courseSpec.clos) {
     courseSpec.clos = [];
   }
-
+  console.log(rowIndexCLO);
   // Update or add the formCLO
   if (rowIndexCLO === undefined || rowIndexCLO === -1) {
     // Add new CLO
