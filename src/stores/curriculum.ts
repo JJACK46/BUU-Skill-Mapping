@@ -54,7 +54,7 @@ export const useCurriculumStore = defineStore('curriculum', {
       }
       this.dialogState = !this.dialogState;
     },
-    async handleAdd() {
+    async handleCreateOne() {
       const ok = await CurriculumService.createOne(this.form);
       if (ok) {
         Notify.create({
