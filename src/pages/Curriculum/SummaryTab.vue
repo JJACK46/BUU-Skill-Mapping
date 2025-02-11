@@ -8,7 +8,18 @@
     <!-- Curriculum Details -->
     <q-card class="q-mb-md" flat bordered>
       <q-card-section>
-        <div class="text-h5">{{ t('details') }}</div>
+        <div class="flex justify-between">
+          <div class="text-h5">{{ t('details') }}</div>
+
+          <!-- Action Buttons Go to path -->
+          <q-btn
+            flat
+            :label="t('edit')"
+            icon-right="edit"
+            color="primary"
+            @click="goToEdit(menuList[0])"
+          />
+        </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list>
           <q-item v-for="(item, index) in details" :key="index">
@@ -27,7 +38,18 @@
     <!-- PLOs -->
     <q-card class="q-mb-md" flat bordered>
       <q-card-section>
-        <div class="text-h6">PLOs</div>
+        <div class="flex justify-between">
+          <div class="text-h6">PLOs</div>
+
+          <!-- Action Buttons Go to path -->
+          <q-btn
+            flat
+            :label="t('edit')"
+            icon-right="edit"
+            color="primary"
+            @click="goToEdit(menuList[1])"
+          />
+        </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list v-if="store.form.plos?.length">
           <q-item v-for="(plo, index) in store.form.plos" :key="plo.id">
@@ -52,7 +74,18 @@
     <!-- Subjects Section -->
     <q-card class="q-mb-md" flat bordered>
       <q-card-section>
-        <div class="text-h6">{{ t('subject') }}</div>
+        <div class="flex justify-between">
+          <div class="text-h6">{{ t('subject') }}</div>
+
+          <!-- Action Buttons Go to path -->
+          <q-btn
+            flat
+            :label="t('edit')"
+            icon-right="edit"
+            color="primary"
+            @click="goToEdit(menuList[3])"
+          />
+        </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list separator>
           <q-item v-for="subject in store.form.subjects" :key="subject.id">
@@ -87,7 +120,18 @@
     <!-- Skills Section -->
     <q-card class="q-mb-md" flat bordered>
       <q-card-section>
-        <div class="text-h6">{{ t('skills') }}</div>
+        <div class="flex justify-between">
+          <div class="text-h6">{{ t('skills') }}</div>
+
+          <!-- Action Buttons Go to path -->
+          <q-btn
+            flat
+            :label="t('edit')"
+            icon-right="edit"
+            color="primary"
+            @click="goToEdit(menuList[4])"
+          />
+        </div>
         <q-separator class="q-my-md"></q-separator>
         <CustomTreeSkill :skills="store.form.skills" readonly></CustomTreeSkill>
       </q-card-section>
@@ -96,7 +140,18 @@
     <!-- Coordinators Section -->
     <q-card class="q-mb-md" flat bordered>
       <q-card-section>
-        <div class="text-h6">{{ t('coordinators') }}</div>
+        <div class="flex justify-between">
+          <div class="text-h6">{{ t('coordinators') }}</div>
+
+          <!-- Action Buttons Go to path -->
+          <q-btn
+            flat
+            :label="t('edit')"
+            icon-right="edit"
+            color="primary"
+            @click="goToEdit(menuList[2])"
+          />
+        </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list>
           <q-item
@@ -159,13 +214,17 @@
 <script setup lang="ts">
 import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import VueJsonPretty from 'vue-json-pretty';
 import { matContentCopy } from '@quasar/extras/material-icons';
+import { useRoute, useRouter } from 'vue-router';
+import type { MenuProps } from 'src/components/MenuLink.vue';
 
 const store = useCurriculumStore();
 const expandJSON = ref(false);
+const route = useRoute();
+const router = useRouter();
 
 const alreadyCopied = ref(false);
 const copyToClipboard = () => {
@@ -183,5 +242,52 @@ const details = [
   { label: t('description'), value: store.form.thaiDescription },
   { label: t('period'), value: store.form.period },
   { label: t('minimumGrade'), value: store.form.minimumGrade },
+];
+
+const basePath = `/curriculums/${route.params.id}`;
+
+onMounted(async () => {
+  console.log(route.params.id);
+  await store.fetchOne(route.params.id as string);
+  console.log(store.form);
+});
+
+const goToEdit = (menuList: MenuProps) => {
+  console.log(menuList);
+  router.push(menuList.link);
+};
+
+const menuList = [
+  {
+    icon: 'home',
+    title: 'curriculum',
+    link: basePath,
+  },
+  {
+    icon: 'collections_bookmark',
+    title: 'PLOs',
+    link: `${basePath}/plos`,
+  },
+  {
+    icon: 'groups',
+    title: 'coordinators',
+    link: `${basePath}/coordinators`,
+  },
+  {
+    icon: 'books',
+    title: 'subjects',
+    link: `${basePath}/subjects`,
+  },
+
+  {
+    icon: 'code',
+    title: 'skills',
+    link: `${basePath}/skills`,
+  },
+  {
+    icon: 'check',
+    title: 'summary',
+    link: `${basePath}/summary`,
+  },
 ];
 </script>
