@@ -5,13 +5,14 @@ import type { Skill } from './skill';
 import type { CourseSpec } from './course-spec';
 import type { Coordinator } from './coordinator';
 export interface Curriculum {
-  id: number;
+  id?: number;
   code: string;
   thaiName: string;
   engName: string;
   thaiDegree: string;
   engDegree: string;
   thaiDescription: string;
+  engDescription: string;
   period: number;
   minimumGrade: number;
   coordinators: Coordinator[];

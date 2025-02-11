@@ -60,15 +60,10 @@
     <!-- Dialog -->
     <DialogForm
       v-model="store.dialogState"
-      :title="store.titleForm"
-      @save="store.handleAdd()"
+      :title="t('curriculum')"
+      @save="store.handleCreateOne()"
       width="60%"
     >
-      <div class="q-py-md">
-        <div class="text-h4 text-primary">
-          {{ t('curriculum') }}
-        </div>
-      </div>
       <div class="flex q-gutter-md">
         <q-input
           dense
@@ -147,6 +142,15 @@
           outlined
           v-model="store.form.thaiDescription"
           :label="t('description') + ' *'"
+          :rules="[requireField]"
+          style="width: 100%"
+        />
+        <q-input
+          dense
+          type="textarea"
+          outlined
+          v-model="store.form.engDescription"
+          :label="t('engDescription') + ' *'"
           :rules="[requireField]"
           style="width: 100%"
         />
