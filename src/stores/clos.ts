@@ -9,12 +9,20 @@ import { useCurriculumStore } from './curriculum';
 import { usePloStore } from './plo';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
-
+type formClo = {
+  id: number;
+  name: string;
+  thaiDescription: string;
+  engDescription: string;
+  expectedLevel: 1 | 2 | 3 | 4 | 5;
+  ploId: number;
+  skillId: number;
+};
 export const useClostore = defineStore('clo', {
   state: () => ({
     dialogState: false,
     clos: [] as Clo[],
-    form: <Partial<Clo>>{},
+    form: <Partial<formClo>>{},
     tabsModel: 'req',
     editMode: true,
     titleForm: '' as TitleForm,
@@ -76,16 +84,16 @@ export const useClostore = defineStore('clo', {
       this.dialogState = false;
       window.location.reload();
     },
-    async handleSave(payload: object) {
+    async handleSave() {
       if (this.titleForm === 'Edit Clos') {
-        const ok = await ClosService.updateOne(payload);
+        const ok = await ClosService.updateOne(this.form);
         if (ok)
           this.qNotify.create({
             type: 'ok',
             message: 'Clos updated successfully',
           });
       } else {
-        const ok = await ClosService.createOne(payload);
+        const ok = await ClosService.createOne(this.form);
         if (ok)
           this.qNotify.create({
             type: 'ok',

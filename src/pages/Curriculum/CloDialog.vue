@@ -191,13 +191,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from 'src/stores/global';
 import { useClostore } from 'src/stores/clos';
 import { useSkillStore } from 'src/stores/skill';
 import type { QTableColumn } from 'quasar';
-import type { Skill } from 'src/types/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import type { PLO } from 'src/types/plo';
@@ -290,23 +289,12 @@ const editRow = (row) => {
 };
 
 function saveClos() {
-  const payload = {
-    // id: store.form.id,
-    name: store.form.name,
-    engDescription: store.form.engDescription,
-    thaiDescription: store.form.thaiDescription,
-    courseSpecId: props.currId, // ใช้ ID ของหลักสูตรปัจจุบัน
-    ploId: selectedPlos.value?.id || null,
-    skillId: selectedSkill.value?.id || null,
-  };
+  store.form.skillId! = selectedSkill.value.id || null;
+  store.form.ploId = selectedPlos.value.id || null;
 
-  console.log('Saving:', payload);
+  console.log('Saving:', store.form);
 
-  // if (payload.id) {
-  //   store.handleUpdate(payload); // ถ้ามี id ให้เรียกอัปเดต
-  // } else {
-  store.handleSave(payload); // ถ้ายังไม่มี id ให้สร้างใหม่
-  // }
+  // store.handleSave();
 
   store.dialogState = false; // ปิด Dialog
 }

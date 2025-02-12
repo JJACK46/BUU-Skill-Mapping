@@ -17,7 +17,7 @@ export class ClosService {
     return res.data;
   }
 
-  static async createOne(obj: object) {
+  static async createOne(obj: Partial<Clo>) {
     const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
   }
