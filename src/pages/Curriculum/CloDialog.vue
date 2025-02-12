@@ -191,18 +191,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from 'src/stores/global';
 import { useClostore } from 'src/stores/clos';
 import { useSkillStore } from 'src/stores/skill';
 import type { QTableColumn } from 'quasar';
-import type { Skill } from 'src/types/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import type { Subject } from 'src/types/subject';
 import { usePlostore } from 'src/stores/plosmouckup';
-import type { Plo } from 'src/types/plo';
 
 const props = defineProps<{
   currId: number;
@@ -217,8 +215,21 @@ const global = useGlobalStore();
 const store = useClostore();
 const skillStore = useSkillStore();
 const plosStore = usePlostore();
-const selectedPlos = ref<Plo | null>(null);
-const selectedSkill = ref<Skill | null>(null);
+const selectedPlos = computed({
+  get: () => plosStore.plos.find((plo) => plo.id === store.form.ploId) || null,
+  set: (value) => {
+    store.form.ploId = value?.id || null;
+  },
+});
+
+const selectedSkill = computed({
+  get: () =>
+    skillStore.skills.find((skill) => skill.id === store.form.skillId) || null,
+  set: (value) => {
+    store.form.skillId = value?.id || null;
+  },
+});
+
 const filteredPlos = ref([...plosStore.plos]);
 const filteredSkills = ref([...skillStore.skills]);
 const columns = ref<QTableColumn[]>([
@@ -282,31 +293,16 @@ const filterSkills = (val: string, update: (cb: () => void) => void) => {
 
 const editRow = (row) => {
   store.form = { ...row }; // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
-  selectedPlos.value =
-    plosStore.plos.find((plo) => plo.id === row.ploId) || null;
-  selectedSkill.value =
-    skillStore.skills.find((skill) => skill.id === row.skillId) || null;
   store.dialogState = true; // เปิด Dialog
 };
 
 function saveClos() {
-  const payload = {
-    // id: store.form.id,
-    name: store.form.name,
-    engDescription: store.form.engDescription,
-    thaiDescription: store.form.thaiDescription,
-    courseSpecId: props.currId, // ใช้ ID ของหลักสูตรปัจจุบัน
-    ploId: selectedPlos.value?.id || null,
-    skillId: selectedSkill.value?.id || null,
-  };
+  store.form.skillId! = selectedSkill.value.id || null;
+  store.form.ploId = selectedPlos.value.id || null;
 
-  console.log('Saving:', payload);
+  console.log('Saving:', store.form);
 
-  // if (payload.id) {
-  //   store.handleUpdate(payload); // ถ้ามี id ให้เรียกอัปเดต
-  // } else {
-  store.handleSave(payload); // ถ้ายังไม่มี id ให้สร้างใหม่
-  // }
+  // store.handleSave();
 
   store.dialogState = false; // ปิด Dialog
 }
