@@ -46,99 +46,115 @@
     </template>
   </q-table>
   <DialogForm
-    title="New Instructor"
+    :title="t('addCoordinators')"
     v-model="store.dialogState"
     @save="handleSave()"
     width="60%"
   >
-    <div class="flex q-gutter-md">
+    <div class="row q-gutter-y-sm">
       <q-input
         outlined
         dense
+        class="col-12"
         v-model="store.form.code"
         label="Code *"
         clearable
         :rules="[requireField]"
-        style="width: 340px"
       />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.email"
-        label="Email *"
-        type="email"
-        clearable
-        :rules="[requireField]"
-        style="width: 340px"
-      />
-      <q-select
-        outlined
-        dense
-        v-model="store.form.position"
-        :options="[...Object.values(AcademicRank)]"
-        label="Position *"
-        options-dense
-        :rules="[requireField]"
-        style="width: 340px"
-      />
-      <q-input
-        outlined
-        v-model="store.form.thaiName"
-        label="Thai Name *"
-        clearable
-        dense
-        :rules="[requireField]"
-        style="width: 340px"
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.engName"
-        label="English Name *"
-        clearable
-        :rules="[requireField]"
-        style="width: 340px"
-      />
-      <q-select
-        outlined
-        dense
-        v-model="store.form.branch"
-        :options="branches"
-        option-label="name"
-        label="Branch *"
-        options-dense
-        :rules="[requireField]"
-        @vue:mounted="fetchBranches"
-        style="width: 340px"
-      />
-      <q-select
-        outlined
-        dense
-        v-model="store.form.specialists"
-        :options="['Machine Learning', 'Deep Learning', 'Software Engineering']"
-        label="Specialists"
-        hint="Optional"
-        options-dense
-        clearable
-        multiple
-        style="width: 340px"
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.tel"
-        label="Telephone *"
-        clearable
-        :rules="[(val) => val.length == 10 || 'Field not correct format']"
-        mask="###-###-####"
-        unmasked-value
-        style="width: 200px"
-      />
+
+      <div class="row col-12">
+        <q-input
+          outlined
+          dense
+          v-model="store.form.email"
+          label="Email *"
+          type="email"
+          clearable
+          class="col q-mr-md"
+          :rules="[requireField]"
+          style="width: 340px"
+        />
+        <q-select
+          outlined
+          dense
+          v-model="store.form.position"
+          :options="[...Object.values(AcademicRank)]"
+          label="Position *"
+          class="col"
+          options-dense
+          :rules="[requireField]"
+        />
+      </div>
+      <div class="row col-12">
+        <q-input
+          outlined
+          v-model="store.form.thaiName"
+          label="Thai Name *"
+          clearable
+          class="col q-mr-md"
+          dense
+          :rules="[requireField]"
+        />
+        <q-input
+          outlined
+          dense
+          v-model="store.form.engName"
+          label="English Name *"
+          class="col"
+          clearable
+          :rules="[requireField]"
+        />
+      </div>
+      <div class="row col-12">
+        <q-select
+          outlined
+          dense
+          v-model="store.form.branch"
+          :options="branches"
+          option-label="name"
+          label="Branch *"
+          class="col-grow q-mr-md"
+          options-dense
+          :rules="[requireField]"
+          @vue:mounted="fetchBranches"
+          style="width: 340px"
+        />
+        <q-select
+          outlined
+          dense
+          v-model="store.form.specialists"
+          :options="[
+            'Machine Learning',
+            'Deep Learning',
+            'Software Engineering',
+          ]"
+          label="Specialists"
+          hint="Optional"
+          options-dense
+          class="col-grow q-mr-md"
+          clearable
+          multiple
+          style="width: 340px"
+        />
+        <q-input
+          outlined
+          dense
+          v-model="store.form.tel"
+          label="Telephone *"
+          clearable
+          class="col-auto"
+          :rules="[(val) => val.length == 10 || 'Field not correct format']"
+          mask="###-###-####"
+          unmasked-value
+          style="width: 200px"
+        />
+      </div>
       <q-input
         outlined
         dense
         v-model="store.form.officeRoom"
         label="Office Room *"
+        class="col-grow"
         :rules="[requireField]"
         clearable
         style="width: 480px"
@@ -148,6 +164,7 @@
         dense
         v-model="store.form.bio"
         label="Bio"
+        class="col-grow"
         hint="Optional"
         type="textarea"
         style="width: 100%"
