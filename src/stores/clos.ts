@@ -6,6 +6,7 @@ import type { Clo } from 'src/types/clo';
 import { convertToPageParams } from 'src/utils/pagination';
 import { useCourseSpecStore } from './couse-spec';
 import { useCurriculumStore } from './curriculum';
+import { usePlostore } from './plosmouckup';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
 
@@ -22,16 +23,26 @@ export const useClostore = defineStore('clo', {
     qDialog: Dialog,
     onlyHaveSubs: true,
     skillStore: useSkillStore(),
+    plosStore: usePlostore(),
     courseStore: useCourseSpecStore(),
     currStore: useCurriculumStore(),
   }),
   getters: {
-    // getData: (s) => s.courseStore.currStore.form.courseSpecs?.map((c) => c.clos) || [],
     getData: (s) =>
       s.courseStore.currStore.form.courseSpecs?.flatMap((spec) => spec.clos) ||
       [],
 
-    // getSkills: (c) => c.form.skills || [],
+    // getData: (s) =>
+    //   s.courseStore.currStore.form.courseSpecs
+    //     ?.filter(
+    //       (spec) =>
+    //         spec.subject.id ===
+    //         s.courseStore.currStore.form.courseSpecs.find(
+    //           (spec) => spec.subject.id === s.currStore.form.id,
+    //         )?.subject.id,
+    //     ) // อ้างถึง subject.id
+    //     .flatMap((spec) => spec.clos) || [],
+
     getDialogTitle: (s) => s.titleForm,
   },
   actions: {
@@ -42,9 +53,12 @@ export const useClostore = defineStore('clo', {
       this.clos = data;
       this.totalClos = total;
     },
+
     async handleOpenDialog(form?: Partial<Clo>) {
-      console.log(this.currStore.form.courseSpecs);
       await this.skillStore.fetchData();
+      await this.plosStore.fetchData();
+      console.log(this.plosStore.plos);
+
       if (form) {
         this.titleForm = 'Edit CLO';
         this.form = { ...form };
@@ -62,16 +76,16 @@ export const useClostore = defineStore('clo', {
       this.dialogState = false;
       window.location.reload();
     },
-    async handleSave() {
+    async handleSave(payload: object) {
       if (this.titleForm === 'Edit Clos') {
-        const ok = await ClosService.updateOne(this.form);
+        const ok = await ClosService.updateOne(payload);
         if (ok)
           this.qNotify.create({
             type: 'ok',
             message: 'Clos updated successfully',
           });
       } else {
-        const ok = await ClosService.createOne(this.form);
+        const ok = await ClosService.createOne(payload);
         if (ok)
           this.qNotify.create({
             type: 'ok',
@@ -82,9 +96,13 @@ export const useClostore = defineStore('clo', {
       this.dialogState = false;
       this.resetForm();
     },
-    async removeOne(id: string) {
-      await ClosService.removeOne(id);
+    async removeOne(id: number) {
+      await ClosService.removeOne(id.toString());
       window.location.reload();
+    },
+    resetForm() {
+      this.form = {};
+      this.fetchData();
     },
   },
 });
