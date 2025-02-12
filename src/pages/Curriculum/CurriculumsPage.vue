@@ -14,7 +14,7 @@
       :rows="store.getCurriculums"
       :pagination="store.pagination"
       :columns="columns"
-      row-key="id"
+      row-key="code"
       wrap-cells
       separator="cell"
     >
@@ -171,6 +171,7 @@ import { onlyAlphabet, requireField } from 'src/utils/field-rules';
 import { useI18n } from 'vue-i18n';
 import { BranchService } from 'src/services/branches';
 import type { Branch } from 'src/types/branch';
+import type { Curriculum } from 'src/types/curriculum';
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
@@ -180,7 +181,7 @@ const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
   { name: 'code', label: 'Code', field: 'code', align: 'left' },
   { name: 'name', label: 'Name', field: 'name', align: 'left' },
-  { name: 'degree', label: 'Degree', field: 'degree', align: 'left' },
+  { name: 'degree', label: 'Degree', field: 'thaiDegree', align: 'left' },
   { name: 'period', label: 'Period', field: 'period', align: 'left' },
   { name: 'branch', label: 'Branch', field: 'branch', align: 'left' },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'left' },
@@ -198,7 +199,7 @@ onMounted(async () => {
   await store.fetchAll();
 });
 
-const handleEditBtn = (row) => {
+const handleEditBtn = (row: Curriculum) => {
   router.push(`/curriculums/${row.code}`);
 };
 
