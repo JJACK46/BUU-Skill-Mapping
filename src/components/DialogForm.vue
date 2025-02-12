@@ -10,7 +10,7 @@
       class="dialog-form"
       :style="{ width: width ? width : '500px', maxWidth: '1920px' }"
     >
-      <q-form ref="formRef" @input="validateForm">
+      <q-form ref="formRef" @input="validateForm" @vue:mounted="validateForm">
         <q-card-section>
           <div class="text-h6">{{ title }}</div>
           <q-separator class="q-my-sm"></q-separator>
