@@ -1,5 +1,6 @@
 import type { LearningDomain } from 'src/data/learning_domain';
 import type { Curriculum } from './curriculum';
+// import type { Curriculum } from './curriculum';
 
 export type Skill = {
   id: number;
@@ -11,4 +12,5 @@ export type Skill = {
   parent?: Skill;
   children?: Skill[];
   curriculum?: Curriculum;
+  curriculumId: number;
 };
