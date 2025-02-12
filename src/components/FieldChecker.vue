@@ -9,7 +9,7 @@
     debounce="100"
     :mask="computedMask"
     hide-selected
-    label="Subject Code *"
+    :label
     input-debounce="500"
     :rules="computedRules"
   >
@@ -34,11 +34,12 @@ const props = defineProps<{
   funcUpdate: (arg0: string | number) => void;
   mask?: string;
   rules?: ValidationRule[];
+  label: string;
 }>();
 
 const computedMask = computed(() => props.mask || '########'); //default 8
 
-const computedRules = computed(() => [requireField, ...props.rules]);
+const computedRules = computed(() => [requireField].concat(props.rules || []));
 
 const model = defineModel<string | number>();
 </script>

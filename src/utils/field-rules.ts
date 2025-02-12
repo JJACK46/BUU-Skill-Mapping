@@ -1,10 +1,13 @@
-export const requireField = (val: string) => !!val || 'Field is required';
-export const onlyAlphabet = (val: string) =>
+import type { ValidationRule } from 'quasar';
+
+export const requireField: ValidationRule = (val: string) =>
+  !!val || 'Field is required';
+export const onlyAlphabet: ValidationRule = (val: string) =>
   !!val.match(/^[A-Za-z\u0E00-\u0E7F\s]+$/) || 'Only alphabet is allowed';
 
-export const onlyEnglish = (val: string) =>
+export const onlyEnglish: ValidationRule = (val: string) =>
   !!val.match(/^[A-Za-z\s]+$/) || 'Only English alphabet is allowed';
-export const onlyThai = (val: string) =>
+export const onlyThai: ValidationRule = (val: string) =>
   !!val.match(/^[\u0E00-\u0E7F\s]+$/) || 'Only Thai alphabet is allowed';
 
 function validateGradeFormat(val: string) {
@@ -16,5 +19,5 @@ function validateGradeFormat(val: string) {
   return numericValue >= 1.0 && numericValue <= 4.0; // Check range
 }
 
-export const ruleGradeFormat = (val: string) =>
+export const ruleGradeFormat: ValidationRule = (val: string) =>
   validateGradeFormat(val) || 'Invalid grade format';

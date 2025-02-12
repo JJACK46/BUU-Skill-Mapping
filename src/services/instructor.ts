@@ -18,6 +18,11 @@ export class InstructorService {
     return res.data;
   }
 
+  static async findExistCode(code: string) {
+    const res = await api.get(`${this.path}/findExistCode/${code}`);
+    return res.data;
+  }
+
   static async createOne(obj: Partial<Instructor>) {
     const dto = {
       ...obj,
