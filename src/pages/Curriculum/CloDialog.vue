@@ -200,6 +200,7 @@ import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import { usePlostore } from 'src/stores/plosmouckup';
+import type { CourseSpec } from 'src/types/course-spec';
 
 const props = defineProps<{
   currId: number;
