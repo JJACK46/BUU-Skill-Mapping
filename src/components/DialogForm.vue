@@ -14,7 +14,7 @@
         <q-card-section>
           <div class="text-h6">{{ title }}</div>
           <q-separator class="q-my-sm"></q-separator>
-          <span class="q-gutter-y-md">
+          <span>
             <slot />
           </span>
         </q-card-section>

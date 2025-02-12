@@ -96,5 +96,6 @@
   "curriculumCode": "รหัสหลักสูตร",
   "subjectCode": "รหัสวิชา",
   "details": "รายละเอียด",
-  "specialists": "ความชำนาญ"
+  "specialists": "ความชำนาญ",
+  "addCoordinators": "เพิ่มผู้รับผิดชอบหลักสูตร"
 }
