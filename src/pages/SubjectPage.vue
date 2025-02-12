@@ -29,14 +29,6 @@
             mask="########"
             :rules="[requireField]"
           />
-          <q-select
-            v-model="store.form.type"
-            outlined
-            dense
-            label="Type *"
-            :options="OptionSubjectType"
-            :rules="[requireField]"
-          />
           <q-input
             v-model="store.form.thaiName"
             outlined
@@ -50,22 +42,6 @@
             dense
             label="Eng Name *"
             :rules="[requireField, onlyEnglish]"
-          />
-          <q-input
-            v-model="store.form.thaiDescription"
-            outlined
-            dense
-            type="textarea"
-            label="Description *"
-            :rules="[requireField]"
-          />
-          <q-input
-            v-model="store.form.credit"
-            outlined
-            dense
-            label="Credit *"
-            mask="# (#-#-#)"
-            :rules="[requireField]"
           />
         </q-tab-panel>
         <!-- <q-tab-panel name="add">
@@ -207,7 +183,6 @@ import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useAuthStore } from 'src/stores/auth';
-import { OptionSubjectType } from 'src/data/subject_type';
 
 const global = useGlobalStore();
 const route = useRoute();
