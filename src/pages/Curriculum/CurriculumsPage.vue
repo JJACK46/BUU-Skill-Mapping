@@ -3,8 +3,8 @@
     <MainHeader
       v-model:search-text="store.search"
       v-model:filter-model="store.filterModel"
-      @open-dialog="handleOpenDialog"
-      @enter-search="store.fetchData"
+      @open-dialog="store.toggleDialogForm()"
+      @enter-search="store.fetchAll"
     />
     <q-table
       flat
@@ -162,11 +162,7 @@
 import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
 import MainHeader from 'src/components/PageHeader.vue';
-import { CurriculumService } from 'src/services/curriculums';
-import { SubjectService } from 'src/services/subject';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import type { Curriculum } from 'src/types/curriculum';
-import type { Subject } from 'src/types/subject';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGlobalStore } from 'src/stores/global';
@@ -180,8 +176,6 @@ const route = useRoute();
 const router = useRouter();
 const title = computed(() => route.matched[1].name as string);
 const store = useCurriculumStore();
-const curriculums = ref<Curriculum[]>();
-const subjects = ref<Subject[]>();
 const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
   { name: 'code', label: 'Code', field: 'code', align: 'left' },
@@ -201,25 +195,14 @@ function fetchBranches() {
 }
 
 onMounted(async () => {
-  await store.fetchData();
+  await store.fetchAll();
 });
 
-const handleOpenDialog = async () => {
-  // const id = await store.fetchInsertId();
-  store.handleOpenDialog();
-};
-
 const handleEditBtn = (row) => {
-  // console.log('Selected row data:', row);
-  // store.handleOpenEdit(row);
   router.push(`/curriculums/${row.code}`);
 };
 
 useMeta({
   title: title.value,
-});
-onMounted(async () => {
-  curriculums.value = (await CurriculumService.getAll({ page: 1 })).data;
-  subjects.value = (await SubjectService.getAll()).data;
 });
 </script>
