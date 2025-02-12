@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 import { Dialog, Notify } from 'quasar';
 import { CurriculumService } from 'src/services/curriculums';
-import { InstructorService } from 'src/services/instructor';
-import { SubjectService } from 'src/services/subject';
 import type { Curriculum } from 'src/types/curriculum';
 import type { FilterModel } from 'src/types/filter';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
@@ -37,7 +35,7 @@ export const useCurriculumStore = defineStore('curriculum', {
       const res = await CurriculumService.getOneByCode(id);
       this.form = res;
     },
-    async fetchData() {
+    async fetchAll() {
       const { data, total } = await CurriculumService.getAll(
         convertToPageParams(this.pagination, this.search, this.filterModel),
       );
@@ -50,7 +48,11 @@ export const useCurriculumStore = defineStore('curriculum', {
     },
     toggleDialogForm(form?: Partial<Curriculum>) {
       if (form) {
+        this.titleForm = 'Edit Curriculum';
         this.form = { ...form };
+      } else {
+        this.titleForm = 'New Curriculum';
+        this.form = {};
       }
       this.dialogState = !this.dialogState;
     },
@@ -79,57 +81,6 @@ export const useCurriculumStore = defineStore('curriculum', {
           this.resetForm();
         }, 1000);
       }
-    },
-
-    async fetchCoordinatorsData() {
-      try {
-        if (this.form.coordinators?.length) {
-          const coordinatorsData = await Promise.all(
-            this.form.coordinators.map(async (coordinator) => {
-              const id = coordinator.id ?? 0;
-              return await InstructorService.getOne(id);
-            }),
-          );
-          this.form.coordinators = coordinatorsData;
-          console.log('Updated Coordinators:', this.form.coordinators);
-        } else {
-          console.log('No coordinators found.');
-        }
-      } catch (error) {
-        console.error('Error fetching coordinator data:', error);
-      }
-    },
-
-    async fetchSubjectsData() {
-      try {
-        if (this.form.subjects?.length) {
-          const subjectsData = await Promise.all(
-            this.form.subjects.map(async (subject) => {
-              const id = subject.code ?? 0;
-              return await SubjectService.getOne(id);
-            }),
-          );
-          this.form.subjects = subjectsData;
-          console.log('Updated Subjects:', this.form.subjects);
-        } else {
-          console.log('No subjects found.');
-        }
-      } catch (error) {
-        console.error('Error fetching subjects data:', error);
-      }
-    },
-
-    handleOpenEdit(form?: Partial<Curriculum>) {
-      this.form = { ...form };
-      this.fetchCoordinatorsData();
-      this.fetchSubjectsData();
-    },
-    handleOpenDialog(form?: Partial<Curriculum>) {
-      if (form) {
-        this.titleForm = 'Delete Curriculum';
-        this.form = { ...form };
-      }
-      this.dialogState = true;
     },
     handleDelete(id: number) {
       Dialog.create({

@@ -18,18 +18,18 @@ export class CurriculumService {
   }
 
   static async createOne(obj: Partial<Curriculum>) {
-    const dto = {
-      ...obj,
-      branchId: obj.branch?.id,
-      coordinatorListId: obj.coordinators?.map((c) => c.id),
-      subjectListId: obj.subjects?.map((s) => s.id),
-    };
+    // const dto = {
+    //   ...obj,
+    //   branchId: obj.branch?.id,
+    //   coordinatorListId: obj.coordinators?.map((c) => c.id),
+    //   subjectListId: obj.subjects?.map((s) => s.id),
+    // };
 
-    delete dto.branch;
-    delete dto.coordinators;
-    delete dto.subjects;
+    // delete dto.branch;
+    // delete dto.coordinators;
+    // delete dto.subjects;
 
-    const res = await api.post(this.path, dto);
+    const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
   }
 
