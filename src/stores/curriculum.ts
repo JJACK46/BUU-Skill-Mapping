@@ -7,7 +7,7 @@ import type { Curriculum } from 'src/types/curriculum';
 import type { FilterModel } from 'src/types/filter';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import { useRouter } from 'vue-router';
-type TitleForm = 'Edit Curriculum';
+type TitleForm = 'New Curriculum' | 'Edit Curriculum';
 export const useCurriculumStore = defineStore('curriculum', {
   state: () => ({
     form: {} as Partial<Curriculum>,
