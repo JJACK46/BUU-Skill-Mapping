@@ -9,7 +9,7 @@ type TitleForm = 'New Curriculum' | 'Edit Curriculum';
 export const useCurriculumStore = defineStore('curriculum', {
   state: () => ({
     form: {} as Partial<Curriculum>,
-    curriculums: [] as Curriculum[],
+    curriculums: <Curriculum[]>[],
     curriculumsOptions: <Curriculum[]>[],
     pagination: defaultPagination,
     dialogState: false,
@@ -45,10 +45,6 @@ export const useCurriculumStore = defineStore('curriculum', {
       this.curriculums = data;
       this.pagination!.rowsNumber = total || 0;
     },
-
-    async fetchAllCurriculums() {
-      this.curriculumsOptions = (await CurriculumService.getAll()).data;
-    },
     toggleDialogForm(form?: Partial<Curriculum>) {
       if (form) {
         this.titleForm = 'Edit Curriculum';
@@ -69,6 +65,7 @@ export const useCurriculumStore = defineStore('curriculum', {
         this.dialogState = false;
         this.resetForm();
       }
+      this.fetchAll();
     },
 
     async handleSave() {
