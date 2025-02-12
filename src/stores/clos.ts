@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia';
 import { Dialog, Notify } from 'quasar';
 import { ClosService } from 'src/services/clos';
-import SkillService from 'src/services/skill';
+import { useSkillStore } from './skill';
 import type { Clo } from 'src/types/clo';
+import { convertToPageParams } from 'src/utils/pagination';
+import { useCourseSpecStore } from './couse-spec';
+import { useCurriculumStore } from './curriculum';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
 
@@ -17,15 +20,31 @@ export const useClostore = defineStore('clo', {
     search: '',
     qNotify: Notify,
     qDialog: Dialog,
+    onlyHaveSubs: true,
+    skillStore: useSkillStore(),
+    courseStore: useCourseSpecStore(),
+    currStore: useCurriculumStore(),
   }),
   getters: {
-    getClos: (c) => c.clos,
+    // getData: (s) => s.courseStore.currStore.form.courseSpecs?.map((c) => c.clos) || [],
+    getData: (s) =>
+      s.courseStore.currStore.form.courseSpecs?.flatMap((spec) => spec.clos) ||
+      [],
+
     // getSkills: (c) => c.form.skills || [],
     getDialogTitle: (s) => s.titleForm,
   },
   actions: {
+    async fetchData() {
+      const { data, total } = await ClosService.getAll(
+        convertToPageParams(this.pagination, this.search),
+      );
+      this.clos = data;
+      this.totalClos = total;
+    },
     async handleOpenDialog(form?: Partial<Clo>) {
-      await SkillService.getAll();
+      console.log(this.currStore.form.courseSpecs);
+      await this.skillStore.fetchData();
       if (form) {
         this.titleForm = 'Edit CLO';
         this.form = { ...form };
@@ -35,9 +54,9 @@ export const useClostore = defineStore('clo', {
       }
       this.dialogState = true;
     },
-    async fetchData() {
-      this.courses = (await ClosService.getAll()).data;
-    },
+    // async fetchData() {
+    //   this.courses = (await ClosService.getAll()).data;
+    // },
     async createOne() {
       await ClosService.createOne(this.form as Clo);
       this.dialogState = false;
