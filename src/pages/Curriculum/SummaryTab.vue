@@ -88,28 +88,28 @@
         </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list separator>
-          <q-item v-for="subject in store.form.subjects" :key="subject.id">
+          <q-item v-for="cs in store.form.courseSpecs" :key="cs.id">
             <div class="row full-width q-py-sm items-start">
               <!-- Subject ID and Details Column -->
               <div class="col-12 col-md-2">
                 <div class="text-weight-medium">
-                  {{ t('subjectCode') }} {{ subject.id }}
+                  {{ t('subjectCode') }} {{ cs.subject.code }}
                 </div>
-                <div class="text-grey-8">{{ subject.credit }} units</div>
+                <div class="text-grey-8">{{ cs.credit }} units</div>
                 <div class="text-caption text-grey-8 q-mt-xs">
-                  {{ subject.type }}
+                  {{ cs.type }}
                 </div>
               </div>
 
               <!-- Subject Names Column -->
               <div class="col-12 col-md-4">
-                <div class="text-weight-medium">{{ subject.thaiName }}</div>
-                <div class="text-grey-8">{{ subject.engName }}</div>
+                <div class="text-weight-medium">{{ cs.thaiName }}</div>
+                <div class="text-grey-8">{{ cs.engName }}</div>
               </div>
 
               <!-- Description Column -->
               <div class="col-12 col-md-6">
-                <div>{{ subject.thaiDescription }}</div>
+                <div>{{ cs.thaiDescription }}</div>
               </div>
             </div>
           </q-item>

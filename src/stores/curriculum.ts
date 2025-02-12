@@ -30,6 +30,7 @@ export const useCurriculumStore = defineStore('curriculum', {
     },
     getCurriculum: (c) => c.form,
     getListSubject: (c) => c.form.courseSpecs?.flatMap((c) => c.subject) || [],
+    getListCourseSpec: (c) => c.form.courseSpecs,
   },
   actions: {
     async fetchOne(id: string) {

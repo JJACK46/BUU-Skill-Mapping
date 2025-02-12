@@ -27,7 +27,7 @@
             {{ store.course.subject?.thaiName }}
           </div>
           <div class="text-body2 q-mt-sm">
-            {{ store.course.subject?.thaiDescription }}
+            {{ store.course.subject }}
           </div>
         </q-card-section>
       </q-card>
