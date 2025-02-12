@@ -4,7 +4,7 @@ import { PlosService } from 'src/services/plosmockup';
 import { useSkillStore } from './skill';
 import type { Plo } from 'src/types/plo';
 import { convertToPageParams } from 'src/utils/pagination';
-import { useCourseSpecStore } from './couse-spec';
+import { useCourseSpecStore } from './course-spec';
 import { useCurriculumStore } from './curriculum';
 
 type TitleForm = 'New PLO' | 'Edit PLO';

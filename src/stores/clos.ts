@@ -4,7 +4,7 @@ import { ClosService } from 'src/services/clos';
 import { useSkillStore } from './skill';
 import type { Clo } from 'src/types/clo';
 import { convertToPageParams } from 'src/utils/pagination';
-import { useCourseSpecStore } from './couse-spec';
+import { useCourseSpecStore } from './course-spec';
 import { useCurriculumStore } from './curriculum';
 import { usePlostore } from './plosmouckup';
 

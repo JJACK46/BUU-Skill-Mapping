@@ -24,29 +24,12 @@
     "
   >
     <div class="row q-gutter-sm">
-      <q-input
-        outlined
-        dense
-        class="col"
-        style="min-width: 200px"
+      <FieldChecker
         v-model="store.form.subject.code"
-        @update:model-value="store.checkUpdateSubjectCode"
-        debounce="100"
-        mask="########"
-        hide-selected
-        label="Subject Code *"
-        input-debounce="500"
-        :rules="[requireField]"
-      >
-        <template #hint>
-          <span
-            :class="`${store.foundExistSubject ? 'text-blue' : 'text-positive'} text-weight-medium`"
-          >
-            {{ store.getSubjectCodeLabel }}
-          </span>
-        </template>
-      </q-input>
-
+        :func-update="store.checkUpdateSubjectCode"
+        :found-hint="store.getSubjectCodeLabel"
+        :is-found="store.foundExistSubject"
+      />
       <q-select
         style="min-width: 200px"
         class="col"
@@ -178,6 +161,7 @@ import { OptionSubjectType } from 'src/data/subject_type';
 import CloDialog from './CloDialog.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useCourseSpecStore } from 'src/stores/course-spec';
+import FieldChecker from 'src/components/FieldChecker.vue';
 
 const curr = useCurriculumStore();
 const dialogCloTable = ref<boolean>(false);
