@@ -61,8 +61,9 @@
     <DialogForm
       v-model="store.dialogState"
       :title="t('newCurriculum')"
+      :cta-text="'createCurriculum'"
       @save="store.handleCreateOne()"
-      width="60%"
+      width="50%"
     >
       <div class="row q-gutter-y-md">
         <FieldChecker
@@ -150,7 +151,9 @@
           v-model="store.form.thaiDescription"
           :label="t('description') + ' *'"
           :rules="[requireField]"
-          style="width: 100%"
+          class="col-12"
+          counter
+          maxlength="500"
         />
         <q-input
           dense
@@ -159,8 +162,11 @@
           v-model="store.form.engDescription"
           :label="t('englishDescription') + ' *'"
           :rules="[requireField]"
-          style="width: 100%"
-        />
+          class="col-12"
+          counter
+          maxlength="500"
+        >
+        </q-input>
       </div>
     </DialogForm>
   </q-page>

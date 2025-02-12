@@ -37,7 +37,7 @@
               color="primary"
               unelevated
               class="full-width"
-              :label="t('save')"
+              :label="t(ctaText || 'save')"
               @click="handleSave"
             />
           </div>
@@ -66,6 +66,7 @@ defineProps<{
   title: string;
   width?: string;
   fullWidth?: boolean;
+  ctaText?: string;
 }>();
 
 // Emits
