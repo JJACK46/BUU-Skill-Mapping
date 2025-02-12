@@ -35,11 +35,21 @@
   />
   <q-input
     dense
+    type="textarea"
+    outlined
+    v-model="store.form.engDescription"
+    :label="t('englishDescription') + ' *'"
+    :rules="[requireField]"
+  />
+  <q-input
+    dense
     outlined
     v-model="store.form.thaiDegree"
     :label="t('degree') + ' *'"
     :rules="[requireField, onlyAlphabet]"
-  />
+  >
+    <template #loading></template>
+  </q-input>
   <q-input
     dense
     outlined
@@ -71,7 +81,6 @@
     v-model="store.form.branch"
     :options="branches"
     :label="t('branches') + ' *'"
-    use-chips
     option-label="name"
     :rules="[requireField]"
     @vue:mounted="fetchBranch"
