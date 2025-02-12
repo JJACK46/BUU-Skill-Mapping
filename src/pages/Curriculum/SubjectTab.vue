@@ -24,30 +24,29 @@
     "
   >
     <div class="row q-gutter-sm">
-      <!-- <q-select
-          filled
-          outlined
-          dense
-          v-model="formCourseSpec.subject"
-          @update:model-value="updateSubjectCode"
-          use-input
-          hide-selected
-          label="Search ID"
-          :options="[]"
-          option-value="subjectCode"
-          :option-label="computedLabel"
-          :popup-offset="[0, 5]"
-        /> -->
       <q-input
+        outlined
+        dense
         class="col"
         style="min-width: 200px"
         v-model="store.form.subject.code"
-        outlined
-        dense
-        label="Code *"
+        @update:model-value="store.checkUpdateSubjectCode"
+        debounce="100"
         mask="########"
-        :rules="[(val) => !!val || 'Required']"
-      />
+        hide-selected
+        label="Subject Code *"
+        input-debounce="500"
+        :rules="[requireField]"
+      >
+        <template #hint>
+          <span
+            :class="`${store.foundExistSubject ? 'text-blue' : 'text-positive'} text-weight-medium`"
+          >
+            {{ store.getSubjectCodeLabel }}
+          </span>
+        </template>
+      </q-input>
+
       <q-select
         style="min-width: 200px"
         class="col"

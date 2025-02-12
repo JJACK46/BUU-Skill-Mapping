@@ -17,6 +17,11 @@ export class CourseSpecService {
     return res.data;
   }
 
+  static async findExistSubjectCode(code: string) {
+    const res = await api.get(`${this.path}/findExistSubject/${code}`);
+    return res.data;
+  }
+
   static async createOne(obj: Partial<CourseSpec>) {
     const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
