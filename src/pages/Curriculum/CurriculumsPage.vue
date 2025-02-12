@@ -127,7 +127,7 @@
           dense
           outlined
           mask="#.##"
-          v-model="store.form.minimumGrade"
+          v-model.number="store.form.minimumGrade"
           :label="t('minimumGrade') + ' *'"
           :rules="[requireField, ruleGradeFormat]"
           class="col-2 q-mr-md"
