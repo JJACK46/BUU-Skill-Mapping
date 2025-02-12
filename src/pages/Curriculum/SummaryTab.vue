@@ -88,28 +88,28 @@
         </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list separator>
-          <q-item v-for="subject in store.form.subjects" :key="subject.id">
+          <q-item v-for="cs in store.form.courseSpecs" :key="cs.id">
             <div class="row full-width q-py-sm items-start">
               <!-- Subject ID and Details Column -->
               <div class="col-12 col-md-2">
                 <div class="text-weight-medium">
-                  {{ t('subjectCode') }} {{ subject.id }}
+                  {{ t('subjectCode') }} {{ cs.subject.code }}
                 </div>
-                <div class="text-grey-8">{{ subject.credit }} units</div>
+                <div class="text-grey-8">{{ cs.credit }} units</div>
                 <div class="text-caption text-grey-8 q-mt-xs">
-                  {{ subject.type }}
+                  {{ cs.type }}
                 </div>
               </div>
 
               <!-- Subject Names Column -->
               <div class="col-12 col-md-4">
-                <div class="text-weight-medium">{{ subject.thaiName }}</div>
-                <div class="text-grey-8">{{ subject.engName }}</div>
+                <div class="text-weight-medium">{{ cs.thaiName }}</div>
+                <div class="text-grey-8">{{ cs.engName }}</div>
               </div>
 
               <!-- Description Column -->
               <div class="col-12 col-md-6">
-                <div>{{ subject.thaiDescription }}</div>
+                <div>{{ cs.thaiDescription }}</div>
               </div>
             </div>
           </q-item>
@@ -190,47 +190,24 @@
       </q-card-section>
     </q-card>
     <!-- JSON -->
-    <q-card flat bordered>
-      <q-card-section>
-        <q-expansion-item label="View JSON" v-model="expandJSON">
-          <q-separator class="q-my-sm"></q-separator>
-          <div class="row justify-end">
-            <q-btn
-              flat
-              padding="xs"
-              :icon="alreadyCopied ? 'check' : matContentCopy"
-              @click="copyToClipboard"
-            >
-              <q-tooltip> {{ alreadyCopied ? 'Copied' : 'Copy' }}</q-tooltip>
-            </q-btn>
-          </div>
-          <vue-json-pretty :data="store.form"></vue-json-pretty>
-        </q-expansion-item>
-      </q-card-section>
-    </q-card>
+    <JSON_Card :data="store.form" />
   </q-page>
 </template>
 
 <script setup lang="ts">
 import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import VueJsonPretty from 'vue-json-pretty';
-import { matContentCopy } from '@quasar/extras/material-icons';
+
 import { useRoute, useRouter } from 'vue-router';
 import type { MenuProps } from 'src/components/MenuLink.vue';
+import JSON_Card from 'src/components/JSON_Card.vue';
 
 const store = useCurriculumStore();
-const expandJSON = ref(false);
+
 const route = useRoute();
 const router = useRouter();
-
-const alreadyCopied = ref(false);
-const copyToClipboard = () => {
-  navigator.clipboard.writeText(JSON.stringify(store.form));
-  alreadyCopied.value = true;
-};
 
 const { t } = useI18n();
 const details = [

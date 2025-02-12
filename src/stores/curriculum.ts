@@ -30,6 +30,7 @@ export const useCurriculumStore = defineStore('curriculum', {
     },
     getCurriculum: (c) => c.form,
     getListSubject: (c) => c.form.courseSpecs?.flatMap((c) => c.subject) || [],
+    getListCourseSpec: (c) => c.form.courseSpecs,
   },
   actions: {
     async fetchOne(id: string) {
@@ -104,7 +105,7 @@ export const useCurriculumStore = defineStore('curriculum', {
         if (this.form.subjects?.length) {
           const subjectsData = await Promise.all(
             this.form.subjects.map(async (subject) => {
-              const id = subject.id ?? 0;
+              const id = subject.code ?? 0;
               return await SubjectService.getOne(id);
             }),
           );
