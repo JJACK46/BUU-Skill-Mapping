@@ -7,11 +7,11 @@
     v-model="model"
     @update:model-value="funcUpdate"
     debounce="100"
-    mask="########"
+    :mask="computedMask"
     hide-selected
     label="Subject Code *"
     input-debounce="500"
-    :rules="[requireField]"
+    :rules="computedRules"
   >
     <template #hint>
       <span
@@ -24,13 +24,21 @@
 </template>
 
 <script setup lang="ts">
+import type { ValidationRule } from 'quasar';
 import { requireField } from 'src/utils/field-rules';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   isFound: boolean;
   foundHint: string;
   funcUpdate: (arg0: string | number) => void;
+  mask?: string;
+  rules?: ValidationRule[];
 }>();
+
+const computedMask = computed(() => props.mask || '########'); //default 8
+
+const computedRules = computed(() => [requireField, ...props.rules]);
 
 const model = defineModel<string | number>();
 </script>

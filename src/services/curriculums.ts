@@ -12,6 +12,11 @@ export class CurriculumService {
     };
   }
 
+  static async findExistCode(code: string) {
+    const res = await api.get(`${this.path}/findExistCode/${code}`);
+    return res.data;
+  }
+
   static async getOneByCode(code: string) {
     const res = await api.get(`${this.path}/${code}`);
     return res.data;
