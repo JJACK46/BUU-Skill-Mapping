@@ -5,6 +5,7 @@ import type { CourseSpec } from 'src/types/course-spec';
 
 export class CourseSpecService {
   static path = 'course-specs';
+  static currPath = 'curriculumId';
 
   static async getAll() {
     const res = await api.get(this.path);
@@ -21,16 +22,39 @@ export class CourseSpecService {
     return res.status === HttpStatusCode.Created;
   }
 
-  static async updateOne(obj: Partial<CourseSpec>) {
+  static async createOneInCurr({
+    currId,
+    form,
+  }: {
+    currId: number;
+    form: Partial<CourseSpec>;
+  }) {
+    const res = await api.post(`${this.path}/${this.currPath}/${currId}`, form);
+    return res.status === HttpStatusCode.Created;
+  }
+
+  static async updateOneInCurr({
+    currId,
+    form,
+  }: {
+    currId: number;
+    form: Partial<CourseSpec>;
+  }) {
+    if (!form.id) {
+      console.error('Update failed: Missing ID');
+    }
     try {
-      const res = await api.patch(`${this.path}/${obj.subject.code}`, obj);
+      const res = await api.patch(
+        `${this.path}/${this.currPath}/${currId}/`,
+        form,
+      );
       return res.status === HttpStatusCode.Ok;
     } catch (error) {
       console.error(error);
     }
   }
 
-  static async removeOne(id: string) {
+  static async removeOne(id: number) {
     const res = await api.delete(`${this.path}/${id}`);
     return res.status === HttpStatusCode.Ok;
   }
@@ -43,9 +67,8 @@ export class CourseSpecService {
     };
   }
 
-  static async fetchSubjectByCurriculums(curriculumId: number) {
-    const res = await api.get(`${this.path}/curriculumId/${curriculumId}`);
-    console.log(res.data)
+  static async fetchSubjectByCurriculumId(curriculumId: number) {
+    const res = await api.get(`${this.path}/${this.currPath}/${curriculumId}`);
     return res.data;
   }
 }
