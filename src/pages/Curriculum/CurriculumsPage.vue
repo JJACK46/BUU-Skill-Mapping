@@ -67,6 +67,7 @@
     >
       <div class="row q-gutter-y-md">
         <FieldChecker
+          :label="t('curriculumCode')"
           v-model="store.form.code"
           :func-update="store.checkUpdateCode"
           :found-hint="store.getCurriculumCodeLabel"

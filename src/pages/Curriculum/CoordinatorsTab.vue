@@ -46,128 +46,113 @@
     </template>
   </q-table>
   <DialogForm
-    :title="t('addCoordinators')"
+    :title="t('coordinators')"
     v-model="store.dialogState"
     @save="handleSave()"
-    width="60%"
+    width="50%"
+    :cta-text="'addCoordinators'"
   >
-    <div class="row q-gutter-y-sm">
+    <div class="row q-gutter-y-md">
+      <FieldChecker
+        v-model="store.form.code"
+        :found-hint="store.codeLabel"
+        :is-found="store.isFoundCode"
+        :func-update="store.findExistCode"
+        label="Find the coordinator code"
+      />
+
       <q-input
         outlined
         dense
-        class="col-12"
-        v-model="store.form.code"
-        label="Code *"
+        v-model="store.form.email"
+        label="Email"
+        type="email"
         clearable
-        :rules="[requireField]"
+        class="col-12 bg-grey-2"
+        readonly
       />
 
-      <div class="row col-12">
-        <q-input
-          outlined
-          dense
-          v-model="store.form.email"
-          label="Email *"
-          type="email"
-          clearable
-          class="col q-mr-md"
-          :rules="[requireField]"
-          style="width: 340px"
-        />
-        <q-select
-          outlined
-          dense
-          v-model="store.form.position"
-          :options="[...Object.values(AcademicRank)]"
-          label="Position *"
-          class="col"
-          options-dense
-          :rules="[requireField]"
-        />
-      </div>
-      <div class="row col-12">
-        <q-input
-          outlined
-          v-model="store.form.thaiName"
-          label="Thai Name *"
-          clearable
-          class="col q-mr-md"
-          dense
-          :rules="[requireField]"
-        />
-        <q-input
-          outlined
-          dense
-          v-model="store.form.engName"
-          label="English Name *"
-          class="col"
-          clearable
-          :rules="[requireField]"
-        />
-      </div>
-      <div class="row col-12">
-        <q-select
-          outlined
-          dense
-          v-model="store.form.branch"
-          :options="branches"
-          option-label="name"
-          label="Branch *"
-          class="col-grow q-mr-md"
-          options-dense
-          :rules="[requireField]"
-          @vue:mounted="fetchBranches"
-          style="width: 340px"
-        />
-        <q-select
-          outlined
-          dense
-          v-model="store.form.specialists"
-          :options="[
-            'Machine Learning',
-            'Deep Learning',
-            'Software Engineering',
-          ]"
-          label="Specialists"
-          hint="Optional"
-          options-dense
-          class="col-grow q-mr-md"
-          clearable
-          multiple
-          style="width: 340px"
-        />
-        <q-input
-          outlined
-          dense
-          v-model="store.form.tel"
-          label="Telephone *"
-          clearable
-          class="col-auto"
-          :rules="[(val) => val.length == 10 || 'Field not correct format']"
-          mask="###-###-####"
-          unmasked-value
-          style="width: 200px"
-        />
-      </div>
+      <q-input
+        outlined
+        v-model="store.form.thaiName"
+        label="Thai Name"
+        clearable
+        class="col-12 bg-grey-2"
+        dense
+        readonly
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.engName"
+        label="English Name"
+        class="col-12 bg-grey-2"
+        clearable
+        readonly
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.position"
+        :options="[...Object.values(AcademicRank)]"
+        label="Position"
+        class="col-12 bg-grey-2"
+        options-dense
+        readonly
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.branch"
+        :options="branches"
+        option-label="name"
+        label="Branch"
+        class="col-12 bg-grey-2"
+        options-dense
+        @vue:mounted="fetchBranches"
+        readonly
+      />
+      <q-select
+        outlined
+        dense
+        v-model="store.form.specialists"
+        label="Specialists"
+        options-dense
+        class="col-12 bg-grey-2"
+        clearable
+        multiple
+        readonly
+      />
+      <q-input
+        outlined
+        dense
+        v-model="store.form.tel"
+        label="Telephone"
+        clearable
+        class="col-12 bg-grey-2"
+        mask="###-###-####"
+        unmasked-value
+        readonly
+      />
       <q-input
         outlined
         dense
         v-model="store.form.officeRoom"
-        label="Office Room *"
-        class="col-grow"
-        :rules="[requireField]"
+        label="Office Room"
+        class="col-12 bg-grey-2"
         clearable
-        style="width: 480px"
+        readonly
       />
       <q-input
         outlined
         dense
         v-model="store.form.bio"
         label="Bio"
-        class="col-grow"
-        hint="Optional"
+        class="col-12 bg-grey-2"
         type="textarea"
-        style="width: 100%"
+        counter
+        maxlength="500"
+        readonly
       />
     </div>
   </DialogForm>
@@ -181,7 +166,6 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
-import { requireField } from 'src/utils/field-rules';
 import type { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
@@ -190,6 +174,7 @@ import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import type { Coordinator } from 'src/types/coordinator';
+import FieldChecker from 'src/components/FieldChecker.vue';
 
 const { t } = useI18n();
 const global = useGlobalStore();
