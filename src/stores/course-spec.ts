@@ -41,6 +41,8 @@ export const useCourseSpecStore = defineStore('course-spec', {
     curriculumId: -1,
     router: useRouter(),
     currStore: useCurriculumStore(),
+    subjectCodeLabel: '',
+    foundExistSubject: false,
     subjectColumns: <QTableColumn[]>[
       {
         name: 'number',
@@ -97,8 +99,27 @@ export const useCourseSpecStore = defineStore('course-spec', {
         return s.listCourseSpec;
       }
     },
+    getSubjectCodeLabel: (s) => s.subjectCodeLabel,
   },
   actions: {
+    async checkUpdateSubjectCode(subjectCode: string) {
+      if (subjectCode.length === 8) {
+        const existSubject =
+          await CourseSpecService.findExistSubjectCode(subjectCode);
+        if (existSubject) {
+          this.subjectCodeLabel = 'Found the exist subject';
+          this.foundExistSubject = true;
+          this.form.subject = existSubject;
+          this.form.thaiName = existSubject.thaiName;
+          this.form.engName = existSubject.engName;
+        } else {
+          this.subjectCodeLabel = 'Create a new Subject';
+          this.foundExistSubject = false;
+        }
+      } else {
+        this.subjectCodeLabel = '';
+      }
+    },
     async fetchData() {
       try {
         // this.listCourseSpec =
