@@ -60,69 +60,77 @@
     <!-- Dialog -->
     <DialogForm
       v-model="store.dialogState"
-      :title="t('curriculum')"
+      :title="t('newCurriculum')"
       @save="store.handleCreateOne()"
       width="60%"
     >
-      <div class="flex q-gutter-md">
-        <q-input
-          dense
-          outlined
+      <div class="row q-gutter-y-md">
+        <FieldChecker
           v-model="store.form.code"
-          :label="t('curriculumCode') + ' *'"
-          :rules="[requireField]"
-          style="width: 100%"
+          :func-update="store.checkUpdateCode"
+          :found-hint="store.getCurriculumCodeLabel"
+          :is-found="store.foundExistCurriculum"
+          mask="##############"
+          :rules="[
+            (val) => val.length == 14 || 'Field not correct format (14 digits)',
+          ]"
         />
+        <div class="row col-12">
+          <q-input
+            dense
+            outlined
+            v-model="store.form.thaiName"
+            :label="t('name') + ' *'"
+            :rules="[requireField, onlyThai]"
+            class="col"
+          />
+          <q-input
+            dense
+            outlined
+            v-model="store.form.engName"
+            :label="t('engName') + ' *'"
+            :rules="[requireField, onlyEnglish]"
+            class="col q-ml-md"
+          />
+        </div>
+        <div class="row col-12">
+          <q-select
+            dense
+            outlined
+            :options="OptionEducationLevelTH"
+            v-model="store.form.thaiDegree"
+            :label="t('degree') + ' *'"
+            :rules="[requireField, onlyAlphabet]"
+            class="col"
+          />
+          <q-select
+            dense
+            outlined
+            v-model="store.form.engDegree"
+            :options="OptionEducationLevelEN"
+            :label="t('engDegree') + ' *'"
+            :rules="[requireField, onlyAlphabet]"
+            class="col q-ml-md"
+          />
+        </div>
         <q-input
           dense
-          outlined
-          v-model="store.form.thaiName"
-          :label="t('name') + ' *'"
-          :rules="[requireField]"
-          style="width: 100%"
-        />
-        <q-input
-          dense
-          outlined
-          v-model="store.form.engName"
-          :label="t('engName') + ' *'"
-          :rules="[requireField, onlyAlphabet]"
-          style="width: 100%"
-        />
-        <q-input
-          dense
-          outlined
-          v-model="store.form.thaiDegree"
-          :label="t('degree') + ' *'"
-          :rules="[requireField, onlyAlphabet]"
-          style="width: 48%"
-        />
-        <q-input
-          dense
-          outlined
-          v-model="store.form.engDegree"
-          :label="t('engDegree') + ' *'"
-          :rules="[requireField, onlyAlphabet]"
-          style="width: 49%"
-        />
-        <q-input
-          dense
-          type="number"
           outlined
           v-model.number="store.form.period"
           :label="t('period') + ' *'"
+          mask="#"
           :rules="[requireField]"
-          style="width: 20%"
+          class="col-2 q-mr-md"
         >
         </q-input>
         <q-input
           dense
-          type="number"
           outlined
-          v-model.number="store.form.minimumGrade"
+          mask="#.##"
+          v-model="store.form.minimumGrade"
           :label="t('minimumGrade') + ' *'"
-          :rules="[requireField]"
-          style="width: 20%"
+          :rules="[requireField, ruleGradeFormat]"
+          class="col-2 q-mr-md"
         />
         <q-select
           dense
@@ -133,7 +141,7 @@
           option-label="name"
           :rules="[requireField]"
           @vue:mounted="fetchBranches"
-          style="width: 55%"
+          class="col"
         ></q-select>
         <q-input
           dense
@@ -163,15 +171,26 @@ import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGlobalStore } from 'src/stores/global';
 import DialogForm from 'src/components/DialogForm.vue';
-import { onlyAlphabet, requireField } from 'src/utils/field-rules';
+import {
+  onlyAlphabet,
+  onlyEnglish,
+  onlyThai,
+  requireField,
+  ruleGradeFormat,
+} from 'src/utils/field-rules';
 import { useI18n } from 'vue-i18n';
 import { BranchService } from 'src/services/branches';
 import type { Branch } from 'src/types/branch';
 import type { Curriculum } from 'src/types/curriculum';
+import {
+  OptionEducationLevelEN,
+  OptionEducationLevelTH,
+} from 'src/data/education_level';
+import FieldChecker from 'src/components/FieldChecker.vue';
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
@@ -198,6 +217,25 @@ function fetchBranches() {
 onMounted(async () => {
   await store.fetchAll();
 });
+
+watch(
+  () => [store.form.thaiDegree, store.form.engDegree],
+  ([newThaiDegree, newEngDegree], [oldThaiDegree, oldEngDegree]) => {
+    // Avoid infinite loops by checking if the value has actually changed
+    if (newThaiDegree !== oldThaiDegree) {
+      const indexTH = OptionEducationLevelTH.indexOf(newThaiDegree);
+      if (indexTH !== -1) {
+        store.form.engDegree = OptionEducationLevelEN[indexTH];
+      }
+    } else if (newEngDegree !== oldEngDegree) {
+      const indexEN = OptionEducationLevelEN.indexOf(newEngDegree);
+      if (indexEN !== -1) {
+        store.form.thaiDegree = OptionEducationLevelTH[indexEN];
+      }
+    }
+  },
+  { deep: true },
+);
 
 const handleEditBtn = (row: Curriculum) => {
   router.push(`/curriculums/${row.code}`);

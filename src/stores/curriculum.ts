@@ -18,8 +18,11 @@ export const useCurriculumStore = defineStore('curriculum', {
     router: useRouter(),
     search: '',
     filterModel: {} as Partial<FilterModel>,
+    foundExistCurriculum: false,
+    codeLabeL: '',
   }),
   getters: {
+    getCurriculumCodeLabel: (c) => c.codeLabeL,
     getCurriculums: (c) => c.curriculums,
     getDialogTitle: (c) => c.titleForm,
     getInsertId: (c) => c.form.id,
@@ -61,8 +64,8 @@ export const useCurriculumStore = defineStore('curriculum', {
         });
         this.dialogState = false;
         this.resetForm();
+        await this.fetchAll();
       }
-      this.fetchAll();
     },
 
     async handleSave() {
@@ -85,20 +88,29 @@ export const useCurriculumStore = defineStore('curriculum', {
         message: 'Are you sure you want to delete this curriculum?',
         cancel: true,
         persistent: true,
-      }).onOk(() => this.removeCurriculum(id));
+      }).onOk(async () => {
+        const ok = await CurriculumService.removeOne(id);
+        if (ok) {
+          Notify.create({
+            type: 'ok',
+            message: 'Curriculum removed successfully',
+          });
+          await this.fetchData();
+        }
+      });
     },
-    async removeCurriculum(id: number) {
-      const ok = await CurriculumService.removeOne(id);
-      if (ok) {
-        Notify.create({
-          type: 'ok',
-          message: 'Curriculum removed successfully',
-        });
-        this.fetchData();
+
+    async checkUpdateCode(val: string) {
+      if (val.length === 14) {
+        const exist = await CurriculumService.findExistCode(this.form.code);
+        if (exist) {
+          this.codeLabeL = 'This code already exists';
+          this.foundExistCurriculum = true;
+        } else {
+          this.codeLabeL = 'Available code';
+          this.foundExistCurriculum = false;
+        }
       }
-    },
-    resetForm() {
-      this.form = {};
     },
   },
 });

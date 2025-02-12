@@ -97,5 +97,8 @@
   "subjectCode": "รหัสวิชา",
   "details": "รายละเอียด",
   "specialists": "ความชำนาญ",
-  "addCoordinators": "เพิ่มผู้รับผิดชอบหลักสูตร"
+  "englishDescription": "รายละเอียดภาษาอังกฤษ",
+  "addCoordinators": "เพิ่มผู้รับผิดชอบหลักสูตร",
+  "englishDescription": "รายละเอียดภาษาอังกฤษ",
+  "newCurriculum": "หลักสูตรใหม่"
 }
