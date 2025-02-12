@@ -8,34 +8,46 @@
   >
     <q-card
       class="dialog-form"
-      :style="{ width: width ? width : '500px', maxWidth: '1920px' }"
+      :style="{ width: width ? width : '500px', maxWidth: '100vw' }"
     >
       <q-form ref="formRef" @input="validateForm" @vue:mounted="validateForm">
         <q-card-section>
-          <div class="text-h6">{{ title }}</div>
-          <q-separator class="q-my-sm"></q-separator>
-          <span>
-            <slot />
-          </span>
-        </q-card-section>
-        <q-card-actions class="justify-end">
-          <div v-if="title !== 'View'" class="q-gutter-x-sm">
+          <div class="row">
+            <div class="col text-h6 text-weight-medium">{{ title }}</div>
             <q-btn
+              fab-mini
               flat
-              :label="t('cancel')"
+              padding="none"
+              icon="close"
               @click="dialogState = false"
             ></q-btn>
+          </div>
+          <q-separator
+            class="q-my-sm bg-primary"
+            style="height: 3px"
+          ></q-separator>
+          <div class="q-py-sm">
+            <slot />
+          </div>
+        </q-card-section>
+        <q-card-actions class="q-ma-sm">
+          <div v-if="title !== 'View'" class="full-width">
             <q-btn
               :disable="!isFormValid || !formValid"
               color="primary"
               unelevated
+              class="full-width"
               :label="t('save')"
-              style="width: 80px"
               @click="handleSave"
-            ></q-btn>
+            />
           </div>
           <div v-else>
-            <q-btn flat :label="t('ok')" @click="dialogState = false"></q-btn>
+            <q-btn
+              class="full-width"
+              flat
+              :label="t('ok')"
+              @click="dialogState = false"
+            ></q-btn>
           </div>
         </q-card-actions>
       </q-form>
