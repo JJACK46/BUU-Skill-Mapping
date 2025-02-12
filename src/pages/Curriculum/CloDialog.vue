@@ -5,7 +5,7 @@
         <div class="text-h4 text-primary">CLOS</div>
       </div>
       <div>{{ props.subject.code }} - {{ props.subject.thaiName }}</div>
-      <div>{{ store.getData }}</div>
+      <div>{{ props.subject }}</div>
       <MainHeader
         v-model:search-text="store.search"
         @open-dialog="store.handleOpenDialog"
@@ -15,6 +15,7 @@
         v-model="store.dialogState"
         :title="store.getDialogTitle"
         ref="formRef"
+        @save="saveClos()"
       >
         <div class="row justify-between">
           <div class="col-6">
@@ -26,7 +27,7 @@
             />
           </div>
           <div class="col-5">
-            <!-- <q-select
+            <q-select
               v-model="store.form.expectedLevel"
               :options="[1, 2, 3, 4, 5]"
               outlined
@@ -34,57 +35,45 @@
               :label="t('Expected Level')"
               behavior="menu"
             >
-            </q-select> -->
+            </q-select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              v-model="store.form.thaiDescription"
+              dense
+              type="textarea"
+              outlined
+              :label="t('thaiDescription') + ' *'"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              v-model="store.form.engDescription"
+              dense
+              type="textarea"
+              outlined
+              :label="t('engDescription') + ' *'"
+            />
           </div>
         </div>
         <div class="row justify-between">
           <div class="col-6">
-            <q-input
-              v-model="selectedPloNames"
-              outlined
-              dense
-              :label="t('PLO')"
-            />
-          </div>
-          <div class="col-5">
-            <q-input
-              v-model="searchPlos"
-              outlined
-              clearable
-              :label="t('search')"
-              class="col rounded-borders"
-              dense
-              debounce="500"
-            />
-          </div>
-        </div>
-        <div class="row justify-between">
-          <div class="col-6">
-            <div class="q-mt-md">
-              <q-chip
-                v-for="(skill, index) in selectedSkills"
-                :key="index"
-                removable
-                @remove="removeSkill(skill)"
-                class="q-mr-sm"
-              >
-                {{ skill.thaiName }}
-              </q-chip>
-            </div>
-          </div>
-          <div class="col-5">
             <q-select
-              v-model="selectedSkills"
-              :options="filteredSkills"
+              v-model="selectedPlos"
+              :options="filteredPlos"
               outlined
               dense
-              multiple
               use-input
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="filterSkills"
-              :label="t('Search Skill')"
+              @filter="filterPlos"
+              :label="t('Search PLO')"
               option-value="id"
               option-label="name"
               clearable
@@ -95,16 +84,59 @@
               </template>
             </q-select>
           </div>
+          <div class="col-5">
+            <q-chip
+              v-if="selectedPlos"
+              removable
+              @remove="selectedPlos = null"
+              class="q-mr-sm"
+            >
+              {{
+                selectedPlos.name.length > 25
+                  ? selectedPlos.name.slice(0, 25) + '...'
+                  : selectedPlos.name
+              }}
+            </q-chip>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-12">
-            <q-input
-              v-model="store.form.thaiDescription"
-              dense
-              type="textarea"
+        <div class="row justify-between">
+          <div class="col-6">
+            <q-select
+              v-model="selectedSkill"
+              :options="filteredSkills"
               outlined
-              :label="t('description') + ' *'"
-            />
+              dense
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="300"
+              @filter="filterSkills"
+              :label="t('Search Skill')"
+              option-value="id"
+              option-label="thaiName"
+              clearable
+              behavior="menu"
+            >
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-select>
+          </div>
+          <div class="col-12">
+            <div class="q-mb-md">
+              <q-chip
+                v-if="selectedSkill"
+                removable
+                @remove="selectedSkill = null"
+                class="q-mr-sm"
+              >
+                {{
+                  selectedSkill.thaiName.length > 25
+                    ? selectedSkill.thaiName.slice(0, 25) + '...'
+                    : selectedSkill.thaiName
+                }}
+              </q-chip>
+            </div>
           </div>
         </div>
       </DialogForm>
@@ -148,6 +180,7 @@
                 color="negative"
                 icon="delete"
                 class="q-ml-sm"
+                @click="removeOne(props.row.id)"
               />
             </q-td>
           </q-tr>
@@ -158,7 +191,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from 'src/stores/global';
 import { useClostore } from 'src/stores/clos';
@@ -168,6 +201,8 @@ import type { Skill } from 'src/types/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import type { Subject } from 'src/types/subject';
+import { usePlostore } from 'src/stores/plosmouckup';
+import type { Plo } from 'src/types/plo';
 
 const props = defineProps<{
   currId: number;
@@ -181,10 +216,10 @@ const { t } = useI18n();
 const global = useGlobalStore();
 const store = useClostore();
 const skillStore = useSkillStore();
-
-const searchPlos = ref('');
-const selectedRow = ref(null);
-const selectedSkills = ref<Skill[]>([]);
+const plosStore = usePlostore();
+const selectedPlos = ref<Plo | null>(null);
+const selectedSkill = ref<Skill | null>(null);
+const filteredPlos = ref([...plosStore.plos]);
 const filteredSkills = ref([...skillStore.skills]);
 const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
@@ -211,9 +246,23 @@ const columns = ref<QTableColumn[]>([
   },
 ]);
 
-const selectedPloNames = computed(() =>
-  selectedRow.value ? selectedRow.value.plos.map((p) => p.name).join(', ') : '',
-);
+const filterPlos = (val: string, update: (cb: () => void) => void) => {
+  if (!val.trim()) {
+    update(() => {
+      filteredPlos.value = plosStore.plos; // โหลดข้อมูลจาก plosStore
+      console.log(filteredPlos.value); // ดูข้อมูลที่โหลดมา
+    });
+    return;
+  }
+
+  const searchVal = val.toLowerCase();
+  update(() => {
+    filteredPlos.value = plosStore.plos.filter(
+      (plo) => plo.name.toLowerCase().includes(searchVal), // กรองข้อมูลตามชื่อ
+    );
+    console.log(filteredPlos.value); // ตรวจสอบผลลัพธ์การกรอง
+  });
+};
 
 const filterSkills = (val: string, update: (cb: () => void) => void) => {
   if (!val.trim()) {
@@ -230,13 +279,41 @@ const filterSkills = (val: string, update: (cb: () => void) => void) => {
     );
   });
 };
-const removeSkill = (skill) => {
-  selectedSkills.value = selectedSkills.value.filter((s) => s.id !== skill.id);
-};
 
 const editRow = (row) => {
-  selectedRow.value = { ...row };
-  store.dialogState = true;
+  store.form = { ...row }; // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
+  selectedPlos.value =
+    plosStore.plos.find((plo) => plo.id === row.ploId) || null;
+  selectedSkill.value =
+    skillStore.skills.find((skill) => skill.id === row.skillId) || null;
+  store.dialogState = true; // เปิด Dialog
+};
+
+function saveClos() {
+  const payload = {
+    // id: store.form.id,
+    name: store.form.name,
+    engDescription: store.form.engDescription,
+    thaiDescription: store.form.thaiDescription,
+    courseSpecId: props.currId, // ใช้ ID ของหลักสูตรปัจจุบัน
+    ploId: selectedPlos.value?.id || null,
+    skillId: selectedSkill.value?.id || null,
+  };
+
+  console.log('Saving:', payload);
+
+  // if (payload.id) {
+  //   store.handleUpdate(payload); // ถ้ามี id ให้เรียกอัปเดต
+  // } else {
+  store.handleSave(payload); // ถ้ายังไม่มี id ให้สร้างใหม่
+  // }
+
+  store.dialogState = false; // ปิด Dialog
+}
+const removeOne = (rowId: number) => {
+  if (confirm('Are you sure you want to delete this CLO?')) {
+    store.removeOne(rowId); // เรียกใช้ store เพื่อลบข้อมูล
+  }
 };
 </script>
 
