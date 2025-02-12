@@ -130,7 +130,6 @@
           v-model="store.form.branch"
           :options="branches"
           :label="t('branches') + ' *'"
-          use-chips
           option-label="name"
           :rules="[requireField]"
           @vue:mounted="fetchBranches"
@@ -150,7 +149,7 @@
           type="textarea"
           outlined
           v-model="store.form.engDescription"
-          :label="t('engDescription') + ' *'"
+          :label="t('englishDescription') + ' *'"
           :rules="[requireField]"
           style="width: 100%"
         />
