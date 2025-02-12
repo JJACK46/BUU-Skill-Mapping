@@ -201,7 +201,7 @@ import { requireField } from 'src/utils/field-rules';
 
 const props = defineProps<{
   currId: number;
-  subject: Subject;
+  subject: CourseSpec;
 }>();
 
 const dialogState = defineModel<boolean>();
