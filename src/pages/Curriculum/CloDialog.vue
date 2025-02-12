@@ -4,7 +4,7 @@
       <div class="q-py-md">
         <div class="text-h4 text-primary">CLOS</div>
       </div>
-      <div>{{ props.subject.code }} - {{ props.subject.thaiName }}</div>
+      <div>{{ props.subject }} - {{ props.subject.thaiName }}</div>
       <div>{{ props.subject }}</div>
       <MainHeader
         v-model:search-text="store.search"
@@ -199,12 +199,11 @@ import { useSkillStore } from 'src/stores/skill';
 import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
-import type { Subject } from 'src/types/subject';
 import { usePlostore } from 'src/stores/plosmouckup';
 
 const props = defineProps<{
   currId: number;
-  subject: Subject;
+  subject: CourseSpec;
 }>();
 
 const dialogState = defineModel<boolean>();
