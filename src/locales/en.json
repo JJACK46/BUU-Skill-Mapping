@@ -98,5 +98,6 @@
   "addCoordinators": "Add Coordinators",
   "newCurriculum": "New Curriculum",
   "createCurriculum": "Create a Curriculum",
-  "addCoordinator": "Add a Coordinator"
+  "addCoordinator": "Add a Coordinator",
+  "createInstructor": "Create a Instructor"
 }
