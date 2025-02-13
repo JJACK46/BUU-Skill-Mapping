@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
-import type { QTableProps } from 'quasar';
+import { Notify, Dialog, type QTableProps } from 'quasar';
 import { InstructorService } from 'src/services/instructor';
-import type { PageParams } from 'src/types/pagination';
 import type { Instructor } from 'src/types/instructor';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import type { FilterModel } from 'src/types/filter';
@@ -13,7 +12,7 @@ export const useInstructorStore = defineStore('instructor', {
     dialogState: false,
     search: '',
     form: {} as Partial<Instructor>,
-    teachers: [] as Instructor[],
+    listItem: [] as Instructor[],
     titleForm: '' as TitleForm,
     foundCode: false,
     pagination: defaultPagination,
@@ -22,14 +21,18 @@ export const useInstructorStore = defineStore('instructor', {
     isFoundCode: false,
   }),
 
-  getters: {},
+  getters: {
+    getInstructors: (s) => s.listItem,
+    getTitleForm: (s) => s.titleForm,
+  },
 
   actions: {
-    async fetchAll() {
+    async fetchAll(pag?: QTableProps['pagination']) {
+      this.pagination = pag || defaultPagination;
       const { data, total } = await InstructorService.getAll(
         convertToPageParams(this.pagination, this.search, this.filterModel),
       );
-      this.curriculums = data;
+      this.listItem = data;
       this.pagination!.rowsNumber = total || 0;
     },
     resetForm() {
@@ -45,26 +48,72 @@ export const useInstructorStore = defineStore('instructor', {
         } else {
           this.codeLabel = 'Not found the code';
           this.isFoundCode = false;
+          this.form = {} as Partial<Instructor>;
         }
       }
     },
-    async fetchData(pag?: QTableProps['pagination']) {
-      const req = {
-        page: pag?.page || 1,
-        limit: pag?.rowsPerPage || 10,
-        sort: pag?.sortBy || '',
-        order: pag?.descending ? 'DESC' : 'ASC',
-        search: this.search || '',
-      } as PageParams;
-      this.teachers = (await InstructorService.getAll(req)).data;
+
+    async createOne() {
+      const ok = await InstructorService.createOne(this.form);
+      if (ok) {
+        Notify.create({
+          type: 'ok',
+          message: 'Created successfully',
+        });
+      }
+    },
+    async updateOne() {
+      const ok = await InstructorService.updateOne(this.form);
+      if (ok) {
+        Notify.create({
+          type: 'ok',
+          message: 'Updated successfully',
+        });
+      }
+    },
+
+    async deleteOne(id: number) {
+      if (confirm) {
+        const ok = await InstructorService.removeOne(id);
+        if (ok) {
+          Notify.create({
+            type: 'ok',
+            message: `Deleted successfully`,
+          });
+        }
+      }
+    },
+
+    handleDelete(id: number) {
+      Dialog.create({
+        title: 'Confirm Deletion',
+        message: 'Are you sure you want to delete this curriculum?',
+        cancel: true,
+        persistent: true,
+      }).onOk(async () => this.deleteOne(id));
     },
 
     async handleSave() {
-      await InstructorService.createOne(this.form);
+      if (this.titleForm === 'Edit Instructor') {
+        this.updateOne();
+      } else {
+        this.createOne();
+      }
       this.resetForm();
-      // Refresh data after saving
-      await this.fetchData();
+      await this.fetchAll();
       this.dialogState = false;
+    },
+
+    handleEdit(form: Partial<Instructor>) {
+      this.form = { ...form };
+      this.titleForm = 'Edit Instructor';
+      this.toggleDialog();
+    },
+
+    handleCreate() {
+      this.form = {} as Partial<Instructor>;
+      this.titleForm = 'New Instructor';
+      this.toggleDialog();
     },
 
     toggleDialog() {

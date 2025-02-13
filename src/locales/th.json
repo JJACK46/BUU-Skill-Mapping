@@ -101,5 +101,6 @@
   "addCoordinators": "เพิ่มผู้รับผิดชอบหลักสูตร",
   "newCurriculum": "หลักสูตรใหม่",
   "createCurriculum": "สร้างหลักสูตรใหม่",
-  "addCoordinator": "เพิ่มผู้รับผิดชอบหลักสูตร"
+  "addCoordinator": "เพิ่มผู้รับผิดชอบหลักสูตร",
+  "createInstructor": "สร้างผู้สอนใหม่"
 }

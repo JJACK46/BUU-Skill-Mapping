@@ -19,5 +19,12 @@ function validateGradeFormat(val: string) {
   return numericValue >= 1.0 && numericValue <= 4.0; // Check range
 }
 
+function validateCodeFormat(val: string) {
+  const regex = /^[0-9]{8}$/;
+  return regex.test(val);
+}
+
 export const ruleGradeFormat: ValidationRule = (val: string) =>
-  validateGradeFormat(val) || 'Invalid grade format';
+  validateGradeFormat(val) || 'Invalid grade format (1.00 - 4.00)';
+export const ruleCodeFormat: ValidationRule = (val: string) =>
+  validateCodeFormat(val) || 'Invalid code format (8 digits)';

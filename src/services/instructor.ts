@@ -24,13 +24,7 @@ export class InstructorService {
   }
 
   static async createOne(obj: Partial<Instructor>) {
-    const dto = {
-      ...obj,
-      userId: obj.user?.id,
-      branchId: String(obj.branch?.id),
-      curriculumListId: obj.curriculums?.map((c) => c.id),
-    };
-    const res = await api.post(this.path, dto);
+    const res = await api.post(this.path, obj);
     return res.data;
   }
 

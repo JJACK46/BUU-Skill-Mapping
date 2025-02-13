@@ -18,6 +18,7 @@ export interface Instructor {
   bio: string;
   position: string;
   branch: Partial<Branch> | null;
+  branchId: number;
   courses?: Course[];
   curriculums: Partial<Curriculum>[] | null;
   user?: User;

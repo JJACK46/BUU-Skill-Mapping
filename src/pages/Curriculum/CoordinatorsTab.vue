@@ -16,7 +16,7 @@
     :loading="global.getLoadingState"
     :columns="columns"
     :filter="store.search"
-    @update:pagination="store.fetchData"
+    @update:pagination="store.fetchAll"
   >
     <template #body-cell-number="props">
       <q-td>
