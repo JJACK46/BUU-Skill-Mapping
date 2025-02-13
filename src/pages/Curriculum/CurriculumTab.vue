@@ -1,103 +1,113 @@
 <template>
-  <div class="q-py-md">
+  <div class="container">
     <div class="text-h4 text-primary">
       {{ t('curriculum') }}
     </div>
-  </div>
-  <q-input
-    dense
-    outlined
-    v-model="store.form.code"
-    :label="t('curriculumCode') + ' *'"
-    :rules="[requireField]"
-  />
-  <q-input
-    dense
-    outlined
-    v-model="store.form.thaiName"
-    :label="t('name') + ' *'"
-    :rules="[requireField]"
-  />
-  <q-input
-    dense
-    outlined
-    v-model="store.form.engName"
-    :label="t('engName') + ' *'"
-    :rules="[requireField]"
-  />
-  <q-input
-    dense
-    type="textarea"
-    outlined
-    v-model="store.form.thaiDescription"
-    :label="t('description') + ' *'"
-    :rules="[requireField]"
-  />
-  <q-input
-    dense
-    type="textarea"
-    outlined
-    v-model="store.form.engDescription"
-    :label="t('englishDescription') + ' *'"
-    :rules="[requireField]"
-  />
-  <q-input
-    dense
-    outlined
-    v-model="store.form.thaiDegree"
-    :label="t('degree') + ' *'"
-    :rules="[requireField, onlyAlphabet]"
-  >
-    <template #loading></template>
-  </q-input>
-  <q-input
-    dense
-    outlined
-    v-model="store.form.engDegree"
-    :label="t('engDegree') + ' *'"
-    :rules="[requireField, onlyAlphabet]"
-  />
+    <div class="q-mt-lg q-gutter-y-md">
+      <FieldBranchOptions v-model="store.form.branch" />
 
-  <q-input
-    dense
-    type="number"
-    outlined
-    v-model.number="store.form.period"
-    :label="t('period') + ' *'"
-    :rules="[requireField]"
-  >
-  </q-input>
-  <q-input
-    dense
-    type="number"
-    outlined
-    v-model.number="store.form.minimumGrade"
-    :label="t('minimumGrade') + ' *'"
-    :rules="[requireField]"
-  />
-  <q-select
-    dense
-    outlined
-    v-model="store.form.branch"
-    :options="branches"
-    :label="t('branches') + ' *'"
-    option-label="name"
-    :rules="[requireField]"
-    @vue:mounted="fetchBranch"
-  ></q-select>
+      <q-input
+        dense
+        outlined
+        v-model="store.form.code"
+        :label="t('curriculumCode') + ' *'"
+        :rules="[requireField]"
+      />
+      <q-input
+        dense
+        outlined
+        v-model="store.form.thaiName"
+        :label="t('name') + ' *'"
+        :rules="[requireField]"
+      />
+      <q-input
+        dense
+        outlined
+        v-model="store.form.engName"
+        :label="t('engName') + ' *'"
+        :rules="[requireField]"
+      />
+      <q-input
+        dense
+        type="textarea"
+        outlined
+        v-model="store.form.thaiDescription"
+        :label="t('description') + ' *'"
+        :rules="[requireField]"
+        counter
+        maxlength="500"
+      />
+      <q-input
+        dense
+        type="textarea"
+        outlined
+        v-model="store.form.engDescription"
+        :label="t('englishDescription') + ' *'"
+        :rules="[requireField]"
+        counter
+        maxlength="500"
+      />
+      <q-select
+        dense
+        outlined
+        :options="OptionEducationLevelTH"
+        v-model="store.form.thaiDegree"
+        :label="t('degree') + ' *'"
+        :rules="[requireField, onlyAlphabet]"
+      />
+      <q-select
+        dense
+        outlined
+        v-model="store.form.engDegree"
+        :options="OptionEducationLevelEN"
+        :label="t('engDegree') + ' *'"
+        :rules="[requireField, onlyAlphabet]"
+      />
+      <q-input
+        dense
+        type="number"
+        outlined
+        v-model.number="store.form.period"
+        :label="t('period') + ' *'"
+        :rules="[requireField]"
+      >
+      </q-input>
+      <q-input
+        dense
+        type="number"
+        outlined
+        v-model.number="store.form.minimumGrade"
+        :label="t('minimumGrade') + ' *'"
+        :rules="[requireField]"
+      />
+      <div class="row col-12">
+        <q-btn
+          :label="t('save')"
+          color="primary"
+          unelevated
+          class="col-grow"
+          @click="store.handleSave"
+        ></q-btn>
+      </div>
+      <JSON_Card :data="store.form" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { BranchService } from 'src/services/branches';
 import { onlyAlphabet, requireField } from 'src/utils/field-rules';
-import type { Branch } from 'src/types/branch';
-import { onMounted, ref } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import {
+  OptionEducationLevelEN,
+  OptionEducationLevelTH,
+} from 'src/data/education_level';
+import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
+import JSON_Card from 'src/components/JSON_Card.vue';
 
 const store = useCurriculumStore();
-const branches = ref<Branch[]>();
 const { t } = useI18n();
 const route = useRoute();
 
@@ -105,7 +115,22 @@ onMounted(() => {
   store.form.id = Number(route.params.id);
 });
 
-async function fetchBranch() {
-  branches.value = (await BranchService.getAll()).data;
-}
+watch(
+  () => [store.form.thaiDegree, store.form.engDegree],
+  ([newThaiDegree, newEngDegree], [oldThaiDegree, oldEngDegree]) => {
+    // Avoid infinite loops by checking if the value has actually changed
+    if (newThaiDegree !== oldThaiDegree) {
+      const indexTH = OptionEducationLevelTH.indexOf(newThaiDegree);
+      if (indexTH !== -1) {
+        store.form.engDegree = OptionEducationLevelEN[indexTH];
+      }
+    } else if (newEngDegree !== oldEngDegree) {
+      const indexEN = OptionEducationLevelEN.indexOf(newEngDegree);
+      if (indexEN !== -1) {
+        store.form.thaiDegree = OptionEducationLevelTH[indexEN];
+      }
+    }
+  },
+  { deep: true },
+);
 </script>
