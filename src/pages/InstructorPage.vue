@@ -51,6 +51,7 @@
       @save="store.handleSave()"
       width="50%"
       :cta-text="'createInstructor'"
+      :json="store.form"
     >
       <div class="row q-gutter-y-md">
         <q-input

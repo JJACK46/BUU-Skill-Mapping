@@ -15,6 +15,14 @@
           <div class="row">
             <div class="col text-h6 text-weight-medium">{{ title }}</div>
             <q-btn
+              v-if="json"
+              flat
+              padding="none"
+              class="q-mr-sm text-primary text-caption"
+              label="JSON"
+              @click="toggleJSONview"
+            />
+            <q-btn
               fab-mini
               flat
               padding="none"
@@ -52,6 +60,16 @@
         </q-card-actions>
       </q-form>
     </q-card>
+    <q-dialog v-model="isJSONview">
+      <q-card style="width: 50%">
+        <q-card-section class="flex justify-end">
+          <q-btn icon="close" padding="none" flat @click="isJSONview = false" />
+        </q-card-section>
+        <q-card-section class="bg-grey-1">
+          <vue-json-pretty :data="json" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-dialog>
 </template>
 
@@ -59,6 +77,8 @@
 import { QForm } from 'quasar';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { JSONDataType } from 'vue-json-pretty/types/utils';
+import VueJsonPretty from 'vue-json-pretty';
 
 const { t } = useI18n();
 // Props
@@ -67,7 +87,14 @@ defineProps<{
   width?: string;
   fullWidth?: boolean;
   ctaText?: string;
+  json?: JSONDataType;
 }>();
+
+const isJSONview = ref(false);
+
+const toggleJSONview = () => {
+  isJSONview.value = !isJSONview.value;
+};
 
 // Emits
 const emits = defineEmits<{ (e: 'save'): void }>();
