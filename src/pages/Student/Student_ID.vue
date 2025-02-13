@@ -16,7 +16,7 @@
             {{ `${student.engName}` }}
           </div>
           <div class="text-body1">
-            {{ `${student.branch?.name}` }}
+            {{ `${student.branch?.thaiName}` }}
           </div>
         </q-card-section>
       </q-card>

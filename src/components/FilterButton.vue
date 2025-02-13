@@ -103,7 +103,7 @@ const initOptions = async () => {
     strBranchOptions.value = data
       .map((b) => b.branches)
       .flat()
-      .map((b) => b?.name || '');
+      .map((b) => b?.thaiName || '');
   }
 };
 
@@ -115,7 +115,7 @@ const handleChangeFaculty = (val: string) => {
   const index = faculties.value?.findIndex((f) => f.name === val);
   if (index && index > -1) {
     strBranchOptions.value =
-      faculties.value?.[index].branches?.map((b) => b.name || '') || [];
+      faculties.value?.[index].branches?.map((b) => b.thaiName || '') || [];
   } else {
     strBranchOptions.value = [];
   }

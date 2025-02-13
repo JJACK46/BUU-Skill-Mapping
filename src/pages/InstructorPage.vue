@@ -104,21 +104,7 @@
           :rules="[requireField]"
           options-dense
         />
-        <q-select
-          outlined
-          dense
-          v-model="store.form.branchId"
-          :options="branches"
-          option-label="name"
-          :option-value="optionBranchValue"
-          map-options
-          emit-value
-          label="Branch"
-          class="col-12"
-          options-dense
-          @vue:mounted="fetchBranches"
-          :rules="[requireField]"
-        />
+        <FieldBranchOptions v-model="store.form.branch" />
         <q-select
           outlined
           dense
@@ -168,7 +154,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
 import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
 import { computed } from 'vue';
@@ -176,14 +161,12 @@ import { useRoute } from 'vue-router';
 import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
 import { requireField, ruleCodeFormat } from 'src/utils/field-rules';
-import type { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
-import { BranchService } from 'src/services/branches';
 import MainHeader from 'src/components/PageHeader.vue';
+import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
 
 const global = useGlobalStore();
-const branches = ref<Branch[]>([]);
 const store = useInstructorStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -240,13 +223,6 @@ const columns: QTableColumn[] = [
     align: 'left',
   },
 ];
-function fetchBranches() {
-  BranchService.getAll().then((res) => {
-    branches.value = res.data;
-  });
-}
-
-const optionBranchValue = (v: Branch) => v.id;
 
 useMeta({
   title: title.value,

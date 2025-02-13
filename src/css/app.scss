@@ -5,6 +5,16 @@
   margin: 0 auto;
 }
 
+.hover-row:hover {
+  color: $secondary;
+}
+.hover-btn {
+  color: $grey-6;
+}
+.hover-btn:hover {
+  color: $grey-5;
+}
+
 .body--light {
   // .q-drawer {
   //   width: 250px !important;

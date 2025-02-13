@@ -6,19 +6,49 @@
       hide-filter
       @enter-search="store.fetchData"
     />
-    <q-separator class="q-my-md" />
-    <div class="q-py-md">
-      <q-icon name="info" class="q-mr-sm" />{{
-        t('Right click to open menu of each row')
-      }}
-    </div>
     <!-- Content -->
-    <q-card flat bordered class="q-pa-md">
+    <q-card flat bordered class="q-pa-md q-mt-lg">
       <q-tree :nodes="store.getNodes" node-key="id" label-key="name">
         <template #default-header="props">
           <q-tr class="full-width q-py-xs hover-row cursor-pointer">
             <q-td>
-              <span class="text-body1">{{ props.node.name }}</span>
+              <span class="text-body1"
+                >{{ props.node.name || props.node.thaiName }}
+              </span>
+            </q-td>
+            <q-td class="q-gutter-x-sm">
+              <q-btn
+                @click="
+                  store.toggleDialog({
+                    form: props.node,
+                    title: 'New Branch',
+                  })
+                "
+                icon="arrow_left"
+                padding="none"
+                class="hover-btn"
+                flat
+              ></q-btn>
+              <q-btn
+                @click="
+                  store.toggleDialog({
+                    form: props.node,
+                  })
+                "
+                icon="edit"
+                padding="none"
+                class="hover-btn"
+                flat
+              ></q-btn>
+              <q-btn
+                @click="
+                  store.handleRemove({ id: props.node.id, node: props.node })
+                "
+                icon="delete"
+                padding="none"
+                class="hover-btn"
+                flat
+              ></q-btn>
             </q-td>
             <ContextMenu
               :custom-create="{
@@ -52,7 +82,7 @@
         </template>
         <template #default-body="node">
           <q-td v-show="node.node.engName" class="text-body2 q-pl-lg">
-            {{ node.node.engName }} {{ node.node?.abbrev }}
+            {{ node.node?.abbrev }} | {{ node.node.engName }}
           </q-td>
         </template>
       </q-tree>
@@ -69,76 +99,78 @@
     </div>
     <!-- Dialog -->
     <DialogForm
-      :title="store.titleForm"
+      :title="t(store.titleForm)"
       v-model="store.dialogState"
       @save="store.handleSave"
+      :cta-text="computedCtaText"
     >
-      <!-- Faculty -->
-      <q-input
-        v-if="store.isFacultyForm"
-        outlined
-        dense
-        label="Name *"
-        v-model="store.formFaculty.name"
-        :rules="[requireField, onlyThai]"
-      />
-      <q-input
-        v-if="store.isFacultyForm"
-        outlined
-        dense
-        label="English Name *"
-        v-model="store.formFaculty.engName"
-        :rules="[requireField, onlyEnglish]"
-      />
-      <q-input
-        v-if="store.isFacultyForm"
-        outlined
-        dense
-        label="Description"
-        hint="Optional"
-        v-model="store.formFaculty.description"
-      />
-      <q-input
-        v-if="store.isFacultyForm"
-        outlined
-        dense
-        label="Abbreviation"
-        hint="Optional"
-        v-model="store.formFaculty.abbrev"
-      />
-      <!-- Branch -->
-      <q-input
-        v-if="!store.isFacultyForm"
-        outlined
-        dense
-        label="Name *"
-        v-model="store.formBranch.name"
-        :rules="[requireField, onlyThai]"
-      />
-      <q-input
-        v-if="!store.isFacultyForm"
-        outlined
-        dense
-        label="English Name *"
-        v-model="store.formBranch.engName"
-        :rules="[requireField, onlyEnglish]"
-      />
-      <q-input
-        v-if="!store.isFacultyForm"
-        outlined
-        dense
-        label="Description"
-        hint="Optional"
-        v-model="store.formBranch.description"
-      />
-      <q-input
-        v-if="!store.isFacultyForm"
-        outlined
-        dense
-        label="Abbreviation"
-        hint="Optional"
-        v-model="store.formBranch.abbrev"
-      />
+      <div>
+        <!-- Faculty -->
+        <div class="q-gutter-y-md" v-if="store.isFacultyForm">
+          <q-input
+            outlined
+            dense
+            label="Name *"
+            v-model="store.formFaculty.name"
+            :rules="[requireField, onlyThai]"
+          />
+          <q-input
+            outlined
+            dense
+            label="English Name *"
+            v-model="store.formFaculty.engName"
+            :rules="[requireField, onlyEnglish]"
+          />
+          <q-input
+            outlined
+            dense
+            label="Description"
+            hint="Optional"
+            v-model="store.formFaculty.description"
+          />
+          <q-input
+            outlined
+            dense
+            label="Abbreviation"
+            hint="Optional"
+            v-model="store.formFaculty.abbrev"
+          />
+        </div>
+        <!-- Branch -->
+        <div class="q-gutter-y-md" v-if="!store.isFacultyForm">
+          <q-input
+            outlined
+            dense
+            label="Name *"
+            v-model="store.formBranch.thaiName"
+            :rules="[requireField, onlyThai]"
+          />
+          <q-input
+            outlined
+            dense
+            label="English Name *"
+            v-model="store.formBranch.engName"
+            :rules="[requireField, onlyEnglish]"
+          />
+          <q-input
+            outlined
+            dense
+            label="Abbreviation"
+            hint="Optional"
+            v-model="store.formBranch.abbrev"
+          />
+          <q-input
+            outlined
+            dense
+            label="Description"
+            hint="Optional"
+            type="textarea"
+            counter
+            maxlength="500"
+            v-model="store.formBranch.description"
+          />
+        </div>
+      </div>
     </DialogForm>
   </q-page>
 </template>
@@ -149,11 +181,20 @@ import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useFacultyStore } from 'src/stores/faculty-branch';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const store = useFacultyStore();
+
+const computedCtaText = computed(() => {
+  if (store.titleForm === 'New Faculty') {
+    return t('createFaculty');
+  } else if (store.titleForm === 'New Branch') {
+    return t('createBranch');
+  }
+  return undefined;
+});
 
 onMounted(async () => {
   await store.fetchData();

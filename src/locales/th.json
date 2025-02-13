@@ -102,5 +102,11 @@
   "newCurriculum": "หลักสูตรใหม่",
   "createCurriculum": "สร้างหลักสูตรใหม่",
   "addCoordinator": "เพิ่มผู้รับผิดชอบหลักสูตร",
-  "createInstructor": "สร้างผู้สอนใหม่"
+  "createInstructor": "สร้างผู้สอนใหม่",
+  "New Faculty": "คณะใหม่",
+  "createFaculty": "สร้างคณะใหม่",
+  "Edit Faculty": "แก้ไขคณะ",
+  "New Branch": "สาขาใหม่",
+  "createBranch": "สร้างสาขาใหม่",
+  "Edit Branch": "แก้ไขสาขา"
 }

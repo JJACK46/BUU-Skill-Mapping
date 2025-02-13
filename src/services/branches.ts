@@ -12,6 +12,11 @@ export class BranchService {
     };
   }
 
+  static async getOptions() {
+    const res = await api.get(`${this.path}/options`);
+    return res.data;
+  }
+
   static async getOne(id: string) {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;

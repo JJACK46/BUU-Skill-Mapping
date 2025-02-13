@@ -126,7 +126,7 @@ export const useFacultyStore = defineStore('faculty', {
       this.qDialog
         .create({
           title: 'Confirm',
-          message: `Are you sure you want to delete this <span class="text-red text-bold">${node.name}</span> ?`,
+          message: `Are you sure you want to delete this <div class="text-red text-bold col-12">${node.engName} ?</div>`,
           html: true,
           cancel: true,
           persistent: true,
