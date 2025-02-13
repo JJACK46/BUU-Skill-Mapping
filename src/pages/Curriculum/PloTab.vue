@@ -2,73 +2,74 @@
   <div class="q-py-md">
     <div class="text-h4 text-primary">PLO</div>
   </div>
-  <MainHeader
-    v-model:search-text="store.search"
-    @open-dialog="store.handleOpenDialog"
-    hide-filter
-  />
+  <div class="flex justify-end">
+    <q-btn
+      unelevated
+      color="primary"
+      :label="t('add')"
+      @click="store.handleCreate"
+    />
+  </div>
   <DialogForm
     v-model="store.dialogState"
     :title="store.getDialogTitle"
+    @save="store.handleSave"
     ref="formRef"
   >
-    <template #body>
+    <div class="row q-gutter-y-md">
       <q-input
-        v-model="store.form.id"
+        v-model="store.form.name"
         outlined
         dense
+        class="col-12"
         :label="t('name')"
-        mask="########"
+        :rules="[requireField]"
+      />
+      <q-input
+        dense
+        outlined
+        class="col-12"
+        v-model="store.form.type"
+        :label="t('type') + ' *'"
         :rules="[requireField]"
       />
       <q-input
         dense
         type="textarea"
         outlined
-        v-model="store.form.description"
+        class="col-12"
+        v-model="store.form.thaiDescription"
         :label="t('description') + ' *'"
         :rules="[requireField]"
+        counter
+        maxlength="300"
       />
-    </template>
+      <q-input
+        dense
+        type="textarea"
+        outlined
+        class="col-12"
+        v-model="store.form.engDescription"
+        :label="t('englishDescription') + ' *'"
+        :rules="[requireField]"
+        counter
+        maxlength="300"
+      />
+    </div>
   </DialogForm>
   <q-table
     flat
     bordered
     :loading="global.getLoadingState"
     class="q-mt-md q-animate--fade"
-    :rows="rows"
+    :rows="store.getListPlo"
     :columns="columns"
-    row-key="id"
+    row-key="name"
     wrap-cells
     separator="cell"
+    @update:pagination="store.fetchAll"
   >
-    <template v-slot:body="props">
-      <q-tr :props="props">
-        <q-td>
-          {{ props.rowIndex + 1 }}
-        </q-td>
-        <q-td key="id" :props="props">
-          {{ props.row.id }}
-        </q-td>
-        <q-td key="name" :props="props" width="400px">
-          {{ props.row.name }}
-        </q-td>
-        <q-td key="description" :props="props">
-          {{ props.row.description }}
-        </q-td>
-        <q-td>
-          <q-btn flat dense round color="primary" icon="edit" />
-          <q-btn
-            flat
-            dense
-            round
-            color="negative"
-            icon="delete"
-            class="q-ml-sm"
-          />
-        </q-td>
-      </q-tr>
-    </template>
+    <template #body-cell-actions> </template>
   </q-table>
 </template>
 
@@ -76,43 +77,29 @@
 import type { QTableColumn } from 'quasar';
 import { useGlobalStore } from 'src/stores/global';
 import { ref } from 'vue';
-import { usePlostore } from 'src/stores/pols';
+import { usePloStore } from 'src/stores/plo';
 import DialogForm from 'src/components/DialogForm.vue';
-import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
 import { requireField } from 'src/utils/field-rules';
 
 const { t } = useI18n();
 const global = useGlobalStore();
-const store = usePlostore();
+const store = usePloStore();
 const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
-  { name: 'id', label: 'ID', field: 'id', align: 'left' },
   { name: 'name', label: 'Name', field: 'name', align: 'left' },
   {
     name: 'description',
-    label: 'Dscription',
+    label: 'Description',
     field: 'description',
     align: 'left',
   },
-  { name: 'actions', label: 'Actions', field: 'actions', align: 'left' },
-]);
-
-const rows = ref([
   {
-    id: 1,
-    name: 'PLO 1',
-    description: '1',
+    name: 'engDescription',
+    label: 'English Description',
+    field: 'engDescription',
+    align: 'left',
   },
-  {
-    id: 2,
-    name: 'PLO 2',
-    description: '1',
-  },
-  {
-    id: 3,
-    name: 'PLO 3',
-    description: '1',
-  },
+  { name: 'actions', label: 'Actions', field: '', align: 'left' },
 ]);
 </script>

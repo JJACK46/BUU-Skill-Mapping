@@ -1,4 +1,4 @@
-import type { Plo } from './plo';
+import type { PLO } from './plo';
 import type { Skill } from './skill';
 
 export type Clo = {
@@ -6,7 +6,7 @@ export type Clo = {
   name: string;
   thaiDescription: string;
   engDescription: string;
-  plo?: Plo;
+  plo?: PLO;
   skill?: Skill;
   expectedLevel: 1 | 2 | 3 | 4 | 5;
   // courseSpec: CourseSpec; prevent circular dependency

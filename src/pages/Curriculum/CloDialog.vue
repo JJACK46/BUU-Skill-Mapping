@@ -200,9 +200,9 @@ import type { QTableColumn } from 'quasar';
 import type { Skill } from 'src/types/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
-import { usePlostore } from 'src/stores/plosmouckup';
-import type { Plo } from 'src/types/plo';
+import type { PLO } from 'src/types/plo';
 import type { CourseSpec } from 'src/types/course-spec';
+import { usePloStore } from 'src/stores/plo';
 
 const props = defineProps<{
   currId: number;
@@ -216,10 +216,10 @@ const { t } = useI18n();
 const global = useGlobalStore();
 const store = useClostore();
 const skillStore = useSkillStore();
-const plosStore = usePlostore();
-const selectedPlos = ref<Plo | null>(null);
+const plosStore = usePloStore();
+const selectedPlos = ref<PLO | null>(null);
 const selectedSkill = ref<Skill | null>(null);
-const filteredPlos = ref([...plosStore.plos]);
+const filteredPlos = ref([...plosStore.getListPlo]);
 const filteredSkills = ref([...skillStore.skills]);
 const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
@@ -249,7 +249,7 @@ const columns = ref<QTableColumn[]>([
 const filterPlos = (val: string, update: (cb: () => void) => void) => {
   if (!val.trim()) {
     update(() => {
-      filteredPlos.value = plosStore.plos; // โหลดข้อมูลจาก plosStore
+      filteredPlos.value = plosStore.getListPlo; // โหลดข้อมูลจาก plosStore
       console.log(filteredPlos.value); // ดูข้อมูลที่โหลดมา
     });
     return;
@@ -257,7 +257,7 @@ const filterPlos = (val: string, update: (cb: () => void) => void) => {
 
   const searchVal = val.toLowerCase();
   update(() => {
-    filteredPlos.value = plosStore.plos.filter(
+    filteredPlos.value = plosStore.getListPlo.filter(
       (plo) => plo.name.toLowerCase().includes(searchVal), // กรองข้อมูลตามชื่อ
     );
     console.log(filteredPlos.value); // ตรวจสอบผลลัพธ์การกรอง
@@ -283,7 +283,7 @@ const filterSkills = (val: string, update: (cb: () => void) => void) => {
 const editRow = (row) => {
   store.form = { ...row }; // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
   selectedPlos.value =
-    plosStore.plos.find((plo) => plo.id === row.ploId) || null;
+    plosStore.getListPlo.find((plo) => plo.id === row.ploId) || null;
   selectedSkill.value =
     skillStore.skills.find((skill) => skill.id === row.skillId) || null;
   store.dialogState = true; // เปิด Dialog

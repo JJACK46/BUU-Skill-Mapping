@@ -1,8 +1,10 @@
 import type { Clo } from './clo';
-
-export type Plo = {
-  id: string;
+export interface PLO {
+  id?: number;
   name: string;
-  description: string;
-  clos?: Clo[]; // CLOs
-};
+  thaiDescription: string;
+  engDescription: string;
+  type: string;
+  curriculumId: number;
+  clos?: Clo[];
+}

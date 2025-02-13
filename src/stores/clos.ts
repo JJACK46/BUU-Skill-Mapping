@@ -6,7 +6,7 @@ import type { Clo } from 'src/types/clo';
 import { convertToPageParams } from 'src/utils/pagination';
 import { useCourseSpecStore } from './course-spec';
 import { useCurriculumStore } from './curriculum';
-import { usePlostore } from './plosmouckup';
+import { usePloStore } from './plo';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
 
@@ -23,7 +23,7 @@ export const useClostore = defineStore('clo', {
     qDialog: Dialog,
     onlyHaveSubs: true,
     skillStore: useSkillStore(),
-    plosStore: usePlostore(),
+    plosStore: usePloStore(),
     courseStore: useCourseSpecStore(),
     currStore: useCurriculumStore(),
   }),
