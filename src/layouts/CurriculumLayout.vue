@@ -9,7 +9,7 @@
       </q-scroll-area>
     </AppDrawer>
     <q-page-container>
-      <q-toolbar>
+      <q-toolbar class="q-px-md">
         <q-breadcrumbs>
           <q-breadcrumbs-el :label="t('home')" icon="home" to="/" />
           <q-breadcrumbs-el
@@ -20,6 +20,7 @@
         </q-breadcrumbs>
       </q-toolbar>
       <div class="q-px-md">
+        <q-separator style="height: 2px" class="q-mb-md"></q-separator>
         <router-view />
       </div>
     </q-page-container>
