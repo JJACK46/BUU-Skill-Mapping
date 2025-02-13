@@ -5,6 +5,6 @@ export type Plo = {
   name: string;
   thaiDescription: string;
   engDescription: string;
-  type: string | null;
+  type: string;
   clos?: Clo[]; // CLOs
 };

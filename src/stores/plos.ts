@@ -4,7 +4,7 @@ import type { Plo } from 'src/types/plo';
 import PloService from 'src/services/plo';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
-type TitleForm = 'New PLO' | 'Edit PLO';
+export type TitleFormPlo = 'New Plo' | 'Edit Plo' | 'Delete Plo' | 'View';
 
 export const usePlostore = defineStore('plo', {
   state: () => ({
@@ -14,7 +14,7 @@ export const usePlostore = defineStore('plo', {
     tabsModel: 'req',
     pagination: defaultPagination,
     editMode: true,
-    titleForm: '' as TitleForm,
+    titleForm: '' as TitleFormPlo,
     search: '',
     qNotify: Notify,
     qDialog: Dialog,
@@ -40,16 +40,16 @@ export const usePlostore = defineStore('plo', {
         )
       ).data;
     },
-    async handleSave() {
+    async handleSave(payload: object) {
       if (this.form.id) {
-        const ok = await PloService.updatePlo(this.form);
+        const ok = await PloService.updatePlo(payload);
         if (ok)
           this.qNotify.create({
             type: 'ok',
             message: 'PLO updated successfully',
           });
       } else {
-        const ok = await PloService.addPlo(this.form as Plo);
+        const ok = await PloService.addPlo(payload);
         if (ok)
           this.qNotify.create({
             type: 'ok',
