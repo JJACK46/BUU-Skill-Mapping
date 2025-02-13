@@ -60,7 +60,7 @@
                 </q-item-label>
               </q-item-section>
               <q-item-section class="col">
-                <q-item-label caption>{{ plo.description }}</q-item-label>
+                <q-item-label caption>{{ plo.name }}</q-item-label>
               </q-item-section>
             </div>
           </q-item>
