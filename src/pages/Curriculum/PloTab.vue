@@ -54,6 +54,19 @@
         v-model="store.form.type"
         :label="t('type') + ' *'"
         :rules="[requireField]"
+        counter
+        maxlength="300"
+      />
+      <q-input
+        dense
+        type="textarea"
+        outlined
+        class="col-12"
+        v-model="store.form.engDescription"
+        :label="t('englishDescription') + ' *'"
+        :rules="[requireField]"
+        counter
+        maxlength="300"
       />
     </div>
   </DialogForm>
@@ -64,7 +77,7 @@
     class="q-mt-md q-animate--fade"
     :rows="store.getData"
     :columns="columns"
-    row-key="id"
+    row-key="name"
     wrap-cells
     separator="cell"
     @update:pagination="store.fetchAll"
