@@ -67,7 +67,7 @@ export const useClostore = defineStore('clo', {
 
       if (form) {
         this.titleForm = 'Edit CLO';
-        this.form = { ...form };
+        await this.fetchOneData(form.id);
       } else {
         this.titleForm = 'New CLO';
         this.form = {};

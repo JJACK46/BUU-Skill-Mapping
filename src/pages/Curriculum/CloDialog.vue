@@ -2,11 +2,12 @@
   <q-card style="max-width: 80%; max-height: 80%">
     <div style="margin: 20px">
       <div class="q-py-md">
-        <div class="text-h4 text-primary">CLOS</div>
+        <div class="text-h4 text-primary">{{ t('Clos') }}</div>
       </div>
-      <div>
+      <div class="text-h5 text-primary">
         {{ props.subject.subject.code }} - {{ props.subject.subject.engName }}
       </div>
+      <div></div>
       <MainHeader
         v-model:search-text="store.search"
         @open-dialog="store.handleOpenDialog"
@@ -14,7 +15,7 @@
       />
       <DialogForm
         v-model="store.dialogState"
-        :title="store.getDialogTitle"
+        :title="store.titleForm"
         ref="formRef"
         @save="saveClos()"
       >
@@ -25,6 +26,7 @@
               outlined
               dense
               :label="t('Name')"
+              :rules="[requireField]"
             />
           </div>
         </div>
@@ -46,6 +48,7 @@
               clearable
               @clear="store.form.skill = null"
               behavior="menu"
+              :rules="[requireField]"
             >
               <template v-slot:append>
                 <q-icon name="search" />
@@ -60,6 +63,7 @@
               dense
               :label="t('Expected Level')"
               behavior="menu"
+              :rules="[requireField]"
             >
             </q-select>
           </div>
@@ -82,6 +86,7 @@
               clearable
               @clear="store.form.plo = null"
               behavior="menu"
+              :rules="[requireField]"
             >
               <template v-slot:append>
                 <q-icon name="search" />
@@ -97,6 +102,7 @@
               type="textarea"
               outlined
               :label="t('thaiDescription') + ' *'"
+              :rules="[requireField]"
             />
           </div>
         </div>
@@ -108,6 +114,7 @@
               type="textarea"
               outlined
               :label="t('engDescription') + ' *'"
+              :rules="[requireField]"
             />
           </div>
         </div>
