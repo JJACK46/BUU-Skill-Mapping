@@ -43,6 +43,7 @@
               fill-input
               input-debounce="300"
               @filter="updateFilteredSkills"
+              @filter="updateFilteredSkills"
               :label="t('Search Skill')"
               option-value="id"
               option-label="thaiName"
@@ -82,6 +83,19 @@
             </q-card>
           </div>
         </div>
+
+        <div v-if="selectedSkill" class="row justify-between q-pb-md">
+          <div class="col-12 q-pa-sm">
+            <q-card class="q-pa-sm">
+              <div>
+                {{ selectedSkill.thaiName }} - {{ selectedSkill.domain }}
+              </div>
+              <div>
+                {{ selectedSkill.thaiDescription || '-' }}
+              </div>
+            </q-card>
+          </div>
+        </div>
         <div class="row justify-between">
           <div class="col-8 q-pa-sm">
             <q-select
@@ -93,6 +107,7 @@
               hide-selected
               fill-input
               input-debounce="300"
+              @filter="updateFilteredPlos"
               @filter="updateFilteredPlos"
               :label="t('Search PLO')"
               option-value="id"
@@ -169,6 +184,7 @@
               props.row.engDescription
             }}</q-td>
             <q-td key="actions" :props="props">
+              <q-btn flat dense round icon="edit" @click="editRow(props.row)" />
               <q-btn flat dense round icon="edit" @click="editRow(props.row)" />
               <q-btn
                 flat
@@ -325,6 +341,7 @@ const editRow = (row) => {
 };
 
 function saveClos() {
+  store.handleSave(props.subject.id);
   store.handleSave(props.subject.id);
   store.dialogState = false; // ปิด Dialog
 }
