@@ -81,25 +81,30 @@
         <q-td key="engDescription" :props="props">{{
           props.row.engDescription
         }}</q-td>
-        <q-td key="engDescription" :props="props">{{ props.row.type }}</q-td>
-        <q-td key="actions" :props="props">
-          <q-btn
-            flat
-            dense
-            round
-            color="primary"
-            icon="edit"
-            @click="store.handleEdit(props.row)"
-          />
-          <q-btn
-            flat
-            dense
-            round
-            color="negative"
-            icon="delete"
-            class="q-ml-sm"
-            @click="store.handleDelete(props.row.id)"
-          />
+        <q-td key="type" :props="props">{{ props.row.type }}</q-td>
+        <q-td
+          key="actions"
+          :props="props"
+          style="width: 120px; white-space: nowrap"
+        >
+          <div class="flex items-center gap-2">
+            <q-btn
+              flat
+              dense
+              round
+              color="primary"
+              icon="edit"
+              @click="store.handleEdit(props.row)"
+            />
+            <q-btn
+              flat
+              dense
+              round
+              color="negative"
+              icon="delete"
+              @click="store.handleDelete(props.row.id)"
+            />
+          </div>
         </q-td>
       </q-tr>
     </template>
@@ -119,22 +124,50 @@ const { t } = useI18n();
 const global = useGlobalStore();
 const store = usePloStore();
 const columns = ref<QTableColumn[]>([
-  { name: 'no', label: 'No.', field: 'no', align: 'left' },
-  { name: 'name', label: 'Name', field: 'name', align: 'left' },
+  {
+    name: 'no',
+    label: 'No.',
+    field: 'no',
+    align: 'left',
+    style: 'width: 60px',
+  },
+  {
+    name: 'name',
+    label: 'Name',
+    field: 'name',
+    align: 'left',
+    style: 'width: 150px',
+  },
   {
     name: 'thaiDescription',
     label: 'Thai Description',
-    field: 'description',
+    field: 'thaiDescription',
     align: 'left',
+    style:
+      'max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;',
   },
   {
     name: 'engDescription',
     label: 'English Description',
     field: 'engDescription',
     align: 'left',
+    style:
+      'max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;',
   },
-  { name: 'type', label: 'Type', field: 'name', align: 'left' },
-  { name: 'actions', label: 'Actions', field: '', align: 'left' },
+  {
+    name: 'type',
+    label: 'Type',
+    field: 'type',
+    align: 'left',
+    style: 'width: 120px',
+  },
+  {
+    name: 'actions',
+    label: 'Actions',
+    field: '',
+    align: 'left',
+    style: 'width: 120px',
+  }, // กำหนดขนาด
 ]);
 onMounted(() => {
   store.fetchAll(); // เรียกใช้ store เพื่อดึงข้อมูล
