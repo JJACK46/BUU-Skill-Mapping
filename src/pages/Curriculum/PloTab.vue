@@ -69,21 +69,9 @@
     separator="cell"
     @update:pagination="store.fetchAll"
   >
-    <!-- <template #body-cell-no="props">
-      <q-td>
-        {{ props.rowIndex + 1 }}
-      </q-td>
-    </template>
-    <template #body-cell-actions>
-      <q-td class="q-gutter-x-sm" style="min-width: 100px">
-        <q-btn icon="edit" padding="none" flat color="grey-8"></q-btn>
-        <q-btn icon="delete" padding="none" color="grey-8" flat></q-btn>
-      </q-td>
-    </template> -->
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td>{{ props.rowIndex + 1 }}</q-td>
-        <q-td key="id" :props="props">{{ props.row.id }}</q-td>
         <q-td key="name" :props="props" width="400px">{{
           props.row.name
         }}</q-td>
@@ -116,7 +104,6 @@
       </q-tr>
     </template>
   </q-table>
-  {{ store.getData }}
 </template>
 
 <script lang="ts" setup>
@@ -133,7 +120,6 @@ const global = useGlobalStore();
 const store = usePloStore();
 const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
-  { name: 'id', label: 'ID', field: 'id', align: 'left' },
   { name: 'name', label: 'Name', field: 'name', align: 'left' },
   {
     name: 'thaiDescription',

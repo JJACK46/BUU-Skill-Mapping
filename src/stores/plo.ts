@@ -71,10 +71,10 @@ export const usePloStore = defineStore('plo', {
     handleDelete(id: number) {
       Dialog.create({
         title: 'Confirm Deletion',
-        message: 'Are you sure you want to delete this curriculum?',
+        message: 'Are you sure you want to delete this Plo?',
         cancel: true,
         persistent: true,
-      }).onOk(async () => this.deleteOne(id));
+      }).onOk(async () => await this.deleteOne(id));
     },
 
     async handleSave() {
