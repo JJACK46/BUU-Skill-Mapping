@@ -3,6 +3,7 @@ import { Dialog, Notify } from 'quasar';
 import { PlosService } from 'src/services/plo';
 import type { PLO } from 'src/types/plo';
 import { useCurriculumStore } from './curriculum';
+import { convertToPageParams } from 'src/utils/pagination';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
 
@@ -22,13 +23,15 @@ export const usePloStore = defineStore('plo', {
   getters: {
     getDialogTitle: (s) => s.titleForm,
     getListPlo: (s) => s.listPlo,
+    getData: (c) => c.curr.form.plos || [],
   },
   actions: {
     async fetchAll() {
-      const currId = this.curr.getInsertId;
-      if (currId) {
-        this.listPlo = await PlosService.getAllInCurr(currId);
-      }
+      const { data, total } = await PlosService.getAll(
+        convertToPageParams(this.pagination, this.search),
+      );
+      this.plos = data;
+      this.totalPlos = total;
     },
 
     async createOne() {
@@ -38,6 +41,7 @@ export const usePloStore = defineStore('plo', {
           type: 'ok',
           message: 'Created successfully',
         });
+        window.location.reload(); // โหลดข้อมูลใหม่
       }
     },
     async updateOne() {
@@ -47,6 +51,7 @@ export const usePloStore = defineStore('plo', {
           type: 'ok',
           message: 'Updated successfully',
         });
+        window.location.reload(); // โหลดข้อมูลใหม่
       }
     },
 
@@ -56,8 +61,9 @@ export const usePloStore = defineStore('plo', {
         if (ok) {
           Notify.create({
             type: 'ok',
-            message: `Deleted successfully`,
+            message: 'Deleted successfully',
           });
+          window.location.reload(); // โหลดข้อมูลใหม่
         }
       }
     },
@@ -74,12 +80,12 @@ export const usePloStore = defineStore('plo', {
     async handleSave() {
       this.form.curriculumId = this.curr.getInsertId;
       if (this.titleForm === 'Edit PLO') {
-        this.updateOne();
+        await this.updateOne();
       } else {
-        this.createOne();
+        await this.createOne();
       }
       this.resetForm();
-      await this.fetchAll();
+      await this.fetchAll(); // รอให้โหลดข้อมูลใหม่ก่อน
       this.dialogState = false;
     },
 
