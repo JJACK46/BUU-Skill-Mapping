@@ -42,7 +42,7 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="filterSkills"
+              @filter="updateFilteredSkills"
               :label="t('Search Skill')"
               option-value="id"
               option-label="thaiName"
@@ -93,7 +93,7 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="filterPlos"
+              @filter="updateFilteredPlos"
               :label="t('Search PLO')"
               option-value="id"
               option-label="name"
@@ -187,18 +187,16 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from 'src/stores/global';
 import { useClostore } from 'src/stores/clos';
 import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
-import type { PLO } from 'src/types/plo';
 import type { Subject } from 'src/types/course-spec';
 import { usePloStore } from 'src/stores/plo';
 import { useSkillStore } from 'src/stores/skill';
-import type { Skill } from 'src/types/skill';
 import { requireField } from 'src/utils/field-rules';
 
 const props = defineProps<{
@@ -212,12 +210,52 @@ console.log(dialogState.value);
 const { t } = useI18n();
 const global = useGlobalStore();
 const store = useClostore();
+const ploStore = usePloStore();
 const skillStore = useSkillStore();
-const plosStore = usePloStore();
-const selectedPlos = ref<PLO | null>(null);
-const selectedSkill = ref<Skill | null>(null);
-const filteredPlos = ref([...plosStore.getListPlo]);
-const filteredSkills = ref([...skillStore.skills]);
+const selectedSkill = computed({
+  get: () => store.form.skill ?? null,
+  set: (val) => {
+    store.form.skill = val;
+  },
+});
+
+const selectedPlos = computed({
+  get: () => store.form.plo ?? null,
+  set: (val) => {
+    store.form.plo = val;
+  },
+});
+
+const filteredPlos = ref([...ploStore.getData]);
+const filteredSkills = ref([...skillStore.getSkills]);
+
+const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
+  update(() => {
+    if (!val || val.trim() === '') {
+      filteredPlos.value = [...ploStore.getData];
+    } else {
+      filteredPlos.value = ploStore.getData.filter((plo) =>
+        plo.name.toLowerCase().includes(val.toLowerCase()),
+      );
+    }
+  });
+};
+
+const updateFilteredSkills = (
+  val: string,
+  update: (cb: () => void) => void,
+) => {
+  update(() => {
+    if (!val || val.trim() === '') {
+      filteredSkills.value = [...skillStore.getSkills];
+    } else {
+      filteredSkills.value = skillStore.getSkills.filter((skill) =>
+        skill.thaiName.toLowerCase().includes(val.toLowerCase()),
+      );
+    }
+  });
+};
+
 const columns = ref<QTableColumn[]>([
   { name: 'no', label: 'No.', field: 'no', align: 'left' },
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
@@ -243,44 +281,44 @@ const columns = ref<QTableColumn[]>([
   },
 ]);
 
-const filterPlos = (val: string, update: (cb: () => void) => void) => {
-  if (!val.trim()) {
-    update(() => {
-      filteredPlos.value = plosStore.getListPlo; // โหลดข้อมูลจาก plosStore
-      console.log(filteredPlos.value); // ดูข้อมูลที่โหลดมา
-    });
-    return;
-  }
+// const filterPlos = (val: string, update: (cb: () => void) => void) => {
+//   if (!val.trim()) {
+//     update(() => {
+//       filteredPlos.value = ploStore.getData; // โหลดข้อมูลจาก plosStore
+//       console.log(filteredPlos.value); // ดูข้อมูลที่โหลดมา
+//     });
+//     return;
+//   }
 
-  const searchVal = val.toLowerCase();
-  update(() => {
-    filteredPlos.value = plosStore.getListPlo.filter(
-      (plo) => plo.name.toLowerCase().includes(searchVal), // กรองข้อมูลตามชื่อ
-    );
-    console.log(filteredPlos.value); // ตรวจสอบผลลัพธ์การกรอง
-  });
-};
+//   const searchVal = val.toLowerCase();
+//   update(() => {
+//     filteredPlos.value = ploStore.getData.filter(
+//       (plo) => plo.name.toLowerCase().includes(searchVal), // กรองข้อมูลตามชื่อ
+//     );
+//     console.log(filteredPlos.value); // ตรวจสอบผลลัพธ์การกรอง
+//   });
+// };
 
-const filterSkills = (val: string, update: (cb: () => void) => void) => {
-  if (!val.trim()) {
-    update(() => {
-      filteredSkills.value = skillStore.skills;
-    });
-    return;
-  }
+// const filterSkills = (val: string, @: (cb: () => void) => void) => {
+//   if (!val.trim()) {
+//     update(() => {
+//       filteredSkills.value = skillStore.skills;
+//     });
+//     return;
+//   }
 
-  const searchVal = val.toLowerCase();
-  update(() => {
-    filteredSkills.value = skillStore.skills.filter((skill) =>
-      skill.thaiName.toLowerCase().includes(searchVal),
-    );
-  });
-};
+//   const searchVal = val.toLowerCase();
+//   update(() => {
+//     filteredSkills.value = skillStore.skills.filter((skill) =>
+//       skill.thaiName.toLowerCase().includes(searchVal),
+//     );
+//   });
+// };
 
 const editRow = (row) => {
   store.form = { ...row }; // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
   selectedPlos.value =
-    plosStore.getListPlo.find((plo) => plo.id === row.ploId) || null;
+    ploStore.getData.find((plo) => plo.id === row.ploId) || null;
   selectedSkill.value =
     skillStore.skills.find((skill) => skill.id === row.skillId) || null;
   store.dialogState = true; // เปิด Dialog
