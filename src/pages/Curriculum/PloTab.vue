@@ -95,7 +95,14 @@
         }}</q-td>
         <q-td key="engDescription" :props="props">{{ props.row.type }}</q-td>
         <q-td key="actions" :props="props">
-          <q-btn flat dense round color="primary" icon="edit" />
+          <q-btn
+            flat
+            dense
+            round
+            color="primary"
+            icon="edit"
+            @click="store.handleEdit(props.row)"
+          />
           <q-btn
             flat
             dense
