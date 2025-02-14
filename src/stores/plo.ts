@@ -85,7 +85,6 @@ export const usePloStore = defineStore('plo', {
         await this.createOne();
       }
       this.resetForm();
-      await this.fetchAll(); // รอให้โหลดข้อมูลใหม่ก่อน
       this.dialogState = false;
     },
 
