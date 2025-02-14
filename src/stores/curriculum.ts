@@ -66,7 +66,6 @@ export const useCurriculumStore = defineStore('curriculum', {
         this.resetForm();
         await this.fetchAll();
       }
-      this.fetchAll();
     },
 
     async handleSave() {
