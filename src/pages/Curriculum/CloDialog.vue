@@ -4,8 +4,9 @@
       <div class="q-py-md">
         <div class="text-h4 text-primary">CLOS</div>
       </div>
-      <div>{{ props.subject }} - {{ props.subject.thaiName }}</div>
-      <div>{{ props.subject }}</div>
+      <div>
+        {{ props.subject.subject.code }} - {{ props.subject.subject.engName }}
+      </div>
       <MainHeader
         v-model:search-text="store.search"
         @open-dialog="store.handleOpenDialog"
@@ -18,7 +19,7 @@
         @save="saveClos()"
       >
         <div class="row justify-between">
-          <div class="col-6">
+          <div class="col-12 q-pa-sm">
             <q-input
               v-model="store.form.name"
               outlined
@@ -26,7 +27,32 @@
               :label="t('Name')"
             />
           </div>
-          <div class="col-5">
+        </div>
+        <div class="row justify-between">
+          <div class="col-8 q-pa-sm">
+            <q-select
+              v-model="selectedSkill"
+              :options="filteredSkills"
+              outlined
+              dense
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="300"
+              @filter="updateFilteredPlos"
+              :label="t('Search Skill')"
+              option-value="id"
+              option-label="thaiName"
+              clearable
+              @clear="store.form.skill = null"
+              behavior="menu"
+            >
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-select>
+          </div>
+          <div class="col-4 q-pa-sm">
             <q-select
               v-model="store.form.expectedLevel"
               :options="[1, 2, 3, 4, 5]"
@@ -38,31 +64,8 @@
             </q-select>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-12">
-            <q-input
-              v-model="store.form.thaiDescription"
-              dense
-              type="textarea"
-              outlined
-              :label="t('thaiDescription') + ' *'"
-            />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <q-input
-              v-model="store.form.engDescription"
-              dense
-              type="textarea"
-              outlined
-              :label="t('engDescription') + ' *'"
-            />
-          </div>
-        </div>
         <div class="row justify-between">
-          <div class="col-6">
+          <div class="col-8 q-pa-sm">
             <q-select
               v-model="selectedPlos"
               :options="filteredPlos"
@@ -72,71 +75,40 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="filterPlos"
+              @filter="updateFilteredSkills"
               :label="t('Search PLO')"
               option-value="id"
               option-label="name"
               clearable
+              @clear="store.form.plo = null"
               behavior="menu"
             >
               <template v-slot:append>
                 <q-icon name="search" />
               </template>
             </q-select>
-          </div>
-          <div class="col-5">
-            <q-chip
-              v-if="selectedPlos"
-              removable
-              @remove="selectedPlos = null"
-              class="q-mr-sm"
-            >
-              {{
-                selectedPlos.name.length > 25
-                  ? selectedPlos.name.slice(0, 25) + '...'
-                  : selectedPlos.name
-              }}
-            </q-chip>
           </div>
         </div>
         <div class="row justify-between">
-          <div class="col-6">
-            <q-select
-              v-model="selectedSkill"
-              :options="filteredSkills"
-              outlined
+          <div class="col-12 q-pa-sm">
+            <q-input
+              v-model="store.form.thaiDescription"
               dense
-              use-input
-              hide-selected
-              fill-input
-              input-debounce="300"
-              @filter="filterSkills"
-              :label="t('Search Skill')"
-              option-value="id"
-              option-label="thaiName"
-              clearable
-              behavior="menu"
-            >
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-select>
+              type="textarea"
+              outlined
+              :label="t('thaiDescription') + ' *'"
+            />
           </div>
-          <div class="col-12">
-            <div class="q-mb-md">
-              <q-chip
-                v-if="selectedSkill"
-                removable
-                @remove="selectedSkill = null"
-                class="q-mr-sm"
-              >
-                {{
-                  selectedSkill.thaiName.length > 25
-                    ? selectedSkill.thaiName.slice(0, 25) + '...'
-                    : selectedSkill.thaiName
-                }}
-              </q-chip>
-            </div>
+        </div>
+        <div class="row justify-between">
+          <div class="col-12 q-pa-sm">
+            <q-input
+              v-model="store.form.engDescription"
+              dense
+              type="textarea"
+              outlined
+              :label="t('engDescription') + ' *'"
+            />
           </div>
         </div>
       </DialogForm>
@@ -191,11 +163,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from 'src/stores/global';
 import { useClostore } from 'src/stores/clos';
-import { useSkillStore } from 'src/stores/skill';
 import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
@@ -289,20 +260,22 @@ const editRow = (row) => {
 };
 
 function saveClos() {
-  store.form.skillId! = selectedSkill.value.id || null;
-  store.form.ploId = selectedPlos.value.id || null;
-
   console.log('Saving:', store.form);
 
-  // store.handleSave();
+  store.handleSave();
+  store.fetchDataByCoursSpec(props.subject.id); // เรียกใช้ store เพื่อดึงข้อมูล
 
   store.dialogState = false; // ปิด Dialog
 }
 const removeOne = (rowId: number) => {
   if (confirm('Are you sure you want to delete this CLO?')) {
-    store.removeOne(rowId); // เรียกใช้ store เพื่อลบข้อมูล
+    store.removeOne(rowId);
+    store.fetchDataByCoursSpec(props.subject.id); // เรียกใช้ store เพื่อลบข้อมูล
   }
 };
+onMounted(() => {
+  store.fetchDataByCoursSpec(props.subject.id);
+});
 </script>
 
 <style scoped></style>

@@ -16,6 +16,10 @@ export class ClosService {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;
   }
+  static async getAllByCourseSpec(id: string) {
+    const res = await api.get(`${this.path}/coursSpecId/${id}`);
+    return res.data;
+  }
 
   static async createOne(obj: Partial<Clo>) {
     const res = await api.post(this.path, obj);

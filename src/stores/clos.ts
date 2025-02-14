@@ -3,26 +3,27 @@ import { Dialog, Notify } from 'quasar';
 import { ClosService } from 'src/services/clos';
 import { useSkillStore } from './skill';
 import type { Clo } from 'src/types/clo';
-import { convertToPageParams } from 'src/utils/pagination';
+// import { convertToPageParams } from 'src/utils/pagination';
 import { useCourseSpecStore } from './course-spec';
 import { useCurriculumStore } from './curriculum';
 import { usePloStore } from './plo';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
-type formClo = {
-  id: number;
-  name: string;
-  thaiDescription: string;
-  engDescription: string;
-  expectedLevel: 1 | 2 | 3 | 4 | 5;
-  ploId: number;
-  skillId: number;
-};
+// type formClo = {
+//   id: number;
+//   name: string;
+//   thaiDescription: string;
+//   engDescription: string;
+//   expectedLevel: 1 | 2 | 3 | 4 | 5;
+//   ploId: number;
+//   skillId: number;
+//   courseSpecId: number;
+// };
 export const useClostore = defineStore('clo', {
   state: () => ({
     dialogState: false,
     clos: [] as Clo[],
-    form: <Partial<formClo>>{},
+    form: <Partial<Clo>>{},
     tabsModel: 'req',
     editMode: true,
     titleForm: '' as TitleForm,
@@ -36,36 +37,33 @@ export const useClostore = defineStore('clo', {
     currStore: useCurriculumStore(),
   }),
   getters: {
-    getData: (s) =>
-      s.courseStore.currStore.form.courseSpecs?.flatMap((spec) => spec.clos) ||
-      [],
-
     // getData: (s) =>
-    //   s.courseStore.currStore.form.courseSpecs
-    //     ?.filter(
-    //       (spec) =>
-    //         spec.subject.id ===
-    //         s.courseStore.currStore.form.courseSpecs.find(
-    //           (spec) => spec.subject.id === s.currStore.form.id,
-    //         )?.subject.id,
-    //     ) // อ้างถึง subject.id
-    //     .flatMap((spec) => spec.clos) || [],
-
+    //   s.courseStore.currStore.form.courseSpecs?.flatMap((spec) => spec.clos) ||
+    //   [],
+    getData: (c) => c.clos,
     getDialogTitle: (s) => s.titleForm,
   },
   actions: {
-    async fetchData() {
-      const { data, total } = await ClosService.getAll(
-        convertToPageParams(this.pagination, this.search),
-      );
+    // async fetchData() {
+    //   const { data, total } = await ClosService.getAll(
+    //     convertToPageParams(this.pagination, this.search),
+    //   );
+    //   this.clos = data;
+    //   this.totalClos = total;
+    // },
+
+    async fetchDataByCoursSpec(id: number) {
+      const data = await ClosService.getAllByCourseSpec(id.toString());
       this.clos = data;
-      this.totalClos = total;
+    },
+    async fetchOneData(id: number) {
+      const data = await ClosService.getOne(id.toString());
+      this.form = data;
     },
 
     async handleOpenDialog(form?: Partial<Clo>) {
       await this.skillStore.fetchData();
-      await this.plosStore.fetchData();
-      console.log(this.plosStore.plos);
+      await this.plosStore.fetchDataplos();
 
       if (form) {
         this.titleForm = 'Edit CLO';
@@ -76,13 +74,13 @@ export const useClostore = defineStore('clo', {
       }
       this.dialogState = true;
     },
-    // async fetchData() {
-    //   this.courses = (await ClosService.getAll()).data;
-    // },
     async createOne() {
-      await ClosService.createOne(this.form as Clo);
-      this.dialogState = false;
-      window.location.reload();
+      const ok = await ClosService.createOne(this.form as Clo);
+      if (ok) {
+        this.clos = await ClosService.getAll(); // โหลดข้อมูลใหม่โดยไม่ต้องรีเฟรช
+        this.dialogState = false;
+        this.resetForm();
+      }
     },
     async handleSave() {
       if (this.titleForm === 'Edit Clos') {
@@ -110,7 +108,7 @@ export const useClostore = defineStore('clo', {
     },
     resetForm() {
       this.form = {};
-      this.fetchData();
+      // this.fetchData();
     },
   },
 });
