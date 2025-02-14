@@ -9,16 +9,6 @@ import { useCurriculumStore } from './curriculum';
 import { usePloStore } from './plo';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
-// type formClo = {
-//   id: number;
-//   name: string;
-//   thaiDescription: string;
-//   engDescription: string;
-//   expectedLevel: 1 | 2 | 3 | 4 | 5;
-//   ploId: number;
-//   skillId: number;
-//   courseSpecId: number;
-// };
 export const useClostore = defineStore('clo', {
   state: () => ({
     dialogState: false,
@@ -64,7 +54,7 @@ export const useClostore = defineStore('clo', {
     async handleOpenDialog(form?: Partial<Clo>) {
       await this.skillStore.fetchData();
       await this.plosStore.fetchDataplos();
-
+      console.log(this.titleForm);
       if (form) {
         this.titleForm = 'Edit CLO';
         await this.fetchOneData(form.id);
@@ -82,23 +72,44 @@ export const useClostore = defineStore('clo', {
         this.resetForm();
       }
     },
-    async handleSave() {
-      if (this.titleForm === 'Edit Clos') {
-        const ok = await ClosService.updateOne(this.form);
+    async handleSave(courseSpecId: number) {
+      console.log(this.titleForm);
+      if (this.titleForm === 'Edit CLO') {
+        const payload = {
+          id: this.form.id,
+          courseSpecId: courseSpecId,
+          name: this.form.name,
+          thaiDescription: this.form.thaiDescription,
+          engDescription: this.form.engDescription,
+          // expectedLevel: this.form.expectedLevel,
+          ploId: this.form.plo.id,
+          skillId: this.form.skill.id,
+        };
+
+        const ok = await ClosService.updateOne(payload);
         if (ok)
           this.qNotify.create({
             type: 'ok',
             message: 'Clos updated successfully',
           });
       } else {
-        const ok = await ClosService.createOne(this.form);
+        const payload = {
+          courseSpecId: courseSpecId,
+          name: this.form.name,
+          thaiDescription: this.form.thaiDescription,
+          engDescription: this.form.engDescription,
+          // expectedLevel: this.form.expectedLevel,
+          ploId: this.form.plo.id,
+          skillId: this.form.skill.id,
+        };
+        const ok = await ClosService.createOne(payload);
         if (ok)
           this.qNotify.create({
             type: 'ok',
             message: 'Clos created successfully',
           });
       }
-      this.subjects = (await ClosService.getAll()).data;
+      this.fetchDataByCoursSpec(courseSpecId);
       this.dialogState = false;
       this.resetForm();
     },
@@ -108,7 +119,6 @@ export const useClostore = defineStore('clo', {
     },
     resetForm() {
       this.form = {};
-      // this.fetchData();
     },
   },
 });

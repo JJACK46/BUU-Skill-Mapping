@@ -17,6 +17,7 @@
         v-model="store.dialogState"
         :title="store.titleForm"
         ref="formRef"
+        width="40%"
         @save="saveClos()"
       >
         <div class="row justify-between">
@@ -41,7 +42,7 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="updateFilteredPlos"
+              @filter="updateFilteredSkills"
               :label="t('Search Skill')"
               option-value="id"
               option-label="thaiName"
@@ -68,6 +69,19 @@
             </q-select>
           </div>
         </div>
+
+        <div v-if="selectedSkill" class="row justify-between q-pb-md">
+          <div class="col-12 q-pa-sm">
+            <q-card class="q-pa-sm">
+              <div>
+                {{ selectedSkill.thaiName }} - {{ selectedSkill.domain }}
+              </div>
+              <div>
+                {{ selectedSkill.thaiDescription || '-' }}
+              </div>
+            </q-card>
+          </div>
+        </div>
         <div class="row justify-between">
           <div class="col-8 q-pa-sm">
             <q-select
@@ -79,7 +93,7 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="updateFilteredSkills"
+              @filter="updateFilteredPlos"
               :label="t('Search PLO')"
               option-value="id"
               option-label="name"
@@ -92,6 +106,17 @@
                 <q-icon name="search" />
               </template>
             </q-select>
+          </div>
+        </div>
+
+        <div v-if="selectedPlos" class="row justify-between q-pb-md">
+          <div class="col-12 q-pa-sm">
+            <q-card class="q-pa-sm"
+              ><div>{{ selectedPlos.name }}</div>
+              <div>
+                {{ selectedPlos.description || '-' }}
+              </div>
+            </q-card>
           </div>
         </div>
         <div class="row justify-between">
@@ -144,19 +169,11 @@
               props.row.engDescription
             }}</q-td>
             <q-td key="actions" :props="props">
+              <q-btn flat dense round icon="edit" @click="editRow(props.row)" />
               <q-btn
                 flat
                 dense
                 round
-                color="primary"
-                icon="edit"
-                @click="editRow(props.row)"
-              />
-              <q-btn
-                flat
-                dense
-                round
-                color="negative"
                 icon="delete"
                 class="q-ml-sm"
                 @click="removeOne(props.row.id)"
@@ -267,11 +284,7 @@ const editRow = (row) => {
 };
 
 function saveClos() {
-  console.log('Saving:', store.form);
-
-  store.handleSave();
-  store.fetchDataByCoursSpec(props.subject.id); // เรียกใช้ store เพื่อดึงข้อมูล
-
+  store.handleSave(props.subject.id);
   store.dialogState = false; // ปิด Dialog
 }
 const removeOne = (rowId: number) => {

@@ -22,11 +22,13 @@ export class ClosService {
   }
 
   static async createOne(obj: Partial<Clo>) {
+    console.log(obj);
     const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
   }
 
   static async updateOne(obj: Partial<Clo>) {
+    console.log(obj);
     const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.status === HttpStatusCode.Ok;
   }
