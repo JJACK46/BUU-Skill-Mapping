@@ -130,7 +130,6 @@
       </q-tr>
     </template>
   </q-table>
-  {{ store.getData }}
 </template>
 
 <script lang="ts" setup>
