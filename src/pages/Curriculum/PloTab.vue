@@ -68,6 +68,14 @@
         counter
         maxlength="300"
       />
+      <q-input
+        dense
+        outlined
+        class="col-12"
+        v-model="store.form.type"
+        :label="t('type') + ' *'"
+        :rules="[requireField]"
+      />
     </div>
   </DialogForm>
   <q-table
@@ -77,7 +85,7 @@
     class="q-mt-md q-animate--fade"
     :rows="store.getData"
     :columns="columns"
-    row-key="name"
+    row-key="id"
     wrap-cells
     separator="cell"
     @update:pagination="store.fetchAll"
@@ -122,6 +130,7 @@
       </q-tr>
     </template>
   </q-table>
+  {{ store.getData }}
 </template>
 
 <script lang="ts" setup>
