@@ -4,7 +4,7 @@ import type { Skill } from 'src/types/skill';
 import { HttpStatusCode } from 'axios';
 class SkillService {
   static path = 'skills';
-  static addSkill = async (skill: object) => {
+  static addSkill = async (skill: Partial<Skill>) => {
     const res = await api.post(this.path, skill);
     return res.status === HttpStatusCode.Created;
   };
@@ -40,7 +40,9 @@ class SkillService {
   // };
 
   static removeSkill = async (id: number) => {
+
     const res = await api.delete(`${this.path}/${id}`);
+    // console.log(res.data)
     return res.status === HttpStatusCode.Ok;
   };
 
@@ -51,7 +53,10 @@ class SkillService {
       total: data[1],
     };
   };
-
+  static getSkillByCurr = async (currId: number) => {
+    const res = await api.get(`${this.path}/curriculumId/${currId}`);
+    return res.data
+  };
   static getOne = async (id: number) => {
     const res = await api.get<Skill>(`${this.path}/${id}`);
     return res.data;

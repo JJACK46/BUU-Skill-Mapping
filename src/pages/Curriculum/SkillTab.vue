@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { type TitleFormSkill, useSkillStore } from 'src/stores/skill';
+import { computed, ref, watch } from 'vue';
+// import { type TitleFormSkill, useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import { LearningDomain } from 'src/data/learning_domain';
 import { requireField } from 'src/utils/field-rules';
-import { QTree, useMeta, useQuasar } from 'quasar';
+import { QTree, useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import type { Skill } from 'src/types/skill';
+import { useSkillStore } from 'src/stores/skill';
+// import { matSurroundSound } from '@quasar/extras/material-icons';
+// import { prototypejs } from 'globals';
 
-const q = useQuasar();
+// const q = useQuasar();
 const store = useSkillStore();
 const curr = useCurriculumStore();
 const { t } = useI18n();
@@ -18,7 +21,6 @@ const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const searchText = ref('');
 const selectedItem = ref<Skill | null>(null);
-
 // Get all node IDs to expand initially
 // const expandedNodes = computed(() => {
 //   const getAllNodeIds = (nodes) =>
@@ -35,67 +37,81 @@ const selectedItem = ref<Skill | null>(null);
 
 const rowIndex = ref(-1);
 
-const saveSkill = (sk: Skill, rowIndex: number) => {
-  if (!curr.form.skills) {
-    curr.form.skills = [];
-  }
-  if (rowIndex >= 0) {
-    curr.form.skills.splice(rowIndex, 1, sk);
-    selectedItem.value = sk;
-  } else {
-    curr.form.skills.push(sk);
-  }
-};
+// const saveSkill = (sk: Skill, rowIndex: number) => {
+//   if (!curr.form.skills) {
+//     curr.form.skills = [];
+//   }
+//   if (rowIndex >= 0) {
+//     curr.form.skills.splice(rowIndex, 1, sk);
+//     selectedItem.value = sk;
+//   } else {
+//     curr.form.skills.push(sk);
+//   }
+// };
 
-const saveSubSkill = (sk: Skill, parentName: string) => {
-  const index = curr.form.skills.findIndex((s) => s.thaiName === parentName);
-  if (index > -1) {
-    const parent = curr.form.skills[index];
-    if (parent.children) {
-      curr.form.skills[index].children.push(sk);
-    } else {
-      parent.children = [sk];
-    }
-  }
-};
+// const saveSubSkill = (sk: Skill, parentName: string) => {
+//   const index = curr.form.skills.findIndex((s) => s.thaiName === parentName);
+//   if (index > -1) {
+//     const parent = curr.form.skills[index];
+//     if (parent.children) {
+//       curr.form.skills[index].children.push(sk);
+//     } else {
+//       parent.children = [sk];
+//     }
+//   }
+// };
 
-const handleAdd = (title: TitleFormSkill, rowIndex: number) => {
-  if (title === 'Insert Sub-Skill') {
-    saveSubSkill(store.form as Skill, store.getParentName);
-  }
-  if (title === 'New Skill' || title === 'Edit Skill') {
-    saveSkill(store.form as Skill, rowIndex);
-  }
-  store.dialogForm = false;
-};
+// const handleAdd = (title: TitleFormSkill, rowIndex: number) => {
+//   if (title === 'Insert Sub-Skill') {
+//     saveSubSkill(store.form as Skill, store.getParentName);
+//   }
+//   if (title === 'New Skill' || title === 'Edit Skill') {
+//     saveSkill(store.form as Skill, rowIndex);
+//   }
+//   store.dialogForm = false;
+// };
 
-const handleRemove = (name: string) => {
-  if (!Array.isArray(curr.form.skills)) return;
+// const handleRemove = (name: string) => {
+//   if (!Array.isArray(curr.form.skills)) return;
 
-  const deepFilter = (skills: Skill[], nameToRemove: string): Skill[] =>
-    skills
-      .map((skill) => ({
-        ...skill,
-        children: skill.children
-          ? deepFilter(skill.children, nameToRemove)
-          : [],
-      }))
-      .filter((skill) => skill.thaiName !== nameToRemove);
+//   const deepFilter = (skills: Skill[], nameToRemove: string): Skill[] =>
+//     skills
+//       .map((skill) => ({
+//         ...skill,
+//         children: skill.children
+//           ? deepFilter(skill.children, nameToRemove)
+//           : [],
+//       }))
+//       .filter((skill) => skill.thaiName !== nameToRemove);
 
-  q.dialog({
-    title: 'Confirm',
-    message: 'Are you sure you want to delete this item?',
-    cancel: true,
-    persistent: true,
-  }).onOk(() => {
-    const filteredSkills = deepFilter(curr.form.skills, name);
-    curr.form.skills.splice(0, curr.form.skills.length, ...filteredSkills);
-  });
-};
+//   q.dialog({
+//     title: 'Confirm',
+//     message: 'Are you sure you want to delete this item?',
+//     cancel: true,
+//     persistent: true,
+//   }).onOk(() => {
+//     const filteredSkills = deepFilter(curr.form.skills, name);
+//     curr.form.skills.splice(0, curr.form.skills.length, ...filteredSkills);
+//   });
+// };
 
 useMeta({
   title: title.value,
 });
+watch(
+  () => curr.getCurriculum.id,
+  (newId) => {
+    if (newId) {
+      store.fetchData2();
+    }
+  },
+  { immediate: true },
+);
+// onMounted(async () => {
+//   await curr.fetchData();
+//   // const id = curr.getInsertId;
+//   await store.fetchData2();
+// });
 </script>
 
 <template>
@@ -137,7 +153,7 @@ useMeta({
     <!-- Content -->
     <div class="row q-mt-md">
       <q-tree
-        :nodes="curr.getSkills"
+        :nodes="store.getSkills"
         node-key="thaiName"
         class="q-pa-sm col q-animate--fade q-mr-lg"
         :no-nodes-label="t('noData')"
@@ -184,7 +200,7 @@ useMeta({
                 flat
               ></q-btn>
               <q-btn
-                @click="handleRemove(props.node.name)"
+                @click="store.handleRemove(props.node)"
                 icon="delete"
                 padding="none"
                 class="hover-btn"
@@ -194,14 +210,73 @@ useMeta({
           </q-tr>
         </template>
       </q-tree>
-      <q-card class="col bg-grey-1 q-pa-md" flat>
-        {{ selectedItem }}
+      <q-card class="col bg-grey-2 q-pa-md" flat>
+        <!-- ส่วนหัว -->
+        <q-card-section
+          v-if="selectedItem && Object.keys(selectedItem).length > 0"
+        >
+          <div class="text-h5">{{ selectedItem.thaiName }}</div>
+          <!-- ขยายขนาด -->
+          <div class="text-subtitle1">{{ selectedItem.engName }}</div>
+          <q-separator class="q-my-sm" />
+          <!-- เส้นคั่น -->
+        </q-card-section>
+
+        <!-- ข้อความเริ่มต้นถ้ายังไม่เลือกข้อมูล -->
+        <q-card-section v-else>
+          <div class="text-grey-6 text-center">กรุณาเลือกข้อมูล</div>
+        </q-card-section>
+
+        <!-- Domain (Chip) -->
+        <q-card-section v-if="selectedItem && selectedItem.domain">
+          <q-chip
+            square
+            color="primary"
+            text-color="white"
+            style="
+              border-radius: 12px;
+              padding: 6px 12px;
+
+              text-align: center;
+            "
+          >
+            {{ selectedItem.domain }}
+          </q-chip>
+        </q-card-section>
+
+        <!-- คำอธิบาย -->
+        <q-card-section
+          v-if="selectedItem && Object.keys(selectedItem).length > 0"
+        >
+          <div
+            class="text-body1 q-mb-md"
+            style="
+              white-space: pre-line;
+              text-indent: 1.5em;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            "
+          >
+            {{ selectedItem.thaiDescription }}
+          </div>
+          <div
+            class="text-body1 q-mb-md"
+            style="
+              white-space: pre-line;
+              text-indent: 1.5em;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            "
+          >
+            {{ selectedItem.engDescription }}
+          </div>
+        </q-card-section>
       </q-card>
     </div>
     <!-- All in One Dialog -->
     <DialogForm
       :title="store.getTitleForm"
-      @save="handleAdd(store.getTitleForm, rowIndex)"
+      @save="store.handleSave"
       v-model="store.dialogForm"
     >
       <q-input

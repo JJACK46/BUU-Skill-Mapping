@@ -7,6 +7,7 @@ import {
   convertToPageParams,
   defaultPagination,
 } from 'src/utils/pagination';
+import { useCurriculumStore } from './curriculum';
 
 export type TitleFormSkill =
   | 'New Skill'
@@ -28,6 +29,7 @@ export const useSkillStore = defineStore('skill', {
     totalSkills: 0,
     qNotify: Notify,
     onlyHaveSubs: true,
+    curr: useCurriculumStore(),
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
@@ -37,10 +39,12 @@ export const useSkillStore = defineStore('skill', {
       calMaxPage(state.totalSkills, state.pagination!.rowsPerPage),
     getSkills: (state) => {
       if (state.onlyHaveSubs) {
-        return state.skills.filter((skill) => skill.children.length > 0);
+        return state.skills.filter((skill) => skill.children.length > 0 || !skill.parent);
       }
       return state.skills;
+
     },
+    getSubjects: (s) => s.skills,
   },
   actions: {
     // independent skill
@@ -48,13 +52,26 @@ export const useSkillStore = defineStore('skill', {
       const { data, total } = await SkillService.getAll(
         convertToPageParams(this.pagination, this.search),
       );
+      console.log("Fetched skills:", data);
       this.skills = data;
       this.totalSkills = total;
     },
+    async fetchData2() {
+      const id = this.curr.getCurriculum.id
+      const data = await SkillService.getSkillByCurr(id)
+      console.log("Fetched skills:", data);
+      this.skills = data;
+      // this.totalSkills = total;
+    },
     // independent skill
     async handleSave() {
-      if (this.parentId) {
-        const ok = await SkillService.addSubSkill(this.parentId, this.form);
+      console.log(this.form)
+      const id = this.curr.getCurriculum
+      this.form.curriculum = id
+
+      // console.log(this.parent.id)
+      if (this.parent) {
+        const ok = await SkillService.addSubSkill(this.parent.id, this.form);
         if (ok)
           this.qNotify.create({
             type: 'ok',
@@ -62,6 +79,7 @@ export const useSkillStore = defineStore('skill', {
           });
       } else {
         if (this.form.id) {
+          console.log('Update')
           const ok = await SkillService.updateSkill(this.form);
           if (ok)
             this.qNotify.create({
@@ -69,7 +87,7 @@ export const useSkillStore = defineStore('skill', {
               message: 'Skill updated successfully',
             });
         } else {
-          const ok = await SkillService.addSkill(this.form as Skill);
+          const ok = await SkillService.addSkill(this.form);
           if (ok)
             this.qNotify.create({
               type: 'ok',
@@ -77,7 +95,7 @@ export const useSkillStore = defineStore('skill', {
             });
         }
       }
-      this.fetchData();
+      this.fetchData2();
       this.dialogForm = false;
       this.resetForm();
       this.parentId = null;
@@ -105,7 +123,7 @@ export const useSkillStore = defineStore('skill', {
           if (subSkillId) {
             await SkillService.removeSubSkill(id, subSkillId);
           }
-          this.fetchData();
+          this.fetchData2();
         });
     },
     async toggleDialog({
@@ -117,6 +135,7 @@ export const useSkillStore = defineStore('skill', {
       title?: TitleFormSkill;
       parent?: Partial<Skill>;
     }) {
+      console.log(this.form)
       this.titleForm = title || 'New Skill';
       this.parent = parent || null;
       if (form) {
