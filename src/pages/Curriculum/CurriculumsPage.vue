@@ -18,43 +18,28 @@
       wrap-cells
       separator="cell"
     >
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td>
-            {{ props.rowIndex + 1 }}
-          </q-td>
-          <q-td key="code" :props="props">
-            {{ props.row.code }}
-          </q-td>
-          <q-td key="name" :props="props" width="400px">
-            {{ props.row.thaiName }}
-          </q-td>
-          <q-td key="degree" :props="props">
-            {{ props.row.thaiDegree }}
-          </q-td>
-          <q-td key="period" :props="props">
-            {{ props.row.period }} &nbsp; ปี
-          </q-td>
-          <q-td key="branch" :props="props">
-            {{ props.row.branch?.name }}
-          </q-td>
-          <q-td>
-            <q-btn
-              flat
-              dense
-              round
-              color="grey-8"
-              icon="edit"
-              @click="handleEditBtn(props.row)" />
-            <q-btn
-              flat
-              dense
-              round
-              color="grey-8"
-              icon="delete"
-              @click="store.handleDelete(props.row.id)"
-          /></q-td>
-        </q-tr>
+      <template #body-cell-number="props">
+        <q-td>
+          {{ props.rowIndex + 1 }}
+        </q-td>
+      </template>
+      <template #body-cell-actions="props">
+        <q-td>
+          <q-btn
+            flat
+            dense
+            round
+            color="grey-8"
+            icon="edit"
+            @click="handleEditBtn(props.row)" />
+          <q-btn
+            flat
+            dense
+            round
+            color="grey-8"
+            icon="delete"
+            @click="store.handleDelete(props.row.id)"
+        /></q-td>
       </template>
     </q-table>
     <!-- Dialog -->
@@ -198,22 +183,41 @@ import {
   OptionEducationLevelTH,
 } from 'src/data/education_level';
 import FieldChecker from 'src/components/FieldChecker.vue';
+
+const { t } = useI18n();
+const branches = ref<Branch[]>([]);
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
 const title = computed(() => route.matched[1].name as string);
 const store = useCurriculumStore();
-const columns = ref<QTableColumn[]>([
-  { name: 'no', label: 'No.', field: 'no', align: 'left' },
-  { name: 'code', label: 'Code', field: 'code', align: 'left' },
-  { name: 'name', label: 'Name', field: 'name', align: 'left' },
-  { name: 'degree', label: 'Degree', field: 'thaiDegree', align: 'left' },
-  { name: 'period', label: 'Period', field: 'period', align: 'left' },
-  { name: 'branch', label: 'Branch', field: 'branch', align: 'left' },
-  { name: 'actions', label: 'Actions', field: 'actions', align: 'left' },
-]);
-const { t } = useI18n();
-const branches = ref<Branch[]>([]);
+const columns = computed(
+  () =>
+    <QTableColumn[]>[
+      { name: 'number', label: t('no.'), field: 'no', align: 'left' },
+      {
+        name: 'code',
+        label: t('curriculumCode'),
+        field: 'code',
+        align: 'left',
+      },
+      { name: 'name', label: t('name'), field: 'thaiName', align: 'left' },
+      { name: 'engName', label: t('engName'), field: 'engName', align: 'left' },
+      {
+        name: 'degree',
+        label: t('degree'),
+        field: 'thaiDegree',
+        align: 'left',
+      },
+      {
+        name: 'branch',
+        label: t('branch'),
+        field: (b: Branch) => b.thaiName,
+        align: 'left',
+      },
+      { name: 'actions', label: t('actions'), field: 'actions', align: 'left' },
+    ],
+);
 
 function fetchBranches() {
   BranchService.getAll().then((res) => {
