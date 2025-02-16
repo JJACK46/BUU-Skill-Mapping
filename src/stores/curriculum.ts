@@ -39,11 +39,17 @@ export const useCurriculumStore = defineStore('curriculum', {
       this.form = res;
     },
     async fetchAll() {
-      const { data, total } = await CurriculumService.getAll(
-        convertToPageParams(this.pagination, this.search, this.filterModel),
-      );
-      this.curriculums = data;
-      this.pagination!.rowsNumber = total || 0;
+      try {
+        const { data, total } = await CurriculumService.getAll(
+          convertToPageParams(this.pagination, this.search, this.filterModel),
+        );
+        if (data) {
+          this.curriculums = data;
+          this.pagination!.rowsNumber = total || 0;
+        }
+      } catch (error) {
+        console.error('❌', error);
+      }
     },
     toggleDialogForm(form?: Partial<Curriculum>) {
       if (form) {
@@ -51,7 +57,7 @@ export const useCurriculumStore = defineStore('curriculum', {
         this.form = { ...form };
       } else {
         this.titleForm = 'New Curriculum';
-        this.form = {};
+        this.form = {} as Partial<Curriculum>;
       }
       this.dialogState = !this.dialogState;
     },
@@ -102,7 +108,7 @@ export const useCurriculumStore = defineStore('curriculum', {
 
     async checkUpdateCode(val: string) {
       if (val.length === 14) {
-        const exist = await CurriculumService.findExistCode(this.form.code);
+        const exist = await CurriculumService.getOneByCode(this.form.code);
         if (exist) {
           this.codeLabeL = 'This code already exists';
           this.foundExistCurriculum = true;

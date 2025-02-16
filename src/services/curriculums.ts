@@ -1,4 +1,4 @@
-import { HttpStatusCode } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { api } from 'boot/axios';
 import type { Curriculum } from 'src/types/curriculum';
 import type { PageParams } from 'src/types/pagination';
@@ -12,28 +12,24 @@ export class CurriculumService {
     };
   }
 
-  static async findExistCode(code: string) {
-    const res = await api.get(`${this.path}/findExistCode/${code}`);
-    return res.data;
-  }
-
   static async getOneByCode(code: string) {
-    const res = await api.get(`${this.path}/${code}`);
-    return res.data;
+    try {
+      const res = await api.get(`${this.path}/${code}`);
+      if (res.data.statusCode !== 404) {
+        return res.data;
+      }
+      return null;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response.status === 404) {
+          return null;
+        }
+      }
+      throw error;
+    }
   }
 
   static async createOne(obj: Partial<Curriculum>) {
-    // const dto = {
-    //   ...obj,
-    //   branchId: obj.branch?.id,
-    //   coordinatorListId: obj.coordinators?.map((c) => c.id),
-    //   subjectListId: obj.subjects?.map((s) => s.id),
-    // };
-
-    // delete dto.branch;
-    // delete dto.coordinators;
-    // delete dto.subjects;
-
     const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
   }
