@@ -133,7 +133,7 @@
       outlined
       clearable
       v-model="search"
-      @keyup.enter="fetchData({ ...props.pageParams, search: search })"
+      @keyup.enter="fetchData({ ...props.pageParams })"
       :label="labelSearch ?? 'Search'"
       class="col"
       dense

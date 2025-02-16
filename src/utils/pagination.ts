@@ -20,13 +20,14 @@ export const convertToPageParams = (
     page: pag?.page || 1,
     limit: pag?.rowsPerPage || 10,
     sort: pag?.sortBy || '',
-    order: pag?.descending ? 'DESC' : 'ASC',
-    search: search || '',
-    branchName: filterModel?.branchName || '',
-    curriculumName: filterModel?.curriculumName || '',
-    facultyName: filterModel?.facultyName || '',
-    subjectName: filterModel?.subjectName || '',
-  } as PageParams;
+    order: pag?.descending ? 'desc' : 'asc',
+    branchThaiName: filterModel?.branchThaiName || undefined,
+    curriculumCode: filterModel?.curriculumCode || undefined,
+    facultyThaiName: filterModel?.facultyThaiName || undefined,
+    code: filterModel?.code || undefined,
+    name: filterModel?.name || undefined,
+    email: filterModel?.email || undefined,
+  } as Partial<PageParams>;
 };
 
 export const calMaxPage = (

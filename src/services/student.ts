@@ -8,7 +8,7 @@ export class StudentService {
   }
   static path = 'students';
 
-  static async fetchData(p?: PageParams) {
+  static async fetchData(p?: Partial<PageParams>) {
     const { data } = await api.get(this.path, { params: p });
     return {
       data: data[0],

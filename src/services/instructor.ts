@@ -1,16 +1,14 @@
 import type { Instructor } from 'src/types/instructor';
 import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
+import type { DataResponse } from 'src/types/data-response';
 
 export class InstructorService {
   static path = 'instructors';
 
   static async getAll(p?: Partial<PageParams>) {
-    const { data } = await api.get(this.path, { params: p });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get<DataResponse>(this.path, { params: p });
+    return res.data;
   }
 
   static async getOne(id: number) {
@@ -19,8 +17,8 @@ export class InstructorService {
   }
 
   static async findExistCode(code: string) {
-    const res = await api.get(`${this.path}/findExistCode/${code}`);
-    return res.data;
+    const res = await api.get(this.path, { params: { code } });
+    return !!res.data;
   }
 
   static async createOne(obj: Partial<Instructor>) {

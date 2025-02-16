@@ -78,7 +78,6 @@ import { useMeta, useQuasar } from 'quasar';
 import CourseCard from 'src/components/CourseCard.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import { SubjectService } from 'src/services/subject';
-import { InstructorService } from 'src/services/instructor';
 import { useCourseStore } from 'src/stores/course';
 import type { Subject } from 'src/types/subject';
 import type { Instructor } from 'src/types/instructor';
@@ -105,7 +104,6 @@ const handleViewCourse = (id: string) => {
 const handleOpenDialog = async () => {
   store.dialogState = true;
   subjects.value = (await SubjectService.getAll()).data;
-  teachers.value = (await InstructorService.getAll()).data;
 };
 
 const handlePopup = (id: string) => {

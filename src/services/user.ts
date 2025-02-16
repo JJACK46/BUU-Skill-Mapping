@@ -5,7 +5,7 @@ import { api } from 'src/boot/axios';
 export class UserService {
   static path = 'users';
 
-  static async getAll(pag?: PageParams) {
+  static async getAll(pag?: Partial<PageParams>) {
     const { data } = await api.get(this.path, { params: pag });
     return {
       data: data[0],
