@@ -7,37 +7,37 @@ export const curriculumRoutes: RouteRecordRaw[] = [
     component: () => import('src/layouts/CurriculumLayout.vue'),
     children: [
       {
-        path: ':id',
-        name: 'Curriculum Id',
+        path: ':code',
+        name: 'Curriculum Code',
         component: () => import('src/pages/Curriculum/CurriculumTab.vue'),
       },
       {
-        path: ':id/coordinators',
+        path: ':code/coordinators',
         name: 'Coordinators of Curriculum',
         component: () => import('src/pages/Curriculum/CoordinatorsTab.vue'),
       },
       {
-        path: ':id/plos',
+        path: ':code/plos',
         name: 'PLOs',
         component: () => import('src/pages/Curriculum/PloTab.vue'),
       },
       {
-        path: ':id/skills',
+        path: ':code/skills',
         name: 'Skills of Curriculum',
         component: () => import('src/pages/Curriculum/SkillTab.vue'),
       },
       {
-        path: ':id/subjects/:subjectId/clos',
+        path: ':code/subjects/:subjectId/clos',
         name: 'ClOs',
         component: () => import('src/pages/Curriculum/CloDialog.vue'),
       },
       {
-        path: ':id/subjects',
+        path: ':code/subjects',
         name: 'Subjects of Curriculum',
         component: () => import('src/pages/Curriculum/SubjectTab.vue'),
       },
       {
-        path: ':id/summary',
+        path: ':code/summary',
         name: 'Summary of Curriculum',
         component: () => import('src/pages/Curriculum/SummaryTab.vue'),
       },
