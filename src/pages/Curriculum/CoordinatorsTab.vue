@@ -169,7 +169,7 @@ import DialogForm from 'src/components/DialogForm.vue';
 import type { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
-import { BranchService } from 'src/services/branches';
+import { BranchService } from 'src/services/branch';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
 import { useCurriculumStore } from 'src/stores/curriculum';

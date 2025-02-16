@@ -5,8 +5,10 @@ export interface Branch {
   id?: number;
   thaiName: string;
   engName: string;
-  faculty: Partial<Faculty>;
+  faculty?: Partial<Faculty>;
+  facultyId: number;
   abbrev: string;
-  description: string;
+  thaiDescription: string;
+  engDescription: string;
   curriculums?: Curriculum[];
 }

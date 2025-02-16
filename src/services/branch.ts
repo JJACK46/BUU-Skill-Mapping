@@ -23,20 +23,14 @@ export class BranchService {
   }
 
   static async createOne(obj: Partial<Branch>) {
-    const dto = {
-      facultyId: obj.faculty?.id,
-      ...obj,
-    };
-    const res = await api.post(this.path, dto);
+    delete obj.faculty;
+    const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
   }
 
   static async updateOne(obj: Partial<Branch>) {
-    const dto = {
-      facultyId: obj.faculty?.id,
-      ...obj,
-    };
-    const res = await api.patch(`${this.path}/${obj.id}`, dto);
+    delete obj.faculty;
+    const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.status === HttpStatusCode.Ok;
   }
 

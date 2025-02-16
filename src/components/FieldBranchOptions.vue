@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { BranchService } from 'src/services/branches';
+import { BranchService } from 'src/services/branch';
 import type { Branch } from 'src/types/branch';
 import { requireField } from 'src/utils/field-rules';
 import { onMounted, ref } from 'vue';

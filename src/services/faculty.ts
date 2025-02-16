@@ -6,11 +6,8 @@ export class FacultyService {
   static path = 'faculties';
 
   static async getAll(p?: Partial<PageParams>) {
-    const { data } = await api.get(this.path, { params: p });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get(this.path, { params: p });
+    return res.data;
   }
 
   static async getOne(id: string) {
@@ -19,11 +16,13 @@ export class FacultyService {
   }
 
   static async createOne(obj: Partial<Faculty>) {
+    delete obj.branch;
     const res = await api.post(this.path, obj);
     return res.data;
   }
 
   static async updateOne(obj: Partial<Faculty>) {
+    delete obj.branch;
     const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.data;
   }

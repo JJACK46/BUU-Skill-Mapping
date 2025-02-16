@@ -175,7 +175,7 @@ import {
   ruleGradeFormat,
 } from 'src/utils/field-rules';
 import { useI18n } from 'vue-i18n';
-import { BranchService } from 'src/services/branches';
+import { BranchService } from 'src/services/branch';
 import type { Branch } from 'src/types/branch';
 import type { Curriculum } from 'src/types/curriculum';
 import {

@@ -116,7 +116,7 @@ import { computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStudentStore } from 'src/stores/student';
 import { requireField } from 'src/utils/field-rules';
-import { BranchService } from 'src/services/branches';
+import { BranchService } from 'src/services/branch';
 import type { Branch } from 'src/types/branch';
 import DialogForm from 'src/components/DialogForm.vue';
 import { StudentService } from 'src/services/student';

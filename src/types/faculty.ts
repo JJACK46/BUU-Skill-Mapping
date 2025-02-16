@@ -2,9 +2,10 @@ import type { Branch } from './branch';
 
 export interface Faculty {
   id: number;
-  name: string;
+  thaiName: string;
   engName: string;
   abbrev: string;
-  description: string;
-  branches: Branch[];
+  thaiDescription: string;
+  engDescription: string;
+  branch: Branch[];
 }

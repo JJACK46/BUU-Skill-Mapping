@@ -99,9 +99,9 @@ const initOptions = async () => {
   if (data) {
     faculties.value = data;
     // convert data to string[] for options
-    strFacultyOptions.value = data.map((f) => f.name);
+    strFacultyOptions.value = data.map((f) => f.thaiName);
     strBranchOptions.value = data
-      .map((b) => b.branches)
+      .map((b) => b.branch)
       .flat()
       .map((b) => b?.thaiName || '');
   }
@@ -112,10 +112,10 @@ const emit = defineEmits<{
 }>();
 
 const handleChangeFaculty = (val: string) => {
-  const index = faculties.value?.findIndex((f) => f.name === val);
+  const index = faculties.value?.findIndex((f) => f.thaiName === val);
   if (index && index > -1) {
     strBranchOptions.value =
-      faculties.value?.[index].branches?.map((b) => b.thaiName || '') || [];
+      faculties.value?.[index].branch?.map((b) => b.thaiName || '') || [];
   } else {
     strBranchOptions.value = [];
   }

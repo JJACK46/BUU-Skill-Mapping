@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
+import type { QTreeNode } from 'quasar';
 import { Dialog, Notify } from 'quasar';
-import { BranchService } from 'src/services/branches';
+import { BranchService } from 'src/services/branch';
 import { FacultyService } from 'src/services/faculty';
 import type { Branch } from 'src/types/branch';
 import type { Faculty } from 'src/types/faculty';
@@ -29,28 +30,44 @@ export const useFacultyStore = defineStore('faculty', {
       calMaxPage(s.pagination?.rowsNumber, s.pagination?.rowsPerPage),
     isFacultyForm: (state) =>
       state.titleForm === 'New Faculty' || state.titleForm === 'Edit Faculty',
-    getNodes: (state) => {
-      return state.faculties.map((faculty) => {
-        const { branches, ...rest } = faculty;
-        return {
-          ...rest,
-          isFaculty: true,
-          children: branches.map((branch) => ({ ...branch, children: [] })),
-        };
-      });
+    getNodes: (state): QTreeNode[] => {
+      if (state.faculties) {
+        return state.faculties.map((faculty: Faculty) => {
+          const { branch, ...rest } = faculty;
+          return {
+            ...rest,
+            isFaculty: true,
+            children:
+              branch &&
+              branch.map((branch: Branch) => ({
+                ...branch,
+                children: [],
+              })),
+          };
+        });
+      }
+    },
+    getFaculties: (s) => s.faculties,
+    getJsonForm: (state) => {
+      if (
+        state.titleForm === 'New Faculty' ||
+        state.titleForm === 'Edit Faculty'
+      ) {
+        return state.formFaculty;
+      } else {
+        return state.formBranch;
+      }
     },
   },
   actions: {
     async fetchData() {
-      this.faculties = (
-        await FacultyService.getAll(
-          convertToPageParams(this.pagination, this.search),
-        )
-      ).data;
+      const res = await FacultyService.getAll(
+        convertToPageParams(this.pagination, this.search),
+      );
+      if (res.data) {
+        this.faculties = res.data;
+      }
     },
-    // async fetchDataBranch() {
-    //     this.branches = (await BranchService.getAll(convertToPageParams(this.pagination, this.search))).data;
-    // },
     async removeOne(id: string) {
       FacultyService.removeOne(id);
       this.faculties = (await FacultyService.getAll()).data;
@@ -63,7 +80,7 @@ export const useFacultyStore = defineStore('faculty', {
       title?: TitleForm;
     }) {
       if (form) {
-        if ('branches' in form) {
+        if (this.isFaculty(form)) {
           this.titleForm = 'Edit Faculty';
           this.formFaculty = { ...form } as Partial<Faculty>;
         } else {
@@ -74,7 +91,9 @@ export const useFacultyStore = defineStore('faculty', {
         if (title === 'New Branch') {
           this.titleForm = title;
           //init facultyId
-          const braForm = { faculty: { ...form } } as Partial<Branch>;
+          const braForm = {
+            facultyId: form.id,
+          } as Partial<Branch>;
           this.formBranch = braForm;
         }
       } else {
@@ -135,7 +154,7 @@ export const useFacultyStore = defineStore('faculty', {
           return;
         })
         .onOk(async () => {
-          if ('branches' in node) {
+          if ('branch' in node) {
             await FacultyService.removeOne(id);
           } else {
             await BranchService.removeOne(id);
@@ -146,6 +165,12 @@ export const useFacultyStore = defineStore('faculty', {
     resetForm() {
       this.formFaculty = {} as Partial<Faculty>;
       this.formBranch = {} as Partial<Branch>;
+    },
+
+    isFaculty(
+      form: Partial<Faculty> | Partial<Branch>,
+    ): form is Partial<Faculty> {
+      return (form as Partial<Faculty>).branch !== undefined;
     },
   },
 });
