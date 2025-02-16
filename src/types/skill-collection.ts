@@ -1,10 +1,10 @@
 import type { Skill } from './skill';
 import type { SkillExpectedLevel } from './skill-exp-lvl';
-import type { Subject } from './subject';
+import type { Lesson } from './subject';
 
 export interface SkillCollection {
   id?: number;
-  subject: Partial<Subject>;
+  subject: Partial<Lesson>;
   skill: Partial<Skill>;
   skillExpectedLevels: SkillExpectedLevel;
   gainedLevel: number;

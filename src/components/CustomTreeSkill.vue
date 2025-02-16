@@ -117,8 +117,8 @@ const formatToNodes = (skills: Skill[]): QTreeProps['nodes'] => {
     };
 
     // Recursively handle children if they exist
-    if (skill.children && skill.children.length > 0) {
-      node.children = formatToNodes(skill.children); // Recursive conversion
+    if (skill.subs && skill.subs.length > 0) {
+      node.children = formatToNodes(skill.subs); // Recursive conversion
     }
     return node;
   });

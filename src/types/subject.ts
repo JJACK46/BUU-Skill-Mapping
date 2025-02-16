@@ -1,7 +1,7 @@
 import type { Curriculum } from './curriculum';
 // import type { SkillExpectedLevel } from './skill-exp-lvl';
 
-export interface Subject {
+export interface Lesson {
   id?: number;
   code: string;
   thaiName: string;

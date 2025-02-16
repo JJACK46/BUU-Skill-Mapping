@@ -1,6 +1,7 @@
 import type { Student } from 'src/types/student';
 import { api } from 'boot/axios';
 import type { PageParams } from 'src/types/pagination';
+import type { DataResponse } from 'src/types/data-response';
 export class StudentService {
   static async postImportedStudents(items: unknown) {
     const res = await api.post(`${this.path}/import`, items);
@@ -9,11 +10,8 @@ export class StudentService {
   static path = 'students';
 
   static async fetchData(p?: Partial<PageParams>) {
-    const { data } = await api.get(this.path, { params: p });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get<DataResponse>(this.path, { params: p });
+    return res.data;
   }
 
   static async getOne(id: number) {

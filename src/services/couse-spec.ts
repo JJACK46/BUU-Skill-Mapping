@@ -1,7 +1,7 @@
 // import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 import { HttpStatusCode } from 'axios';
-import type { CourseSpec } from 'src/types/course-spec';
+import type { Subject } from 'src/types/course-spec';
 
 export class CourseSpecService {
   static path = 'course-specs';
@@ -22,7 +22,7 @@ export class CourseSpecService {
     return res.data;
   }
 
-  static async createOne(obj: Partial<CourseSpec>) {
+  static async createOne(obj: Partial<Subject>) {
     const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
   }
@@ -32,7 +32,7 @@ export class CourseSpecService {
     form,
   }: {
     currId: number;
-    form: Partial<CourseSpec>;
+    form: Partial<Subject>;
   }) {
     const res = await api.post(`${this.path}/${this.currPath}/${currId}`, form);
     return res.status === HttpStatusCode.Created;
@@ -43,7 +43,7 @@ export class CourseSpecService {
     form,
   }: {
     currId: number;
-    form: Partial<CourseSpec>;
+    form: Partial<Subject>;
   }) {
     if (!form.id) {
       console.error('Update failed: Missing ID');

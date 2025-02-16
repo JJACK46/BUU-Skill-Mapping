@@ -9,6 +9,7 @@ export type Skill = {
   engDescription: string;
   domain: LearningDomain;
   parent?: Skill;
-  children?: Skill[];
+  subs?: Skill[];
   curriculum?: Curriculum;
+  curriculumId: number;
 };

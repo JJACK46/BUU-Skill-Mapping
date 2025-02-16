@@ -93,7 +93,7 @@
               <!-- Subject ID and Details Column -->
               <div class="col-12 col-md-2">
                 <div class="text-weight-medium">
-                  {{ t('subjectCode') }} {{ cs.subject.code }}
+                  {{ t('subjectCode') }} {{ cs.lesson.code }}
                 </div>
                 <div class="text-grey-8">{{ cs.credit }} units</div>
                 <div class="text-caption text-grey-8 q-mt-xs">

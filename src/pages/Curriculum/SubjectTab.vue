@@ -26,7 +26,7 @@
     <div class="row q-gutter-sm">
       <FieldChecker
         :label="t('subjectCode')"
-        v-model="store.form.subject.code"
+        v-model="store.form.lesson.code"
         :func-update="store.checkUpdateSubjectCode"
         :found-hint="store.getSubjectCodeLabel"
         :is-found="store.foundExistSubject"

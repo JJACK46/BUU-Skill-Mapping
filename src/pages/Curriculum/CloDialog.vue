@@ -5,7 +5,7 @@
         <div class="text-h4 text-primary">{{ t('Clos') }}</div>
       </div>
       <div class="text-h5 text-primary">
-        {{ props.subject.subject.code }} - {{ props.subject.subject.engName }}
+        {{ props.subject.lesson.code }} - {{ props.subject.lesson.engName }}
       </div>
       <div></div>
       <MainHeader
@@ -195,7 +195,7 @@ import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import type { PLO } from 'src/types/plo';
-import type { CourseSpec } from 'src/types/course-spec';
+import type { Subject } from 'src/types/course-spec';
 import { usePloStore } from 'src/stores/plo';
 import { useSkillStore } from 'src/stores/skill';
 import type { Skill } from 'src/types/skill';
@@ -203,7 +203,7 @@ import { requireField } from 'src/utils/field-rules';
 
 const props = defineProps<{
   currId: number;
-  subject: CourseSpec;
+  subject: Subject;
 }>();
 
 const dialogState = defineModel<boolean>();

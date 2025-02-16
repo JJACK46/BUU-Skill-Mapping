@@ -38,11 +38,13 @@ export const useSkillStore = defineStore('skill', {
     getMaxPage: (state) =>
       calMaxPage(state.totalSkills, state.pagination!.rowsPerPage),
     getSkills: (state) => {
+      if (!state.skills) return [];
       if (state.onlyHaveSubs) {
-        return state.skills.filter((skill) => skill.children.length > 0 || !skill.parent);
+        return state.skills.filter(
+          (skill) => skill.subs.length > 0 || !skill.parent,
+        );
       }
       return state.skills;
-
     },
     getSubjects: (s) => s.skills,
   },
@@ -52,22 +54,22 @@ export const useSkillStore = defineStore('skill', {
       const { data, total } = await SkillService.getAll(
         convertToPageParams(this.pagination, this.search),
       );
-      console.log("Fetched skills:", data);
+      console.log('Fetched skills:', data);
       this.skills = data;
       this.totalSkills = total;
     },
     async fetchData2() {
-      const id = this.curr.getCurriculum.id
-      const data = await SkillService.getSkillByCurr(id)
-      console.log("Fetched skills:", data);
+      const id = this.curr.getCurriculum.id;
+      const data = await SkillService.getSkillByCurr(id);
+      console.log('Fetched skills:', data);
       this.skills = data;
       // this.totalSkills = total;
     },
     // independent skill
     async handleSave() {
-      console.log(this.form)
-      const id = this.curr.getCurriculum
-      this.form.curriculum = id
+      console.log(this.form);
+      const id = this.curr.getCurriculum;
+      this.form.curriculum = id;
 
       // console.log(this.parent.id)
       if (this.parent) {
@@ -79,7 +81,7 @@ export const useSkillStore = defineStore('skill', {
           });
       } else {
         if (this.form.id) {
-          console.log('Update')
+          console.log('Update');
           const ok = await SkillService.updateSkill(this.form);
           if (ok)
             this.qNotify.create({
@@ -135,7 +137,7 @@ export const useSkillStore = defineStore('skill', {
       title?: TitleFormSkill;
       parent?: Partial<Skill>;
     }) {
-      console.log(this.form)
+      console.log(this.form);
       this.titleForm = title || 'New Skill';
       this.parent = parent || null;
       if (form) {

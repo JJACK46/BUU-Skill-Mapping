@@ -4,7 +4,7 @@ import SkillService from 'src/services/skill';
 import { SubjectService } from 'src/services/subject';
 import type { FilterModel } from 'src/types/filter';
 import type { Skill } from 'src/types/skill';
-import type { Subject } from 'src/types/subject';
+import type { Lesson } from 'src/types/subject';
 import { useRouter } from 'vue-router';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
@@ -13,9 +13,9 @@ type TitleForm = 'New Subject' | 'Edit Subject';
 export const useSubjectStore = defineStore('subject', {
   state: () => ({
     dialogState: false,
-    subjects: <Subject[]>[],
-    currsubjects: <Subject[]>[],
-    form: <Partial<Subject>>{},
+    subjects: <Lesson[]>[],
+    currsubjects: <Lesson[]>[],
+    form: <Partial<Lesson>>{},
     skillOptions: <Skill[]>[],
     tabsModel: 'req',
     editMode: true,
@@ -32,7 +32,7 @@ export const useSubjectStore = defineStore('subject', {
     getSkillOptions: (s) => s.skillOptions,
     getDialogTitle: (s) => s.titleForm,
     getSubjects: (s) => s.subjects,
-    getSubjectsByCu: (s) => s.currsubjects
+    getSubjectsByCu: (s) => s.currsubjects,
   },
   actions: {
     async fetchData() {
@@ -54,15 +54,15 @@ export const useSubjectStore = defineStore('subject', {
         // this.form.skillExpectedLevels = [];
         // const ok = await CurriculumService.addSubject(this.curriculumId, this.form);
         const ok = await SubjectService.createOne(this.form);
-        console.log(this.form)
-        console.log(ok)
+        console.log(this.form);
+        console.log(ok);
         if (ok)
           this.qNotify.create({
             type: 'ok',
             message: 'Subject created successfully',
           });
       }
-      console.log(this.curriculumId)
+      console.log(this.curriculumId);
       // this.subjects = (await SubjectService.getSubjectByCurriculums(this.curriculumId)).data;
       this.subjects = (await SubjectService.getAll()).data;
       this.dialogState = false;
@@ -72,14 +72,16 @@ export const useSubjectStore = defineStore('subject', {
       this.skillOptions = (await SkillService.getAll()).data; // need to update for fetch only options
     },
     async fetchSubjectsByCurriculum(id: number) {
-      this.currsubjects = (await SubjectService.getSubjectByCurriculums(id)).data;
+      this.currsubjects = (
+        await SubjectService.getSubjectByCurriculums(id)
+      ).data;
       if (this.subjects) {
-        console.log('fetch subjects')
+        console.log('fetch subjects');
       } else {
-        console.log('Not found')
+        console.log('Not found');
       }
     },
-    handleOpenDialog(form?: Partial<Subject>) {
+    handleOpenDialog(form?: Partial<Lesson>) {
       if (form) {
         this.titleForm = 'Edit Subject';
         this.form = { ...form };

@@ -1,17 +1,15 @@
 import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
-import type { Subject } from 'src/types/subject';
+import type { Lesson } from 'src/types/subject';
 import { HttpStatusCode } from 'axios';
+import type { DataResponse } from 'src/types/data-response';
 
 export class SubjectService {
   static path = 'subjects';
 
   static async getAll(p?: Partial<PageParams>) {
-    const { data } = await api.get(this.path, { params: p });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get<DataResponse>(this.path, { params: p });
+    return res.data;
   }
 
   static async getOne(id: number) {
@@ -19,12 +17,12 @@ export class SubjectService {
     return res.data;
   }
 
-  static async createOne(obj: Partial<Subject>) {
+  static async createOne(obj: Partial<Lesson>) {
     const res = await api.post(this.path, obj);
     return res.status === HttpStatusCode.Created;
   }
 
-  static async updateOne(obj: Partial<Subject>) {
+  static async updateOne(obj: Partial<Lesson>) {
     try {
       const res = await api.patch(`${this.path}/${obj.id}`, obj);
       return res.status === HttpStatusCode.Ok;

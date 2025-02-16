@@ -2,6 +2,7 @@ import type { PageParams } from 'src/types/pagination';
 import { api } from 'boot/axios';
 import type { Skill } from 'src/types/skill';
 import { HttpStatusCode } from 'axios';
+import type { DataResponse } from 'src/types/data-response';
 class SkillService {
   static path = 'skills';
   static addSkill = async (skill: Partial<Skill>) => {
@@ -29,7 +30,7 @@ class SkillService {
 
   static removeSubSkill = async (id: number, subSkillId: number) => {
     const res = await api.patch(
-      `${this.path}/${id}/removeSubSkill/${subSkillId}`
+      `${this.path}/${id}/removeSubSkill/${subSkillId}`,
     );
     return res.status === HttpStatusCode.Ok;
   };
@@ -40,22 +41,18 @@ class SkillService {
   // };
 
   static removeSkill = async (id: number) => {
-
     const res = await api.delete(`${this.path}/${id}`);
     // console.log(res.data)
     return res.status === HttpStatusCode.Ok;
   };
 
   static getAll = async (p?: Partial<PageParams>) => {
-    const { data } = await api.get(this.path, { params: p });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get<DataResponse>(this.path, { params: p });
+    return res.data;
   };
   static getSkillByCurr = async (currId: number) => {
     const res = await api.get(`${this.path}/curriculumId/${currId}`);
-    return res.data
+    return res.data;
   };
   static getOne = async (id: number) => {
     const res = await api.get<Skill>(`${this.path}/${id}`);

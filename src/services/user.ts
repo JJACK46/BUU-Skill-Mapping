@@ -1,16 +1,14 @@
 import type { User } from 'src/types/user';
 import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
+import type { DataResponse } from 'src/types/data-response';
 
 export class UserService {
   static path = 'users';
 
   static async getAll(pag?: Partial<PageParams>) {
-    const { data } = await api.get(this.path, { params: pag });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get<DataResponse>(this.path, { params: pag });
+    return res.data;
   }
 
   static async getOne(id: number) {

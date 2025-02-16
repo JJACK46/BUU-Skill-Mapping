@@ -11,6 +11,7 @@ export interface Student {
   courseEnrollment: Partial<CourseEnrollment>[];
   skillCollection: SkillCollection[];
   socials?: Partial<SocialForm>;
-  branch: Partial<Branch> | null;
+  branch?: Partial<Branch> | null;
+  branchId: number;
   tel: string;
 }

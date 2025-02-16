@@ -3,25 +3,25 @@ import { Dialog, Notify, type QTableColumn } from 'quasar';
 import type { FilterModel } from 'src/types/filter';
 import { useRouter } from 'vue-router';
 // import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
-import type { CourseSpec } from 'src/types/course-spec';
+import type { Subject } from 'src/types/course-spec';
 import { CourseSpecService } from 'src/services/couse-spec';
 import { useCurriculumStore } from 'src/stores/curriculum';
 
-import type { Subject } from 'src/types/subject';
+import type { Lesson } from 'src/types/subject';
 
 type TitleForm = 'New Subject' | 'Edit Subject';
 
-const initForm = <Partial<CourseSpec>>{
+const initForm = <Partial<Subject>>{
   thaiDescription: '',
   engDescription: '',
   thaiName: '',
   engName: '',
   curriculumId: -1,
-  subject: {
+  lesson: {
     code: '',
     thaiName: '',
     engName: '',
-  } as Subject,
+  } as Lesson,
   clos: [],
 };
 
@@ -29,7 +29,7 @@ export const useCourseSpecStore = defineStore('course-spec', {
   state: () => ({
     dialogState: false,
     form: initForm,
-    listCourseSpec: [] as CourseSpec[],
+    listCourseSpec: [] as Subject[],
     tabsModel: 'req',
     editMode: true,
     titleForm: '' as TitleForm,
@@ -129,7 +129,7 @@ export const useCourseSpecStore = defineStore('course-spec', {
         console.error('Error fetching data:', error);
       }
     },
-    async handleSave({ form }: { form: Partial<CourseSpec> }) {
+    async handleSave({ form }: { form: Partial<Subject> }) {
       this.curriculumId = this.currStore.getInsertId;
       if (this.titleForm === 'Edit Subject') {
         const ok = await CourseSpecService.updateOneInCurr({
@@ -160,7 +160,7 @@ export const useCourseSpecStore = defineStore('course-spec', {
     handleOpenDialog({
       form,
       rowIndex,
-    }: { form?: Partial<CourseSpec>; rowIndex?: number } = {}) {
+    }: { form?: Partial<Subject>; rowIndex?: number } = {}) {
       this.rowIndex = rowIndex || -1;
       if (form) {
         this.titleForm = 'Edit Subject';
@@ -177,15 +177,15 @@ export const useCourseSpecStore = defineStore('course-spec', {
       subject,
       rowIndex,
     }: {
-      subject: Subject;
+      subject: Lesson;
       rowIndex: number;
     }) {
       // pre-object
       const cs = {
-        subject,
+        lesson: subject,
         curriculumId: this.curriculumId,
         clos: [],
-      } as CourseSpec;
+      } as Subject;
       // if exist, update
       if (rowIndex !== -1) {
         this.listCourseSpec.courseSpecs[rowIndex] = cs;

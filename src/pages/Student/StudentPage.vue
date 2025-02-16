@@ -13,7 +13,7 @@
       bordered
       class="q-animate--fade"
       separator="cell"
-      :rows="store.students || []"
+      :rows="store.getStudents"
       row-key="id"
       :pagination="store.pagination"
       :loading="global.getLoadingState"
@@ -50,21 +50,7 @@
       v-model="store.dialogState"
       @save="store.handleSave"
     >
-      <q-select
-        :options="branches"
-        option-label="name"
-        @vue:mounted="
-          async () => {
-            const { data } = await BranchService.getAll();
-            branches = data;
-          }
-        "
-        outlined
-        v-model="store.formStudent.branch"
-        label="Branch *"
-        clearable
-        :rules="[requireField]"
-      />
+      <FieldBranchOptions v-model="store.formStudent.branchId" />
       <q-input
         outlined
         v-model="store.formStudent.name"
@@ -79,12 +65,7 @@
         clearable
         :rules="[requireField]"
       />
-      <q-input
-        label="Date Enrolled"
-        readonly
-        outlined
-        v-model="store.formStudent.dateEnrollment as string"
-      >
+      <q-input label="Date Enrolled" readonly outlined v-model="fieldDate">
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy
@@ -116,8 +97,6 @@ import { computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStudentStore } from 'src/stores/student';
 import { requireField } from 'src/utils/field-rules';
-import { BranchService } from 'src/services/branch';
-import type { Branch } from 'src/types/branch';
 import DialogForm from 'src/components/DialogForm.vue';
 import { StudentService } from 'src/services/student';
 
@@ -125,14 +104,15 @@ import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useGlobalStore } from 'src/stores/global';
 import { downloadTemplateForStudents } from 'src/utils/file-template';
 import MainHeader from 'src/components/PageHeader.vue';
+import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
 
 const global = useGlobalStore();
 const router = useRouter();
 const search = ref('');
 const store = useStudentStore();
-const branches = ref<Branch[]>([]);
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
+const fieldDate = store.formStudent.dateEnrollment as string;
 const studentColumns: QTableColumn[] = [
   {
     name: 'id',

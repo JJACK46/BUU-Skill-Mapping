@@ -193,7 +193,7 @@ import { ref, watch } from 'vue';
 import type { Faculty } from 'src/types/faculty';
 import type { Branch } from 'src/types/branch';
 import type { Curriculum } from 'src/types/curriculum';
-import type { Subject } from 'src/types/subject';
+import type { Lesson } from 'src/types/subject';
 import type { Skill } from 'src/types/skill';
 import { api } from 'src/boot/axios';
 import type { PageParams } from 'src/types/pagination';
@@ -217,7 +217,7 @@ const search = ref('');
 const faculties = ref<Partial<Faculty>[]>([]);
 const branches = ref<Partial<Branch>[]>([]);
 const curriculums = ref<Partial<Curriculum>[]>([]);
-const subjects = ref<Partial<Subject>[]>([]);
+const subjects = ref<Partial<Lesson>[]>([]);
 const skills = ref<Partial<Skill>[]>([]);
 // const techSkills = ref<any[]>([]);
 const selectedFaculty = ref();
@@ -349,7 +349,7 @@ const handleChangeCurriculum = async (v: Curriculum) => {
   }
 };
 
-const handleChangeSubject = async (v: Subject) => {
+const handleChangeSubject = async (v: Lesson) => {
   if (!props.bySkill) {
     return;
   }

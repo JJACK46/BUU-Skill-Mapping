@@ -17,12 +17,14 @@ export const useStudentStore = defineStore('student', {
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
+    getStudents: (s) => s.students,
   },
   actions: {
     async fetchData() {
       const { data } = await StudentService.fetchData(
         convertToPageParams(this.pagination),
       );
+      if (!data) return;
       this.students = data;
     },
     async handleSave(form?: Partial<Student>) {

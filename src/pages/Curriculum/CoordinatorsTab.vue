@@ -100,18 +100,7 @@
         options-dense
         readonly
       />
-      <q-select
-        outlined
-        dense
-        v-model="store.form.branch"
-        :options="branches"
-        option-label="name"
-        label="Branch"
-        class="col-12 bg-grey-2"
-        options-dense
-        @vue:mounted="fetchBranches"
-        readonly
-      />
+      <FieldBranchOptions v-model="store.form.branchId" />
       <q-select
         outlined
         dense
@@ -166,19 +155,17 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
-import type { Branch } from 'src/types/branch';
 import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
-import { BranchService } from 'src/services/branch';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import type { Coordinator } from 'src/types/coordinator';
 import FieldChecker from 'src/components/FieldChecker.vue';
+import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
 
 const { t } = useI18n();
 const global = useGlobalStore();
-const branches = ref<Branch[]>([]);
 const store = useInstructorStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
@@ -239,11 +226,6 @@ const columns: QTableColumn[] = [
     align: 'left',
   },
 ];
-function fetchBranches() {
-  BranchService.getAll().then((res) => {
-    branches.value = res.data;
-  });
-}
 
 const handleSave = () => {
   const index = rowIndex.value;

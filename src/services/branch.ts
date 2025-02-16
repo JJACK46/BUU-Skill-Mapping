@@ -2,14 +2,12 @@ import type { Branch } from 'src/types/branch';
 import { api } from 'boot/axios';
 import type { PageParams } from 'src/types/pagination';
 import { HttpStatusCode } from 'axios';
+import type { DataResponse } from 'src/types/data-response';
 export class BranchService {
   static path = 'branches';
   static async getAll(p?: Partial<PageParams>) {
-    const { data } = await api.get(this.path, { params: p });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get<DataResponse>(this.path, { params: p });
+    return res.data;
   }
 
   static async getOptions() {

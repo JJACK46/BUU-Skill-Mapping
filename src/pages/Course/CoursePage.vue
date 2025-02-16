@@ -79,12 +79,12 @@ import CourseCard from 'src/components/CourseCard.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import { SubjectService } from 'src/services/subject';
 import { useCourseStore } from 'src/stores/course';
-import type { Subject } from 'src/types/subject';
 import type { Instructor } from 'src/types/instructor';
 import { requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import MainHeader from 'src/components/PageHeader.vue';
+import type { Subject } from 'src/types/course-spec';
 
 const $q = useQuasar();
 const route = useRoute();
@@ -103,7 +103,7 @@ const handleViewCourse = (id: string) => {
 
 const handleOpenDialog = async () => {
   store.dialogState = true;
-  subjects.value = (await SubjectService.getAll()).data;
+  subjects.value = (await SubjectService.getAll()).data as Subject[];
 };
 
 const handlePopup = (id: string) => {

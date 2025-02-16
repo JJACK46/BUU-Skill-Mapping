@@ -1,8 +1,8 @@
 import type { Branch } from './branch';
-import type { Subject } from './subject';
+import type { Lesson } from './subject';
 import type { PLO } from './plo';
 import type { Skill } from './skill';
-import type { CourseSpec } from './course-spec';
+import type { Subject } from './course-spec';
 import type { Coordinator } from './coordinator';
 export interface Curriculum {
   id?: number;
@@ -17,8 +17,8 @@ export interface Curriculum {
   minimumGrade: string; //decimal point for DTO
   coordinators: Coordinator[];
   plos?: PLO[];
-  subjects: Subject[];
-  courseSpecs?: CourseSpec[];
+  subjects: Lesson[];
+  courseSpecs?: Subject[];
   branch: Branch;
   skills?: Skill[];
 }
