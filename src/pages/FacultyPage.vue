@@ -137,7 +137,7 @@
             hint="Optional"
             type="textarea"
             counter
-            maxlength="500"
+            maxlength="1000"
             v-model="store.formFaculty.thaiDescription"
           />
           <q-input
@@ -147,7 +147,7 @@
             hint="Optional"
             type="textarea"
             counter
-            maxlength="500"
+            maxlength="1000"
             v-model="store.formFaculty.engDescription"
           />
         </div>
@@ -181,7 +181,7 @@
             type="textarea"
             counter
             :rules="[requireField]"
-            maxlength="500"
+            maxlength="1000"
             v-model="store.formBranch.thaiDescription"
           />
           <q-input
@@ -191,7 +191,7 @@
             hint="Optional"
             type="textarea"
             counter
-            maxlength="500"
+            maxlength="1000"
             v-model="store.formBranch.engDescription"
           />
         </div>

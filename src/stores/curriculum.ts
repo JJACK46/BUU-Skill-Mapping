@@ -43,7 +43,7 @@ export const useCurriculumStore = defineStore('curriculum', {
         const { data, total } = await CurriculumService.getAll(
           convertToPageParams(this.pagination, this.search, this.filterModel),
         );
-        if (data) {
+        if (total > 0) {
           this.curriculums = data;
           this.pagination!.rowsNumber = total || 0;
         }

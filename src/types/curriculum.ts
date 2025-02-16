@@ -14,7 +14,7 @@ export interface Curriculum {
   thaiDescription: string;
   engDescription: string;
   period: number;
-  minimumGrade: number;
+  minimumGrade: string; //decimal point for DTO
   coordinators: Coordinator[];
   plos?: PLO[];
   subjects: Subject[];

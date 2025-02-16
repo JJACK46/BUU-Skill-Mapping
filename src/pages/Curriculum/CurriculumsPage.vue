@@ -48,6 +48,7 @@
       :title="t('newCurriculum')"
       :cta-text="'createCurriculum'"
       @save="store.handleCreateOne()"
+      :json="store.form"
       width="50%"
     >
       <div class="row q-gutter-y-md">
@@ -114,22 +115,14 @@
           dense
           outlined
           mask="#.##"
-          v-model.number="store.form.minimumGrade"
+          v-model="store.form.minimumGrade"
           :label="t('minimumGrade') + ' *'"
           :rules="[requireField, ruleGradeFormat]"
           class="col-2 q-mr-md"
         />
-        <q-select
-          dense
-          outlined
-          v-model="store.form.branch"
-          :options="branches"
-          :label="t('branches') + ' *'"
-          option-label="name"
-          :rules="[requireField]"
-          @vue:mounted="fetchBranches"
-          class="col"
-        ></q-select>
+        <div class="col">
+          <FieldBranchOptions v-model="store.form.branch" />
+        </div>
         <q-input
           dense
           type="textarea"
@@ -139,7 +132,7 @@
           :rules="[requireField]"
           class="col-12"
           counter
-          maxlength="500"
+          maxlength="1000"
         />
         <q-input
           dense
@@ -150,7 +143,7 @@
           :rules="[requireField]"
           class="col-12"
           counter
-          maxlength="500"
+          maxlength="1000"
         >
         </q-input>
       </div>
@@ -163,7 +156,7 @@ import type { QTableColumn } from 'quasar';
 import { useMeta } from 'quasar';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGlobalStore } from 'src/stores/global';
 import DialogForm from 'src/components/DialogForm.vue';
@@ -175,7 +168,6 @@ import {
   ruleGradeFormat,
 } from 'src/utils/field-rules';
 import { useI18n } from 'vue-i18n';
-import { BranchService } from 'src/services/branch';
 import type { Branch } from 'src/types/branch';
 import type { Curriculum } from 'src/types/curriculum';
 import {
@@ -183,9 +175,9 @@ import {
   OptionEducationLevelTH,
 } from 'src/data/education_level';
 import FieldChecker from 'src/components/FieldChecker.vue';
+import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
 
 const { t } = useI18n();
-const branches = ref<Branch[]>([]);
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
@@ -218,12 +210,6 @@ const columns = computed(
       { name: 'actions', label: t('actions'), field: 'actions', align: 'left' },
     ],
 );
-
-function fetchBranches() {
-  BranchService.getAll().then((res) => {
-    branches.value = res.data;
-  });
-}
 
 onMounted(async () => {
   await store.fetchAll();

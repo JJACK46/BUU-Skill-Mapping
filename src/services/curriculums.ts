@@ -1,15 +1,13 @@
 import { AxiosError, HttpStatusCode } from 'axios';
 import { api } from 'boot/axios';
 import type { Curriculum } from 'src/types/curriculum';
+import type { DataResponse } from 'src/types/data-response';
 import type { PageParams } from 'src/types/pagination';
 export class CurriculumService {
   static path = 'curriculums';
   static async getAll(p?: Partial<PageParams>) {
-    const { data } = await api.get(this.path, { params: p });
-    return {
-      data: data[0],
-      total: data[1],
-    };
+    const res = await api.get<DataResponse>(this.path, { params: p });
+    return res.data;
   }
 
   static async getOneByCode(code: string) {
@@ -35,10 +33,12 @@ export class CurriculumService {
   }
 
   static async updateOne(obj: Partial<Curriculum>) {
-    if (!obj.id) {
-      console.error('Update failed: Missing ID');
-      return false;
-    }
+    // dto validation
+    delete obj.plos;
+    delete obj.subjects;
+    delete obj.branch;
+    delete obj.skills;
+    delete obj.coordinators;
     const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.status === HttpStatusCode.Ok;
   }
