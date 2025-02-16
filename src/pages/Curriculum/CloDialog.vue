@@ -42,7 +42,7 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="updateFilteredSkills"
+              @filter="filterSkills"
               :label="t('Search Skill')"
               option-value="id"
               option-label="thaiName"
@@ -93,7 +93,7 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="updateFilteredPlos"
+              @filter="filterPlos"
               :label="t('Search PLO')"
               option-value="id"
               option-label="name"
@@ -114,7 +114,7 @@
             <q-card class="q-pa-sm"
               ><div>{{ selectedPlos.name }}</div>
               <div>
-                {{ selectedPlos.description || '-' }}
+                {{ selectedPlos.thaiDescription || '-' }}
               </div>
             </q-card>
           </div>
@@ -187,7 +187,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from 'src/stores/global';
 import { useClostore } from 'src/stores/clos';
@@ -197,6 +197,9 @@ import MainHeader from 'src/components/PageHeader.vue';
 import type { PLO } from 'src/types/plo';
 import type { CourseSpec } from 'src/types/course-spec';
 import { usePloStore } from 'src/stores/plo';
+import { useSkillStore } from 'src/stores/skill';
+import type { Skill } from 'src/types/skill';
+import { requireField } from 'src/utils/field-rules';
 
 const props = defineProps<{
   currId: number;
