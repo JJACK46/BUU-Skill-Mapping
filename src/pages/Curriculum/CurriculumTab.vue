@@ -4,7 +4,7 @@
       {{ t('curriculum') }}
     </div>
     <div class="q-mt-lg q-gutter-y-md">
-      <FieldBranchOptions v-model="store.form.branch" />
+      <FieldBranchOptions v-model="store.form.branchId" />
 
       <q-input
         dense
@@ -35,7 +35,7 @@
         :label="t('description') + ' *'"
         :rules="[requireField]"
         counter
-        maxlength="500"
+        maxlength="1000"
       />
       <q-input
         dense
@@ -45,7 +45,7 @@
         :label="t('englishDescription') + ' *'"
         :rules="[requireField]"
         counter
-        maxlength="500"
+        maxlength="1000"
       />
       <q-select
         dense
@@ -74,11 +74,12 @@
       </q-input>
       <q-input
         dense
-        type="number"
         outlined
-        v-model.number="store.form.minimumGrade"
+        mask="#.##"
+        v-model="store.form.minimumGrade"
         :label="t('minimumGrade') + ' *'"
-        :rules="[requireField]"
+        :rules="[requireField, ruleGradeFormat]"
+        class="col-2 q-mr-md"
       />
       <div class="row col-12">
         <q-btn
@@ -95,7 +96,11 @@
 </template>
 
 <script lang="ts" setup>
-import { onlyAlphabet, requireField } from 'src/utils/field-rules';
+import {
+  onlyAlphabet,
+  requireField,
+  ruleGradeFormat,
+} from 'src/utils/field-rules';
 import { onMounted, watch } from 'vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useI18n } from 'vue-i18n';

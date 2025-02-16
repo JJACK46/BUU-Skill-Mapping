@@ -24,6 +24,7 @@ import { onMounted, ref } from 'vue';
 const model = defineModel();
 const branches = ref<Branch[]>([]);
 
+// return branch id
 const optionBranchValue = (branch: Branch) => branch.id;
 
 onMounted(async () => {

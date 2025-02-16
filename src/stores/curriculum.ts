@@ -4,7 +4,6 @@ import { CurriculumService } from 'src/services/curriculums';
 import type { Curriculum } from 'src/types/curriculum';
 import type { FilterModel } from 'src/types/filter';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
-import { useRouter } from 'vue-router';
 type TitleForm = 'New Curriculum' | 'Edit Curriculum';
 export const useCurriculumStore = defineStore('curriculum', {
   state: () => ({
@@ -13,10 +12,8 @@ export const useCurriculumStore = defineStore('curriculum', {
     curriculumsOptions: <Curriculum[]>[],
     pagination: defaultPagination,
     dialogState: false,
-    tabsModel: 'main',
-    titleForm: '' as TitleForm,
-    router: useRouter(),
     search: '',
+    titleForm: '' as TitleForm,
     filterModel: {} as Partial<FilterModel>,
     foundExistCurriculum: false,
     codeLabeL: '',
@@ -101,7 +98,7 @@ export const useCurriculumStore = defineStore('curriculum', {
             type: 'ok',
             message: 'Curriculum removed successfully',
           });
-          await this.fetchData();
+          await this.fetchOne();
         }
       });
     },
@@ -117,6 +114,10 @@ export const useCurriculumStore = defineStore('curriculum', {
           this.foundExistCurriculum = false;
         }
       }
+    },
+
+    resetForm() {
+      this.form = {} as Partial<Curriculum>;
     },
   },
 });
