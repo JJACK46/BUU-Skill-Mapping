@@ -4,6 +4,7 @@ import { PlosService } from 'src/services/plo';
 import type { PLO } from 'src/types/plo';
 import { useCurriculumStore } from './curriculum';
 import { convertToPageParams } from 'src/utils/pagination';
+import type { FilterModel } from 'src/types/filter';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
 
@@ -17,21 +18,24 @@ export const usePloStore = defineStore('plo', {
     search: '',
     qNotify: Notify,
     qDialog: Dialog,
-    listPlo: [] as PLO[],
+    plos: [] as PLO[],
+    // total: 0,
     curr: useCurriculumStore(),
+    filterModel: {} as Partial<FilterModel>,
   }),
   getters: {
     getDialogTitle: (s) => s.titleForm,
-    getListPlo: (s) => s.listPlo,
-    getData: (c) => c.curr.form.plos || [],
+    getListPLO: (c) => c.plos || [],
   },
   actions: {
     async fetchAll() {
-      const { data, total } = await PlosService.getAll(
-        convertToPageParams(this.pagination, this.search),
+      const data = await PlosService.getAll(
+        convertToPageParams(this.pagination, this.search, this.filterModel),
       );
-      this.plos = data;
-      this.totalPlos = total;
+      if (data) {
+        this.plos = data;
+      }
+      // this.total = total;
     },
 
     async createOne() {
@@ -41,7 +45,6 @@ export const usePloStore = defineStore('plo', {
           type: 'ok',
           message: 'Created successfully',
         });
-        window.location.reload(); // โหลดข้อมูลใหม่
       }
     },
     async updateOne() {
@@ -51,7 +54,6 @@ export const usePloStore = defineStore('plo', {
           type: 'ok',
           message: 'Updated successfully',
         });
-        window.location.reload(); // โหลดข้อมูลใหม่
       }
     },
 
@@ -63,7 +65,7 @@ export const usePloStore = defineStore('plo', {
             type: 'ok',
             message: 'Deleted successfully',
           });
-          window.location.reload(); // โหลดข้อมูลใหม่
+          await this.fetchAll();
         }
       }
     },
@@ -84,7 +86,9 @@ export const usePloStore = defineStore('plo', {
       } else {
         await this.createOne();
       }
-      this.resetForm();
+      setTimeout(() => {
+        this.resetForm();
+      }, 1000);
       await this.fetchAll();
       this.dialogState = false;
     },

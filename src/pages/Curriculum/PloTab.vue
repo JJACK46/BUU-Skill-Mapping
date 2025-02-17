@@ -64,51 +64,23 @@
     bordered
     :loading="global.getLoadingState"
     class="q-mt-md q-animate--fade"
-    :rows="store.getData"
+    :rows="store.getListPLO"
     :columns="columns"
     row-key="name"
     wrap-cells
     separator="cell"
     @update:pagination="store.fetchAll"
   >
-    <template v-slot:body="props">
-      <q-tr :props="props">
-        <q-td>{{ props.rowIndex + 1 }}</q-td>
-        <q-td key="name" :props="props" width="400px">{{
-          props.row.name
-        }}</q-td>
-        <q-td key="thaiDescription" :props="props">{{
-          props.row.thaiDescription
-        }}</q-td>
-        <q-td key="engDescription" :props="props">{{
-          props.row.engDescription
-        }}</q-td>
-        <q-td key="type" :props="props">{{ props.row.type }}</q-td>
-        <q-td
-          key="actions"
-          :props="props"
-          style="width: 120px; white-space: nowrap"
-        >
-          <div class="flex items-center gap-2">
-            <q-btn
-              flat
-              dense
-              round
-              color="primary"
-              icon="edit"
-              @click="store.handleEdit(props.row)"
-            />
-            <q-btn
-              flat
-              dense
-              round
-              color="negative"
-              icon="delete"
-              @click="store.handleDelete(props.row.id)"
-            />
-          </div>
-        </q-td>
-      </q-tr>
+    <template #body-cell-number="props">
+      <q-td>
+        {{ props.rowIndex + 1 }}
+      </q-td>
+    </template>
+    <template #body-cell-actions="props">
+      <ActionsCell
+        @handle-delete="store.handleDelete(props.row.id)"
+        @handle-edit="store.handleEdit(props.row)"
+      />
     </template>
   </q-table>
 </template>
@@ -121,13 +93,16 @@ import { usePloStore } from 'src/stores/plo';
 import DialogForm from 'src/components/DialogForm.vue';
 import { useI18n } from 'vue-i18n';
 import { requireField } from 'src/utils/field-rules';
+import ActionsCell from 'src/components/ActionsCell.vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const { t } = useI18n();
 const global = useGlobalStore();
 const store = usePloStore();
 const columns = ref<QTableColumn[]>([
   {
-    name: 'no',
+    name: 'number',
     label: 'No.',
     field: 'no',
     align: 'left',
@@ -172,6 +147,7 @@ const columns = ref<QTableColumn[]>([
   }, // กำหนดขนาด
 ]);
 onMounted(() => {
+  store.filterModel.curriculumCode = route.params.code as string;
   store.fetchAll(); // เรียกใช้ store เพื่อดึงข้อมูล
 });
 </script>

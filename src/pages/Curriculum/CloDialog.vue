@@ -226,15 +226,15 @@ const selectedPlos = computed({
   },
 });
 
-const filteredPlos = ref([...ploStore.getData]);
+const filteredPlos = ref([...ploStore.getListPLO]);
 const filteredSkills = ref([...skillStore.getSkills]);
 
 const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
   update(() => {
     if (!val || val.trim() === '') {
-      filteredPlos.value = [...ploStore.getData];
+      filteredPlos.value = [...ploStore.getListPLO];
     } else {
-      filteredPlos.value = ploStore.getData.filter((plo) =>
+      filteredPlos.value = ploStore.getListPLO.filter((plo) =>
         plo.name.toLowerCase().includes(val.toLowerCase()),
       );
     }
@@ -318,7 +318,7 @@ const columns = ref<QTableColumn[]>([
 const editRow = (row) => {
   store.form = { ...row }; // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
   selectedPlos.value =
-    ploStore.getData.find((plo) => plo.id === row.ploId) || null;
+    ploStore.getListPLO.find((plo) => plo.id === row.ploId) || null;
   selectedSkill.value =
     skillStore.skills.find((skill) => skill.id === row.skillId) || null;
   store.dialogState = true; // เปิด Dialog

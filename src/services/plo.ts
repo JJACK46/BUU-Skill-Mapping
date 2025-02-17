@@ -2,16 +2,10 @@ import type { PLO } from 'src/types/plo';
 import { api } from 'boot/axios';
 import type { PageParams } from 'src/types/pagination';
 import { HttpStatusCode } from 'axios';
-import type { DataResponse } from 'src/types/data-response';
 export class PlosService {
   static path = 'plos';
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: p });
-    return res.data;
-  }
-
-  static async getAllInCurr(currId: number) {
-    const res = await api.get(`${this.path}/curriculumId/${currId}`);
+    const res = await api.get(this.path, { params: p });
     return res.data;
   }
 
