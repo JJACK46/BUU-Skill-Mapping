@@ -32,8 +32,10 @@ export const useInstructorStore = defineStore('instructor', {
       const { data, total } = await InstructorService.getAll(
         convertToPageParams(this.pagination, this.search, this.filterModel),
       );
-      this.listItem = data;
-      this.pagination!.rowsNumber = total || 0;
+      if (data) {
+        this.listItem = data;
+      }
+      this.pagination.rowsNumber = total || 0;
     },
     resetForm() {
       this.form = {} as Partial<Instructor>;
@@ -61,6 +63,7 @@ export const useInstructorStore = defineStore('instructor', {
           message: 'Created successfully',
         });
       }
+      await this.fetchAll();
     },
     async updateOne() {
       const ok = await InstructorService.updateOne(this.form);
@@ -70,6 +73,7 @@ export const useInstructorStore = defineStore('instructor', {
           message: 'Updated successfully',
         });
       }
+      await this.fetchAll();
     },
 
     async deleteOne(id: number) {
@@ -81,6 +85,7 @@ export const useInstructorStore = defineStore('instructor', {
             message: `Deleted successfully`,
           });
         }
+        await this.fetchAll();
       }
     },
 

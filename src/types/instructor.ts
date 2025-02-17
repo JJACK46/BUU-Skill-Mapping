@@ -6,18 +6,18 @@ import type { User } from './user';
 
 export interface Instructor {
   id?: number;
-  code: string;
+  email: string;
   thaiName: string;
   engName: string;
-  tel: string;
-  picture: string;
-  email: string;
-  officeRoom: string;
-  specialists: string[];
-  socials: Partial<SocialForm> | null;
-  bio: string;
-  position: string;
-  branch: Partial<Branch> | null;
+  code?: string;
+  tel?: string;
+  picture?: string;
+  officeRoom?: string;
+  specialists?: string;
+  socials?: Partial<SocialForm> | null;
+  bio?: string;
+  position?: string;
+  branch?: Partial<Branch> | null;
   branchId: number;
   courses?: Course[];
   curriculums: Partial<Curriculum>[] | null;

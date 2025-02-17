@@ -54,17 +54,7 @@
       :json="store.form"
     >
       <div class="row q-gutter-y-md">
-        <q-input
-          outlined
-          dense
-          v-model="store.form.code"
-          label="Code"
-          clearable
-          mask="########"
-          class="col-12"
-          :rules="[requireField, ruleCodeFormat]"
-        />
-
+        <FieldBranchOptions v-model="store.form.branchId" />
         <q-input
           outlined
           dense
@@ -75,14 +65,13 @@
           class="col-12"
           :rules="[requireField]"
         />
-
         <q-input
           outlined
           v-model="store.form.thaiName"
           label="Thai Name"
           clearable
           class="col-12"
-          :rules="[requireField]"
+          :rules="[requireField, onlyThai]"
           dense
         />
         <q-input
@@ -91,8 +80,18 @@
           v-model="store.form.engName"
           label="English Name"
           class="col-12"
-          :rules="[requireField]"
+          :rules="[requireField, onlyEnglish]"
           clearable
+        />
+        <q-input
+          outlined
+          dense
+          v-model="store.form.code"
+          label="Code"
+          clearable
+          mask="########"
+          class="col-12"
+          hint="optional"
         />
         <q-select
           outlined
@@ -101,21 +100,8 @@
           :options="[...Object.values(AcademicRank)]"
           label="Position"
           class="col-12"
-          :rules="[requireField]"
+          hint="optional"
           options-dense
-        />
-        <FieldBranchOptions v-model="store.form.branch" />
-        <q-select
-          outlined
-          dense
-          v-model="store.form.specialists"
-          label="Specialists"
-          options-dense
-          class="col-12"
-          :options="['IT Expert']"
-          clearable
-          :rules="[requireField]"
-          multiple
         />
         <q-input
           outlined
@@ -126,16 +112,27 @@
           class="col-12"
           mask="###-###-####"
           unmasked-value
-          :rules="[requireField]"
+          hint="optional"
         />
         <q-input
           outlined
           dense
           v-model="store.form.officeRoom"
           label="Office Room"
+          hint="optional"
           class="col-12"
-          :rules="[requireField]"
           clearable
+        />
+        <q-input
+          outlined
+          dense
+          type="text"
+          counter
+          maxlength="150"
+          hint="optional"
+          v-model="store.form.specialists"
+          label="Specialists"
+          class="col-12"
         />
         <q-input
           outlined
@@ -160,7 +157,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
-import { requireField, ruleCodeFormat } from 'src/utils/field-rules';
+import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
