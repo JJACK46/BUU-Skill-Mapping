@@ -1,7 +1,5 @@
 <template>
-  <div class="q-py-md">
-    <div class="text-h4 text-primary">PLO</div>
-  </div>
+  <div class="text-h4 text-primary">PLO</div>
   <div class="flex justify-end">
     <q-btn
       unelevated
@@ -25,66 +23,36 @@
         :label="t('name')"
         :rules="[requireField]"
       />
+
+      <q-input
+        dense
+        outlined
+        class="col-12"
+        v-model="store.form.type"
+        :label="t('type')"
+        :rules="[requireField]"
+        counter
+        maxlength="300"
+      />
       <q-input
         dense
         type="textarea"
         outlined
         class="col-12"
         v-model="store.form.thaiDescription"
-        :label="t('thaiDescription') + ' *'"
+        :label="t('description')"
         :rules="[requireField]"
         counter
         maxlength="300"
       />
+
       <q-input
         dense
         type="textarea"
         outlined
         class="col-12"
         v-model="store.form.engDescription"
-        :label="t('englishDescription') + ' *'"
-        :rules="[requireField]"
-        counter
-        maxlength="300"
-      />
-      <q-input
-        dense
-        outlined
-        class="col-12"
-        v-model="store.form.type"
-        :label="t('type') + ' *'"
-        :rules="[requireField]"
-        counter
-        maxlength="300"
-      />
-      <q-input
-        dense
-        type="textarea"
-        outlined
-        class="col-12"
-        v-model="store.form.engDescription"
-        :label="t('englishDescription') + ' *'"
-        :rules="[requireField]"
-        counter
-        maxlength="300"
-      />
-      <q-input
-        dense
-        outlined
-        class="col-12"
-        v-model="store.form.type"
-        :label="t('type') + ' *'"
-        :rules="[requireField]"
-        counter
-        maxlength="300"
-      />
-      <q-input
-        dense
-        type="textarea"
-        outlined
-        class="col-12"
-        v-model="store.form.engDescription"
-        :label="t('englishDescription') + ' *'"
+        :label="t('englishDescription')"
         :rules="[requireField]"
         counter
         maxlength="300"
