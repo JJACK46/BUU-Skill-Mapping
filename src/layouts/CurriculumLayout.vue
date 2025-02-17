@@ -16,7 +16,7 @@
             :label="`${t('curriculum')}`"
             :to="`/${auth.getRole || 'administer'}/curriculums`"
           />
-          <q-breadcrumbs-el :label="`${$route.params.id}`" />
+          <q-breadcrumbs-el :label="`${$route.params.code}`" />
         </q-breadcrumbs>
       </q-toolbar>
       <div class="q-px-md">
