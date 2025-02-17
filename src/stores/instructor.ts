@@ -4,6 +4,8 @@ import { InstructorService } from 'src/services/instructor';
 import type { Instructor } from 'src/types/instructor';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import type { FilterModel } from 'src/types/filter';
+import { useCurriculumStore } from './curriculum';
+import { nextTick } from 'vue';
 
 type TitleForm = 'New Instructor' | 'Edit Instructor';
 
@@ -13,17 +15,27 @@ export const useInstructorStore = defineStore('instructor', {
     search: '',
     form: {} as Partial<Instructor>,
     listItem: [] as Instructor[],
+    availableItem: [] as Instructor[],
     titleForm: '' as TitleForm,
     foundCode: false,
     pagination: defaultPagination,
     filterModel: {} as Partial<FilterModel>,
     codeLabel: '',
     isFoundCode: false,
+    curr: useCurriculumStore(),
   }),
 
   getters: {
     getInstructors: (s) => s.listItem,
     getTitleForm: (s) => s.titleForm,
+    getCtaText: (s) => {
+      if (s.titleForm === 'New Instructor') {
+        return 'createInstructor';
+      } else {
+        return 'save';
+      }
+    },
+    getAvailableInstructors: (s) => s.availableItem,
   },
 
   actions: {
@@ -37,22 +49,73 @@ export const useInstructorStore = defineStore('instructor', {
       }
       this.pagination.rowsNumber = total || 0;
     },
+    async fetchRowsInCurr(pag?: QTableProps['pagination']) {
+      this.pagination = pag || defaultPagination;
+      // wait for 100ms for the curr store to update
+      setTimeout(async () => {
+        const filter: Partial<FilterModel> = {
+          curriculumCode: this.curr.getCode,
+        };
+        const { data, total } = await InstructorService.getAll(
+          convertToPageParams(this.pagination, this.search, filter),
+        );
+        if (data) {
+          this.listItem = data;
+        }
+        this.pagination.rowsNumber = total || 0;
+      }, 100);
+    },
+    async fetchAvailableInstructors(pag: QTableProps['pagination']) {
+      nextTick(async () => {
+        this.pagination = pag;
+        const filter: Partial<FilterModel> = {
+          branchThaiName: this.curr.getBranchThaiName,
+        };
+        const { data } = await InstructorService.getAll(
+          convertToPageParams(this.pagination, this.search, filter),
+        );
+        if (data) {
+          this.availableItem = data;
+        }
+      });
+    },
+    async assignInstructor(params: {
+      curriculumId: number;
+      instructorId: number;
+    }) {
+      const ok = await InstructorService.assignInstructor(params);
+      if (ok) {
+        Notify.create({
+          type: 'ok',
+          message: 'Updated successfully',
+        });
+        nextTick(async () => await this.fetchRowsInCurr());
+        this.toggleDialog();
+      }
+    },
+
+    async removeAssignedInstructor(params: {
+      curriculumId: number;
+      instructorId: number;
+    }) {
+      Dialog.create({
+        title: 'Confirm Deletion',
+        message: 'Are you sure you want to revoke this instructor?',
+        cancel: true,
+        persistent: true,
+      }).onOk(async () => {
+        const ok = await InstructorService.removeAssignedInstructor(params);
+        if (ok) {
+          Notify.create({
+            type: 'ok',
+            message: `Deleted successfully`,
+          });
+          nextTick(async () => await this.fetchRowsInCurr());
+        }
+      });
+    },
     resetForm() {
       this.form = {} as Partial<Instructor>;
-    },
-    async findExistCode(code: string) {
-      if (code.length === 8) {
-        const res = await InstructorService.findExistCode(code);
-        if (res) {
-          this.codeLabel = 'Found the exist code';
-          this.isFoundCode = true;
-          this.form = res;
-        } else {
-          this.codeLabel = 'Not found the code';
-          this.isFoundCode = false;
-          this.form = {} as Partial<Instructor>;
-        }
-      }
     },
 
     async createOne() {
@@ -92,7 +155,7 @@ export const useInstructorStore = defineStore('instructor', {
     handleDelete(id: number) {
       Dialog.create({
         title: 'Confirm Deletion',
-        message: 'Are you sure you want to delete this curriculum?',
+        message: 'Are you sure you want to delete this instructor?',
         cancel: true,
         persistent: true,
       }).onOk(async () => this.deleteOne(id));
@@ -104,9 +167,9 @@ export const useInstructorStore = defineStore('instructor', {
       } else {
         this.createOne();
       }
+      this.dialogState = false;
       this.resetForm();
       await this.fetchAll();
-      this.dialogState = false;
     },
 
     handleEdit(form: Partial<Instructor>) {

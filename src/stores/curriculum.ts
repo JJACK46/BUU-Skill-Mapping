@@ -23,12 +23,14 @@ export const useCurriculumStore = defineStore('curriculum', {
     getCurriculums: (c) => c.curriculums,
     getDialogTitle: (c) => c.titleForm,
     getInsertId: (c) => c.form.id,
+    getCode: (c) => c.form.code,
     getSkills: (c) => {
       return c.form.skills?.map((skill, index) => ({ ...skill, index })) || [];
     },
     getCurriculum: (c) => c.form,
     getListSubject: (c) => c.form.courseSpecs?.flatMap((c) => c.lesson) || [],
     getListCourseSpec: (c) => c.form.courseSpecs,
+    getBranchThaiName: (c) => c.form.branch?.thaiName,
   },
   actions: {
     async fetchOne(id: string) {

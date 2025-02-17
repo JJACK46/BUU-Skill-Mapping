@@ -121,7 +121,7 @@
           class="col-2 q-mr-md"
         />
         <div class="col">
-          <FieldBranchOptions v-model="store.form.branch" />
+          <FieldBranchOptions v-model="store.form.branchId" />
         </div>
         <q-input
           dense

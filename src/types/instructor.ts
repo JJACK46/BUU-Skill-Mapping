@@ -14,12 +14,12 @@ export interface Instructor {
   picture?: string;
   officeRoom?: string;
   specialists?: string;
-  socials?: Partial<SocialForm> | null;
+  socials?: Partial<SocialForm>;
   bio?: string;
   position?: string;
-  branch?: Partial<Branch> | null;
+  branch?: Partial<Branch>;
   branchId: number;
   courses?: Course[];
-  curriculums: Partial<Curriculum>[] | null;
+  curriculums: Partial<Curriculum>[];
   user?: User;
 }

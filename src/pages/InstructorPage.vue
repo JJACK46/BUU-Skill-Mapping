@@ -50,11 +50,14 @@
       v-model="store.dialogState"
       @save="store.handleSave()"
       width="50%"
-      :cta-text="'createInstructor'"
+      :cta-text="store.getCtaText"
       :json="store.form"
     >
       <div class="row q-gutter-y-md">
-        <FieldBranchOptions v-model="store.form.branchId" />
+        <FieldBranchOptions
+          v-model="store.form.branchId"
+          :branch="store.form.branch"
+        />
         <q-input
           outlined
           dense
@@ -178,7 +181,7 @@ const columns: QTableColumn[] = [
   {
     name: 'code',
     label: 'Code',
-    field: 'code',
+    field: (c) => c.code || 'Unknown',
     align: 'left',
     sortable: true,
   },
@@ -204,7 +207,7 @@ const columns: QTableColumn[] = [
   {
     name: 'tel',
     label: 'Tel',
-    field: 'tel',
+    field: (c) => c.tel || 'Unknown',
     align: 'left',
   },
   {

@@ -70,7 +70,7 @@
   "minimumGrade": "เกรดขั้นต่ํา",
   "coordinator": "ผู้รับผิดชอบหลักสูตร",
   "coordinators": "ผู้รับผิดชอบหลักสูตร",
-  "coordinatorsManagement": "การจัดการผู้รับผิดชอบหลักสูตร",
+  "coordinatorsManagement": "จัดการผู้รับผิดชอบหลักสูตร",
   "instructors": "ผู้สอน",
   "noInstructor": "ไม่มีผู้สอน",
   "noCoordinator": "ไม่มีผู้ประสาน",
@@ -110,5 +110,7 @@
   "Edit Faculty": "แก้ไขคณะ",
   "New Branch": "สาขาใหม่",
   "createBranch": "สร้างสาขาใหม่",
-  "Edit Branch": "แก้ไขสาขา"
+  "Edit Branch": "แก้ไขสาขา",
+  "Coordinators of Curriculum": "ผู้รับผิดชอบหลักสูตร",
+  "assign": "มอบหมาย"
 }

@@ -16,9 +16,27 @@ export class InstructorService {
     return res.data;
   }
 
-  static async findExistCode(code: string) {
-    const res = await api.get(this.path, { params: { code } });
-    return !!res.data;
+  static async assignInstructor(params: {
+    curriculumId: number;
+    instructorId: number;
+  }) {
+    const res = await api.post(`${this.path}/assign-coordinator`, null, {
+      params,
+    });
+    return res.data;
+  }
+
+  static async removeAssignedInstructor(params: {
+    curriculumId: number;
+    instructorId: number;
+  }) {
+    const res = await api.post(`${this.path}/assign-coordinator`, null, {
+      params: {
+        curriculumId: -1,
+        instructorId: params.instructorId,
+      },
+    });
+    return res.data;
   }
 
   static async createOne(obj: Partial<Instructor>) {
@@ -27,7 +45,9 @@ export class InstructorService {
   }
 
   static async updateOne(obj: Instructor) {
-    const res = await api.patch(this.path, obj);
+    // validation
+    delete obj.branch;
+    const res = await api.patch(`${this.path}/${obj.id}`, obj);
     return res.data;
   }
 

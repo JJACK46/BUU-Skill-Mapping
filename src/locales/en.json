@@ -107,5 +107,7 @@
   "createBranch": "Create a Branch",
   "New Branch": "New Branch",
   "createFaculty": "Create a Faculty",
-  "Edit Branch": "Edit Branch"
+  "Edit Branch": "Edit Branch",
+  "Coordinators of Curriculum": "Coordinators of Curriculum",
+  "assign": "Assign"
 }

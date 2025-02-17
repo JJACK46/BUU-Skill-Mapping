@@ -32,7 +32,7 @@ import AppDrawer from 'src/components/AppLeftDrawer.vue';
 import AppHeader from 'src/components/AppHeader.vue';
 import MenuLink, { type MenuProps } from 'src/components/MenuLink.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { onMounted } from 'vue';
+import { nextTick, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth';
@@ -45,7 +45,9 @@ const auth = useAuthStore();
 const basePath = `/curriculums/${route.params.code}`;
 
 onMounted(() => {
-  store.fetchOne(route.params.code as string);
+  nextTick(async () => {
+    await store.fetchOne(route.params.code as string);
+  });
 });
 
 const menuList: MenuProps[] = [

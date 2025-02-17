@@ -5,18 +5,19 @@
     @open-dialog="store.toggleDialog"
     hide-filter
   />
+
+  <!-- Main Table -->
   <q-table
     flat
     bordered
     :pagination="store.pagination"
     class="q-animate--fade q-mt-lg"
     separator="cell"
-    :rows="curr.form.coordinators || []"
-    row-key="code"
+    :rows="store.getInstructors"
+    row-key="thaiName"
     :loading="global.getLoadingState"
     :columns="columns"
     :filter="store.search"
-    @update:pagination="store.fetchAll"
   >
     <template #body-cell-number="props">
       <q-td>
@@ -30,149 +31,86 @@
           dense
           round
           color="grey-8"
-          icon="edit"
-          @click="handleEditBtn(props.rowIndex, props.row)"
-        />
-        <q-btn
-          flat
-          dense
-          round
-          color="grey-8"
           icon="delete"
           class="q-ml-sm"
-          @click="handleDeleteBtn(props.rowIndex)"
+          @click="
+            store.removeAssignedInstructor({
+              curriculumId: curr.getInsertId,
+              instructorId: props.row.id,
+            })
+          "
         />
       </q-td>
     </template>
   </q-table>
-  <DialogForm
-    :title="t('coordinators')"
-    v-model="store.dialogState"
-    @save="handleSave()"
-    width="50%"
-    :cta-text="'addCoordinators'"
-  >
-    <div class="row q-gutter-y-md">
-      <FieldChecker
-        v-model="store.form.code"
-        :found-hint="store.codeLabel"
-        :is-found="store.isFoundCode"
-        :func-update="store.findExistCode"
-        label="Find the coordinator code"
-      />
-
-      <q-input
-        outlined
-        dense
-        v-model="store.form.email"
-        label="Email"
-        type="email"
-        clearable
-        class="col-12 bg-grey-2"
-        readonly
-      />
-
-      <q-input
-        outlined
-        v-model="store.form.thaiName"
-        label="Thai Name"
-        clearable
-        class="col-12 bg-grey-2"
-        dense
-        readonly
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.engName"
-        label="English Name"
-        class="col-12 bg-grey-2"
-        clearable
-        readonly
-      />
-      <q-select
-        outlined
-        dense
-        v-model="store.form.position"
-        :options="[...Object.values(AcademicRank)]"
-        label="Position"
-        class="col-12 bg-grey-2"
-        options-dense
-        readonly
-      />
-      <FieldBranchOptions v-model="store.form.branchId" />
-      <q-select
-        outlined
-        dense
-        v-model="store.form.specialists"
-        label="Specialists"
-        options-dense
-        class="col-12 bg-grey-2"
-        clearable
-        multiple
-        readonly
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.tel"
-        label="Telephone"
-        clearable
-        class="col-12 bg-grey-2"
-        mask="###-###-####"
-        unmasked-value
-        readonly
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.officeRoom"
-        label="Office Room"
-        class="col-12 bg-grey-2"
-        clearable
-        readonly
-      />
-      <q-input
-        outlined
-        dense
-        v-model="store.form.bio"
-        label="Bio"
-        class="col-12 bg-grey-2"
-        type="textarea"
-        counter
-        maxlength="500"
-        readonly
-      />
-    </div>
-  </DialogForm>
+  <!-- Dialog Assign Instructor -->
+  <q-dialog v-model="store.dialogState">
+    <q-card class="q-pa-lg" style="min-width: 60%">
+      <div class="text-h5 text-weight-medium q-py-md text-primary">
+        Instructors from current branch
+      </div>
+      <q-separator class="full-width bg-primary q-mb-md" style="height: 2px" />
+      <q-table
+        flat
+        bordered
+        row-key="thaiName"
+        separator="cell"
+        :rows="store.getAvailableInstructors"
+        :columns
+        :pagination
+        @update:pagination="store.fetchAvailableInstructors"
+      >
+        <template #body-cell-number="props">
+          <q-td>
+            {{ props.rowIndex + 1 }}
+          </q-td>
+        </template>
+        <template #body-cell-actions="props">
+          <q-td>
+            <q-btn
+              size="md"
+              unelevated
+              class="q-mr-sm"
+              color="primary"
+              icon="add"
+              :label="t('assign')"
+              @click="
+                store.assignInstructor({
+                  curriculumId: curr.getInsertId,
+                  instructorId: props.row.id,
+                })
+              "
+            ></q-btn>
+          </q-td>
+        </template>
+      </q-table>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import type { QTableColumn } from 'quasar';
-import { useMeta, useQuasar } from 'quasar';
-import { computed } from 'vue';
+/*
+    imports
+*/
+import type { QTable, QTableColumn } from 'quasar';
+import { useMeta } from 'quasar';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useInstructorStore } from 'src/stores/instructor';
-import DialogForm from 'src/components/DialogForm.vue';
-import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useI18n } from 'vue-i18n';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import type { Coordinator } from 'src/types/coordinator';
-import FieldChecker from 'src/components/FieldChecker.vue';
-import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
-
+/*
+    states
+*/
+const pagination = ref<QTable['pagination']>();
 const { t } = useI18n();
 const global = useGlobalStore();
 const store = useInstructorStore();
 const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
 const curr = useCurriculumStore();
-const q = useQuasar();
-const rowIndex = ref(-1);
-
+const title = computed(() => route.matched[1].name as string);
 const columns: QTableColumn[] = [
   {
     name: 'number',
@@ -184,7 +122,7 @@ const columns: QTableColumn[] = [
   {
     name: 'code',
     label: 'Code',
-    field: 'code',
+    field: (c) => c.code || 'Unknown',
     align: 'left',
     sortable: true,
   },
@@ -214,47 +152,18 @@ const columns: QTableColumn[] = [
     sortable: true,
   },
   {
-    name: 'tel',
-    label: 'Tel',
-    field: 'tel',
-    align: 'left',
-  },
-  {
     name: 'actions',
     label: 'Actions',
     field: () => {},
     align: 'left',
   },
 ];
-
-const handleSave = () => {
-  const index = rowIndex.value;
-  if (index === -1) {
-    curr.form.coordinators?.push(store.form as Coordinator);
-  } else {
-    curr.form.coordinators?.splice(index, 1, store.form as Coordinator);
-  }
-  rowIndex.value = -1;
-  store.dialogState = false;
-};
-
-const handleEditBtn = (index: number, item: Coordinator) => {
-  rowIndex.value = index;
-  store.form = JSON.parse(JSON.stringify(item));
-  store.toggleDialog();
-};
-
-const handleDeleteBtn = (index: number) => {
-  q.dialog({
-    title: 'Confirm',
-    message: 'Are you sure?',
-    cancel: true,
-    persistent: true,
-  }).onOk(() => {
-    curr.form.coordinators?.splice(index, 1);
-  });
-};
-
+/*
+    methods
+*/
+onMounted(async () => {
+  await store.fetchRowsInCurr();
+});
 useMeta({
   title: title.value,
 });
