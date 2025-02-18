@@ -139,7 +139,7 @@
     <CloDialog
       v-model="dialogCloTable"
       :curr-id="curr.form.id"
-      :subject="curr.form.courseSpecs[store.rowIndex]"
+      :subject="store.getListSubjects[store.rowIndex]"
     />
   </q-dialog>
   <!-- CLOs Form -->

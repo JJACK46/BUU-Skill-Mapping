@@ -5,7 +5,7 @@
         <div class="text-h4 text-primary">{{ t('Clos') }}</div>
       </div>
       <div class="text-h5 text-primary">
-        {{ props.subject.lesson.code }} - {{ props.subject.lesson.engName }}
+        {{ props.subject.code }} - {{ props.subject.engName }}
       </div>
       <div></div>
       <MainHeader
@@ -42,7 +42,6 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="updateFilteredSkills"
               @filter="updateFilteredSkills"
               :label="t('Search Skill')"
               option-value="id"
@@ -107,7 +106,6 @@
               hide-selected
               fill-input
               input-debounce="300"
-              @filter="updateFilteredPlos"
               @filter="updateFilteredPlos"
               :label="t('Search PLO')"
               option-value="id"
