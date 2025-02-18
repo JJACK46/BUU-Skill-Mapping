@@ -167,6 +167,7 @@ const dialogCloTable = ref<boolean>(false);
 const { t } = useI18n();
 const global = useGlobalStore();
 const store = useSubjectStore();
+
 const handleOpenCloDialogTable = (indexCS: number) => {
   store.rowIndex = indexCS;
   dialogCloTable.value = true;

@@ -8,6 +8,7 @@ export type Skill = {
   thaiDescription: string;
   engDescription: string;
   domain: LearningDomain;
+  parentId?: number;
   parent?: Skill;
   subs?: Skill[];
   curriculum?: Curriculum;

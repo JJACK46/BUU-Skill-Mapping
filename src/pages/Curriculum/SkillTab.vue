@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+/*
+    imports
+*/
+import { computed, onMounted, ref } from 'vue';
 // import { type TitleFormSkill, useSkillStore } from 'src/stores/skill';
 import DialogForm from 'src/components/DialogForm.vue';
 import { LearningDomain } from 'src/data/learning_domain';
@@ -7,111 +10,27 @@ import { requireField } from 'src/utils/field-rules';
 import { QTree, useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useCurriculumStore } from 'src/stores/curriculum';
 import type { Skill } from 'src/types/skill';
 import { useSkillStore } from 'src/stores/skill';
-// import { matSurroundSound } from '@quasar/extras/material-icons';
-// import { prototypejs } from 'globals';
-
-// const q = useQuasar();
+import JSON_Card from 'src/components/JSON_Card.vue';
+/*
+    states
+*/
 const store = useSkillStore();
-const curr = useCurriculumStore();
 const { t } = useI18n();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
 const searchText = ref('');
 const selectedItem = ref<Skill | null>(null);
-// Get all node IDs to expand initially
-// const expandedNodes = computed(() => {
-//   const getAllNodeIds = (nodes) =>
-//     nodes.reduce(
-//       (ids, node) => [
-//         ...ids,
-//         node.thaiName,
-//         ...(node.children ? getAllNodeIds(node.children) : []),
-//       ],
-//       [],
-//     );
-//   return getAllNodeIds(curr.getSkills);
-// });
-
-const rowIndex = ref(-1);
-
-// const saveSkill = (sk: Skill, rowIndex: number) => {
-//   if (!curr.form.skills) {
-//     curr.form.skills = [];
-//   }
-//   if (rowIndex >= 0) {
-//     curr.form.skills.splice(rowIndex, 1, sk);
-//     selectedItem.value = sk;
-//   } else {
-//     curr.form.skills.push(sk);
-//   }
-// };
-
-// const saveSubSkill = (sk: Skill, parentName: string) => {
-//   const index = curr.form.skills.findIndex((s) => s.thaiName === parentName);
-//   if (index > -1) {
-//     const parent = curr.form.skills[index];
-//     if (parent.children) {
-//       curr.form.skills[index].children.push(sk);
-//     } else {
-//       parent.children = [sk];
-//     }
-//   }
-// };
-
-// const handleAdd = (title: TitleFormSkill, rowIndex: number) => {
-//   if (title === 'Insert Sub-Skill') {
-//     saveSubSkill(store.form as Skill, store.getParentName);
-//   }
-//   if (title === 'New Skill' || title === 'Edit Skill') {
-//     saveSkill(store.form as Skill, rowIndex);
-//   }
-//   store.dialogForm = false;
-// };
-
-// const handleRemove = (name: string) => {
-//   if (!Array.isArray(curr.form.skills)) return;
-
-//   const deepFilter = (skills: Skill[], nameToRemove: string): Skill[] =>
-//     skills
-//       .map((skill) => ({
-//         ...skill,
-//         children: skill.children
-//           ? deepFilter(skill.children, nameToRemove)
-//           : [],
-//       }))
-//       .filter((skill) => skill.thaiName !== nameToRemove);
-
-//   q.dialog({
-//     title: 'Confirm',
-//     message: 'Are you sure you want to delete this item?',
-//     cancel: true,
-//     persistent: true,
-//   }).onOk(() => {
-//     const filteredSkills = deepFilter(curr.form.skills, name);
-//     curr.form.skills.splice(0, curr.form.skills.length, ...filteredSkills);
-//   });
-// };
-
+/*
+    methods
+*/
 useMeta({
   title: title.value,
 });
-watch(
-  () => curr.getCurriculum.id,
-  (newId) => {
-    if (newId) {
-      store.fetchData2();
-    }
-  },
-  { immediate: true },
-);
-// onMounted(async () => {
-//   await curr.fetchData();
-//   // const id = curr.getInsertId;
-//   await store.fetchData2();
-// });
+onMounted(async () => {
+  await store.fetchDataInCurr();
+});
 </script>
 
 <template>
@@ -155,8 +74,10 @@ watch(
       <q-tree
         :nodes="store.getSkills"
         node-key="thaiName"
+        children-key="subs"
         class="q-pa-sm col q-animate--fade q-mr-lg"
         :no-nodes-label="t('noData')"
+        default-expand-all
       >
         <template v-slot:default-header="props">
           <q-tr
@@ -188,11 +109,10 @@ watch(
               ></q-btn>
               <q-btn
                 @click="
-                  (store.toggleDialog({
+                  store.toggleDialog({
                     form: props.node,
                     title: 'Edit Skill',
-                  }),
-                  (rowIndex = props.node.index))
+                  })
                 "
                 icon="edit"
                 padding="none"
@@ -273,45 +193,55 @@ watch(
         </q-card-section>
       </q-card>
     </div>
+    <div class="col-12 q-mt-md">
+      <JSON_Card :data="store.getSkills" />
+    </div>
     <!-- All in One Dialog -->
     <DialogForm
       :title="store.getTitleForm"
       @save="store.handleSave"
       v-model="store.dialogForm"
+      :json="store.form"
     >
-      <q-input
-        v-model="store.form.thaiName"
-        :label="t('name') + ' *'"
-        outlined
-        :rules="[requireField]"
-      />
-      <q-input
-        v-model="store.form.engName"
-        :label="t('engName') + ' *'"
-        outlined
-        :rules="[requireField]"
-      />
-      <q-select
-        :options="Object.values(LearningDomain)"
-        v-model="store.form.domain"
-        label="Domain *"
-        outlined
-        :rules="[requireField]"
-      />
-      <q-input
-        v-model="store.form.thaiDescription"
-        :label="t('description') + ' *'"
-        outlined
-        type="textarea"
-        :rules="[requireField]"
-      />
-      <q-input
-        v-model="store.form.engDescription"
-        :label="t('engDescription') + ' *'"
-        outlined
-        type="textarea"
-        :rules="[requireField]"
-      />
+      <div class="q-gutter-y-md">
+        <q-input
+          v-model="store.form.thaiName"
+          :label="t('name')"
+          outlined
+          :rules="[requireField]"
+        />
+        <q-input
+          v-model="store.form.engName"
+          :label="t('engName')"
+          outlined
+          :rules="[requireField]"
+        />
+        <q-select
+          :options="Object.values(LearningDomain)"
+          v-model="store.form.domain"
+          label="Domain"
+          outlined
+          :rules="[requireField]"
+        />
+        <q-input
+          v-model="store.form.thaiDescription"
+          :label="t('description')"
+          outlined
+          type="textarea"
+          counter
+          maxlength="1000"
+          :rules="[requireField]"
+        />
+        <q-input
+          v-model="store.form.engDescription"
+          :label="t('engDescription')"
+          outlined
+          counter
+          maxlength="1000"
+          type="textarea"
+          :rules="[requireField]"
+        />
+      </div>
     </DialogForm>
   </q-page>
 </template>

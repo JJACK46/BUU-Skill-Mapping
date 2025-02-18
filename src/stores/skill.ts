@@ -37,15 +37,7 @@ export const useSkillStore = defineStore('skill', {
     getParentName: (s) => s.parent.thaiName,
     getMaxPage: (state) =>
       calMaxPage(state.totalSkills, state.pagination!.rowsPerPage),
-    getSkills: (state) => {
-      if (!state.skills) return [];
-      if (state.onlyHaveSubs) {
-        return state.skills.filter(
-          (skill) => skill.subs.length > 0 || !skill.parent,
-        );
-      }
-      return state.skills;
-    },
+    getSkills: (state) => state.skills || [],
     getSubjects: (s) => s.skills,
   },
   actions: {
@@ -54,24 +46,27 @@ export const useSkillStore = defineStore('skill', {
       const { data, total } = await SkillService.getAll(
         convertToPageParams(this.pagination, this.search),
       );
-      console.log('Fetched skills:', data);
-      this.skills = data;
-      this.totalSkills = total;
+      if (total > 0) {
+        this.skills = data;
+        this.totalSkills = total;
+      }
     },
-    async fetchData2() {
-      const id = this.curr.getCurriculum.id;
-      const data = await SkillService.getSkillByCurr(id);
-      console.log('Fetched skills:', data);
-      this.skills = data;
-      // this.totalSkills = total;
+    async fetchDataInCurr() {
+      const code = this.curr.getCode;
+      const { data, total } = await SkillService.getSkillByCurr(code);
+      if (total > 0) {
+        this.skills = data;
+        this.totalSkills = total;
+      }
     },
     // independent skill
     async handleSave() {
-      console.log(this.form);
-      const id = this.curr.getCurriculum;
-      this.form.curriculum = id;
+      const curId = this.curr.getInsertId;
+      this.form = {
+        ...this.form,
+        curriculumId: curId,
+      } as Partial<Skill>;
 
-      // console.log(this.parent.id)
       if (this.parent) {
         const ok = await SkillService.addSubSkill(this.parent.id, this.form);
         if (ok)
@@ -81,8 +76,7 @@ export const useSkillStore = defineStore('skill', {
           });
       } else {
         if (this.form.id) {
-          console.log('Update');
-          const ok = await SkillService.updateSkill(this.form);
+          const ok = await SkillService.updateSkill(this.form.id, this.form);
           if (ok)
             this.qNotify.create({
               type: 'ok',
@@ -97,19 +91,12 @@ export const useSkillStore = defineStore('skill', {
             });
         }
       }
-      this.fetchData2();
+      await this.fetchDataInCurr();
       this.dialogForm = false;
       this.resetForm();
-      this.parentId = null;
     },
     // independent skill
-    async handleRemove({
-      id,
-      subSkillId,
-    }: {
-      id: number;
-      subSkillId?: number;
-    }) {
+    async handleRemove({ id }: { id: number; subSkillId?: number }) {
       this.qDialog
         .create({
           title: 'Confirm',
@@ -121,11 +108,14 @@ export const useSkillStore = defineStore('skill', {
           return;
         })
         .onOk(async () => {
-          await SkillService.removeSkill(id);
-          if (subSkillId) {
-            await SkillService.removeSubSkill(id, subSkillId);
+          const ok = await SkillService.removeSkill(id);
+          if (ok) {
+            this.qNotify.create({
+              type: 'ok',
+              message: 'Skill delete successfully',
+            });
           }
-          this.fetchData2();
+          this.fetchDataInCurr();
         });
     },
     async toggleDialog({
@@ -137,7 +127,6 @@ export const useSkillStore = defineStore('skill', {
       title?: TitleFormSkill;
       parent?: Partial<Skill>;
     }) {
-      console.log(this.form);
       this.titleForm = title || 'New Skill';
       this.parent = parent || null;
       if (form) {
