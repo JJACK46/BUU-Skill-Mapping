@@ -9,7 +9,7 @@ import { useCurriculumStore } from 'src/stores/curriculum';
 
 type TitleForm = 'New Subject' | 'Edit Subject';
 
-export const useCourseSpecStore = defineStore('course-spec', {
+export const useSubjectStore = defineStore('subject', {
   state: () => ({
     dialogState: false,
     form: {} as Subject,

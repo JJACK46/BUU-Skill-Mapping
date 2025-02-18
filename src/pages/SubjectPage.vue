@@ -94,7 +94,7 @@ import { useMeta } from 'quasar';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import DialogForm from 'src/components/DialogForm.vue';
-import { useSubjectStore } from 'src/stores/lesson';
+import { useLessonStore } from 'src/stores/lesson';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
@@ -102,7 +102,7 @@ import MainHeader from 'src/components/PageHeader.vue';
 const global = useGlobalStore();
 const route = useRoute();
 const title = computed(() => route.matched[1].name as string);
-const store = useSubjectStore();
+const store = useLessonStore();
 const formRef = ref();
 const formValid = ref<boolean>(false);
 

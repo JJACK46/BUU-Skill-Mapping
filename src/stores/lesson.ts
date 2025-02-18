@@ -10,7 +10,7 @@ import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 
 type TitleForm = 'New Subject' | 'Edit Subject';
 
-export const useSubjectStore = defineStore('subject', {
+export const useLessonStore = defineStore('lesson', {
   state: () => ({
     dialogState: false,
     subjects: <Lesson[]>[],

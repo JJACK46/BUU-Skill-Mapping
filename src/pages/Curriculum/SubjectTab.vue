@@ -157,7 +157,7 @@ import DialogForm from 'src/components/DialogForm.vue';
 import { OptionSubjectType } from 'src/data/subject_type';
 import CloDialog from './CloDialog.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { useCourseSpecStore } from 'src/stores/subject';
+import { useSubjectStore } from 'src/stores/subject';
 import FieldChecker from 'src/components/FieldChecker.vue';
 /*
     states
@@ -166,7 +166,7 @@ const curr = useCurriculumStore();
 const dialogCloTable = ref<boolean>(false);
 const { t } = useI18n();
 const global = useGlobalStore();
-const store = useCourseSpecStore();
+const store = useSubjectStore();
 const handleOpenCloDialogTable = (indexCS: number) => {
   store.rowIndex = indexCS;
   dialogCloTable.value = true;
