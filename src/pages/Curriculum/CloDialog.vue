@@ -346,11 +346,11 @@ function saveClos() {
 const removeOne = (rowId: number) => {
   if (confirm('Are you sure you want to delete this CLO?')) {
     store.removeOne(rowId);
-    store.fetchDataByCoursSpec(props.subject.id); // เรียกใช้ store เพื่อลบข้อมูล
+    store.fetchData(props.subject.id); // เรียกใช้ store เพื่อลบข้อมูล
   }
 };
 onMounted(() => {
-  store.fetchDataByCoursSpec(props.subject.id);
+  store.fetchData(props.subject.id);
 });
 </script>
 

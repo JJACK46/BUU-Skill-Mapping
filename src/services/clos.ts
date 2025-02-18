@@ -10,12 +10,14 @@ export class ClosService {
     return res.data;
   }
 
-  static async getOne(id: string) {
+  static async getOne(id: number) {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;
   }
-  static async getAllByCourseSpec(id: string) {
-    const res = await api.get(`${this.path}/coursSpecId/${id}`);
+  static async getAllBySubject(id: number) {
+    const res = await api.get<DataResponse>(`${this.path}`, {
+      params: { subjectId: id },
+    });
     return res.data;
   }
 
@@ -31,7 +33,7 @@ export class ClosService {
     return res.status === HttpStatusCode.Ok;
   }
 
-  static async removeOne(id: string) {
+  static async removeOne(id: number) {
     const res = await api.delete(`${this.path}/${id}`);
     return res.status === HttpStatusCode.Ok;
   }

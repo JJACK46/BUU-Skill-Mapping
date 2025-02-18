@@ -4,7 +4,7 @@ import { ClosService } from 'src/services/clos';
 import { useSkillStore } from './skill';
 import type { Clo } from 'src/types/clo';
 // import { convertToPageParams } from 'src/utils/pagination';
-import { useCourseSpecStore } from './subject';
+import { useSubjectStore } from './subject';
 import { useCurriculumStore } from './curriculum';
 import { usePloStore } from './plo';
 
@@ -23,7 +23,7 @@ export const useClostore = defineStore('clo', {
     onlyHaveSubs: true,
     skillStore: useSkillStore(),
     plosStore: usePloStore(),
-    courseStore: useCourseSpecStore(),
+    courseStore: useSubjectStore(),
     currStore: useCurriculumStore(),
   }),
   getters: {
@@ -34,26 +34,20 @@ export const useClostore = defineStore('clo', {
     getDialogTitle: (s) => s.titleForm,
   },
   actions: {
-    // async fetchData() {
-    //   const { data, total } = await ClosService.getAll(
-    //     convertToPageParams(this.pagination, this.search),
-    //   );
-    //   this.clos = data;
-    //   this.totalClos = total;
-    // },
-
-    async fetchDataByCoursSpec(id: number) {
-      const data = await ClosService.getAllByCourseSpec(id.toString());
-      this.clos = data;
+    async fetchData(id: number) {
+      const { data, total } = await ClosService.getAllBySubject(id);
+      if (total > 0) {
+        this.clos = data;
+      }
     },
     async fetchOneData(id: number) {
-      const data = await ClosService.getOne(id.toString());
+      const data = await ClosService.getOne(id);
       this.form = data;
     },
 
     async handleOpenDialog(form?: Partial<Clo>) {
       await this.skillStore.fetchData();
-      await this.plosStore.fetchDataplos();
+      // await this.plosStore.fetchDataplos();
       console.log(this.titleForm);
       if (form) {
         this.titleForm = 'Edit CLO';
@@ -114,7 +108,7 @@ export const useClostore = defineStore('clo', {
       this.resetForm();
     },
     async removeOne(id: number) {
-      await ClosService.removeOne(id.toString());
+      await ClosService.removeOne(id);
       window.location.reload();
     },
     resetForm() {
