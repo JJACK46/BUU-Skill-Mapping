@@ -94,7 +94,7 @@ import { useMeta } from 'quasar';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import DialogForm from 'src/components/DialogForm.vue';
-import { useSubjectStore } from 'src/stores/subject';
+import { useSubjectStore } from 'src/stores/lesson';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';

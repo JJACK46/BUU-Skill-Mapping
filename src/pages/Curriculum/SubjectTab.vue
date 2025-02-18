@@ -8,7 +8,7 @@
       unelevated
       style="width: 100px"
       :label="t('add')"
-      @click="store.handleOpenDialog()"
+      @click="store.handleCreate()"
     ></q-btn>
   </div>
   <!-- Add & Edit Dialog Subject -->
@@ -17,17 +17,14 @@
     :title="store.titleForm"
     ref="formRef"
     width="60%"
-    @save="
-      store.handleSave({
-        form: store.form,
-      })
-    "
+    @save="store.handleSave()"
+    :json="store.form"
   >
     <div class="row q-gutter-sm">
       <FieldChecker
         :label="t('subjectCode')"
-        v-model="store.form.lesson.code"
-        :func-update="store.checkUpdateSubjectCode"
+        v-model="store.form.code"
+        :func-update="store.checkSubjectCode"
         :found-hint="store.getSubjectCodeLabel"
         :is-found="store.foundExistSubject"
       />
@@ -103,6 +100,7 @@
     row-key="code"
     :loading="global.getLoadingState"
     :columns="store.subjectColumns"
+    @update:pagination="store.fetchAllInCurr"
   >
     <template #body-cell-number="props">
       <q-td>
@@ -124,19 +122,14 @@
           padding="none"
           flat
           color="grey-8"
-          @click="
-            store.handleOpenDialog({
-              form: props.row,
-              rowIndex: props.rowIndex,
-            })
-          "
+          @click="store.handleEdit(props.row)"
         ></q-btn>
         <q-btn
           icon="delete"
           padding="none"
           color="grey-8"
           flat
-          @click="store.handleRemove(props.row.id)"
+          @click="store.handleDelete(props.row.id)"
         ></q-btn>
       </q-td>
     </template>
@@ -153,6 +146,9 @@
 </template>
 
 <script lang="ts" setup>
+/*
+    imports
+*/
 import { useGlobalStore } from 'src/stores/global';
 import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
 import { ref } from 'vue';
@@ -161,9 +157,11 @@ import DialogForm from 'src/components/DialogForm.vue';
 import { OptionSubjectType } from 'src/data/subject_type';
 import CloDialog from './CloDialog.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { useCourseSpecStore } from 'src/stores/course-spec';
+import { useCourseSpecStore } from 'src/stores/subject';
 import FieldChecker from 'src/components/FieldChecker.vue';
-
+/*
+    states
+*/
 const curr = useCurriculumStore();
 const dialogCloTable = ref<boolean>(false);
 const { t } = useI18n();

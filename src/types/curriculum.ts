@@ -1,8 +1,8 @@
 import type { Branch } from './branch';
-import type { Lesson } from './subject';
+import type { Lesson } from './lesson';
 import type { PLO } from './plo';
 import type { Skill } from './skill';
-import type { Subject } from './course-spec';
+import type { Subject } from './subject';
 import type { Coordinator } from './coordinator';
 export interface Curriculum {
   id?: number;

@@ -1,191 +1,207 @@
 import { defineStore } from 'pinia';
-import { Dialog, Notify } from 'quasar';
-import SkillService from 'src/services/skill';
-import { SubjectService } from 'src/services/subject';
+import { Dialog, Notify, type QTableProps, type QTableColumn } from 'quasar';
 import type { FilterModel } from 'src/types/filter';
-import type { Skill } from 'src/types/skill';
-import type { Lesson } from 'src/types/subject';
 import { useRouter } from 'vue-router';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
+import type { Subject } from 'src/types/subject';
+import { SubjectService } from 'src/services/subject';
+import { useCurriculumStore } from 'src/stores/curriculum';
 
 type TitleForm = 'New Subject' | 'Edit Subject';
 
-export const useSubjectStore = defineStore('subject', {
+export const useCourseSpecStore = defineStore('course-spec', {
   state: () => ({
     dialogState: false,
-    subjects: <Lesson[]>[],
-    currsubjects: <Lesson[]>[],
-    form: <Partial<Lesson>>{},
-    skillOptions: <Skill[]>[],
+    form: {} as Subject,
+    listItem: [] as Subject[],
     tabsModel: 'req',
     editMode: true,
     titleForm: '' as TitleForm,
-    pagination: defaultPagination,
     search: '',
+    rowIndex: -1,
     qNotify: Notify,
     qDialog: Dialog,
+    pagination: defaultPagination,
     filterModel: {} as Partial<FilterModel>,
-    curriculumId: 0,
     router: useRouter(),
+    curr: useCurriculumStore(),
+    subjectCodeLabel: '',
+    total: 0,
+    foundExistSubject: false,
+    subjectColumns: <QTableColumn[]>[
+      {
+        name: 'number',
+        label: 'No.',
+        field: () => {},
+        align: 'left',
+        sortable: true,
+      },
+      {
+        name: 'code',
+        label: 'Code',
+        field: (row) => row.code,
+        align: 'left',
+        sortable: true,
+      },
+      {
+        name: 'thaiName',
+        label: 'Name',
+        field: (row) => row.thaiName,
+        align: 'left',
+      },
+      {
+        name: 'engName',
+        label: 'English Name',
+        field: (row) => row.engName,
+        align: 'left',
+      },
+      {
+        name: 'credit',
+        label: 'Credit',
+        field: (row) => row.credit,
+        align: 'left',
+      },
+      {
+        name: 'type',
+        label: 'Type',
+        field: (row) => row.type,
+        align: 'left',
+      },
+      {
+        name: 'actions',
+        label: 'Actions',
+        field: '',
+        align: 'left',
+      },
+    ],
   }),
   getters: {
-    getSkillOptions: (s) => s.skillOptions,
     getDialogTitle: (s) => s.titleForm,
-    getSubjects: (s) => s.subjects,
-    getSubjectsByCu: (s) => s.currsubjects,
+    getListSubjects: (s) => s.listItem,
+    getSubjectCodeLabel: (s) => s.subjectCodeLabel,
   },
   actions: {
-    async fetchData() {
-      this.subjects = (
-        await SubjectService.getAll(
-          convertToPageParams(this.pagination, this.search),
-        )
-      ).data;
-    },
-    async handleSave() {
-      if (this.titleForm === 'Edit Subject') {
-        const ok = await SubjectService.updateOne(this.form);
-        if (ok)
-          this.qNotify.create({
-            type: 'ok',
-            message: 'Subject updated successfully',
-          });
+    async checkSubjectCode(subjectCode: string) {
+      if (subjectCode.length === 8) {
+        const existSubject = (await SubjectService.findExistSubjectCode(
+          subjectCode,
+        )) as unknown as Subject;
+        if (existSubject) {
+          this.subjectCodeLabel = 'Found the exist subject';
+          this.foundExistSubject = true;
+          this.form = existSubject;
+        } else {
+          this.subjectCodeLabel = 'Create a new Subject';
+          this.foundExistSubject = false;
+        }
       } else {
-        // this.form.skillExpectedLevels = [];
-        // const ok = await CurriculumService.addSubject(this.curriculumId, this.form);
-        const ok = await SubjectService.createOne(this.form);
-        console.log(this.form);
-        console.log(ok);
-        if (ok)
-          this.qNotify.create({
-            type: 'ok',
-            message: 'Subject created successfully',
-          });
+        this.subjectCodeLabel = '';
       }
-      console.log(this.curriculumId);
-      // this.subjects = (await SubjectService.getSubjectByCurriculums(this.curriculumId)).data;
-      this.subjects = (await SubjectService.getAll()).data;
+    },
+    async fetchAll(pag?: QTableProps['pagination']) {
+      try {
+        const { data, total } = await SubjectService.getAll(
+          convertToPageParams(pag, this.search),
+        );
+        if (data) {
+          this.listItem = data;
+          this.total = total;
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    async fetchAllInCurr() {
+      try {
+        setTimeout(async () => {
+          const filter: Partial<FilterModel> = {
+            curriculumCode: this.curr.getCode,
+          };
+          const { data, total } = await SubjectService.getAll(filter);
+          if (data) {
+            this.listItem = data;
+            this.total = total;
+          }
+        }, 100);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    resetForm() {
+      this.form = {} as Partial<Subject>;
+    },
+
+    async createOne() {
+      const ok = await SubjectService.createOne(this.form);
+      if (ok) {
+        Notify.create({
+          type: 'ok',
+          message: 'Created successfully',
+        });
+      }
+      await this.fetchAll();
+    },
+    async updateOne() {
+      const ok = await SubjectService.updateOne(this.form.id, this.form);
+      if (ok) {
+        Notify.create({
+          type: 'ok',
+          message: 'Updated successfully',
+        });
+      }
+      await this.fetchAll();
+    },
+
+    async deleteOne(id: number) {
+      if (confirm) {
+        const ok = await SubjectService.removeOne(id);
+        if (ok) {
+          Notify.create({
+            type: 'ok',
+            message: `Deleted successfully`,
+          });
+        }
+        await this.fetchAll();
+      }
+    },
+
+    handleDelete(id: number) {
+      Dialog.create({
+        title: 'Confirm Deletion',
+        message: 'Are you sure you want to delete this Subject?',
+        cancel: true,
+        persistent: true,
+      }).onOk(async () => this.deleteOne(id));
+    },
+
+    async handleSave() {
+      if (!this.form.curriculumId) {
+        this.form.curriculumId = this.curr.getInsertId;
+      }
+      if (this.titleForm === 'Edit Subject') {
+        this.updateOne();
+      } else {
+        this.createOne();
+      }
       this.dialogState = false;
       this.resetForm();
+      await this.fetchAll();
     },
-    async fetchAllSkills() {
-      this.skillOptions = (await SkillService.getAll()).data; // need to update for fetch only options
+
+    handleEdit(form: Partial<Subject>) {
+      this.form = { ...form };
+      this.titleForm = 'Edit Subject';
+      this.toggleDialog();
     },
-    async fetchSubjectsByCurriculum(id: number) {
-      this.currsubjects = (
-        await SubjectService.getSubjectByCurriculums(id)
-      ).data;
-      if (this.subjects) {
-        console.log('fetch subjects');
-      } else {
-        console.log('Not found');
-      }
+
+    handleCreate() {
+      this.form = {} as Partial<Subject>;
+      this.titleForm = 'New Subject';
+      this.toggleDialog();
     },
-    handleOpenDialog(form?: Partial<Lesson>) {
-      if (form) {
-        this.titleForm = 'Edit Subject';
-        this.form = { ...form };
-      } else {
-        this.titleForm = 'New Subject';
-        this.form = {};
-      }
-      this.dialogState = true;
-    },
+
     toggleDialog() {
       this.dialogState = !this.dialogState;
     },
-    // handleClo(id: string) {
-    //   // form.id.map(async (subject) => {
-    //   //   const id = subject.id ?? 0;
-    //   //   return await CloService.getOne(id);
-    //   // })
-    //   // this.router.push(`/${id}/clos`);
-    // },
-    async removeSubject(id: string) {
-      this.qDialog
-        .create({
-          title: 'Confirm',
-          message: 'Are you sure you want to remove this subject?',
-          cancel: true,
-          persistent: true,
-        })
-        .onCancel(() => {
-          return;
-        })
-        .onOk(async () => {
-          const ok = await SubjectService.removeOne(id);
-          if (ok) {
-            this.qNotify.create({
-              type: 'ok',
-              message: 'Subject removed successfully',
-            });
-            this.fetchData();
-          }
-        });
-    },
-    resetForm() {
-      this.form = {};
-    },
-    handleAddSkill() {
-      this.form.skillExpectedLevels = this.form.skillExpectedLevels || [];
-      this.form.skillExpectedLevels.push({
-        subject: { code: this.form.code }, //at least subject id is required
-        expectedLevel: 1,
-      });
-    },
-    handleRemoveSkill(index: number) {
-      this.form.skillExpectedLevels?.splice(index, 1);
-    },
-    handleDuplicate() {
-      if (!this.form.skillExpectedLevels?.length) return;
-
-      const ids = new Set();
-      const newSkills = this.form.skillExpectedLevels.filter((s) => {
-        const isDupe = ids.has(s.skill?.id);
-        ids.add(s.skill?.id);
-        return !isDupe;
-      });
-
-      this.form.skillExpectedLevels = newSkills;
-    },
   },
-  // async fetchCurriculumId() {
-  //   try {
-  //     if (this.form.subjects?.length) {
-  //       const subjectsData = await Promise.all(
-  //         this.form.subjects.map(async (subject) => {
-  //           const id = subject.id ?? 0;
-  //           return await SubjectService.getOne(id);
-  //         }),
-  //       );
-  //       this.form.subjects = subjectsData;
-  //       console.log('Updated Subjects:', this.form.subjects);
-  //     } else {
-  //       console.log('No subjects found.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching subjects data:', error);
-  //   }
-  // },
-  // async handleSave() {
-  //   if (this.titleForm === 'Edit Subject') {
-  //     const ok = await SubjectService.updateOne(this.form);
-  //     if (ok)
-  //       this.qNotify.create({
-  //         type: 'ok',
-  //         message: 'Subject updated successfully',
-  //       });
-  //   } else {
-  //     const ok = await SubjectService.createOne(this.form);
-  //     if (ok)
-  //       this.qNotify.create({
-  //         type: 'ok',
-  //         message: 'Subject created successfully',
-  //       });
-  //   }
-  //   console.log(this.curriculumId)
-  //   this.subjects = (await SubjectService.getAll).data;
-  //   this.dialogState = false;
-  //   this.resetForm();
-  // }
 });

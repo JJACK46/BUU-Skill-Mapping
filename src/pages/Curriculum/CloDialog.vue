@@ -194,14 +194,14 @@ import { useClostore } from 'src/stores/clos';
 import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
-import type { Subject } from 'src/types/course-spec';
+import type { Subject } from 'src/types/subject';
 import { usePloStore } from 'src/stores/plo';
 import { useSkillStore } from 'src/stores/skill';
 import { requireField } from 'src/utils/field-rules';
 
 const props = defineProps<{
   currId: number;
-  subject: CourseSpec;
+  subject: Subject;
 }>();
 
 const dialogState = defineModel<boolean>();

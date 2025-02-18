@@ -1,6 +1,6 @@
 import type { SkillCollection } from './skill-collection';
 import type { Student } from './student';
-import type { Lesson } from './subject';
+import type { Lesson } from './lesson';
 import type { Instructor } from './instructor';
 
 export interface Course {

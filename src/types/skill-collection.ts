@@ -1,6 +1,6 @@
 import type { Skill } from './skill';
 import type { SkillExpectedLevel } from './skill-exp-lvl';
-import type { Lesson } from './subject';
+import type { Lesson } from './lesson';
 
 export interface SkillCollection {
   id?: number;

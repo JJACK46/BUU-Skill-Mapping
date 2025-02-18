@@ -193,7 +193,7 @@ import { ref, watch } from 'vue';
 import type { Faculty } from 'src/types/faculty';
 import type { Branch } from 'src/types/branch';
 import type { Curriculum } from 'src/types/curriculum';
-import type { Lesson } from 'src/types/subject';
+import type { Lesson } from 'src/types/lesson';
 import type { Skill } from 'src/types/skill';
 import { api } from 'src/boot/axios';
 import type { PageParams } from 'src/types/pagination';
