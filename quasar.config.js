@@ -54,7 +54,8 @@ export default configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        BACKEND_API: 'https://env-1851196.proen.app.ruk-com.cloud',
+        BACKEND_API: process.env.VITE_BACKEND_API,
+        // BACKEND_API_PRODUCTION: process.env
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
