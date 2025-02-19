@@ -155,7 +155,7 @@
         <q-separator class="q-my-md"></q-separator>
         <q-list>
           <q-item
-            v-for="coordinator in store.form.coordinators"
+            v-for="coordinator in instructorStore.listItem"
             :key="coordinator.id"
           >
             <q-item-section avatar class="q-mr-sm">
@@ -173,17 +173,23 @@
             </q-item-section>
             <q-item-section>
               <q-item-label>
-                Email :
-                <span class="text-grey-8">
-                  {{ coordinator.email }}</span
+                {{ t('code') }}
+                <span class="text-black-8 q-mx-md">
+                  {{ coordinator.code }}</span
                 ></q-item-label
               >
               <q-item-label>
+                อีเมลล์
+                <span class="text-black-8 q-mx-md">
+                  {{ coordinator.email }}</span
+                ></q-item-label
+              >
+              <!-- <q-item-label>
                 {{ t('specialists') }} :
                 <span class="text-grey-8">{{
                   coordinator.specialists
                 }}</span></q-item-label
-              >
+              > -->
             </q-item-section>
           </q-item>
         </q-list>
@@ -199,7 +205,7 @@ import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-
+import { useInstructorStore } from 'src/stores/instructor';
 import { useRoute, useRouter } from 'vue-router';
 import type { MenuProps } from 'src/components/MenuLink.vue';
 import JSON_Card from 'src/components/JSON_Card.vue';
@@ -207,6 +213,7 @@ import { useSubjectStore } from 'src/stores/subject';
 
 const store = useCurriculumStore();
 const subjectStore = useSubjectStore();
+const instructorStore = useInstructorStore();
 const subjects = computed(() => subjectStore.getListSubjects);
 
 const route = useRoute();
@@ -238,7 +245,8 @@ import { watchEffect } from 'vue';
 
 watchEffect(async () => {
   await subjectStore.fetchAllInCurr();
-  console.log('Instuctors', store.form.coordinators);
+  await console.log('Instuctors', store.form.coordinators);
+  await instructorStore.fetchRowsInCurr();
 });
 
 const goToEdit = (menuList: MenuProps) => {
