@@ -1,5 +1,10 @@
 // app global css in SCSS form
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .container {
   max-width: 1280px;
   margin: 0 auto;
@@ -21,8 +26,7 @@
   // }
 
   .q-header {
-    background-color: white;
-    color: $accent-2;
+    background-color: $primary;
   }
 
   // .q-page-container {

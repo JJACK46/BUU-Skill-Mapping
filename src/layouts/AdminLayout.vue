@@ -7,11 +7,6 @@
         <q-item-label header> </q-item-label>
         <MenuLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
-      <q-space />
-      <q-separator class="q-my-sm" />
-      <q-list class="flex justify-between q-px-md">
-        <div>{{ __APP_VERSION }}</div>
-      </q-list>
     </AppDrawer>
 
     <!-- Right Drawer -->
@@ -51,7 +46,6 @@
 import { computed, ref, watch } from 'vue';
 import type { MenuProps } from 'components/MenuLink.vue';
 import MenuLink from 'components/MenuLink.vue';
-import { __APP_VERSION } from 'src/utils/app';
 import { useQuasar } from 'quasar';
 import { LocalStorage } from 'quasar';
 import { useI18n } from 'vue-i18n';
@@ -127,11 +121,6 @@ const linksList: MenuProps[] = [
     title: 'students',
     icon: 'school',
     link: `/${EnumUserRole.ADMIN}/students`,
-  },
-  {
-    title: 'about',
-    icon: 'info',
-    link: '/about',
   },
 ];
 </script>

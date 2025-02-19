@@ -53,10 +53,5 @@ const linksList: MenuProps[] = [
     icon: 'play_lesson',
     link: `/${EnumUserRole.COORDINATOR}/courses`,
   },
-  {
-    title: 'about',
-    icon: 'info',
-    link: '/about',
-  },
 ];
 </script>

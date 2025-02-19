@@ -17,15 +17,14 @@
           style="text-decoration: none"
         >
           <q-img
-            src="logos/buu-light.png"
+            src="logos/buu-white.svg"
             alt="logo"
             height="auto"
             width="50px"
             fit="contain"
           >
-            <template #loading></template>
           </q-img>
-          <span class="q-ml-sm text-weight-medium">Skill Mapping</span>
+          <span class="q-ml-sm text-weight-bold text-white">Skill Mapping</span>
         </router-link>
       </q-toolbar-title>
       <!-- Locale -->
@@ -53,11 +52,14 @@
             auth.profile?.avatarUrl || 'https://placehold.co/32x32?text=profile'
           } `"
         />
-        <q-menu :offset="[-20, 0]" style="width: 160px">
+        <q-menu :offset="[-20, 0]" style="width: auto" class="shadow-1">
           <q-list>
             <q-item>
               <q-item-section side>
-                <q-icon color="primary" name="accessibility"></q-icon>
+                <q-icon
+                  color="primary"
+                  :name="symOutlinedShieldPerson"
+                ></q-icon>
               </q-item-section>
               <q-item-section class="text-primary text-bold">
                 {{ auth.getRole ?? 'Unknown' }}
@@ -120,11 +122,18 @@
 </template>
 
 <script lang="ts" setup>
+/*
+    imports
+*/
+import { symOutlinedShieldPerson } from '@quasar/extras/material-symbols-outlined';
 import { useAuthStore } from 'src/stores/auth';
 import { useGlobalStore } from 'src/stores/global';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+/*
+    states
+*/
 
 defineProps<{
   landing?: boolean | false;
@@ -145,6 +154,10 @@ const getCurrentLocale = computed(() => {
     return 'TH';
   }
 });
+/*
+    methods
+*/
+
 function changeLocale() {
   if (locale.value === 'en-US') {
     locale.value = 'th-TH';

@@ -38,13 +38,28 @@
     </DialogForm>
     <q-separator class="q-my-md" />
     <section class="q-gutter-lg row">
-      <CourseCard
-        v-for="course in store.courses"
-        :key="course.id"
-        :course="course"
-        @handle-delete="handlePopup(course.id!)"
-        @handle-view="handleViewCourse(course.id!)"
-      />
+      <div v-for="course in store.courses" :key="course.id">
+        <CustomCard
+          :head-text="course.name"
+          :sub-text="course.subject?.engName"
+          @click="handleViewCourse"
+        >
+          <template #btn-options>
+            <q-item
+              clickable
+              onmouseenter="this.style.color='red'"
+              onmouseleave="this.style.color=''"
+              @click="handleDelete(course.id)"
+              v-close-popup
+            >
+              <q-item-section side>
+                <q-icon size="16px" name="delete" />
+              </q-item-section>
+              <q-item-section> {{ t('delete') }}</q-item-section>
+            </q-item>
+          </template>
+        </CustomCard>
+      </div>
     </section>
     <q-card
       class="q-mt-lg"
@@ -62,7 +77,7 @@
     imports
 */
 import { useMeta, useQuasar } from 'quasar';
-import CourseCard from 'src/components/CourseCard.vue';
+import CustomCard from 'src/components/CustomCard.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import { LessonService } from 'src/services/lesson';
 import { useCourseStore } from 'src/stores/course';
@@ -95,7 +110,7 @@ const handleOpenDialog = async () => {
   subjects.value = (await LessonService.getAll()).data as Subject[];
 };
 
-const handlePopup = (id: string) => {
+const handleDelete = (id: string) => {
   $q.dialog({
     title: 'Confirm Deletion',
     message: 'Are you sure you want to delete this course?',

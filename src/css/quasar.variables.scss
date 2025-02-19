@@ -15,18 +15,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 // COLORS
-$primary: #2f3a91;
-$secondary: #4a84c2;
+$primary: #3674b5;
+$secondary: #578fca;
 $accent: #face00;
-$accent-2: #7c7c7c;
-$surface-light: #fafafa;
-$surface-secondary: #d1d7dd;
+$accent_2: #7c7c7c;
+$surface_light: #fafafa;
+$surface_secondary: #d1d7dd;
 
 // DARK
-$primary-dark: #323538;
-$secondary-dark: #30373e;
-$accent-dark: #face00;
-$accent-2-dark: #7c7c7c;
+$primary_dark: #323538;
+$secondary_dark: #30373e;
+$accent_dark: #face00;
+$accent_2_dark: #7c7c7c;
 $surface-dark: #202020;
 
 $dark: #1d1d1d;
@@ -38,10 +38,10 @@ $info: #31ccec;
 $warning: #f2c037;
 
 // BUTTON
-$button-border-radius: 8px;
+$button-border-radius: 10px;
 
 // GENERIC
-$generic-border-radius: 8px;
+$generic-border-radius: 10px;
 $body-font-size: var(--q-theme-font-size, 16px);
 $typography-font-family: 'Sarabun', sans-serif !default;
 $button-font-size: var(--q-theme-btn-font-size, 15px);

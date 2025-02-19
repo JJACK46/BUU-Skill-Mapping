@@ -41,7 +41,7 @@ export default configure(function (/* ctx */) {
     build: {
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome100', 'safari13.1'],
-        node: 'node20',
+        node: 'node22',
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
