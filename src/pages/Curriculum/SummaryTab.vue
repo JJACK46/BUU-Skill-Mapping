@@ -88,12 +88,12 @@
         </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list separator>
-          <q-item v-for="cs in store.form.courseSpecs" :key="cs.id">
+          <q-item v-for="cs in subjects" :key="cs.id">
             <div class="row full-width q-py-sm items-start">
               <!-- Subject ID and Details Column -->
               <div class="col-12 col-md-2">
                 <div class="text-weight-medium">
-                  {{ t('subjectCode') }} {{ cs.lesson.code }}
+                  {{ t('subjectCode') }} {{ cs.code }}
                 </div>
                 <div class="text-grey-8">{{ cs.credit }} units</div>
                 <div class="text-caption text-grey-8 q-mt-xs">
@@ -197,20 +197,23 @@
 <script setup lang="ts">
 import CustomTreeSkill from 'src/components/CustomTreeSkill.vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useRoute, useRouter } from 'vue-router';
 import type { MenuProps } from 'src/components/MenuLink.vue';
 import JSON_Card from 'src/components/JSON_Card.vue';
+import { useSubjectStore } from 'src/stores/subject';
 
 const store = useCurriculumStore();
+const subjectStore = useSubjectStore();
+const subjects = computed(() => subjectStore.getListSubjects);
 
 const route = useRoute();
 const router = useRouter();
 
 const { t } = useI18n();
-const details = [
+const details = computed(() => [
   { label: t('engName'), value: store.form.engName },
   {
     label: t('degree'),
@@ -219,14 +222,23 @@ const details = [
   { label: t('description'), value: store.form.thaiDescription },
   { label: t('period'), value: store.form.period },
   { label: t('minimumGrade'), value: store.form.minimumGrade },
-];
+]);
 
 const basePath = `/curriculums/${route.params.id}`;
 
 onMounted(async () => {
-  console.log(route.params.id);
-  await store.fetchOne(route.params.id as string);
-  console.log(store.form);
+  // get curriculumn id from route fullPath curriculums/23112122111211/summary
+  if (!store.form) {
+    const id = route.fullPath.split('/')[2];
+    await store.fetchOne(id);
+  }
+});
+
+import { watchEffect } from 'vue';
+
+watchEffect(async () => {
+  await subjectStore.fetchAllInCurr();
+  console.log('Instuctors', store.form.coordinators);
 });
 
 const goToEdit = (menuList: MenuProps) => {
