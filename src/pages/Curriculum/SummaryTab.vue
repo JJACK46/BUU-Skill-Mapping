@@ -59,8 +59,11 @@
                   PLO {{ index + 1 }}
                 </q-item-label>
               </q-item-section>
-              <q-item-section class="col">
-                <q-item-label caption>{{ plo.name }}</q-item-label>
+              <q-item-section class="col flex">
+                <q-item-label caption class="text-black">{{
+                  plo.type
+                }}</q-item-label
+                ><q-item-label caption>{{ plo.thaiDescription }}</q-item-label>
               </q-item-section>
             </div>
           </q-item>
@@ -102,13 +105,13 @@
               </div>
 
               <!-- Subject Names Column -->
-              <div class="col-12 col-md-4">
+              <div class="col-12 col-md-3">
                 <div class="text-weight-medium">{{ cs.thaiName }}</div>
                 <div class="text-grey-8">{{ cs.engName }}</div>
               </div>
 
               <!-- Description Column -->
-              <div class="col-12 col-md-6">
+              <div class="col-12 col-md-7">
                 <div>{{ cs.thaiDescription }}</div>
               </div>
             </div>
