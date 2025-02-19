@@ -47,7 +47,7 @@ export const useClostore = defineStore('clo', {
 
     async handleOpenDialog(form?: Partial<Clo>) {
       await this.skillStore.fetchData();
-      // await this.plosStore.fetchDataplos();
+      await this.plosStore.fetchAll();
       console.log(this.titleForm);
       if (form) {
         this.titleForm = 'Edit CLO';

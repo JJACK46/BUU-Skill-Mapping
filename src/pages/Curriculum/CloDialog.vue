@@ -17,7 +17,7 @@
         v-model="store.dialogState"
         :title="store.titleForm"
         ref="formRef"
-        width="40%"
+        width="50%"
         @save="saveClos()"
       >
         <div class="row justify-between">
@@ -72,29 +72,57 @@
 
         <div v-if="selectedSkill" class="row justify-between q-pb-md">
           <div class="col-12 q-pa-sm">
-            <q-card class="q-pa-sm">
-              <div>
-                {{ selectedSkill.thaiName }} - {{ selectedSkill.domain }}
-              </div>
-              <div>
-                {{ selectedSkill.thaiDescription || '-' }}
-              </div>
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">{{ selectedSkill.thaiName }}</div>
+                <!-- ขยายขนาด -->
+                <div class="text-subtitle1">{{ selectedSkill.engName }}</div>
+                <q-separator class="q-my-sm" />
+                <!-- เส้นคั่น -->
+              </q-card-section>
+              <q-card-section>
+                <q-chip
+                  square
+                  color="primary"
+                  text-color="white"
+                  style="
+                    border-radius: 12px;
+                    padding: 6px 12px;
+
+                    text-align: center;
+                  "
+                >
+                  {{ selectedSkill.domain }}
+                </q-chip>
+              </q-card-section>
+              <q-card-section>
+                <div
+                  class="text-body1 q-mb-md"
+                  style="
+                    white-space: pre-line;
+                    text-indent: 1.5em;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                  "
+                >
+                  {{ selectedSkill.thaiDescription }}
+                </div>
+                <div
+                  class="text-body1 q-mb-md"
+                  style="
+                    white-space: pre-line;
+                    text-indent: 1.5em;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                  "
+                >
+                  {{ selectedSkill.engDescription }}
+                </div>
+              </q-card-section>
             </q-card>
           </div>
         </div>
 
-        <div v-if="selectedSkill" class="row justify-between q-pb-md">
-          <div class="col-12 q-pa-sm">
-            <q-card class="q-pa-sm">
-              <div>
-                {{ selectedSkill.thaiName }} - {{ selectedSkill.domain }}
-              </div>
-              <div>
-                {{ selectedSkill.thaiDescription || '-' }}
-              </div>
-            </q-card>
-          </div>
-        </div>
         <div class="row justify-between">
           <div class="col-8 q-pa-sm">
             <q-select
@@ -124,11 +152,37 @@
 
         <div v-if="selectedPlos" class="row justify-between q-pb-md">
           <div class="col-12 q-pa-sm">
-            <q-card class="q-pa-sm"
-              ><div>{{ selectedPlos.name }}</div>
-              <div>
-                {{ selectedPlos.thaiDescription || '-' }}
-              </div>
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">{{ selectedPlos.name }}</div>
+                <!-- ขยายขนาด -->
+                <q-separator class="q-my-sm" />
+                <!-- เส้นคั่น -->
+              </q-card-section>
+              <q-card-section>
+                <div
+                  class="text-body1 q-mb-md"
+                  style="
+                    white-space: pre-line;
+                    text-indent: 1.5em;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                  "
+                >
+                  {{ selectedPlos.thaiDescription }}
+                </div>
+                <div
+                  class="text-body1 q-mb-md"
+                  style="
+                    white-space: pre-line;
+                    text-indent: 1.5em;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                  "
+                >
+                  {{ selectedPlos.engDescription }}
+                </div>
+              </q-card-section>
             </q-card>
           </div>
         </div>
@@ -213,10 +267,7 @@ import { usePloStore } from 'src/stores/plo';
 import { useSkillStore } from 'src/stores/skill';
 import { requireField } from 'src/utils/field-rules';
 
-const props = defineProps<{
-  currId: number;
-  subject: Subject;
-}>();
+const props = defineProps<{ currId: number; subject: Subject }>();
 
 const dialogState = defineModel<boolean>();
 console.log(dialogState.value);
@@ -243,6 +294,17 @@ const selectedPlos = computed({
 const filteredPlos = ref([...ploStore.getListPLO]);
 const filteredSkills = ref([...skillStore.getSkills]);
 
+// const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
+//   update(() => {
+//     if (!val || val.trim() === '') {
+//       filteredPlos.value = [...ploStore.getListPLO];
+//     } else {
+//       filteredPlos.value = ploStore.getListPLO.filter((plo) =>
+//         plo.name.toLowerCase().includes(val.toLowerCase()),
+//       );
+//     }
+//   });
+// };
 const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
   update(() => {
     if (!val || val.trim() === '') {
@@ -254,7 +316,6 @@ const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
     }
   });
 };
-
 const updateFilteredSkills = (
   val: string,
   update: (cb: () => void) => void,
