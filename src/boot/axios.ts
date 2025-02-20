@@ -3,7 +3,7 @@ import { Notify } from 'quasar';
 import { useRoute } from 'vue-router';
 
 const api = axios.create({
-  baseURL: process.env.BACKEND_API,
+  baseURL: process.env.VITE_BACKEND_API,
   withCredentials: true,
   timeout: 5000,
 });
