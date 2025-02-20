@@ -56,8 +56,10 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
-      await AuthService.logout();
-      window.location.reload();
+      if (!this.payload) {
+        return;
+      }
+      await AuthService.logout(this.payload?.user.id);
     },
 
     setUserPayload(payload: Payload) {

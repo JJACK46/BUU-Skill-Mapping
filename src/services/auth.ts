@@ -16,10 +16,13 @@ class AuthService {
     window.location.href = api.defaults.baseURL + '/auth/google';
   }
 
-  static async logout(): Promise<AxiosResponse> {
+  static async logout(userId: number): Promise<AxiosResponse> {
     try {
-      const res = await api.post('/auth/logout', { withCredentials: true });
-      localStorage.removeItem('token');
+      const res = await api.get(`/auth/logout/${userId}`, {
+        withCredentials: true,
+      });
+      sessionStorage.removeItem('userPayload');
+      window.location.reload();
       return res.data;
     } catch (error) {
       console.error(error);

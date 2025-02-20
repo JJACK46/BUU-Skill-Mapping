@@ -3,7 +3,7 @@ import type { Student } from './student';
 import type { Instructor } from './instructor';
 
 export interface User {
-  id: string;
+  id: number;
   email: string;
   password?: string;
   googleId?: string;
