@@ -43,6 +43,7 @@ export default route(function (/* { store, ssrContext } */) {
 
     try {
       const auth = useAuthStore();
+      auth.loadUserFromSession();
       const { isAuthenticated } = auth;
       const userRole = auth.getRole;
       // Bypass now

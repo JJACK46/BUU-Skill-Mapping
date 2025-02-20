@@ -16,13 +16,6 @@ export interface AuthState {
 }
 
 export const useAuthStore = defineStore('auth', {
-  hydrate(storeState) {
-    const storedPayload = SessionStorage.getItem('userPayload');
-    if (storedPayload) {
-      storeState.payload = JSON.parse(JSON.stringify(storedPayload));
-      storeState.isAuthenticated = true;
-    }
-  },
   state: (): AuthState => ({
     payload: null,
     form: {
@@ -50,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
       const data = await AuthService.login(this.form.email, this.form.password);
       if (data) {
         this.payload = data;
-        SessionStorage.set('user-payload', data);
+        SessionStorage.set('userPayload', data);
         this.router.push('dashboard');
       }
     },
