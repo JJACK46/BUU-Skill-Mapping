@@ -9,8 +9,7 @@
                 <img
                   draggable="false"
                   :src="`${
-                    usr.profile?.avatarUrl ||
-                    'https://placehold.co/32x32?text=nopic'
+                    auth.getAvatarUrl || 'https://placehold.co/32x32?text=nopic'
                   } `"
                 />
               </q-avatar>
@@ -22,19 +21,15 @@
                   <q-item-section avatar>
                     <q-icon name="email" class="q-mr-sm"
                   /></q-item-section>
-                  <q-item-section>{{ usr.profile?.email }}</q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section avatar>
-                    <q-icon name="person" class="q-mr-sm"
-                  /></q-item-section>
-                  <q-item-section>{{ usr.profile?.name }}</q-item-section>
+                  <q-item-section>{{
+                    auth.payload?.user.email
+                  }}</q-item-section>
                 </q-item>
                 <q-item>
                   <q-item-section avatar>
                     <q-icon name="build_circle" class="q-mr-sm"
                   /></q-item-section>
-                  <q-item-section>{{ usr.profile?.role }}</q-item-section>
+                  <q-item-section>{{ auth.getRole }}</q-item-section>
                 </q-item>
               </q-list>
             </q-card-section>
@@ -159,7 +154,7 @@ const skillsExample = [
   },
 ];
 
-const usr = useAuthStore();
+const auth = useAuthStore();
 const student = useStudentStore();
 
 const studentSkillTrees = ref([]);

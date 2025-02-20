@@ -7,9 +7,8 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
-// import AuthService from 'src/services/auth';
 import { EnumUserRole } from 'src/data/roles';
-import { useGlobalStore } from 'src/stores/global';
+import { useAuthStore } from 'src/stores/auth';
 
 /*
  * If not building with SSR mode, you can
@@ -41,17 +40,14 @@ export default route(function (/* { store, ssrContext } */) {
     const { meta, path } = to;
     const isPublic = meta?.public || false;
     const requiredRole = meta?.role || null;
-    const app = useGlobalStore();
 
     try {
-      // app.debugMode = true;
-      if (app.debugMode) return next();
-
-      // const isAuthenticated = await AuthService.isAuthenticated();
-      // const userRole = isAuthenticated ? await AuthService.getUserRole() : null;
+      const auth = useAuthStore();
+      const { isAuthenticated } = auth;
+      const userRole = auth.getRole;
       // Bypass now
-      const isAuthenticated = true;
-      const userRole = EnumUserRole.ADMIN;
+      // const isAuthenticated = true;
+      // const userRole = EnumUserRole.ADMIN;
 
       // Handle '/' route, first order
       if (path === '/') {
@@ -78,13 +74,18 @@ export default route(function (/* { store, ssrContext } */) {
       if (requiredRole && (!userRole || userRole !== requiredRole)) {
         return next('/forbidden');
       }
+      // Redirect depend on role
+      const rolePaths = {
+        [EnumUserRole.ADMIN]: `/${EnumUserRole.ADMIN}${path}`,
+        [EnumUserRole.COORDINATOR]: `/${EnumUserRole.COORDINATOR}${path}`,
+        [EnumUserRole.INSTRUCTOR]: `/${EnumUserRole.INSTRUCTOR}${path}`,
+        [EnumUserRole.STUDENT]: `/${EnumUserRole.STUDENT}${path}`,
+      };
 
-      // Allow Admin access to `/admin` routes
-      if (
-        path.startsWith(`/${EnumUserRole.ADMIN}`) &&
-        userRole === EnumUserRole.ADMIN
-      ) {
-        return next();
+      // Redirect only if userRole exists and current path is not already correct
+      const redirectPath = rolePaths[userRole];
+      if (redirectPath && !path.startsWith(`/${userRole}`)) {
+        return next(redirectPath);
       }
 
       // Proceed to the route

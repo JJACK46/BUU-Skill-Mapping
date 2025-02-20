@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <div class="text-h4 text-weight-medium">
-      {{ t('hello') }} {{ user.profile?.name ?? user.profile?.email }} 👋
+      {{ t('hello') }} {{ user.payload?.user.email }} 👋
     </div>
     <q-space class="q-my-md" />
     <section name="courses">

@@ -49,7 +49,8 @@
         <img
           draggable="false"
           :src="`${
-            auth.profile?.avatarUrl || 'https://placehold.co/32x32?text=profile'
+            auth.payload?.user.avatarUrl ||
+            'https://placehold.co/32x32?text=profile'
           } `"
         />
         <q-menu :offset="[-20, 0]" style="width: auto" class="shadow-1">

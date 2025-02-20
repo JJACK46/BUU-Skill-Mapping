@@ -3,19 +3,12 @@ import type { AxiosResponse } from 'axios';
 import type { Payload } from 'src/types/payload';
 
 class AuthService {
-  static async getUserRole() {
-    const profile = await this.fetchProfile();
-    if (profile) {
-      return profile.role.toLocaleLowerCase();
-    }
-  }
-  static async login(email: string, password: string): Promise<AxiosResponse> {
-    const { data } = await api.post('/auth/login', { email, password });
+  static async login(email: string, password: string) {
+    const { data } = await api.post<Payload>('/auth/login', {
+      email,
+      password,
+    });
     return data;
-  }
-
-  static async isAuthenticated(): Promise<boolean> {
-    return !!localStorage.getItem('token');
   }
 
   static async loginGoogle() {

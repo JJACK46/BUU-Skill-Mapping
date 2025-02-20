@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Notify } from 'quasar';
+import { useAuthStore } from 'src/stores/auth';
 import { useRoute } from 'vue-router';
 
 const api = axios.create({
@@ -10,7 +11,8 @@ const api = axios.create({
 
 api.interceptors.request.use(
   function (config) {
-    const token = localStorage.getItem('token');
+    const auth = useAuthStore();
+    const token = auth.getAccessToken;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

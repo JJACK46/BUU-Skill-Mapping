@@ -5,14 +5,12 @@ import type { Instructor } from './instructor';
 export interface User {
   id: string;
   email: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
   password?: string;
-  gender: string;
-  googleId: string;
-  phone: string;
+  googleId?: string;
+  avatarUrl: string;
   role: EnumUserRole;
-  teacher?: Instructor;
+  instructorId?: number;
+  instructor?: Instructor;
+  studentId?: number;
   student?: Student;
 }

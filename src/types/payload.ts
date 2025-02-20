@@ -1,9 +1,9 @@
-import type { EnumUserRole } from 'src/data/roles';
+import type { User } from './user';
 
 export interface Payload {
-  id: string;
-  name: string;
-  email: string;
-  role: EnumUserRole;
-  avatarUrl: string;
+  messages: string;
+  accessToken: string;
+  refreshToken: string;
+  statusCode: number;
+  user: User;
 }
