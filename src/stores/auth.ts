@@ -11,7 +11,6 @@ export interface AuthState {
     email: string;
     password: string;
   };
-  isAuthenticated: boolean;
   router: Router;
 }
 
@@ -22,12 +21,10 @@ export const useAuthStore = defineStore('auth', {
       email: '',
       password: '',
     },
-    isAuthenticated: false,
     router: useRouter(),
   }),
 
   getters: {
-    isSignedIn: (s) => !!s.payload,
     isAdmin: (s) => s.payload?.user.role === EnumUserRole.ADMIN,
     getRole: (s) => s.payload?.user.role,
     getAvatarUrl: (s) => s.payload?.user.avatarUrl,

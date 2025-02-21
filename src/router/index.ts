@@ -44,7 +44,7 @@ export default route(function (/* { store, ssrContext } */) {
     try {
       const auth = useAuthStore();
       auth.loadUserFromSession();
-      const { isAuthenticated } = auth;
+      const { getAccessToken } = auth;
       const userRole = auth.getRole;
       // Bypass now
       // const isAuthenticated = true;
@@ -57,7 +57,7 @@ export default route(function (/* { store, ssrContext } */) {
       }
 
       // Handle public routes first
-      if (isPublic && !isAuthenticated) {
+      if (isPublic && !getAccessToken) {
         return next(); // Allow access to public routes
       }
 
