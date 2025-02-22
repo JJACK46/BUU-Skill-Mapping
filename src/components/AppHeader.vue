@@ -2,7 +2,7 @@
   <q-header reveal :reveal-offset="0" bordered class="q-px-sm">
     <q-toolbar>
       <q-btn
-        v-if="!landing && !hideToggle"
+        v-if="!hideToggle"
         flat
         dense
         icon="menu"
@@ -27,32 +27,20 @@
           <span class="q-ml-sm text-weight-bold text-white">Skill Mapping</span>
         </router-link>
       </q-toolbar-title>
-      <!-- Locale -->
-      <q-btn
-        flat
-        padding="none"
-        class="q-mr-md text-bold"
-        @click="changeLocale"
-        >{{ getCurrentLocale }}</q-btn
-      >
-      <!-- Notifications Btn -->
-      <div class="q-gutter-md q-mr-md" v-if="!landing">
-        <q-btn
-          icon="notifications"
-          flat
-          padding="none"
-          @click="app.toggleRightDrawer('notifications')"
-        />
-      </div>
       <!-- Profile -->
-      <q-avatar class="cursor-pointer" v-if="!landing">
-        <img
-          draggable="false"
-          :src="`${
-            auth.payload?.user.avatarUrl ||
-            'https://placehold.co/32x32?text=profile'
-          } `"
-        />
+      <div class="row items-center">
+        <q-avatar class="cursor-pointer q-mr-sm">
+          <img
+            draggable="false"
+            :src="`${
+              auth.payload?.user.avatarUrl ||
+              'https://placehold.co/32x32?text=profile'
+            } `"
+          />
+        </q-avatar>
+        <div class="q-mr-md">
+          {{ auth.getName }}
+        </div>
         <q-menu :offset="[-20, 0]" style="width: auto" class="shadow-1">
           <q-list>
             <q-item>
@@ -100,19 +88,29 @@
             </q-item>
           </q-list>
         </q-menu>
-      </q-avatar>
+      </div>
+      <!-- Locale -->
       <q-btn
-        v-if="landing && !auth.isSignedIn"
+        flat
+        padding="none"
+        class="q-mr-md text-bold"
+        @click="changeLocale"
+        >{{ getCurrentLocale }}</q-btn
+      >
+      <!-- Notifications Btn -->
+      <div class="q-gutter-md q-mr-md">
+        <q-btn
+          icon="notifications"
+          flat
+          padding="none"
+          @click="app.toggleRightDrawer('notifications')"
+        />
+      </div>
+
+      <q-btn
+        v-if="!auth.isSignedIn"
         label="login"
         to="/login"
-        flat
-        class="bg-primary text-bold"
-        color="white"
-      />
-      <q-btn
-        v-if="landing && auth.isSignedIn"
-        label="app"
-        to="/"
         flat
         class="bg-primary text-bold"
         color="white"
@@ -137,7 +135,6 @@ import { useRouter } from 'vue-router';
 */
 
 defineProps<{
-  landing?: boolean | false;
   hideToggle?: true;
 }>();
 

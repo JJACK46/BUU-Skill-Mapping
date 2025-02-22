@@ -319,7 +319,7 @@ const columns: QTableColumn<CourseEnrollment>[] = [
   {
     name: 'name',
     label: 'Name',
-    field: (s) => s.student.name,
+    field: (s) => s.student.thaiName,
     align: 'left',
   },
   {

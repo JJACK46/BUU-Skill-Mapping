@@ -32,6 +32,10 @@ export const useAuthStore = defineStore('auth', {
     getRole: (s) => s.payload?.user.role,
     getAvatarUrl: (s) => s.payload?.user.avatarUrl,
     getAccessToken: (s) => s.payload?.accessToken,
+    getName: (s) =>
+      s.payload?.user.instructor?.thaiName ||
+      s.payload?.user.student?.thaiName ||
+      s.payload?.user.email,
   },
 
   actions: {

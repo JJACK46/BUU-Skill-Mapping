@@ -5,7 +5,7 @@ import type { SocialForm } from './social';
 
 export interface Student {
   id?: number;
-  name: string;
+  thaiName: string;
   engName: string;
   dateEnrollment: Date | string;
   courseEnrollment: Partial<CourseEnrollment>[];

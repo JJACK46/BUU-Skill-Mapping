@@ -53,7 +53,7 @@
       <FieldBranchOptions v-model="store.formStudent.branchId" />
       <q-input
         outlined
-        v-model="store.formStudent.name"
+        v-model="store.formStudent.thaiName"
         label="Name *"
         clearable
         :rules="[requireField]"

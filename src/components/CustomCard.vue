@@ -26,7 +26,9 @@
     <q-card-section class="text-body2 q-pt-none">
       <slot name="body"></slot
     ></q-card-section>
-    <q-card-actions> <slot name="actions"></slot> </q-card-actions>
+    <q-card-actions v-if="!hideActions">
+      <slot name="actions"></slot>
+    </q-card-actions>
   </q-card>
   <q-skeleton v-else type="rect" style="width: 350px; height: 180px" />
 </template>

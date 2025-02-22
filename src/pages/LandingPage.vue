@@ -1,10 +1,48 @@
 <template>
-  <AppHeader landing />
   <q-page :padding="$q.screen.lt.md">
+    <q-header class="bg-primary" reveal :reveal-offset="20">
+      <q-toolbar class="container">
+        <q-toolbar-title>
+          <router-link
+            to="/"
+            class="cursor-pointer text-grey-10"
+            style="text-decoration: none"
+          >
+            <q-img
+              src="logos/buu-white.svg"
+              alt="logo"
+              height="auto"
+              width="50px"
+              fit="contain"
+            >
+            </q-img>
+            <span class="q-ml-sm text-weight-bold text-white"
+              >Skill Mapping</span
+            >
+          </router-link>
+        </q-toolbar-title>
+        <q-btn
+          v-if="!auth.isSignedIn"
+          label="login"
+          to="/login"
+          outline
+          class="text-bold"
+          color="white"
+        />
+        <q-btn
+          v-if="auth.isSignedIn"
+          label="app"
+          to="/"
+          outline
+          class="text-bold"
+          color="white"
+        />
+      </q-toolbar>
+    </q-header>
     <section
-      class="flex justify-evenly items-center"
+      class="flex justify-around items-center container"
       :style="{
-        marginTop: $q.screen.lt.md ? '0' : '50px',
+        padding: $q.screen.lt.md ? '50px 0' : '100px 0',
         flexDirection: $q.screen.lt.md ? 'column-reverse' : 'row',
       }"
     >
@@ -20,38 +58,43 @@
         </div>
       </div>
       <q-img
-        src="https://placehold.co/500x400"
+        src="landing/gen1.webp"
         alt="image"
         :draggable="false"
-        :width="$q.screen.lt.md ? '400px' : '500px'"
+        :width="$q.screen.lt.md ? '300px' : '400px'"
+        :img-style="{ borderRadius: '10px' }"
         height="auto"
+        id="custom-img-card"
         fit="cover"
       />
     </section>
     <section
-      style="margin-top: 100px"
-      class="bg-accent q-pa-xl fit"
-      :style="{ borderRadius: '300px 100px' }"
+      class="bg-secondary q-pa-xl fit"
+      :style="{ borderRadius: '100px 100px 0 0' }"
     >
-      <div :class="['text-center', $q.screen.lt.md ? 'text-h5' : 'text-h3']">
-        จัดการหลักสูตรโดยมุ่งเน้นผลลัพธ์การเรียนรู้
+      <div
+        :class="[
+          'text-center text-white text-weight-medium',
+          $q.screen.lt.md ? 'text-h5' : 'text-h3',
+        ]"
+      >
+        จัดการการศึกษาโดยมุ่งเน้นผลลัพธ์ของผู้เรียน
       </div>
       <div class="flex justify-center q-gutter-xl q-mt-sm">
-        <q-card
-          class="q-pa-md text-h5"
-          flat
-          v-for="item in outcomes"
-          :key="item.title"
-        >
-          <q-card-section>
-            <div class="text-h5">
-              {{ item.title }}
-            </div>
-            <span class="text-body1">
-              {{ item.fullName }}
-            </span>
-          </q-card-section>
-        </q-card>
+        <div v-for="item in outcomes" :key="item.title">
+          <CustomCard
+            :head-text="item.title"
+            :sub-text="item.name"
+            hide-options
+            hide-actions
+          >
+            <template #body>
+              <div class="text-grey-9">
+                {{ item.description }}
+              </div>
+            </template>
+          </CustomCard>
+        </div>
       </div>
     </section>
 
@@ -61,8 +104,9 @@
     >
       <q-img
         v-if="!$q.screen.lt.md"
-        src="https://placehold.co/500x800"
+        src="landing/gen2.webp"
         alt="image"
+        id="custom-img-card-2"
         :draggable="false"
         width="500px"
         height="auto"
@@ -108,16 +152,30 @@
         </div>
       </div>
     </section>
+    <footer class="q-py-md bg-dark">
+      <div class="container text-white">
+        <div class="flex justify-around items-center">
+          <q-card flat class="bg-grey-9 q-pa-md">
+            <div class="text-weight-medium">Contact</div>
+            <q-list>
+              <q-item>
+                <q-item-section>Email: informatics@go.buu.ac.th</q-item-section>
+              </q-item>
+            </q-list>
+          </q-card>
+        </div>
+        <div class="text-center q-mt-lg">
+          © 2025 Burapha University. Skill Mapping. All Rights Reserved.
+          <br />
+        </div>
+      </div>
+    </footer>
   </q-page>
-  <footer class="q-py-md bg-grey-4">
-    <div class="text-center">
-      © 2025 Burapha University. Skill Mapping. All Rights Reserved.
-    </div>
-  </footer>
 </template>
 
 <script setup lang="ts">
-import AppHeader from 'src/components/AppHeader.vue';
+import CustomCard from 'src/components/CustomCard.vue';
+import { useAuthStore } from 'src/stores/auth';
 
 // import { useI18n } from 'vue-i18n';
 
@@ -129,7 +187,8 @@ defineOptions({
 
 type OutcomeLearn = {
   title: string;
-  fullName: string;
+  name: string;
+  description: string;
 };
 
 type Skill = {
@@ -138,9 +197,20 @@ type Skill = {
   children?: Skill[];
 };
 
+const auth = useAuthStore();
+
 const outcomes: OutcomeLearn[] = [
-  { title: 'PLOs', fullName: 'Program Learning Outcomes' },
-  { title: 'CLOs', fullName: 'Course Learning Outcomes' },
+  {
+    title: 'PLOs',
+    name: 'Program Learning Outcomes',
+    description:
+      'ผลการเรียนรู้ที่คาดหวังของหลักสูตร มีจุดประสงค์เพื่อระบุว่าเมื่อจบหลักสูตรแล้ว นักศึกษาจะบรรลุผลการเรียนรู้อะไรบ้าง',
+  },
+  {
+    title: 'CLOs',
+    name: 'Course Learning Outcomes',
+    description: 'ผลการเรียนรู้ในระดับรายวิชา ซึ่งรวมถึงกิจกรรมการเรียนการสอน',
+  },
 ];
 
 const softSkills: Skill[] = [
@@ -203,3 +273,17 @@ const hardSkills: Skill[] = [
   },
 ];
 </script>
+
+<style scoped>
+.custom-bg {
+  background: url('backdrop/hero.webp');
+}
+#custom-img-card {
+  border-radius: 10px;
+  box-shadow: 0 12px 50px 2px rgba(36, 105, 243, 0.5);
+}
+#custom-img-card-2 {
+  border-radius: 10px;
+  box-shadow: 0 12px 50px 2px rgba(187, 209, 246, 0.5);
+}
+</style>

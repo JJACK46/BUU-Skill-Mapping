@@ -10,7 +10,7 @@
       <q-card flat bordered>
         <q-card-section>
           <div class="text-h6">
-            {{ `${student.id} ${student.name}` }}
+            {{ `${student.id} ${student.thaiName}` }}
           </div>
           <div class="text-body1">
             {{ `${student.engName}` }}
