@@ -108,7 +108,7 @@
       </div>
 
       <q-btn
-        v-if="!auth.isSignedIn"
+        v-if="!auth.getAccessToken"
         label="login"
         to="/login"
         flat

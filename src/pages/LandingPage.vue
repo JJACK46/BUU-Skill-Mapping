@@ -22,7 +22,7 @@
           </router-link>
         </q-toolbar-title>
         <q-btn
-          v-if="!auth.isSignedIn"
+          v-if="!auth.getAccessToken"
           label="login"
           to="/login"
           outline
@@ -30,7 +30,7 @@
           color="white"
         />
         <q-btn
-          v-if="auth.isSignedIn"
+          v-if="auth.getAccessToken"
           label="app"
           to="/"
           outline
