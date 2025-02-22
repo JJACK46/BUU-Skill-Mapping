@@ -3,7 +3,7 @@
     <AppHeader hide-toggle> </AppHeader>
     <AppDrawer>
       <q-scroll-area class="fit">
-        <q-list>
+        <q-list class="q-my-lg">
           <MenuLink v-for="link in menuList" :key="link.title" v-bind="link" />
         </q-list>
       </q-scroll-area>
@@ -62,20 +62,19 @@ const menuList: MenuProps[] = [
     link: `${basePath}/plos`,
   },
   {
-    icon: 'groups',
-    title: 'coordinators',
-    link: `${basePath}/coordinators`,
+    icon: 'code',
+    title: 'skills',
+    link: `${basePath}/skills`,
   },
   {
     icon: 'books',
     title: 'subjects',
     link: `${basePath}/subjects`,
   },
-
   {
-    icon: 'code',
-    title: 'skills',
-    link: `${basePath}/skills`,
+    icon: 'groups',
+    title: 'coordinators',
+    link: `${basePath}/coordinators`,
   },
   {
     icon: 'check',
