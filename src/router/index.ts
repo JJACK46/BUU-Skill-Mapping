@@ -56,6 +56,10 @@ export default route(function (/* { store, ssrContext } */) {
         return next(redirectPath);
       }
 
+      if (path.startsWith('/curr')) {
+        return next();
+      }
+
       // Handle public routes first
       if (isPublic && !getAccessToken) {
         return next(); // Allow access to public routes
