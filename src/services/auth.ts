@@ -4,11 +4,11 @@ import type { Payload } from 'src/types/payload';
 
 class AuthService {
   static async login(email: string, password: string) {
-    const { data } = await api.post<Payload>('/auth/login', {
+    const res = await api.post<Payload>('/auth/login', {
       email,
       password,
     });
-    return data;
+    return res?.data;
   }
 
   static async loginGoogle() {

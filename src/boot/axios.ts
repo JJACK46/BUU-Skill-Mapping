@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { Notify } from 'quasar';
+import { Notify, SessionStorage } from 'quasar';
 import { useAuthStore } from 'src/stores/auth';
-import { useRoute, useRouter } from 'vue-router';
 
 const api = axios.create({
   baseURL: process.env.VITE_BACKEND_API,
@@ -28,20 +27,16 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   function (response) {
     if (response.status === 401) {
-      sessionStorage.removeItem('userPayload');
+      SessionStorage.removeItem('userPayload');
       window.location.reload();
     }
     return response;
   },
   function (e) {
-    const route = useRoute();
-    const router = useRouter();
     if (e.response?.status === 401) {
-      sessionStorage.remove('userPayload');
-      router.push('/login'); // Redirect instead of reload
+      SessionStorage.remove('userPayload');
       return;
     }
-    if (route && (route.path === '/login' || route.path === '/landing')) return;
     Notify.create({
       type: 'negative',
       message: e + ' | ' + e.response?.data.message,
