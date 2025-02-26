@@ -4,38 +4,6 @@
       v-model:searchText="filterCourse"
       @open-dialog="handleOpenDialog"
     />
-    <DialogForm
-      title="New Course *"
-      v-model="store.dialogState"
-      @save="store.createOne"
-      :json="store.form"
-    >
-      <div class="q-gutter-y-md">
-        <q-input
-          outlined
-          :label="t('name')"
-          v-model="store.form.name"
-          :rules="[requireField]"
-        />
-        <q-select
-          outlined
-          label="Subject"
-          v-model="store.form.subject"
-          :options="subjects"
-          option-label="engName"
-          options-dense
-          :rules="[requireField]"
-        >
-        </q-select>
-        <q-input
-          v-model="store.form.description"
-          label="Course Description"
-          autogrow
-          outlined
-          :rules="[requireField]"
-        />
-      </div>
-    </DialogForm>
     <q-separator class="q-my-md" />
     <section class="q-gutter-lg row">
       <div v-for="course in store.courses" :key="course.id">
@@ -78,14 +46,10 @@
 */
 import { useMeta, useQuasar } from 'quasar';
 import CustomCard from 'src/components/CustomCard.vue';
-import DialogForm from 'src/components/DialogForm.vue';
-import { LessonService } from 'src/services/lesson';
 import { useCourseStore } from 'src/stores/course';
-import { requireField } from 'src/utils/field-rules';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import MainHeader from 'src/components/PageHeader.vue';
-import type { Subject } from 'src/types/subject';
 import { useI18n } from 'vue-i18n';
 /*
     states
@@ -93,7 +57,6 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const $q = useQuasar();
 const route = useRoute();
-const subjects = ref<Subject[]>([]);
 const router = useRouter();
 const filterCourse = ref('');
 const store = useCourseStore();
@@ -107,7 +70,6 @@ const handleViewCourse = (id: string) => {
 
 const handleOpenDialog = async () => {
   store.dialogState = true;
-  subjects.value = (await LessonService.getAll()).data as Subject[];
 };
 
 const handleDelete = (id: string) => {
