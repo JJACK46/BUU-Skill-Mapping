@@ -6,11 +6,9 @@
     style="min-width: 200px"
     v-model="model"
     @update:model-value="funcUpdate"
-    debounce="100"
     :mask="computedMask"
     hide-selected
     :label
-    input-debounce="500"
     :rules="computedRules"
   >
     <template #hint>
