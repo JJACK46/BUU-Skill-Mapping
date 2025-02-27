@@ -35,8 +35,8 @@ export const usePloStore = defineStore('plo', {
       );
       if (data) {
         this.plos = data;
+        return data
       }
-      // this.total = total;
     },
 
     async createOne() {

@@ -46,7 +46,7 @@ export default route(function (/* { store, ssrContext } */) {
       auth.loadUserFromSession();
       const { getAccessToken } = auth;
       const userRole = auth.getRole;
-      if (!userRole) {
+      if (!userRole && path !== '/login') {
         return next('/login');
       }
       // Bypass now

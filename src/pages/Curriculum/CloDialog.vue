@@ -1,13 +1,22 @@
 <template>
-  <q-card style="max-width: 80%; max-height: 80%">
-    <div style="margin: 20px">
-      <div class="q-py-md">
-        <div class="text-h4 text-primary">{{ t('Clos') }}</div>
+  <q-card style="min-width: 70%; min-height: 80%">
+    <q-card-section>
+      <div class="text-h4 text-primary">CLO Management</div>
+      <q-separator class="q-my-sm bg-primary" style="height: 3px"></q-separator>
+    </q-card-section>
+    <q-card-section class="q-pa-lg bg-grey-2">
+      <div class="col-12 text-h6">
+        {{ t('subjectCode') }} {{ props.subject.code }}
+        <div class="text-body1 q-ml-lg"></div>
       </div>
-      <div class="text-h5 text-primary">
-        {{ props.subject.code }} - {{ props.subject.engName }}
+      <div class="col-12 text-body1">
+        {{ props.subject.thaiName }}
       </div>
-      <div></div>
+      <div class="col-12 text-body1">
+        {{ props.subject.engName }}
+      </div>
+    </q-card-section>
+    <q-card-section>
       <MainHeader
         v-model:search-text="store.search"
         @open-dialog="store.handleOpenDialog"
@@ -18,6 +27,7 @@
         :title="store.titleForm"
         ref="formRef"
         width="50%"
+        :json="store.form"
         @save="saveClos()"
       >
         <div class="row justify-between">
@@ -28,33 +38,20 @@
               dense
               :label="t('Name')"
               :rules="[requireField]"
-            />
+            >
+            </q-input>
           </div>
         </div>
         <div class="row justify-between">
           <div class="col-8 q-pa-sm">
-            <q-select
-              v-model="selectedSkill"
-              :options="filteredSkills"
-              outlined
-              dense
-              use-input
-              hide-selected
-              fill-input
-              input-debounce="300"
-              @filter="updateFilteredSkills"
-              :label="t('Search Skill')"
-              option-value="id"
-              option-label="thaiName"
-              clearable
-              @clear="clearSkill()"
-              behavior="menu"
-              :rules="[requireField]"
-            >
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-select>
+            <!-- SKill -->
+            <FieldSearcher
+              v-model="store.form.skillId"
+              :label="t('skills')"
+              :func-filter="updateFilteredSkills"
+              :func-clear="clearSkill"
+              :fetch-options="()=>SkillService.getSkillByCurr(currCode)"
+            />
           </div>
           <div class="col-4 q-pa-sm">
             <q-select
@@ -69,10 +66,10 @@
             </q-select>
           </div>
         </div>
-
         <div v-if="selectedSkill" class="row justify-between q-pb-md">
           <div class="col-12 q-pa-sm">
-            <q-card>
+            <!-- Skill Card -->
+            <q-card flat bordered>
               <q-card-section>
                 <div class="text-h6">{{ selectedSkill.thaiName }}</div>
                 <!-- ขยายขนาด -->
@@ -88,7 +85,6 @@
                   style="
                     border-radius: 12px;
                     padding: 6px 12px;
-
                     text-align: center;
                   "
                 >
@@ -122,37 +118,22 @@
             </q-card>
           </div>
         </div>
-
         <div class="row justify-between">
-          <div class="col-8 q-pa-sm">
-            <q-select
-              v-model="selectedPlos"
-              :options="filteredPlos"
-              outlined
-              dense
-              use-input
-              hide-selected
-              fill-input
-              input-debounce="300"
-              @filter="updateFilteredPlos"
-              :label="t('Search PLO')"
-              option-value="id"
-              option-label="name"
-              clearable
-              @clear="clearPLO()"
-              behavior="menu"
-              :rules="[requireField]"
-            >
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-select>
+          <div class="col q-pa-sm">
+            <!-- PLO -->
+            <FieldSearcher
+              v-model="store.form.ploId"
+              label="PLO"
+              :func-filter="updateFilteredPlos"
+              :fetch-options="ploStore.fetchAll"
+              :func-clear="clearPLO"
+            />
           </div>
         </div>
-
         <div v-if="selectedPlos" class="row justify-between q-pb-md">
           <div class="col-12 q-pa-sm">
-            <q-card>
+            <!-- PLO Card -->
+            <q-card flat bordered>
               <q-card-section>
                 <div class="text-h6">{{ selectedPlos.name }}</div>
                 <!-- ขยายขนาด -->
@@ -222,35 +203,19 @@
         wrap-cells
         separator="cell"
       >
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td>{{ props.rowIndex + 1 }}</q-td>
-            <q-td key="id" :props="props">{{ props.row.id }}</q-td>
-            <q-td key="name" :props="props" width="400px">{{
-              props.row.name
-            }}</q-td>
-            <q-td key="thaiDescription" :props="props">{{
-              props.row.thaiDescription
-            }}</q-td>
-            <q-td key="engDescription" :props="props">{{
-              props.row.engDescription
-            }}</q-td>
-            <q-td key="actions" :props="props">
-              <q-btn flat dense round icon="edit" @click="editRow(props.row)" />
-              <q-btn flat dense round icon="edit" @click="editRow(props.row)" />
-              <q-btn
-                flat
-                dense
-                round
-                icon="delete"
-                class="q-ml-sm"
-                @click="removeOne(props.row.id)"
-              />
-            </q-td>
-          </q-tr>
+        <template #body-cell-number="props">
+          <q-td>{{ props.rowIndex + 1 }}</q-td>
+        </template>
+        <template #body-cell-actions="props">
+          <ActionsCell
+            key="actions"
+            :props="props"
+            @handle-edit="editRow(props.row)"
+            @handle-delete="removeOne(props.row.id)"
+          />
         </template>
       </q-table>
-    </div>
+    </q-card-section>
   </q-card>
 </template>
 
@@ -258,7 +223,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGlobalStore } from 'src/stores/global';
-import { useClostore } from 'src/stores/clos';
+import { useCloStore } from 'src/stores/clos';
 import type { QTableColumn } from 'quasar';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
@@ -269,15 +234,18 @@ import { requireField } from 'src/utils/field-rules';
 import type { Clo } from 'src/types/clo';
 import type { PLO } from 'src/types/plo';
 import type { Skill } from 'src/types/skill';
+import ActionsCell from 'src/components/ActionsCell.vue';
+import FieldSearcher from 'src/components/FieldSearcher.vue';
+import SkillService from 'src/services/skill';
+import { useRoute } from 'vue-router';
 
-const props = defineProps<{ currId: number; subject: Subject }>();
-
-const dialogState = defineModel<boolean>();
-console.log(dialogState.value);
+const props = defineProps<{ currId: number; subject: Subject; }>();
+const route = useRoute()
+const currCode = computed(()=>route.params.code as string)
 
 const { t } = useI18n();
 const global = useGlobalStore();
-const store = useClostore();
+const store = useCloStore();
 const ploStore = usePloStore();
 const skillStore = useSkillStore();
 const selectedSkill = computed({
@@ -304,17 +272,6 @@ const clearPLO = () => {
   store.form.plo = {} as PLO;
 };
 
-// const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
-//   update(() => {
-//     if (!val || val.trim() === '') {
-//       filteredPlos.value = [...ploStore.getListPLO];
-//     } else {
-//       filteredPlos.value = ploStore.getListPLO.filter((plo) =>
-//         plo.name.toLowerCase().includes(val.toLowerCase()),
-//       );
-//     }
-//   });
-// };
 const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
   update(() => {
     if (!val || val.trim() === '') {
@@ -341,8 +298,8 @@ const updateFilteredSkills = (
   });
 };
 
-const columns = ref<QTableColumn[]>([
-  { name: 'no', label: 'No.', field: 'no', align: 'left' },
+const columns: QTableColumn[] = [
+  { name: 'number', label: 'No.', field: '', align: 'left' },
   { name: 'id', label: 'ID', field: 'id', align: 'left' },
   { name: 'name', label: 'Name', field: 'name', align: 'left' },
   {
@@ -364,41 +321,7 @@ const columns = ref<QTableColumn[]>([
     align: 'left',
     sortable: false,
   },
-]);
-
-// const filterPlos = (val: string, update: (cb: () => void) => void) => {
-//   if (!val.trim()) {
-//     update(() => {
-//       filteredPlos.value = ploStore.getData; // โหลดข้อมูลจาก plosStore
-//       console.log(filteredPlos.value); // ดูข้อมูลที่โหลดมา
-//     });
-//     return;
-//   }
-
-//   const searchVal = val.toLowerCase();
-//   update(() => {
-//     filteredPlos.value = ploStore.getData.filter(
-//       (plo) => plo.name.toLowerCase().includes(searchVal), // กรองข้อมูลตามชื่อ
-//     );
-//     console.log(filteredPlos.value); // ตรวจสอบผลลัพธ์การกรอง
-//   });
-// };
-
-// const filterSkills = (val: string, @: (cb: () => void) => void) => {
-//   if (!val.trim()) {
-//     update(() => {
-//       filteredSkills.value = skillStore.skills;
-//     });
-//     return;
-//   }
-
-//   const searchVal = val.toLowerCase();
-//   update(() => {
-//     filteredSkills.value = skillStore.skills.filter((skill) =>
-//       skill.thaiName.toLowerCase().includes(searchVal),
-//     );
-//   });
-// };
+];
 
 const editRow = (row: Clo) => {
   store.form = JSON.parse(JSON.stringify(row)); // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
@@ -406,13 +329,12 @@ const editRow = (row: Clo) => {
   selectedSkill.value = skillStore.skills.find(
     (skill) => skill.id === row.skillId,
   )!;
+  store.titleForm = 'Edit CLO';
   store.dialogState = true; // เปิด Dialog
 };
 
 async function saveClos() {
   await store.handleSave(props.subject.id);
-  await store.handleSave(props.subject.id);
-  store.dialogState = false; // ปิด Dialog
 }
 const removeOne = async (rowId: number) => {
   if (confirm('Are you sure you want to delete this CLO?')) {
@@ -424,5 +346,3 @@ onMounted(async () => {
   await store.fetchData(props.subject.id);
 });
 </script>
-
-<style scoped></style>

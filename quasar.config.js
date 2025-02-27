@@ -10,7 +10,7 @@
 
 import { configure } from 'quasar/wrappers';
 
-export default configure(function (/* ctx */) {
+export default configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -156,15 +156,26 @@ export default configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
-      workboxMode: 'GenerateSW', // or 'injectManifest'
-      injectPwaMetaTags: true,
-      swFilename: 'sw.js',
-      manifestFilename: 'manifest.json',
-      useCredentialsForManifestTag: false,
-      // extendGenerateSWOptions (cfg) {}
-      // extendInjectManifestOptions (cfg) {},
-      // extendManifestJson (json) {}
-      // extendPWACustomSWConf (esbuildConf) {}
+      workboxMode: 'GenerateSW', // Keep this as-is
+      injectPwaMetaTags: ctx.dev ? false : true, // Already good
+      swFilename: 'sw.js', // Keep this
+      manifestFilename: 'manifest.json', // Keep this
+      useCredentialsForManifestTag: false, // Keep this
+      // Conditionally enable/disable the service worker entirely
+      workboxOptions: ctx.dev
+        ? { runtimeCaching: [] } // Minimal config to prevent SW generation in dev
+        : {
+            skipWaiting: true, // Production: Take control immediately
+            clientsClaim: true, // Production: Claim clients immediately
+            // Add any production-specific caching strategies here
+            globPatterns: ['**/*.{js,css,html,png,jpg,svg,woff2}'], // Cache built assets
+            runtimeCaching: [
+              {
+                urlPattern: /^https?:\/\/.*/, // Cache external resources in production
+                handler: 'NetworkFirst',
+              },
+            ],
+          },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova

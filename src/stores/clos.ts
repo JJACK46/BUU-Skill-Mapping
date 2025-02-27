@@ -8,13 +8,22 @@ import { useSubjectStore } from './subject';
 import { useCurriculumStore } from './curriculum';
 import { usePloStore } from './plo';
 
-type TitleForm = 'New PLO' | 'Edit PLO';
-export const useClostore = defineStore('clo', {
+type TitleForm = 'New CLO' | 'Edit CLO';
+
+const initForm: Clo = {
+  name: '',
+  thaiDescription: '',
+  engDescription: '',
+  ploId: 0,
+  cloId: 0,
+  expectedLevel: 1,
+};
+
+export const useCloStore = defineStore('clo', {
   state: () => ({
     dialogState: false,
     clos: [] as Clo[],
-    form: <Partial<Clo>>{},
-    tabsModel: 'req',
+    form: initForm,
     editMode: true,
     titleForm: '' as TitleForm,
     search: '',
@@ -47,10 +56,10 @@ export const useClostore = defineStore('clo', {
       await this.plosStore.fetchAll();
       console.log(this.titleForm);
       if (form) {
-        this.titleForm = 'Edit PLO';
+        this.titleForm = 'Edit CLO';
         await this.fetchOneData(form.id || -1);
       } else {
-        this.titleForm = 'New PLO';
+        this.titleForm = 'New CLO';
         this.form = {};
       }
       this.dialogState = true;
@@ -67,11 +76,7 @@ export const useClostore = defineStore('clo', {
       }
     },
     async handleSave(subjectId: number) {
-      console.log(this.titleForm);
-      if (!this.form.plo || !this.form.skill) {
-        return;
-      }
-      if (this.titleForm === 'Edit PLO') {
+      if (this.titleForm === 'Edit CLO') {
         const payload = {
           id: this.form.id,
           subjectId: subjectId,
@@ -79,8 +84,8 @@ export const useClostore = defineStore('clo', {
           thaiDescription: this.form.thaiDescription,
           engDescription: this.form.engDescription,
           // expectedLevel: this.form.expectedLevel,
-          ploId: this.form.plo.id,
-          skillId: this.form.skill.id,
+          ploId: this.form.ploId,
+          skillId: this.form.skillId,
         } as Partial<Clo>;
 
         ClosService.updateOne(payload)
@@ -118,7 +123,7 @@ export const useClostore = defineStore('clo', {
     },
     async removeOne(id: number) {
       await ClosService.removeOne(id);
-      window.location.reload();
+      await this.fetchData();
     },
     resetForm() {
       this.form = {};

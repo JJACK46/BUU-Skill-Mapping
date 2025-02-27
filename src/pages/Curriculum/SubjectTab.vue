@@ -137,7 +137,6 @@
   <!-- CLOs Dialog -->
   <q-dialog
     v-model="dialogCloTable"
-    maximized
     v-if="curr.form.id && curr.form.subjects"
   >
     <CloDialog

@@ -15,7 +15,7 @@ const { t } = useI18n();
 const route = useRoute();
 const title = computed(() => route.matched[1]?.name as string);
 onMounted(async () => {
-  await store.fetchData();
+  await store.fetchAll();
 });
 useMeta({
   title: title.value,
@@ -28,7 +28,7 @@ useMeta({
       v-model:search-text="store.search"
       :label-search="`${t('search')}`"
       @open-dialog="store.toggleDialog({ title: 'New Skill' })"
-      @enter-search="store.fetchData"
+      @enter-search="store.fetchAll"
     />
     <q-separator class="q-my-md" />
     <!-- Top -->
@@ -77,7 +77,7 @@ useMeta({
       <q-pagination
         class="q-mx-auto"
         v-model="store.pagination!.page!"
-        @update:model-value="store.fetchData()"
+        @update:model-value="store.fetchAll()"
         :max="store.getMaxPage"
         direction-links
       />

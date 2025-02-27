@@ -42,7 +42,7 @@ export const useSkillStore = defineStore('skill', {
   },
   actions: {
     // independent skill
-    async fetchData() {
+    async fetchAll() {
       const { data, total } = await SkillService.getAll(
         convertToPageParams(this.pagination, this.search),
       );
@@ -51,7 +51,7 @@ export const useSkillStore = defineStore('skill', {
         this.totalSkills = total;
       }
     },
-    async fetchDataInCurr() {
+    async fetchDataInCurr(){
       const code = this.curr.getCode;
       const { data, total } = await SkillService.getSkillByCurr(code);
       if (total > 0) {
@@ -129,7 +129,7 @@ export const useSkillStore = defineStore('skill', {
       parent?: Partial<Skill>;
     }) {
       this.titleForm = title || 'New Skill';
-      this.parent = parent as Skill || null;
+      this.parent = (parent as Skill) || null;
       if (form) {
         // copy form
         this.form = JSON.parse(JSON.stringify(form));
