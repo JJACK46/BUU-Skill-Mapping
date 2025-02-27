@@ -15,7 +15,7 @@ export class CourseService {
     // return res.data;
   }
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: p });
+    const res = await api.get<DataResponse<Course>>(this.path, { params: p });
     return res.data;
   }
 

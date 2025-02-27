@@ -5,7 +5,7 @@ import type { DataResponse } from 'src/types/data-response';
 export class ClosService {
   static path = 'clos';
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: p });
+    const res = await api.get<DataResponse<Clo>>(this.path, { params: p });
     return res.data;
   }
 
@@ -14,7 +14,7 @@ export class ClosService {
     return res.data;
   }
   static async getAllBySubject(id: number) {
-    const res = await api.get<DataResponse>(`${this.path}`, {
+    const res = await api.get<DataResponse<Clo>>(`${this.path}`, {
       params: { subjectId: id },
     });
     return res.data;

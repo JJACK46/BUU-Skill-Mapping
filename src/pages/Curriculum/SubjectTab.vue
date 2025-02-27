@@ -137,11 +137,9 @@
   <!-- CLOs Dialog -->
   <q-dialog
     v-model="dialogCloTable"
-    v-if="curr.form.id && curr.form.subjects"
   >
     <CloDialog
       v-model="dialogCloTable"
-      :curr-id="curr.form.id"
       :subject="store.getListSubjects[store.rowIndex]!"
     />
   </q-dialog>
@@ -159,13 +157,11 @@ import { useI18n } from 'vue-i18n';
 import DialogForm from 'src/components/DialogForm.vue';
 import { OptionSubjectType } from 'src/data/subject_type';
 import CloDialog from './CloDialog.vue';
-import { useCurriculumStore } from 'src/stores/curriculum';
 import { useSubjectStore } from 'src/stores/subject';
 import FieldChecker from 'src/components/FieldChecker.vue';
 /*
     states
 */
-const curr = useCurriculumStore();
 const dialogCloTable = ref<boolean>(false);
 const { t } = useI18n();
 const global = useGlobalStore();

@@ -5,6 +5,7 @@ import type { PLO } from 'src/types/plo';
 import { useCurriculumStore } from './curriculum';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import type { FilterModel } from 'src/types/filter';
+import type { DataResponse } from 'src/types/data-response';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
 
@@ -29,14 +30,17 @@ export const usePloStore = defineStore('plo', {
     getListPLO: (c) => c.plos || [],
   },
   actions: {
-    async fetchAll() {
+    async fetchAll(): Promise<DataResponse<PLO>> {
       const data = await PlosService.getAll(
         convertToPageParams(this.pagination, this.search, this.filterModel),
       );
       if (data) {
         this.plos = data;
-        return data
       }
+      return {
+        data,
+        total: -1,
+      };
     },
 
     async createOne() {

@@ -39,11 +39,11 @@ class SkillService {
   };
 
   static getAll = async (p?: Partial<PageParams>) => {
-    const res = await api.get<DataResponse>(this.path, { params: p });
+    const res = await api.get<DataResponse<Skill>>(this.path, { params: p });
     return res.data;
   };
   static getSkillByCurr = async (curriculumCode: string) => {
-    const res = await api.get<DataResponse>(`${this.path}`, {
+    const res = await api.get<DataResponse<Skill>>(`${this.path}`, {
       params: { curriculumCode },
     });
     return res.data;

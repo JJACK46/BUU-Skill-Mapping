@@ -1,5 +1,5 @@
 // for findAll API
-export interface DataResponse {
-  data: Array<unknown>;
+export interface DataResponse<T> {
+  data: Array<T>;
   total: number;
 }

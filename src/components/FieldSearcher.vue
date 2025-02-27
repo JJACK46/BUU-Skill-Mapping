@@ -10,10 +10,11 @@
     @filter="funcFilter"
     :label
     option-value="id"
-    option-label="thaiName"
+    :option-label="computedOptionLabel"
     emit-value
     map-options
     clearable
+    @update:model-value="emitObject"
     @clear="funcClear"
     behavior="menu"
     :rules="[requireField]"
@@ -33,14 +34,34 @@ const model = defineModel<number>();
 const props = defineProps<{
   label: QSelect['label'];
   options?: QSelect['options'];
-  fetchOptions?: () => Promise<DataResponse>;
+  fetchOptions?: () => Promise<DataResponse<unknown>>;
   funcFilter: QSelect['onFilter'];
   funcClear: QSelect['onClear'];
+  optionLabel? : string
 }>();
 
 const mutationOptions = ref<[]>([]);
-
+const computedOptionLabel = computed(()=> props.optionLabel || 'thaiName')
 const computedOptions = computed(() => props.options || mutationOptions.value);
+
+// Function to find and emit the full object
+const emitObject = (val: number | null) => {
+  if (val === null) {
+    emit('update:modelValue', null);
+    return;
+  }
+  
+  const selectedObject = computedOptions.value.find(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (option: any) => option.id === val
+  );
+  emit('update:modelValue', selectedObject || null);
+};
+
+const emit = defineEmits<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (e: 'update:modelValue', value: any): void; 
+}>();
 
 onMounted(async () => {
   if (!props.options) {

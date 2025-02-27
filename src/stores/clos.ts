@@ -1,12 +1,10 @@
 import { defineStore } from 'pinia';
 import { Dialog, Notify } from 'quasar';
 import { ClosService } from 'src/services/clos';
-import { useSkillStore } from './skill';
 import type { Clo } from 'src/types/clo';
 // import { convertToPageParams } from 'src/utils/pagination';
 import { useSubjectStore } from './subject';
 import { useCurriculumStore } from './curriculum';
-import { usePloStore } from './plo';
 
 type TitleForm = 'New CLO' | 'Edit CLO';
 
@@ -30,8 +28,6 @@ export const useCloStore = defineStore('clo', {
     qNotify: Notify,
     qDialog: Dialog,
     onlyHaveSubs: true,
-    skillStore: useSkillStore(),
-    plosStore: usePloStore(),
     courseStore: useSubjectStore(),
     currStore: useCurriculumStore(),
   }),
@@ -52,9 +48,6 @@ export const useCloStore = defineStore('clo', {
     },
 
     async handleOpenDialog(form?: Partial<Clo>) {
-      await this.skillStore.fetchData();
-      await this.plosStore.fetchAll();
-      console.log(this.titleForm);
       if (form) {
         this.titleForm = 'Edit CLO';
         await this.fetchOneData(form.id || -1);

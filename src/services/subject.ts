@@ -9,7 +9,7 @@ export class SubjectService {
   static currPath = 'curriculumId';
 
   static async getAll(params?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params });
+    const res = await api.get<DataResponse<Subject>>(this.path, { params });
     return res.data;
   }
 
@@ -19,7 +19,7 @@ export class SubjectService {
   }
 
   static async findExistSubjectCode(code: string) {
-    const res = await api.get<DataResponse>(`${this.path}`, {
+    const res = await api.get<DataResponse<Subject>>(`${this.path}`, {
       params: { code },
     });
     return res.data.data[0];

@@ -7,7 +7,7 @@ export class LessonService {
   static path = 'lessons';
 
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: p });
+    const res = await api.get<DataResponse<Lesson>>(this.path, { params: p });
     return res.data;
   }
 

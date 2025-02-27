@@ -7,7 +7,7 @@ export class InstructorService {
   static path = 'instructors';
 
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: p });
+    const res = await api.get<DataResponse<Instructor>>(this.path, { params: p });
     return res.data;
   }
 

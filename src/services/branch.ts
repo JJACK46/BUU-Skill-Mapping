@@ -5,7 +5,7 @@ import type { DataResponse } from 'src/types/data-response';
 export class BranchService {
   static path = 'branches';
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: p });
+    const res = await api.get<DataResponse<Branch>>(this.path, { params: p });
     return res.data;
   }
 

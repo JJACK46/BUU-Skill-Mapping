@@ -5,7 +5,7 @@ import type { PageParams } from 'src/types/pagination';
 export class CurriculumService {
   static path = 'curriculums';
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: p });
+    const res = await api.get<DataResponse<Curriculum>>(this.path, { params: p });
     return res.data;
   }
 

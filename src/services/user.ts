@@ -7,7 +7,7 @@ export class UserService {
   static path = 'users';
 
   static async getAll(pag?: Partial<PageParams>) {
-    const res = await api.get<DataResponse>(this.path, { params: pag });
+    const res = await api.get<DataResponse<User>>(this.path, { params: pag });
     return res.data;
   }
 

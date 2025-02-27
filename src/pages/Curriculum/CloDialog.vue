@@ -25,12 +25,11 @@
       <DialogForm
         v-model="store.dialogState"
         :title="store.titleForm"
-        ref="formRef"
         width="50%"
         :json="store.form"
         @save="saveClos()"
       >
-        <div class="row justify-between">
+        <div class="row ">
           <div class="col-12 q-pa-sm">
             <q-input
               v-model="store.form.name"
@@ -42,7 +41,7 @@
             </q-input>
           </div>
         </div>
-        <div class="row justify-between">
+        <div class="row ">
           <div class="col-8 q-pa-sm">
             <!-- SKill -->
             <FieldSearcher
@@ -51,6 +50,7 @@
               :func-filter="updateFilteredSkills"
               :func-clear="clearSkill"
               :fetch-options="()=>SkillService.getSkillByCurr(currCode)"
+              @update:model-value="(s)=>{selectedSkill = s}"
             />
           </div>
           <div class="col-4 q-pa-sm">
@@ -66,7 +66,7 @@
             </q-select>
           </div>
         </div>
-        <div v-if="selectedSkill" class="row justify-between q-pb-md">
+        <div v-if="selectedSkill" class="row  q-pb-md">
           <div class="col-12 q-pa-sm">
             <!-- Skill Card -->
             <q-card flat bordered>
@@ -118,7 +118,7 @@
             </q-card>
           </div>
         </div>
-        <div class="row justify-between">
+        <div class="row ">
           <div class="col q-pa-sm">
             <!-- PLO -->
             <FieldSearcher
@@ -127,15 +127,17 @@
               :func-filter="updateFilteredPlos"
               :fetch-options="ploStore.fetchAll"
               :func-clear="clearPLO"
+              :option-label="'name'"
+              @update:model-value="(s)=>{selectedPlo = s}"
             />
           </div>
         </div>
-        <div v-if="selectedPlos" class="row justify-between q-pb-md">
+        <div v-if="selectedPlo" class="row  q-pb-md">
           <div class="col-12 q-pa-sm">
             <!-- PLO Card -->
             <q-card flat bordered>
               <q-card-section>
-                <div class="text-h6">{{ selectedPlos.name }}</div>
+                <div class="text-h6">{{ selectedPlo.name }}</div>
                 <!-- ขยายขนาด -->
                 <q-separator class="q-my-sm" />
                 <!-- เส้นคั่น -->
@@ -150,7 +152,7 @@
                     overflow-wrap: break-word;
                   "
                 >
-                  {{ selectedPlos.thaiDescription }}
+                  {{ selectedPlo.thaiDescription }}
                 </div>
                 <div
                   class="text-body1 q-mb-md"
@@ -161,30 +163,34 @@
                     overflow-wrap: break-word;
                   "
                 >
-                  {{ selectedPlos.engDescription }}
+                  {{ selectedPlo.engDescription }}
                 </div>
               </q-card-section>
             </q-card>
           </div>
         </div>
-        <div class="row justify-between">
+        <div class="row ">
           <div class="col-12 q-pa-sm">
             <q-input
               v-model="store.form.thaiDescription"
               dense
               type="textarea"
               outlined
+              counter
+              maxlength="1000"
               :label="t('thaiDescription') + ' *'"
               :rules="[requireField]"
             />
           </div>
         </div>
-        <div class="row justify-between">
+        <div class="row ">
           <div class="col-12 q-pa-sm">
             <q-input
               v-model="store.form.engDescription"
               dense
               type="textarea"
+              counter
+              maxlength="1000"
               outlined
               :label="t('engDescription') + ' *'"
               :rules="[requireField]"
@@ -239,7 +245,7 @@ import FieldSearcher from 'src/components/FieldSearcher.vue';
 import SkillService from 'src/services/skill';
 import { useRoute } from 'vue-router';
 
-const props = defineProps<{ currId: number; subject: Subject; }>();
+const props = defineProps<{ subject: Subject; }>();
 const route = useRoute()
 const currCode = computed(()=>route.params.code as string)
 
@@ -255,7 +261,7 @@ const selectedSkill = computed({
   },
 });
 
-const selectedPlos = computed({
+const selectedPlo = computed({
   get: () => store.form.plo ?? null,
   set: (val: PLO) => {
     store.form.plo = val;
@@ -325,7 +331,7 @@ const columns: QTableColumn[] = [
 
 const editRow = (row: Clo) => {
   store.form = JSON.parse(JSON.stringify(row)); // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
-  selectedPlos.value = ploStore.getListPLO.find((plo) => plo.id === row.ploId)!;
+  selectedPlo.value = ploStore.getListPLO.find((plo) => plo.id === row.ploId)!;
   selectedSkill.value = skillStore.skills.find(
     (skill) => skill.id === row.skillId,
   )!;
