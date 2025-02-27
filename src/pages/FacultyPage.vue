@@ -218,7 +218,7 @@ const computedCtaText = computed(() => {
   } else if (store.titleForm === 'New Branch') {
     return t('createBranch');
   }
-  return undefined;
+  return '';
 });
 
 onMounted(async () => {

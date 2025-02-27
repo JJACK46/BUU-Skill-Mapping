@@ -9,11 +9,22 @@ import { nextTick } from 'vue';
 
 type TitleForm = 'New Instructor' | 'Edit Instructor';
 
+const initForm: Instructor = {
+  id: 0,
+  code: '',
+  thaiName: '',
+  engName: '',
+  branchId: 0,
+  branch: {},
+  email: '',
+  curriculums: [],
+};
+
 export const useInstructorStore = defineStore('instructor', {
   state: () => ({
     dialogState: false,
     search: '',
-    form: {} as Partial<Instructor>,
+    form: initForm,
     listItem: [] as Instructor[],
     availableItem: [] as Instructor[],
     titleForm: '' as TitleForm,
@@ -45,39 +56,36 @@ export const useInstructorStore = defineStore('instructor', {
         convertToPageParams(this.pagination, this.search, this.filterModel),
       );
       if (data) {
-        this.listItem = data;
+        this.listItem = JSON.parse(JSON.stringify(data));
       }
-      this.pagination.rowsNumber = total || 0;
+      this.pagination!.rowsNumber = total || 0;
     },
     async fetchRowsInCurr(pag?: QTableProps['pagination']) {
       this.pagination = pag || defaultPagination;
-      // wait for 100ms for the curr store to update
-      setTimeout(async () => {
-        const filter: Partial<FilterModel> = {
-          curriculumCode: this.curr.getCode,
-        };
-        const { data, total } = await InstructorService.getAll(
-          convertToPageParams(this.pagination, this.search, filter),
-        );
-        if (data) {
-          this.listItem = data;
-        }
-        this.pagination.rowsNumber = total || 0;
-      }, 100);
+      await nextTick(); // Wait for the curr store to update
+      const filter: Partial<FilterModel> = {
+        curriculumCode: this.curr.getCode,
+      };
+      const { data, total } = await InstructorService.getAll(
+        convertToPageParams(this.pagination, this.search, filter),
+      );
+      if (data) {
+        this.listItem = JSON.parse(JSON.stringify(data));
+      }
+      this.pagination!.rowsNumber = total || 0;
     },
     async fetchAvailableInstructors(pag: QTableProps['pagination']) {
-      nextTick(async () => {
-        this.pagination = pag;
-        const filter: Partial<FilterModel> = {
-          branchThaiName: this.curr.getBranchThaiName,
-        };
-        const { data } = await InstructorService.getAll(
-          convertToPageParams(this.pagination, this.search, filter),
-        );
-        if (data) {
-          this.availableItem = data;
-        }
-      });
+      this.pagination = pag;
+      await nextTick();
+      const filter: Partial<FilterModel> = {
+        branchThaiName: this.curr.getBranchThaiName,
+      };
+      const { data } = await InstructorService.getAll(
+        convertToPageParams(this.pagination, this.search, filter),
+      );
+      if (data) {
+        this.availableItem = JSON.parse(JSON.stringify(data));
+      }
     },
     async assignInstructor(params: {
       curriculumId: number;
@@ -89,12 +97,13 @@ export const useInstructorStore = defineStore('instructor', {
           type: 'ok',
           message: 'Updated successfully',
         });
-        nextTick(async () => await this.fetchRowsInCurr());
+        await nextTick();
+        await this.fetchRowsInCurr();
         this.toggleDialog();
       }
     },
 
-    async removeAssignedInstructor(params: {
+    removeAssignedInstructor(params: {
       curriculumId: number;
       instructorId: number;
     }) {
@@ -103,19 +112,23 @@ export const useInstructorStore = defineStore('instructor', {
         message: 'Are you sure you want to revoke this instructor?',
         cancel: true,
         persistent: true,
-      }).onOk(async () => {
-        const ok = await InstructorService.removeAssignedInstructor(params);
-        if (ok) {
-          Notify.create({
-            type: 'ok',
-            message: `Deleted successfully`,
-          });
-          nextTick(async () => await this.fetchRowsInCurr());
-        }
+      }).onOk(() => {
+        InstructorService.removeAssignedInstructor(params)
+          .then(async (ok) => {
+            if (ok) {
+              Notify.create({
+                type: 'ok',
+                message: `Deleted successfully`,
+              });
+              await nextTick();
+              await this.fetchRowsInCurr();
+            }
+          })
+          .catch((err) => console.log(err));
       });
     },
     resetForm() {
-      this.form = {} as Partial<Instructor>;
+      this.form = initForm;
     },
 
     async createOne() {
@@ -129,7 +142,7 @@ export const useInstructorStore = defineStore('instructor', {
       await this.fetchAll();
     },
     async updateOne() {
-      const ok = await InstructorService.updateOne(this.form);
+      const ok = await InstructorService.updateOne(this.form as Instructor);
       if (ok) {
         Notify.create({
           type: 'ok',
@@ -140,7 +153,7 @@ export const useInstructorStore = defineStore('instructor', {
     },
 
     async deleteOne(id: number) {
-      if (confirm) {
+      if (confirm()) {
         const ok = await InstructorService.removeOne(id);
         if (ok) {
           Notify.create({
@@ -158,28 +171,32 @@ export const useInstructorStore = defineStore('instructor', {
         message: 'Are you sure you want to delete this instructor?',
         cancel: true,
         persistent: true,
-      }).onOk(async () => this.deleteOne(id));
+      }).onOk(() => {
+        void nextTick(async () => {
+          await this.deleteOne(id);
+        });
+      });
     },
 
     async handleSave() {
       if (this.titleForm === 'Edit Instructor') {
-        this.updateOne();
+        await this.updateOne();
       } else {
-        this.createOne();
+        await this.createOne();
       }
       this.dialogState = false;
       this.resetForm();
       await this.fetchAll();
     },
 
-    handleEdit(form: Partial<Instructor>) {
+    handleEdit(form: Instructor) {
       this.form = { ...form };
       this.titleForm = 'Edit Instructor';
       this.toggleDialog();
     },
 
     handleCreate() {
-      this.form = {} as Partial<Instructor>;
+      this.form = initForm;
       this.titleForm = 'New Instructor';
       this.toggleDialog();
     },

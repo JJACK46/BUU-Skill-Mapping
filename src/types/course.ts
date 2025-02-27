@@ -1,21 +1,15 @@
-import type { SkillCollection } from './skill-collection';
-import type { Student } from './student';
-import type { Lesson } from './lesson';
 import type { Instructor } from './instructor';
+import type { Subject } from './subject';
 
-export interface Course {
-  id?: string;
-  name: string;
-  description: string;
+export type Course = {
+  id?: number;
   active: boolean;
-  subject: Partial<Lesson> | null;
-  // curriculum: Partial<Curriculum> | null;
-  teachers: Partial<Instructor>[];
-  courseEnrollment: CourseEnrollment[];
+  subject: Partial<Subject>;
+  instructors?: Partial<Instructor>[];
 }
-export interface CourseEnrollment {
-  id?: string;
-  course: Partial<Course>;
-  student: Partial<Student>;
-  skillCollections: SkillCollection[];
-}
+// export interface CourseEnrollment {
+//   id?: string;
+//   course: Partial<Course>;
+//   student: Partial<Student>;
+//   skillCollections: SkillCollection[];
+// }

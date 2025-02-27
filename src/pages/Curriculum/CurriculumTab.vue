@@ -125,14 +125,14 @@ watch(
   ([newThaiDegree, newEngDegree], [oldThaiDegree, oldEngDegree]) => {
     // Avoid infinite loops by checking if the value has actually changed
     if (newThaiDegree !== oldThaiDegree) {
-      const indexTH = OptionEducationLevelTH.indexOf(newThaiDegree);
+      const indexTH = OptionEducationLevelTH.indexOf(newThaiDegree!);
       if (indexTH !== -1) {
-        store.form.engDegree = OptionEducationLevelEN[indexTH];
+        store.form.engDegree = OptionEducationLevelEN[indexTH]!;
       }
     } else if (newEngDegree !== oldEngDegree) {
-      const indexEN = OptionEducationLevelEN.indexOf(newEngDegree);
+      const indexEN = OptionEducationLevelEN.indexOf(newEngDegree!);
       if (indexEN !== -1) {
-        store.form.thaiDegree = OptionEducationLevelTH[indexEN];
+        store.form.thaiDegree = OptionEducationLevelTH[indexEN]!;
       }
     }
   },

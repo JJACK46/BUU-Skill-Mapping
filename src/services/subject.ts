@@ -1,6 +1,5 @@
 // import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
-import { HttpStatusCode } from 'axios';
 import type { Subject } from 'src/types/subject';
 import type { DataResponse } from 'src/types/data-response';
 import type { PageParams } from 'src/types/pagination';
@@ -31,7 +30,7 @@ export class SubjectService {
     delete obj.lesson;
     delete obj.clos;
     const res = await api.post(this.path, obj);
-    return res.status === HttpStatusCode.Created;
+    return res.status
   }
 
   static async createOneInCurr({
@@ -42,7 +41,7 @@ export class SubjectService {
     form: Partial<Subject>;
   }) {
     const res = await api.post(`${this.path}/${this.currPath}/${currId}`, form);
-    return res.status === HttpStatusCode.Created;
+    return res.status
   }
 
   static async updateOneInCurr({
@@ -60,7 +59,7 @@ export class SubjectService {
         `${this.path}/${this.currPath}/${currId}/`,
         form,
       );
-      return res.status === HttpStatusCode.Ok;
+      return res.status
     } catch (error) {
       console.error(error);
     }
@@ -72,12 +71,12 @@ export class SubjectService {
     delete obj.clos;
     delete obj.curriculums;
     const res = await api.patch(`${this.path}/${id}`, obj);
-    return res.status === HttpStatusCode.Ok;
+    return res.status
   }
 
   static async removeOne(id: number) {
     const res = await api.delete(`${this.path}/${id}`);
-    return res.status === HttpStatusCode.Ok;
+    return res.status
   }
 
   static async getSubjectByCurriculums(id: number) {

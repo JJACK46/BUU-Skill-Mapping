@@ -1,15 +1,5 @@
 {
-  "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": true,
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["awaitstore", "plos"],
-  "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  "cSpell.words": ["plos"],
   "files.associations": {
     "*.page-template": "vue",
     "*.layout-template": "vue",

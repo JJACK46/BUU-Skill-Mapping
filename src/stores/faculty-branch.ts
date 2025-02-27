@@ -46,6 +46,7 @@ export const useFacultyStore = defineStore('faculty', {
           };
         });
       }
+      return [];
     },
     getFaculties: (s) => s.faculties,
     getJsonForm: (state) => {
@@ -69,7 +70,7 @@ export const useFacultyStore = defineStore('faculty', {
       }
     },
     async removeOne(id: string) {
-      FacultyService.removeOne(id);
+      await FacultyService.removeOne(id);
       this.faculties = (await FacultyService.getAll()).data;
     },
     toggleDialog({
@@ -103,37 +104,34 @@ export const useFacultyStore = defineStore('faculty', {
       this.dialogState = !this.dialogState;
     },
     async handleSave() {
-      let ok = false;
       let text = '';
       switch (this.titleForm) {
         case 'New Faculty':
-          ok = await FacultyService.createOne(this.formFaculty);
+          await FacultyService.createOne(this.formFaculty);
           text = 'Faculty created successfully';
           break;
         case 'Edit Faculty':
-          ok = await FacultyService.updateOne(this.formFaculty);
+          await FacultyService.updateOne(this.formFaculty);
           text = 'Faculty updated successfully';
           break;
         case 'New Branch':
-          ok = await BranchService.createOne(this.formBranch);
+          await BranchService.createOne(this.formBranch);
           text = 'Branch created successfully';
           break;
         case 'Edit Branch':
-          ok = await BranchService.updateOne(this.formBranch);
+          await BranchService.updateOne(this.formBranch);
           text = 'Branch updated successfully';
           break;
         default:
           break;
       }
-      if (ok) {
-        this.qNotify.create({
-          type: 'ok',
-          message: text,
-        });
-        this.dialogState = false;
-        this.fetchData();
-        // this.fetchDataBranch()
-      }
+      this.qNotify.create({
+        type: 'ok',
+        message: text,
+      });
+      this.dialogState = false;
+      await this.fetchData();
+      // this.fetchDataBranch()
     },
     handleRemove({
       id,
@@ -153,13 +151,23 @@ export const useFacultyStore = defineStore('faculty', {
         .onCancel(() => {
           return;
         })
-        .onOk(async () => {
-          if ('branch' in node) {
-            await FacultyService.removeOne(id);
-          } else {
-            await BranchService.removeOne(id);
-          }
-          this.fetchData();
+        .onOk(() => {
+          const remove = async () => {
+            if ('branch' in node) {
+              await FacultyService.removeOne(id);
+            } else {
+              await BranchService.removeOne(id);
+            }
+            await this.fetchData();
+          };
+          remove()
+            .then()
+            .catch((err) => {
+              this.qNotify.create({
+                type: 'negative',
+                message: err.message,
+              });
+            });
         });
     },
     resetForm() {

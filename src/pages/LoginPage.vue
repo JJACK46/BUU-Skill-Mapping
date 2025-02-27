@@ -114,7 +114,7 @@ import { useAuthStore } from 'src/stores/auth';
     states
 */
 const route = useRoute();
-const title = computed(() => route.matched[0].name as string);
+const title = computed(() => route.matched[0]?.name as string);
 const $q = useQuasar();
 const auth = useAuthStore();
 /*

@@ -36,7 +36,7 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach(async (to, from, next) => {
+  Router.beforeEach((to, from, next) => {
     const { meta, path } = to;
     const isPublic = meta?.public || false;
     const requiredRole = meta?.role || null;
@@ -46,6 +46,9 @@ export default route(function (/* { store, ssrContext } */) {
       auth.loadUserFromSession();
       const { getAccessToken } = auth;
       const userRole = auth.getRole;
+      if (!userRole) {
+        return next('/login');
+      }
       // Bypass now
       // const isAuthenticated = true;
       // const userRole = EnumUserRole.ADMIN;

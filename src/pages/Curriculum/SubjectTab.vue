@@ -24,7 +24,7 @@
       <FieldChecker
         :label="t('subjectCode')"
         v-model="store.form.code"
-        :func-update="store.checkSubjectCode"
+        :func-update="(s) => store.checkSubjectCode(String(s))"
         :found-hint="store.getSubjectCodeLabel"
         :is-found="store.foundExistSubject"
       />
@@ -135,11 +135,15 @@
     </template>
   </q-table>
   <!-- CLOs Dialog -->
-  <q-dialog v-model="dialogCloTable" maximized>
+  <q-dialog
+    v-model="dialogCloTable"
+    maximized
+    v-if="curr.form.id && curr.form.subjects"
+  >
     <CloDialog
       v-model="dialogCloTable"
       :curr-id="curr.form.id"
-      :subject="store.getListSubjects[store.rowIndex]"
+      :subject="store.getListSubjects[store.rowIndex]!"
     />
   </q-dialog>
   <!-- CLOs Form -->

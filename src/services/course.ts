@@ -6,23 +6,24 @@ import type { DataResponse } from 'src/types/data-response';
 export class CourseService {
   static path = 'courses';
 
-  static async importStudents(id: string, studentListId: string[]) {
-    const res = await api.patch(
-      `${this.path}/${id}/import-students`,
-      studentListId,
-    );
-    return res.data;
+  static async importStudents() {
+    // ! need new implement
+    // const res = await api.patch(
+    //   `${this.path}/${id}/import-students`,
+    //   studentListId,
+    // );
+    // return res.data;
   }
   static async getAll(p?: Partial<PageParams>) {
     const res = await api.get<DataResponse>(this.path, { params: p });
     return res.data;
   }
 
-  static async getOne(id: string) {
+  static async getOne(id: number) {
     const res = await api.get(`${this.path}/${id}`);
     return res.data;
   }
-  static async getEnrollment(id: string) {
+  static async getEnrollment(id: number) {
     const res = await api.get(`${this.path}/${id}/enrollments`);
     return res.data;
   }
@@ -30,7 +31,7 @@ export class CourseService {
   static async createOne(obj: Course) {
     const dto = {
       ...obj,
-      teacherListId: obj.teachers.map((t) => t.id),
+      instructorListId: obj.instructors!.map((t) => t.id),
       // curriculumId: obj.curriculum?.id,
       subjectId: obj.subject?.id,
     };

@@ -110,7 +110,7 @@ const global = useGlobalStore();
 const store = useInstructorStore();
 const route = useRoute();
 const curr = useCurriculumStore();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 const columns: QTableColumn[] = [
   {
     name: 'number',

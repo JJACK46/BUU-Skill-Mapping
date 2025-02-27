@@ -2,34 +2,69 @@ import { defineStore } from 'pinia';
 import { CourseService } from 'src/services/course';
 import type { Course } from 'src/types/course';
 
+// Mockup data
+const courses: Course[] = [
+  {
+    id: 1,
+    active: true,
+    subject: {
+      id: 1,
+      thaiName: 'Subject 1',
+      engName: 'Subject 1',
+    },
+  },
+  {
+    id: 2,
+    active: true,
+    subject: {
+      id: 2,
+      thaiName: 'Subject 2',
+      engName: 'Subject 2',
+    },
+  },
+];
+
+// Define the state interface for better type inference
+interface CourseState {
+  form: Partial<Course>;
+  courses: Course[];
+  dialogState: boolean;
+}
+
 export const useCourseStore = defineStore('course', {
-  state: () => ({
-    form: <Partial<Course>>{},
-    courses: <Course[]>[],
-    course: <Course>{},
+  state: (): CourseState => ({
+    form: {},
+    courses: [],
     dialogState: false,
   }),
 
   getters: {
-    getCourseId(state) {
-      return state.course.id || '';
+    getCourseId(state): number {
+      return state.form?.id || -1;
+    },
+    getCourse(): Partial<Course> {
+      return this.form || {};
     },
   },
+
   actions: {
-    async fetchData() {
-      this.courses = (await CourseService.getAll()).data;
+    fetchData() {
+      // Simulate API call
+      // const response = await CourseService.getAll();
+      // this.courses = response.data;
+      this.courses = courses;
+
+      this.form = courses[0] ?? {};
     },
-    async createOne() {
-      await CourseService.createOne(this.form as Course);
-      this.dialogState = false;
-      window.location.reload();
-    },
+
     async removeOne(id: string) {
       await CourseService.removeOne(id);
       window.location.reload();
     },
-    setCourseId(id: string) {
-      this.course.id = id;
+
+    setCourseId(id: number) {
+      // Fixed: Use `form` instead of `course`
+      this.form.id = id;
     },
   },
 });

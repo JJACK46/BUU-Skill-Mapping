@@ -3,7 +3,7 @@ import { Notify, SessionStorage } from 'quasar';
 import { useAuthStore } from 'src/stores/auth';
 
 const api = axios.create({
-  baseURL: process.env.VITE_BACKEND_API,
+  baseURL: process.env.VITE_BACKEND_API || 'http://localhost:3000',
   withCredentials: true,
   timeout: 5000,
 });
@@ -20,7 +20,7 @@ api.interceptors.request.use(
   },
   function (error) {
     // Do something with request error
-    return Promise.reject(error);
+    return Promise.reject(error as Error);
   },
 );
 
@@ -45,7 +45,7 @@ api.interceptors.response.use(
     });
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(e);
+    return Promise.reject(e as Error);
   },
 );
 export { api, axios };

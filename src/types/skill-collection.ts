@@ -1,14 +1,15 @@
 import type { Skill } from './skill';
-import type { SkillExpectedLevel } from './skill-exp-lvl';
-import type { Lesson } from './lesson';
+import type { Course } from './course';
 
 export interface SkillCollection {
   id?: number;
-  subject: Partial<Lesson>;
-  skill: Partial<Skill>;
-  skillExpectedLevels: SkillExpectedLevel;
-  gainedLevel: number;
-  passed: boolean | null;
+  course?: Partial<Course>;
+  courseId: number;
+  studentId: number;
+  skillId: number;
+  skill?: Partial<Skill>;
+  gained: number;
+  expected?: number;
 }
 
 // export enum SkillLevel {

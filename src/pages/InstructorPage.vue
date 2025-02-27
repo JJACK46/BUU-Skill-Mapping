@@ -56,7 +56,6 @@
       <div class="row q-gutter-y-md">
         <FieldBranchOptions
           v-model="store.form.branchId"
-          :branch="store.form.branch"
         />
         <q-input
           outlined
@@ -169,7 +168,7 @@ import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
 const global = useGlobalStore();
 const store = useInstructorStore();
 const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 const columns: QTableColumn[] = [
   {
     name: 'number',

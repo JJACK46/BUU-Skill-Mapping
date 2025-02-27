@@ -3,8 +3,6 @@ import globals from 'globals';
 import pluginVue from 'eslint-plugin-vue';
 import pluginQuasar from '@quasar/app-vite/eslint';
 import vueTsEslintConfig from '@vue/eslint-config-typescript';
-
-// the following is optional, if you want prettier too:
 import prettierSkipFormatting from '@vue/eslint-config-prettier/skip-formatting';
 
 export default [
@@ -17,7 +15,6 @@ export default [
      *
      * ESLint requires "ignores" key to be the only one in this object
      */
-
     ignores: [
       'dist/*',
       'src-capacitor/*',
@@ -44,14 +41,23 @@ export default [
    */
   ...pluginVue.configs['flat/essential'],
 
+  {
+    files: ['**/*.ts', '**/*.vue'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports' },
+      ],
+    },
+  },
   // https://github.com/vuejs/eslint-config-typescript
   ...vueTsEslintConfig({
     // Optional: extend additional configurations from typescript-eslint'.
     // Supports all the configurations in
     // https://typescript-eslint.io/users/configs#recommended-configurations
     extends: [
-      // By default, only the recommended rules are enabled.
-      'recommended',
+      // By default, only the 'recommendedTypeChecked' rules are enabled.
+      'recommendedTypeChecked',
       // You can also manually enable the stylistic rules.
       // "stylistic",
 
@@ -80,10 +86,6 @@ export default [
     // add your custom rules here
     rules: {
       'prefer-promise-reject-errors': 'off',
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        { prefer: 'type-imports' },
-      ],
 
       // allow debugger during development only
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -99,5 +101,5 @@ export default [
     },
   },
 
-  prettierSkipFormatting, // optional, if you want prettier
+  prettierSkipFormatting,
 ];

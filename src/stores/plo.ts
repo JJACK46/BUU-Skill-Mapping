@@ -3,7 +3,7 @@ import { Dialog, Notify } from 'quasar';
 import { PlosService } from 'src/services/plo';
 import type { PLO } from 'src/types/plo';
 import { useCurriculumStore } from './curriculum';
-import { convertToPageParams } from 'src/utils/pagination';
+import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import type { FilterModel } from 'src/types/filter';
 
 type TitleForm = 'New PLO' | 'Edit PLO';
@@ -14,6 +14,7 @@ export const usePloStore = defineStore('plo', {
     form: <Partial<PLO>>{},
     tabsModel: 'req',
     editMode: true,
+    pagination: defaultPagination,
     titleForm: '' as TitleForm,
     search: '',
     qNotify: Notify,
@@ -58,7 +59,7 @@ export const usePloStore = defineStore('plo', {
     },
 
     async deleteOne(id: number) {
-      if (confirm) {
+      if (confirm()) {
         const ok = await PlosService.removeOne(id);
         if (ok) {
           Notify.create({
@@ -73,10 +74,27 @@ export const usePloStore = defineStore('plo', {
     handleDelete(id: number) {
       Dialog.create({
         title: 'Confirm Deletion',
-        message: 'Are you sure you want to delete this Plo?',
+        message: 'Are you sure you want to delete this PLO?',
         cancel: true,
         persistent: true,
-      }).onOk(async () => await this.deleteOne(id));
+      })
+        .onOk(() => {
+          this.deleteOne(id)
+            .then()
+            .catch((err) => {
+              console.error('Error deleting PLO:', err);
+              Notify.create({
+                type: 'negative',
+                message: 'Failed to delete PLO. Please try again.',
+              });
+            });
+        })
+        .onCancel(() => {
+          Notify.create({
+            type: 'info',
+            message: 'Deletion cancelled.',
+          });
+        });
     },
 
     async handleSave() {

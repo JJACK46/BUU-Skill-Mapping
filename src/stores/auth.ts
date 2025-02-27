@@ -3,7 +3,6 @@ import { SessionStorage } from 'quasar';
 import { EnumUserRole } from 'src/data/roles';
 import AuthService from 'src/services/auth';
 import type { Payload } from 'src/types/payload';
-import { type Router, useRouter } from 'vue-router';
 
 export interface AuthState {
   payload: Payload | null;
@@ -11,7 +10,6 @@ export interface AuthState {
     email: string;
     password: string;
   };
-  router: Router;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -21,7 +19,6 @@ export const useAuthStore = defineStore('auth', {
       email: '',
       password: '',
     },
-    router: useRouter(),
   }),
 
   getters: {
@@ -36,7 +33,7 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async loginGoogle() {
+    loginGoogle() {
       return AuthService.loginGoogle();
     },
 
@@ -45,7 +42,7 @@ export const useAuthStore = defineStore('auth', {
       if (data) {
         this.payload = data;
         SessionStorage.set('userPayload', data);
-        this.router.push('dashboard');
+        await this.router.push('dashboard');
       }
     },
 
@@ -71,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
     loadUserFromSession() {
       const storedPayload = SessionStorage.getItem('userPayload');
       if (storedPayload) {
-        this.payload = storedPayload;
+        this.payload = JSON.parse(JSON.stringify(storedPayload));
       }
     },
   },

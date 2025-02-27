@@ -55,7 +55,7 @@
         <FieldChecker
           :label="t('curriculumCode')"
           v-model="store.form.code"
-          :func-update="store.checkUpdateCode"
+          :func-update="(s) => store.checkUpdateCode(String(s))"
           :found-hint="store.getCurriculumCodeLabel"
           :is-found="store.foundExistCurriculum"
           mask="##############"
@@ -181,7 +181,7 @@ const { t } = useI18n();
 const global = useGlobalStore();
 const route = useRoute();
 const router = useRouter();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 const store = useCurriculumStore();
 const columns = computed(
   () =>
@@ -220,22 +220,22 @@ watch(
   ([newThaiDegree, newEngDegree], [oldThaiDegree, oldEngDegree]) => {
     // Avoid infinite loops by checking if the value has actually changed
     if (newThaiDegree !== oldThaiDegree) {
-      const indexTH = OptionEducationLevelTH.indexOf(newThaiDegree);
+      const indexTH = OptionEducationLevelTH.indexOf(newThaiDegree!);
       if (indexTH !== -1) {
-        store.form.engDegree = OptionEducationLevelEN[indexTH];
+        store.form.engDegree = OptionEducationLevelEN[indexTH]!;
       }
     } else if (newEngDegree !== oldEngDegree) {
-      const indexEN = OptionEducationLevelEN.indexOf(newEngDegree);
+      const indexEN = OptionEducationLevelEN.indexOf(newEngDegree!);
       if (indexEN !== -1) {
-        store.form.thaiDegree = OptionEducationLevelTH[indexEN];
+        store.form.thaiDegree = OptionEducationLevelTH[indexEN]!;
       }
     }
   },
   { deep: true },
 );
 
-const handleEditBtn = (row: Curriculum) => {
-  router.push(`/curriculums/${row.code}`);
+const handleEditBtn = async (row: Curriculum) => {
+  await router.push(`/curriculums/${row.code}`);
 };
 
 useMeta({

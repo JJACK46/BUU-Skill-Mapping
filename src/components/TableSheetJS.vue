@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { read, utils, type WorkSheet } from 'xlsx';
 
 type DataSet = { [index: string]: WorkSheet };
-type Row = unknown[];
+type Row = string[];
 type RowCB = (row: Row) => string;
 type Column = { field: string; label: string; display: RowCB };
 type RowCol = { rows: Row[]; cols: Column[] };
@@ -96,18 +96,31 @@ declare global {
 window.startEdit = function (ev: MouseEvent) {
   (ev?.target as HTMLSpanElement).contentEditable = 'true';
 };
-window.endEdit = function (ev: FocusEvent | KeyboardEvent) {
+/**
+ * Ends the cell editing and updates the workbook with the new value.
+ * @param {FocusEvent | KeyboardEvent} ev - The focus or keyboard event that triggered the end of editing.
+ */
+window.endEdit = function (ev: FocusEvent | KeyboardEvent): void {
   if (
-    typeof (ev as KeyboardEvent).key == 'undefined' ||
-    (ev as KeyboardEvent).key === 'Enter'
+    !(ev instanceof KeyboardEvent) ||
+    ev.key === 'Enter'
   ) {
     const pos = (ev.target as HTMLSpanElement)
       ?.getAttribute('position')
       ?.split('.');
     if (!pos) return;
-    (ev?.target as HTMLSpanElement).contentEditable = 'true';
 
-    rows.value[+pos[0]][+pos[1]] = (ev.target as HTMLSpanElement).innerText;
+    const target = ev.target as HTMLSpanElement;
+    target.contentEditable = 'true';
+
+    if (!rows.value) {
+      return;
+    }
+
+    const rowIndex = +pos[0]!;
+    const colIndex = +pos[1]!;
+    
+    rows.value[rowIndex]![colIndex] = target.innerText;
 
     workBook.value[currSheet.value] = utils.json_to_sheet(rows.value, {
       header: columns.value.map((col: Column) => col.field),
@@ -116,12 +129,12 @@ window.endEdit = function (ev: FocusEvent | KeyboardEvent) {
   }
 };
 
-async function importAB(ab: ArrayBuffer, name: string): Promise<void> {
+function importAB(ab: ArrayBuffer, name: string) {
   loading.value = true;
   const data = read(ab);
 
   currFileName.value = name;
-  currSheet.value = data.SheetNames?.[0];
+  currSheet.value = data.SheetNames?.[0] || '';
   sheets.value = data.SheetNames;
   workBook.value = data.Sheets;
   loading.value = false;
@@ -132,7 +145,7 @@ async function importAB(ab: ArrayBuffer, name: string): Promise<void> {
 async function importFile(ev: Event): Promise<void> {
   const file = (ev.target as HTMLInputElement)?.files?.[0];
   if (!file) return;
-  await importAB(await file.arrayBuffer(), file.name);
+  importAB(await file.arrayBuffer(), file.name);
 }
 
 // function exportFile(type: string): void {
@@ -155,7 +168,7 @@ function selectSheet(sheet: string): void {
   rows.value = dropBlankRow(newRows);
   paging.value = newRows.length > 50;
 
-  items.value = utils.sheet_to_json(workBook.value[sheet]);
+  items.value = utils.sheet_to_json(workBook.value[sheet]!);
 }
 
 // onMounted(async () => {
@@ -192,7 +205,8 @@ async function onDrop(event: DragEvent) {
   if (!files || files.length === 0) return;
 
   const file = files[0];
-  await importAB(await file.arrayBuffer(), file.name);
+  if (!file) return;
+  importAB(await file.arrayBuffer(), file.name);
 }
 
 // Handle the drag events

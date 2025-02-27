@@ -36,7 +36,7 @@ export const useSkillStore = defineStore('skill', {
     getParentId: (state) => state.parent.id,
     getParentName: (s) => s.parent.thaiName,
     getMaxPage: (state) =>
-      calMaxPage(state.totalSkills, state.pagination!.rowsPerPage),
+      calMaxPage(state.totalSkills, state.pagination?.rowsPerPage),
     getSkills: (state) => state.skills || [],
     getSubjects: (s) => s.skills,
   },
@@ -47,7 +47,7 @@ export const useSkillStore = defineStore('skill', {
         convertToPageParams(this.pagination, this.search),
       );
       if (total > 0) {
-        this.skills = data;
+        this.skills = JSON.parse(JSON.stringify(data));
         this.totalSkills = total;
       }
     },
@@ -55,7 +55,7 @@ export const useSkillStore = defineStore('skill', {
       const code = this.curr.getCode;
       const { data, total } = await SkillService.getSkillByCurr(code);
       if (total > 0) {
-        this.skills = data;
+        this.skills = JSON.parse(JSON.stringify(data));
         this.totalSkills = total;
       }
     },
@@ -96,7 +96,7 @@ export const useSkillStore = defineStore('skill', {
       this.resetForm();
     },
     // independent skill
-    async handleRemove({ id }: { id: number; subSkillId?: number }) {
+    handleRemove({ id }: { id: number; subSkillId?: number }) {
       this.qDialog
         .create({
           title: 'Confirm',
@@ -107,18 +107,19 @@ export const useSkillStore = defineStore('skill', {
         .onCancel(() => {
           return;
         })
-        .onOk(async () => {
-          const ok = await SkillService.removeSkill(id);
-          if (ok) {
-            this.qNotify.create({
-              type: 'ok',
-              message: 'Skill delete successfully',
-            });
-          }
-          this.fetchDataInCurr();
+        .onOk(() => {
+          void SkillService.removeSkill(id).then(async (ok) => {
+            if (ok) {
+              this.qNotify.create({
+                type: 'ok',
+                message: 'Skill delete successfully',
+              });
+            }
+            await this.fetchDataInCurr();
+          });
         });
     },
-    async toggleDialog({
+    toggleDialog({
       form,
       title,
       parent,
@@ -128,7 +129,7 @@ export const useSkillStore = defineStore('skill', {
       parent?: Partial<Skill>;
     }) {
       this.titleForm = title || 'New Skill';
-      this.parent = parent || null;
+      this.parent = parent as Skill || null;
       if (form) {
         // copy form
         this.form = JSON.parse(JSON.stringify(form));

@@ -92,7 +92,9 @@ const emit = defineEmits<{
 }>();
 
 const searchText = defineModel('searchText', { default: '' });
-const filterModel = defineModel<Partial<FilterModel>>('filterModel');
+const filterModel = defineModel<Partial<FilterModel>>('filterModel', {
+  default: {} as FilterModel,
+});
 
 // auto fetch data again after search empty
 watch(

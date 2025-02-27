@@ -101,7 +101,7 @@ import MainHeader from 'src/components/PageHeader.vue';
 
 const global = useGlobalStore();
 const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 const store = useLessonStore();
 const formRef = ref();
 const formValid = ref<boolean>(false);

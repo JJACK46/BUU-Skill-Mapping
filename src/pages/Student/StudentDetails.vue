@@ -28,22 +28,6 @@
               <q-item v-for="(s, i) in student.skillCollection" :key="i">
                 <q-item-section>
                   {{ i + 1 }}. {{ s.skill?.thaiName ?? 'Unknown' }} / Level:
-                  {{ s.gainedLevel }} / {{ s.passed ? 'Passed' : 'Failed' }}
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-card flat bordered>
-        <q-card-section>
-          <div class="text-h6">Course Enrollment</div>
-          <div class="text-body1">
-            <q-list>
-              <q-item v-for="(s, i) in student.courseEnrollment" :key="i">
-                <q-item-section>
-                  {{ i + 1 }}.
-                  {{ s.course?.name ?? 'Unknown' }}
                 </q-item-section>
               </q-item>
             </q-list>

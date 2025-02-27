@@ -1,7 +1,6 @@
 import type { Branch } from 'src/types/branch';
 import { api } from 'boot/axios';
 import type { PageParams } from 'src/types/pagination';
-import { HttpStatusCode } from 'axios';
 import type { DataResponse } from 'src/types/data-response';
 export class BranchService {
   static path = 'branches';
@@ -23,17 +22,17 @@ export class BranchService {
   static async createOne(obj: Partial<Branch>) {
     delete obj.faculty;
     const res = await api.post(this.path, obj);
-    return res.status === HttpStatusCode.Created;
+    return res.status 
   }
 
   static async updateOne(obj: Partial<Branch>) {
     delete obj.faculty;
     const res = await api.patch(`${this.path}/${obj.id}`, obj);
-    return res.status === HttpStatusCode.Ok;
+    return res.status
   }
 
   static async removeOne(id: string) {
     const res = await api.delete(`${this.path}/${id}`);
-    return res.status === HttpStatusCode.Ok;
+    return res.status
   }
 }

@@ -24,7 +24,7 @@ export const coordinatorRoutes: RouteRecordRaw[] = [
         children: [
           {
             path: ':id',
-            component: () => import('pages/Course/Course-id.vue'),
+            component: () => import('src/pages/Course/CourseDetails.vue'),
           },
         ],
       },

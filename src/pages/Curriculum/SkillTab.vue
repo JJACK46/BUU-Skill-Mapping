@@ -19,7 +19,7 @@ import JSON_Card from 'src/components/JSON_Card.vue';
 const store = useSkillStore();
 const { t } = useI18n();
 const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 const searchText = ref('');
 const selectedItem = ref<Skill | null>(null);
 /*

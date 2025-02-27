@@ -27,9 +27,6 @@ export const useClostore = defineStore('clo', {
     currStore: useCurriculumStore(),
   }),
   getters: {
-    // getData: (s) =>
-    //   s.courseStore.currStore.form.courseSpecs?.flatMap((spec) => spec.clos) ||
-    //   [],
     getData: (c) => c.clos,
     getDialogTitle: (s) => s.titleForm,
   },
@@ -37,7 +34,7 @@ export const useClostore = defineStore('clo', {
     async fetchData(id: number) {
       const { data, total } = await ClosService.getAllBySubject(id);
       if (total > 0) {
-        this.clos = data;
+        this.clos = JSON.parse(JSON.stringify(data));
       }
     },
     async fetchOneData(id: number) {
@@ -50,10 +47,10 @@ export const useClostore = defineStore('clo', {
       await this.plosStore.fetchAll();
       console.log(this.titleForm);
       if (form) {
-        this.titleForm = 'Edit CLO';
-        await this.fetchOneData(form.id);
+        this.titleForm = 'Edit PLO';
+        await this.fetchOneData(form.id || -1);
       } else {
-        this.titleForm = 'New CLO';
+        this.titleForm = 'New PLO';
         this.form = {};
       }
       this.dialogState = true;
@@ -61,49 +58,61 @@ export const useClostore = defineStore('clo', {
     async createOne() {
       const ok = await ClosService.createOne(this.form as Clo);
       if (ok) {
-        this.clos = await ClosService.getAll(); // โหลดข้อมูลใหม่โดยไม่ต้องรีเฟรช
+        const data = await ClosService.getAll(); // โหลดข้อมูลใหม่โดยไม่ต้องรีเฟรช
+        if (data) {
+          this.clos = JSON.parse(JSON.stringify(data));
+        }
         this.dialogState = false;
         this.resetForm();
       }
     },
-    async handleSave(courseSpecId: number) {
+    async handleSave(subjectId: number) {
       console.log(this.titleForm);
-      if (this.titleForm === 'Edit CLO') {
+      if (!this.form.plo || !this.form.skill) {
+        return;
+      }
+      if (this.titleForm === 'Edit PLO') {
         const payload = {
           id: this.form.id,
-          courseSpecId: courseSpecId,
+          subjectId: subjectId,
           name: this.form.name,
           thaiDescription: this.form.thaiDescription,
           engDescription: this.form.engDescription,
           // expectedLevel: this.form.expectedLevel,
           ploId: this.form.plo.id,
           skillId: this.form.skill.id,
-        };
+        } as Partial<Clo>;
 
-        const ok = await ClosService.updateOne(payload);
-        if (ok)
-          this.qNotify.create({
-            type: 'ok',
-            message: 'Clos updated successfully',
+        ClosService.updateOne(payload)
+          .then((ok) => {
+            if (ok)
+              this.qNotify.create({
+                type: 'ok',
+                message: 'Clos updated successfully',
+              });
+          })
+          .catch((err) => {
+            console.log(err);
           });
       } else {
         const payload = {
-          courseSpecId: courseSpecId,
+          subjectId: subjectId,
           name: this.form.name,
           thaiDescription: this.form.thaiDescription,
           engDescription: this.form.engDescription,
           // expectedLevel: this.form.expectedLevel,
           ploId: this.form.plo.id,
           skillId: this.form.skill.id,
-        };
-        const ok = await ClosService.createOne(payload);
-        if (ok)
-          this.qNotify.create({
-            type: 'ok',
-            message: 'Clos created successfully',
-          });
+        } as Partial<Clo>;
+        await ClosService.createOne(payload).then((ok) => {
+          if (ok)
+            this.qNotify.create({
+              type: 'ok',
+              message: 'Clos created successfully',
+            });
+        });
       }
-      this.fetchDataByCoursSpec(courseSpecId);
+      await this.fetchData(subjectId);
       this.dialogState = false;
       this.resetForm();
     },

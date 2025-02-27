@@ -47,7 +47,7 @@
               option-value="id"
               option-label="thaiName"
               clearable
-              @clear="store.form.skill = null"
+              @clear="clearSkill()"
               behavior="menu"
               :rules="[requireField]"
             >
@@ -139,7 +139,7 @@
               option-value="id"
               option-label="name"
               clearable
-              @clear="store.form.plo = null"
+              @clear="clearPLO()"
               behavior="menu"
               :rules="[requireField]"
             >
@@ -266,6 +266,9 @@ import type { Subject } from 'src/types/subject';
 import { usePloStore } from 'src/stores/plo';
 import { useSkillStore } from 'src/stores/skill';
 import { requireField } from 'src/utils/field-rules';
+import type { Clo } from 'src/types/clo';
+import type { PLO } from 'src/types/plo';
+import type { Skill } from 'src/types/skill';
 
 const props = defineProps<{ currId: number; subject: Subject }>();
 
@@ -279,20 +282,27 @@ const ploStore = usePloStore();
 const skillStore = useSkillStore();
 const selectedSkill = computed({
   get: () => store.form.skill ?? null,
-  set: (val) => {
+  set: (val: Skill) => {
     store.form.skill = val;
   },
 });
 
 const selectedPlos = computed({
   get: () => store.form.plo ?? null,
-  set: (val) => {
+  set: (val: PLO) => {
     store.form.plo = val;
   },
 });
 
 const filteredPlos = ref([...ploStore.getListPLO]);
 const filteredSkills = ref([...skillStore.getSkills]);
+
+const clearSkill = () => {
+  store.form.skill = {} as Skill;
+};
+const clearPLO = () => {
+  store.form.plo = {} as PLO;
+};
 
 // const updateFilteredPlos = (val: string, update: (cb: () => void) => void) => {
 //   update(() => {
@@ -390,28 +400,28 @@ const columns = ref<QTableColumn[]>([
 //   });
 // };
 
-const editRow = (row) => {
-  store.form = { ...row }; // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
-  selectedPlos.value =
-    ploStore.getListPLO.find((plo) => plo.id === row.ploId) || null;
-  selectedSkill.value =
-    skillStore.skills.find((skill) => skill.id === row.skillId) || null;
+const editRow = (row: Clo) => {
+  store.form = JSON.parse(JSON.stringify(row)); // คัดลอกข้อมูลจากแถวที่เลือกไปยัง form
+  selectedPlos.value = ploStore.getListPLO.find((plo) => plo.id === row.ploId)!;
+  selectedSkill.value = skillStore.skills.find(
+    (skill) => skill.id === row.skillId,
+  )!;
   store.dialogState = true; // เปิด Dialog
 };
 
-function saveClos() {
-  store.handleSave(props.subject.id);
-  store.handleSave(props.subject.id);
+async function saveClos() {
+  await store.handleSave(props.subject.id);
+  await store.handleSave(props.subject.id);
   store.dialogState = false; // ปิด Dialog
 }
-const removeOne = (rowId: number) => {
+const removeOne = async (rowId: number) => {
   if (confirm('Are you sure you want to delete this CLO?')) {
-    store.removeOne(rowId);
-    store.fetchData(props.subject.id); // เรียกใช้ store เพื่อลบข้อมูล
+    await store.removeOne(rowId);
+    await store.fetchData(props.subject.id); // เรียกใช้ store เพื่อลบข้อมูล
   }
 };
-onMounted(() => {
-  store.fetchData(props.subject.id);
+onMounted(async () => {
+  await store.fetchData(props.subject.id);
 });
 </script>
 

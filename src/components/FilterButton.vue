@@ -115,7 +115,7 @@ const handleChangeFaculty = (val: string) => {
   const index = faculties.value?.findIndex((f) => f.thaiName === val);
   if (index && index > -1) {
     strBranchOptions.value =
-      faculties.value?.[index].branch?.map((b) => b.thaiName || '') || [];
+      faculties.value?.[index]!.branch?.map((b) => b.thaiName || '') || [];
   } else {
     strBranchOptions.value = [];
   }

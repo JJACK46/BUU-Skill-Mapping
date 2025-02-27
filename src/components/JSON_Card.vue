@@ -30,8 +30,8 @@ import { matContentCopy } from '@quasar/extras/material-icons';
 const alreadyCopied = ref(false);
 const expanded = ref<boolean>(false);
 
-const copyToClipboard = () => {
-  navigator.clipboard.writeText(JSON.stringify(props));
+const copyToClipboard = async () => {
+  await navigator.clipboard.writeText(JSON.stringify(props));
   alreadyCopied.value = true;
 };
 

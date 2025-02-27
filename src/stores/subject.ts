@@ -6,6 +6,7 @@ import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 import type { Subject } from 'src/types/subject';
 import { SubjectService } from 'src/services/subject';
 import { useCurriculumStore } from 'src/stores/curriculum';
+import { nextTick } from 'vue';
 
 type TitleForm = 'New Subject' | 'Edit Subject';
 
@@ -13,7 +14,7 @@ export const useSubjectStore = defineStore('subject', {
   state: () => ({
     dialogState: false,
     form: {} as Subject,
-    listItem: [] as Subject[],
+    subjects: [] as Subject[],
     tabsModel: 'req',
     editMode: true,
     titleForm: '' as TitleForm,
@@ -77,7 +78,7 @@ export const useSubjectStore = defineStore('subject', {
   }),
   getters: {
     getDialogTitle: (s) => s.titleForm,
-    getListSubjects: (s) => s.listItem,
+    getListSubjects: (s) => s.subjects ,
     getSubjectCodeLabel: (s) => s.subjectCodeLabel,
   },
   actions: {
@@ -85,7 +86,7 @@ export const useSubjectStore = defineStore('subject', {
       if (subjectCode.length === 8) {
         const existSubject = (await SubjectService.findExistSubjectCode(
           subjectCode,
-        )) as unknown as Subject;
+        )) as Subject;
         if (existSubject) {
           this.subjectCodeLabel = 'Found the exist subject';
           this.foundExistSubject = true;
@@ -104,7 +105,7 @@ export const useSubjectStore = defineStore('subject', {
           convertToPageParams(pag, this.search),
         );
         if (data) {
-          this.listItem = data;
+          this.subjects = JSON.parse(JSON.stringify(data));
           this.total = total;
         }
       } catch (error) {
@@ -113,47 +114,55 @@ export const useSubjectStore = defineStore('subject', {
     },
     async fetchAllInCurr() {
       try {
-        setTimeout(async () => {
-          const filter: Partial<FilterModel> = {
-            curriculumCode: this.curr.getCode,
-          };
-          const { data, total } = await SubjectService.getAll(filter);
-          if (data) {
-            this.listItem = data;
-            this.total = total;
-          }
-        }, 100);
-      } catch (error) {
+        const filter = {
+          curriculumCode: this.curr.getCode,
+        };
+
+        const { data, total } = await SubjectService.getAll(filter);
+
+        if (data) {
+          this.subjects = JSON.parse(JSON.stringify(data));
+          this.total = total;
+        }
+      } catch (error: unknown) {
         console.error('Error fetching data:', error);
       }
     },
     resetForm() {
-      this.form = {} as Partial<Subject>;
+      this.form = {} as Subject;
     },
 
     async createOne() {
-      const ok = await SubjectService.createOne(this.form);
-      if (ok) {
-        Notify.create({
-          type: 'ok',
-          message: 'Created successfully',
-        });
+      try {
+        const ok = await SubjectService.createOne(this.form);
+        if (ok) {
+          Notify.create({
+            type: 'ok',
+            message: 'Created successfully',
+          });
+        }
+        await this.fetchAll();
+      } catch (error) {
+        console.error('Error creating subject:', error);
       }
-      await this.fetchAll();
     },
     async updateOne() {
-      const ok = await SubjectService.updateOne(this.form.id, this.form);
-      if (ok) {
-        Notify.create({
-          type: 'ok',
-          message: 'Updated successfully',
-        });
+      try {
+        const ok = await SubjectService.updateOne(this.form.id, this.form);
+        if (ok) {
+          Notify.create({
+            type: 'ok',
+            message: 'Updated successfully',
+          });
+        }
+        await this.fetchAll();
+      } catch (error) {
+        console.error('Error updating subject:', error);
       }
-      await this.fetchAll();
     },
 
     async deleteOne(id: number) {
-      if (confirm) {
+      if (confirm()) {
         const ok = await SubjectService.removeOne(id);
         if (ok) {
           Notify.create({
@@ -171,7 +180,11 @@ export const useSubjectStore = defineStore('subject', {
         message: 'Are you sure you want to delete this Subject?',
         cancel: true,
         persistent: true,
-      }).onOk(async () => this.deleteOne(id));
+      }).onOk(() => {
+        void nextTick(async () => {
+          await this.deleteOne(id);
+        });
+      });
     },
 
     async handleSave() {
@@ -179,9 +192,9 @@ export const useSubjectStore = defineStore('subject', {
         this.form.curriculumId = this.curr.getInsertId;
       }
       if (this.titleForm === 'Edit Subject') {
-        this.updateOne();
+        await this.updateOne();
       } else {
-        this.createOne();
+        await this.createOne();
       }
       this.dialogState = false;
       this.resetForm();
@@ -189,13 +202,13 @@ export const useSubjectStore = defineStore('subject', {
     },
 
     handleEdit(form: Partial<Subject>) {
-      this.form = { ...form };
+      this.form = JSON.parse(JSON.stringify(form));
       this.titleForm = 'Edit Subject';
       this.toggleDialog();
     },
 
     handleCreate() {
-      this.form = {} as Partial<Subject>;
+      this.form = {} as Subject;
       this.titleForm = 'New Subject';
       this.toggleDialog();
     },

@@ -6,26 +6,12 @@
     />
     <q-separator class="q-my-md" />
     <section class="q-gutter-lg row">
-      <div v-for="course in store.courses" :key="course.id">
+      <div v-for="(course, index) in store.courses" :key="index">
         <CustomCard
-          :head-text="course.name"
-          :sub-text="course.subject?.engName"
+          :head-text="course.subject.thaiName || ''"
+          :sub-text="course.subject.engName || ''"
           @click="handleViewCourse"
         >
-          <template #btn-options>
-            <q-item
-              clickable
-              onmouseenter="this.style.color='red'"
-              onmouseleave="this.style.color=''"
-              @click="handleDelete(course.id)"
-              v-close-popup
-            >
-              <q-item-section side>
-                <q-icon size="16px" name="delete" />
-              </q-item-section>
-              <q-item-section> {{ t('delete') }}</q-item-section>
-            </q-item>
-          </template>
         </CustomCard>
       </div>
     </section>
@@ -33,10 +19,12 @@
       class="q-mt-lg"
       flat
       bordered
-      v-show="!store.courses || store.courses.length === 0"
+      v-if="!store.courses || store.courses.length === 0"
     >
       <q-card-section class="text-body2 text-center"> No Data </q-card-section>
     </q-card>
+    <!-- debug -->
+    <CourseDetails />
   </q-page>
 </template>
 
@@ -44,47 +32,39 @@
 /*
     imports
 */
-import { useMeta, useQuasar } from 'quasar';
+import { useMeta } from 'quasar';
 import CustomCard from 'src/components/CustomCard.vue';
 import { useCourseStore } from 'src/stores/course';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import MainHeader from 'src/components/PageHeader.vue';
-import { useI18n } from 'vue-i18n';
+import CourseDetails from './CourseDetails.vue';
 /*
     states
 */
-const { t } = useI18n();
-const $q = useQuasar();
 const route = useRoute();
 const router = useRouter();
 const filterCourse = ref('');
 const store = useCourseStore();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 
-const handleViewCourse = (id: string) => {
+const handleViewCourse = async (id: string) => {
   if (id) {
-    router.push({ name: 'Course Detail', params: { id } });
+    await router.push({ name: 'Course Detail', params: { id } });
   }
 };
 
-const handleOpenDialog = async () => {
+const handleOpenDialog = () => {
   store.dialogState = true;
 };
 
-const handleDelete = (id: string) => {
-  $q.dialog({
-    title: 'Confirm Deletion',
-    message: 'Are you sure you want to delete this course?',
-    cancel: true,
-    persistent: true,
-  }).onOk(() => store.removeOne(id));
-};
 /*
     methods
 */
 
-onMounted(store.fetchData);
+onMounted(() => {
+  store.fetchData();
+});
 
 useMeta({
   title: title.value,

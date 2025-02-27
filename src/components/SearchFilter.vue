@@ -199,7 +199,7 @@ import { api } from 'src/boot/axios';
 import type { PageParams } from 'src/types/pagination';
 
 const props = defineProps<{
-  fetchData: (pageParams?: PageParams) => void;
+  fetchData: (pageParams?: PageParams) => Promise<void>;
   pageParams: PageParams;
   byFaculty?: boolean;
   byBranch?: boolean;

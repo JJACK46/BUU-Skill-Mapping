@@ -11,7 +11,7 @@ class AuthService {
     return res?.data;
   }
 
-  static async loginGoogle() {
+  static loginGoogle() {
     localStorage.removeItem('token');
     window.location.href = api.defaults.baseURL + '/auth/google';
   }

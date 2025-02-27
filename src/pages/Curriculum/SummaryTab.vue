@@ -17,7 +17,7 @@
             :label="t('edit')"
             icon-right="edit"
             color="primary"
-            @click="goToEdit(menuList[0])"
+            @click="goToEdit('home')"
           />
         </div>
         <q-separator class="q-my-md"></q-separator>
@@ -47,12 +47,12 @@
             :label="t('edit')"
             icon-right="edit"
             color="primary"
-            @click="goToEdit(menuList[1])"
+            @click="goToEdit('PLOs')"
           />
         </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list v-if="store.form.plos?.length">
-          <q-item v-for="(plo, index) in store.form.plos" :key="plo.id">
+          <q-item v-for="(plo, index) in store.form.plos" :key="index">
             <div class="row full-width items-start">
               <q-item-section side class="col-1">
                 <q-item-label caption class="text-black">
@@ -86,7 +86,7 @@
             :label="t('edit')"
             icon-right="edit"
             color="primary"
-            @click="goToEdit(menuList[3])"
+            @click="goToEdit('subjects')"
           />
         </div>
         <q-separator class="q-my-md"></q-separator>
@@ -132,11 +132,14 @@
             :label="t('edit')"
             icon-right="edit"
             color="primary"
-            @click="goToEdit(menuList[4])"
+            @click="goToEdit('skills')"
           />
         </div>
         <q-separator class="q-my-md"></q-separator>
-        <CustomTreeSkill :skills="store.form.skills" readonly></CustomTreeSkill>
+        <CustomTreeSkill
+          :skills="store.form.skills || []"
+          readonly
+        ></CustomTreeSkill>
       </q-card-section>
     </q-card>
 
@@ -152,14 +155,14 @@
             :label="t('edit')"
             icon-right="edit"
             color="primary"
-            @click="goToEdit(menuList[2])"
+            @click="goToEdit('coordinators')"
           />
         </div>
         <q-separator class="q-my-md"></q-separator>
         <q-list>
           <q-item
-            v-for="coordinator in instructorStore.listItem"
-            :key="coordinator.id"
+            v-for="(coordinator, index) in instructorStore.listItem"
+            :key="index"
           >
             <q-item-section avatar class="q-mr-sm">
               <q-avatar>
@@ -210,17 +213,33 @@ import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useInstructorStore } from 'src/stores/instructor';
 import { useRoute, useRouter } from 'vue-router';
-import type { MenuProps } from 'src/components/MenuLink.vue';
 import JSON_Card from 'src/components/JSON_Card.vue';
 import { useSubjectStore } from 'src/stores/subject';
+
+// Define MenuTitle as a union of valid titles
+type MenuTitle =
+  | 'home'
+  | 'curriculum'
+  | 'PLOs'
+  | 'coordinators'
+  | 'subjects'
+  | 'skills'
+  | 'summary';
+
+// Define MenuProps with the specific title type
+interface MenuProps {
+  icon: string;
+  title: MenuTitle;
+  link: string;
+}
 
 const store = useCurriculumStore();
 const subjectStore = useSubjectStore();
 const instructorStore = useInstructorStore();
 const subjects = computed(() => subjectStore.getListSubjects);
-
 const route = useRoute();
 const router = useRouter();
+const currCode = computed(() => route.params.code as string);
 
 const { t } = useI18n();
 const details = computed(() => [
@@ -234,30 +253,26 @@ const details = computed(() => [
   { label: t('minimumGrade'), value: store.form.minimumGrade },
 ]);
 
-const basePath = `/curriculums/${route.params.id}`;
+const basePath = `/curriculums/${currCode.value}`;
 
 onMounted(async () => {
-  // get curriculumn id from route fullPath curriculums/23112122111211/summary
   if (!store.form) {
-    const id = route.fullPath.split('/')[2];
-    await store.fetchOne(id);
+    await store.fetchOneByCode(currCode.value);
+    await subjectStore.fetchAllInCurr();
+    await instructorStore.fetchRowsInCurr();
   }
 });
 
-import { watchEffect } from 'vue';
-
-watchEffect(async () => {
-  await subjectStore.fetchAllInCurr();
-  await console.log('Instuctors', store.form.coordinators);
-  await instructorStore.fetchRowsInCurr();
-});
-
-const goToEdit = (menuList: MenuProps) => {
-  console.log(menuList);
-  router.push(menuList.link);
+// Update goToEdit to use MenuTitle
+const goToEdit = async (title: MenuTitle) => {
+  const link = menuList.find((item) => item.title === title)?.link;
+  if (link) {
+    await router.push(link);
+  }
 };
 
-const menuList = [
+// Update menuList with typed titles
+const menuList: MenuProps[] = [
   {
     icon: 'home',
     title: 'curriculum',
@@ -278,7 +293,6 @@ const menuList = [
     title: 'subjects',
     link: `${basePath}/subjects`,
   },
-
   {
     icon: 'code',
     title: 'skills',

@@ -23,16 +23,10 @@ export const useUserStore = defineStore('user', {
       const { data, total } = await UserService.getAll(
         convertToPageParams(this.pagination, this.search),
       );
-      this.users = data;
+      this.users = JSON.parse(JSON.stringify(data));
       this.pagination = { ...this.pagination, rowsNumber: total };
     },
-    async toggleDialog({
-      form,
-      title,
-    }: {
-      form?: Partial<User>;
-      title?: TitleForm;
-    }) {
+    toggleDialog({ form, title }: { form?: Partial<User>; title?: TitleForm }) {
       this.titleForm = title || 'New User';
       if (form) {
         this.form = form;
@@ -48,12 +42,12 @@ export const useUserStore = defineStore('user', {
         await UserService.createOne(this.form as User);
       }
       await UserService.getAll();
-      this.fetchData();
+      await this.fetchData();
       this.resetForm();
       this.dialogState = false;
     },
 
-    async handleRemove(id: string) {
+    handleRemove(id: string) {
       this.qDialog
         .create({
           title: 'Confirm',
@@ -64,9 +58,14 @@ export const useUserStore = defineStore('user', {
         .onCancel(() => {
           return;
         })
-        .onOk(async () => {
-          await UserService.removeOne(id);
-          this.fetchData();
+        .onOk(() => {
+          UserService.removeOne(id)
+            .then(async () => {
+              await this.fetchData();
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         });
     },
     resetForm() {

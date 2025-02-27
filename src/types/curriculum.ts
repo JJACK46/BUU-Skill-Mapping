@@ -20,6 +20,6 @@ export interface Curriculum {
   plos?: PLO[];
   subjects: Lesson[];
   courseSpecs?: Subject[];
-  branch: Branch;
+  branch?: Branch;
   skills?: Skill[];
 }

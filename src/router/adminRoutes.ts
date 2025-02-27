@@ -41,7 +41,7 @@ export const adminRoutes: RouteRecordRaw[] = [
           {
             path: ':id',
             name: 'Course Detail',
-            component: () => import('pages/Course/Course-id.vue'),
+            component: () => import('src/pages/Course/CourseDetails.vue'),
           },
         ],
       },
@@ -58,7 +58,7 @@ export const adminRoutes: RouteRecordRaw[] = [
           {
             path: ':id',
             name: 'Student Detail',
-            component: () => import('src/pages/Student/Student_ID.vue'),
+            component: () => import('src/pages/Student/StudentDetails.vue'),
           },
         ],
       },

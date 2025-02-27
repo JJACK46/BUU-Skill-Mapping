@@ -14,7 +14,7 @@ import { useRoute } from 'vue-router';
 const auth = useAuthStore();
 const store = useUserStore();
 const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 const global = useGlobalStore();
 
 const columns = ref(<QTableColumn[]>[
@@ -41,8 +41,8 @@ const columns = ref(<QTableColumn[]>[
 
 watch(
   () => store.search,
-  () => {
-    store.fetchData();
+  async () => {
+    await store.fetchData();
   },
 );
 

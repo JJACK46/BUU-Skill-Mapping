@@ -22,7 +22,7 @@ defineOptions({
 export interface MenuProps {
   title: string;
   caption?: string;
-  link?: string;
+  link: string;
   icon?: string;
 }
 

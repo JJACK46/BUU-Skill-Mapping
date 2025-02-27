@@ -65,7 +65,7 @@
         <q-card-section class="flex justify-end">
           <q-btn icon="close" padding="none" flat @click="isJSONview = false" />
         </q-card-section>
-        <q-card-section class="bg-grey-1">
+        <q-card-section class="bg-grey-1" v-if="json">
           <vue-json-pretty :data="json" />
         </q-card-section>
       </q-card>
@@ -100,7 +100,7 @@ const toggleJSONview = () => {
 const emits = defineEmits<{ (e: 'save'): void }>();
 
 // State
-const dialogState = defineModel<boolean>();
+const dialogState = defineModel<boolean>({ default: false });
 const formRef = ref<InstanceType<typeof QForm>>();
 const isFormValid = ref(false);
 

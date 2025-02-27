@@ -146,8 +146,8 @@ const columns = ref<QTableColumn[]>([
     style: 'width: 120px',
   }, // กำหนดขนาด
 ]);
-onMounted(() => {
+onMounted(async () => {
   store.filterModel.curriculumCode = route.params.code as string;
-  store.fetchAll(); // เรียกใช้ store เพื่อดึงข้อมูล
+  await store.fetchAll(); // เรียกใช้ store เพื่อดึงข้อมูล
 });
 </script>

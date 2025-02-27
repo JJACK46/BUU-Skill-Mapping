@@ -29,7 +29,7 @@ import { computed } from 'vue';
 const props = defineProps<{
   isFound: boolean;
   foundHint: string;
-  funcUpdate: (arg0: string | number) => void;
+  funcUpdate: (arg0: string | number | null) => void | Promise<void>;
   mask?: string;
   rules?: ValidationRule[];
   label: string;

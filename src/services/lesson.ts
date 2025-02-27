@@ -1,7 +1,6 @@
 import type { PageParams } from 'src/types/pagination';
 import { api } from 'src/boot/axios';
 import type { Lesson } from 'src/types/lesson';
-import { HttpStatusCode } from 'axios';
 import type { DataResponse } from 'src/types/data-response';
 
 export class LessonService {
@@ -19,13 +18,13 @@ export class LessonService {
 
   static async createOne(obj: Partial<Lesson>) {
     const res = await api.post(this.path, obj);
-    return res.status === HttpStatusCode.Created;
+    return res.status 
   }
 
   static async updateOne(obj: Partial<Lesson>) {
     try {
       const res = await api.patch(`${this.path}/${obj.id}`, obj);
-      return res.status === HttpStatusCode.Ok;
+      return res.status
     } catch (error) {
       console.error(error);
     }
@@ -33,7 +32,7 @@ export class LessonService {
 
   static async removeOne(id: string) {
     const res = await api.delete(`${this.path}/${id}`);
-    return res.status === HttpStatusCode.Ok;
+    return res.status 
   }
 
   static async getSubjectByCurriculums(id: number) {

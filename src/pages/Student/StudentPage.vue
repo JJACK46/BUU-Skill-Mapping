@@ -111,7 +111,7 @@ const router = useRouter();
 const search = ref('');
 const store = useStudentStore();
 const route = useRoute();
-const title = computed(() => route.matched[1].name as string);
+const title = computed(() => route.matched[1]?.name as string);
 const fieldDate = store.formStudent.dateEnrollment as string;
 const studentColumns: QTableColumn[] = [
   {
@@ -162,8 +162,8 @@ const studentColumns: QTableColumn[] = [
 
 const sheet = ref();
 
-function handleClickInfo(id: number | string) {
-  router.push(`/students/${id}`);
+async function handleClickInfo(id: number | string) {
+  await router.push(`/students/${id}`);
 }
 
 async function handleImport() {

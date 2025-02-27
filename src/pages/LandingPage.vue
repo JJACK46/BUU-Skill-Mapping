@@ -123,7 +123,7 @@
           <q-list>
             <div class="text-h5 q-mt-md">Soft Skills 🧑🏻‍🎓</div>
 
-            <q-item v-for="item in softSkills[0].children" :key="item.title">
+            <q-item v-for="item in softSkills[0]?.children" :key="item.title">
               <q-item-section>
                 <q-item-label class="text-h6"
                   >✔︎ {{ item.title }}</q-item-label
@@ -136,7 +136,7 @@
               </q-item-section>
             </q-item>
             <div class="text-h5 q-mt-md">Hard Skills ⚙️</div>
-            <q-item v-for="item in hardSkills[0].children" :key="item.title">
+            <q-item v-for="item in hardSkills[0]?.children" :key="item.title">
               <q-item-section>
                 <q-item-label class="text-h6"
                   >✔︎ {{ item.title }}</q-item-label

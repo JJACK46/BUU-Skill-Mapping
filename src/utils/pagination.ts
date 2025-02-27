@@ -8,7 +8,7 @@ export const defaultPagination = {
   descending: false,
   page: 1,
   rowsPerPage: 10,
-  rowsNumber: undefined,
+  rowsNumber: 15,
 } as QTableProps['pagination'];
 
 export const convertToPageParams = (
