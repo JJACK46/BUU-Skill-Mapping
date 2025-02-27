@@ -5,7 +5,9 @@ import type { PageParams } from 'src/types/pagination';
 export class CurriculumService {
   static path = 'curriculums';
   static async getAll(p?: Partial<PageParams>) {
-    const res = await api.get<DataResponse<Curriculum>>(this.path, { params: p });
+    const res = await api.get<DataResponse<Curriculum>>(this.path, {
+      params: p,
+    });
     return res.data;
   }
 
@@ -15,6 +17,8 @@ export class CurriculumService {
   }
 
   static async createOne(obj: Partial<Curriculum>) {
+    delete obj.subjects
+    delete obj.coordinators
     const res = await api.post(this.path, obj);
     return res.status;
   }

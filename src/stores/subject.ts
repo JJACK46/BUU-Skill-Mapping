@@ -86,7 +86,7 @@ export const useSubjectStore = defineStore('subject', {
       if (subjectCode.length === 8) {
         const existSubject = (await SubjectService.findExistSubjectCode(
           subjectCode,
-        )) as Subject;
+        ));
         if (existSubject) {
           this.subjectCodeLabel = 'Found the exist subject';
           this.foundExistSubject = true;

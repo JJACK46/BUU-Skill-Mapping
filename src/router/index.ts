@@ -46,9 +46,7 @@ export default route(function (/* { store, ssrContext } */) {
       auth.loadUserFromSession();
       const { getAccessToken } = auth;
       const userRole = auth.getRole;
-      if (!userRole && path !== '/login') {
-        return next('/login');
-      }
+
       // Bypass now
       // const isAuthenticated = true;
       // const userRole = EnumUserRole.ADMIN;

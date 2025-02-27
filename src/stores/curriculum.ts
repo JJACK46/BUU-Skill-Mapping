@@ -117,7 +117,7 @@ export const useCurriculumStore = defineStore('curriculum', {
                 type: 'ok',
                 message: 'Curriculum removed successfully',
               });
-              await this.fetchOneByCode(this.getCode);
+              await this.fetchAll();
             }
           })
           .catch((err) => {
