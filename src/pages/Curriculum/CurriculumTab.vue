@@ -101,7 +101,7 @@ import {
   requireField,
   ruleGradeFormat,
 } from 'src/utils/field-rules';
-import { onMounted, watch } from 'vue';
+import { computed, nextTick, onMounted, watch } from 'vue';
 import { useCurriculumStore } from 'src/stores/curriculum';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -115,9 +115,12 @@ import JSON_Card from 'src/components/JSON_Card.vue';
 const store = useCurriculumStore();
 const { t } = useI18n();
 const route = useRoute();
+const curCode = computed(()=>route.params.code as string);
 
-onMounted(() => {
-  store.form.id = Number(route.params.id);
+onMounted(async () => {
+  await nextTick().then(async () => {
+    await store.fetchOneByCode(curCode.value);
+  });
 });
 
 watch(

@@ -31,13 +31,11 @@
 import AppDrawer from 'src/components/AppLeftDrawer.vue';
 import AppHeader from 'src/components/AppHeader.vue';
 import MenuLink, { type MenuProps } from 'src/components/MenuLink.vue';
-import { useCurriculumStore } from 'src/stores/curriculum';
-import { computed, nextTick, onMounted } from 'vue';
+import { computed} from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth';
 
-const store = useCurriculumStore();
 const route = useRoute();
 const { t } = useI18n();
 const auth = useAuthStore();
@@ -45,11 +43,6 @@ const currCode = computed(() => route.params.code as string);
 
 const basePath = `/curriculums/${currCode.value}`;
 
-onMounted(async () => {
-  await nextTick().then(async () => {
-    await store.fetchOneByCode(currCode.value);
-  });
-});
 
 const menuList: MenuProps[] = [
   {
