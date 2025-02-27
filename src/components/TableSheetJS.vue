@@ -101,10 +101,7 @@ window.startEdit = function (ev: MouseEvent) {
  * @param {FocusEvent | KeyboardEvent} ev - The focus or keyboard event that triggered the end of editing.
  */
 window.endEdit = function (ev: FocusEvent | KeyboardEvent): void {
-  if (
-    !(ev instanceof KeyboardEvent) ||
-    ev.key === 'Enter'
-  ) {
+  if (!(ev instanceof KeyboardEvent) || ev.key === 'Enter') {
     const pos = (ev.target as HTMLSpanElement)
       ?.getAttribute('position')
       ?.split('.');
@@ -117,10 +114,10 @@ window.endEdit = function (ev: FocusEvent | KeyboardEvent): void {
       return;
     }
 
-    const rowIndex = +pos[0]!;
-    const colIndex = +pos[1]!;
-    
-    rows.value[rowIndex]![colIndex] = target.innerText;
+    const rowIndex = +(pos[0] || '');
+    const colIndex = +(pos[1] || '');
+
+    (rows.value[rowIndex] ??= [])[colIndex] = target.innerText;
 
     workBook.value[currSheet.value] = utils.json_to_sheet(rows.value, {
       header: columns.value.map((col: Column) => col.field),
@@ -168,7 +165,7 @@ function selectSheet(sheet: string): void {
   rows.value = dropBlankRow(newRows);
   paging.value = newRows.length > 50;
 
-  items.value = utils.sheet_to_json(workBook.value[sheet]!);
+  items.value = utils.sheet_to_json(workBook.value[sheet] ?? []);
 }
 
 // onMounted(async () => {

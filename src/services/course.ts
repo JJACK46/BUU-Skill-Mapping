@@ -31,7 +31,7 @@ export class CourseService {
   static async createOne(obj: Course) {
     const dto = {
       ...obj,
-      instructorListId: obj.instructors!.map((t) => t.id),
+      instructorListId: obj.instructors?.map((t) => t.id),
       // curriculumId: obj.curriculum?.id,
       subjectId: obj.subject?.id,
     };
