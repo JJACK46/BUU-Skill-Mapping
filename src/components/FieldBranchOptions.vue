@@ -21,7 +21,7 @@ import type { Branch } from 'src/types/branch';
 import { requireField } from 'src/utils/field-rules';
 import { onMounted, ref } from 'vue';
 
-const model = defineModel<number>();
+const model = defineModel<number | undefined>({ default: undefined });
 const branches = ref<Branch[]>([]);
 
 const props = defineProps<{
@@ -30,7 +30,9 @@ const props = defineProps<{
 }>();
 
 onMounted(() => {
-  model.value = props.branch?.id || undefined;
+  if (props.branch) {
+    model.value = props.branch.id;
+  }
 });
 
 // return branch id

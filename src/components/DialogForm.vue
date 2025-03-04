@@ -10,7 +10,7 @@
       class="dialog-form"
       :style="{ width: width ? width : '500px', maxWidth: '100vw' }"
     >
-      <q-form ref="formRef" @input="validateForm" @vue:mounted="validateForm">
+      <q-form ref="formRef" @input="validateForm">
         <q-card-section>
           <div class="row">
             <div class="col text-h6 text-weight-medium">{{ title }}</div>
@@ -119,7 +119,8 @@ const validateForm = async () => {
   }
 };
 
-const handleSave = () => {
+const handleSave = async () => {
+  await validateForm()
   if (isFormValid.value) {
     emits('save');
   }
