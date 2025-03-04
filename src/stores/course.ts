@@ -3,7 +3,7 @@ import { CourseService } from 'src/services/course';
 import type { Course } from 'src/types/course';
 
 // Mockup data
-const courses: Course[] = [
+const mockCourses: Course[] = [
   {
     id: 1,
     active: true,
@@ -40,7 +40,8 @@ export const useCourseStore = defineStore('course', {
 
   getters: {
     getCourseId(state): number {
-      return state.form?.id || -1;
+      const id = this.router.currentRoute.value.params.id as unknown as number;
+      return id || state.form?.id || -1;
     },
     getCourse(): Partial<Course> {
       return this.form || {};
@@ -52,9 +53,9 @@ export const useCourseStore = defineStore('course', {
       // Simulate API call
       // const response = await CourseService.getAll();
       // this.courses = response.data;
-      this.courses = courses;
+      this.courses = mockCourses;
 
-      this.form = courses[0] ?? {};
+      this.form = mockCourses[0] ?? {};
     },
 
     async removeOne(id: string) {

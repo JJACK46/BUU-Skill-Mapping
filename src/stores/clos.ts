@@ -28,7 +28,7 @@ export const useCloStore = defineStore('clo', {
     qNotify: Notify,
     qDialog: Dialog,
     onlyHaveSubs: true,
-    courseStore: useSubjectStore(),
+    subjectStore: useSubjectStore(),
     currStore: useCurriculumStore(),
   }),
   getters: {
@@ -53,7 +53,7 @@ export const useCloStore = defineStore('clo', {
         await this.fetchOneData(form.id || -1);
       } else {
         this.titleForm = 'New CLO';
-        this.form = {};
+        this.form = {} as Clo;
       }
       this.dialogState = true;
     },
@@ -99,8 +99,8 @@ export const useCloStore = defineStore('clo', {
           thaiDescription: this.form.thaiDescription,
           engDescription: this.form.engDescription,
           // expectedLevel: this.form.expectedLevel,
-          ploId: this.form.plo.id,
-          skillId: this.form.skill.id,
+          ploId: this.form.plo?.id,
+          skillId: this.form.skill?.id,
         } as Partial<Clo>;
         await ClosService.createOne(payload).then((ok) => {
           if (ok)
@@ -116,10 +116,10 @@ export const useCloStore = defineStore('clo', {
     },
     async removeOne(id: number) {
       await ClosService.removeOne(id);
-      await this.fetchData();
+      await this.fetchData(this.subjectStore.form.id);
     },
     resetForm() {
-      this.form = {};
+      this.form = {} as Clo;
     },
   },
 });

@@ -31,17 +31,13 @@ export const adminRoutes: RouteRecordRaw[] = [
       },
       {
         path: 'courses',
+        name: 'Course Management',
         component: () => import('pages/Course/CoursePage.vue'),
         children: [
           {
-            path: '',
-            name: 'Course Management',
-            component: () => import('pages/Course/CoursePage.vue'),
-          },
-          {
             path: ':id',
             name: 'Course Detail',
-            component: () => import('src/pages/Course/CourseDetails.vue'),
+            component: () => import('pages/Course/CourseDetails.vue'),
           },
         ],
       },

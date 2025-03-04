@@ -2,7 +2,7 @@ import type { Instructor } from './instructor';
 import type { Subject } from './subject';
 
 export type Course = {
-  id?: number;
+  id: number;
   active: boolean;
   subject: Partial<Subject>;
   instructors?: Partial<Instructor>[];

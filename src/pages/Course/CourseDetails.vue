@@ -15,20 +15,56 @@
           <div class="text-h5">
             {{ store.getCourse.subject?.thaiName }}
           </div>
-          <div class="text-body2 q-mt-sm">
-            {{ store.getCourse.subject }}
-          </div>
         </q-card-section>
       </q-card>
     </section>
     <!-- Table clo + skill -->
     <q-card flat bordered class="q-my-md q-animate--fade">
-      <q-table :rows="[]" :columns></q-table>
+      <q-table :rows="mockCloRow" :columns>
+        <template #body-cell-number="props">
+          <q-td>{{ props.rowIndex + 1 }}</q-td>
+        </template>
+        <template #body-cell-actions>
+          <ActionsCell
+            @handle-edit="toggleDialogClo()"
+            @handle-delete="() => {}"
+          />
+        </template>
+      </q-table>
     </q-card>
     <!-- open dialog clo -->
-    <q-card flat bordered class="q-my-md q-animate--fade">
-      <q-table :rows="[]" :columns="columnsScores"></q-table>
-    </q-card>
+    <DialogForm
+      v-model:model-value="dialogClo"
+      title="Update Score"
+      @save="() => {}"
+      width="60%"
+    >
+      <q-table :rows="mockStudents" :columns="columnsScores" flat>
+        <template #top>
+          <div class="text-primary text-weight-medium text-h5 q-pb-lg">
+            CLO / Skill
+          </div>
+        </template>
+        <template #body-cell-number="props">
+          <q-td>{{ props.rowIndex + 1 }}</q-td>
+        </template>
+        <template #body-cell-gained="props">
+          <q-td :props="props">
+            <q-input
+              v-model.number="props.row[props.col.name]"
+              type="number"
+              dense
+              borderless
+            />
+          </q-td>
+        </template>
+        <template #body-cell-actions>
+          <ActionsCell
+            @handle-edit="() => {}"
+            @handle-delete="() => {}"
+          /> </template
+      ></q-table>
+    </DialogForm>
     <!-- Table -->
   </q-page>
 </template>
@@ -36,12 +72,17 @@
 <script lang="ts" setup>
 // import DialogForm from 'src/components/DialogForm.vue';
 // import TableSheetJS from 'src/components/TableSheetJS.vue';
-import type { QTableColumn } from 'quasar';
+import { useMeta, type QTableColumn } from 'quasar';
+import ActionsCell from 'src/components/ActionsCell.vue';
+import DialogForm from 'src/components/DialogForm.vue';
 import { useCourseStore } from 'src/stores/course';
-import { onMounted } from 'vue';
+import type { Clo } from 'src/types/clo';
+import type { Skill } from 'src/types/skill';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const store = useCourseStore();
+const dialogClo = ref(false);
 // const sheet = ref();
 // const filterStudent = ref();
 // const route = useRoute();
@@ -60,13 +101,13 @@ const columns: QTableColumn[] = [
   {
     name: 'clo',
     label: 'CLO',
-    field: '',
+    field: (r) => r.clo.name,
     align: 'left',
   },
   {
     name: 'skill',
     label: 'Skill',
-    field: '',
+    field: (r) => r.skill.thaiName || r.skill.engName,
     align: 'left',
   },
   {
@@ -97,9 +138,74 @@ const columnsScores: QTableColumn[] = [
   },
 ];
 
+type CloRow = {
+  clo: Partial<Clo>;
+  skill: Partial<Skill>;
+};
+
+const mockCloRow: CloRow[] = [
+  {
+    clo: {
+      id: 1,
+      name: 'CLO 1',
+    },
+    skill: {
+      id: 1,
+      thaiName: '',
+      engName: 'Programming',
+    },
+  },
+  {
+    clo: {
+      id: 1,
+      name: 'CLO 1',
+    },
+    skill: {
+      id: 1,
+      thaiName: 'ออกแบบ UI',
+      engName: 'UI Design',
+    },
+  },
+  {
+    clo: {
+      id: 1,
+      name: 'CLO 1',
+    },
+    skill: {
+      id: 1,
+      thaiName: 'SQL',
+      engName: 'SQL',
+    },
+  },
+];
+
+type ScoreRow = {
+  code: string;
+  gained: number;
+};
+
+const mockStudents = ref<ScoreRow[]>([
+  {
+    code: '67100001',
+    gained: 0,
+  },
+  {
+    code: '67100002',
+    gained: 0,
+  },
+  {
+    code: '67100003',
+    gained: 0,
+  },
+]);
+
 // function makeSkillTree(skills: Partial<SkillExpectedLevel>[]) {
 //   return skills.map((s) => ({ ...s.skill, level: s.expectedLevel }));
 // }
+
+const toggleDialogClo = () => {
+  dialogClo.value = !dialogClo.value;
+};
 
 onMounted(() => {
   store.fetchData();
@@ -119,4 +225,8 @@ onMounted(() => {
 //   dialogImport.value = false;
 //   window.location.reload();
 // };
+
+useMeta({
+  title: store.getCourse.subject?.thaiName,
+});
 </script>

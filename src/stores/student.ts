@@ -6,6 +6,7 @@ import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
 type TitleForm = 'New Student' | 'Edit Student';
 
 const initForm: Student = {
+  code: '',
   thaiName: '',
   engName: '',
   dateEnrollment: new Date(),

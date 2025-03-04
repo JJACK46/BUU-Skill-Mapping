@@ -4,6 +4,7 @@ import type { SocialForm } from './social';
 
 export interface Student {
   id?: number;
+  code: string
   thaiName: string;
   engName: string;
   dateEnrollment: Date | string;
