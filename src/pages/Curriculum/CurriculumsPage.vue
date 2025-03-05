@@ -69,7 +69,6 @@
             outlined
             v-model="store.form.thaiName"
             :label="t('name') + ' *'"
-            :rules="[requireField, onlyThai]"
             class="col"
           />
           <q-input
@@ -77,7 +76,7 @@
             outlined
             v-model="store.form.engName"
             :label="t('engName') + ' *'"
-            :rules="[requireField, onlyEnglish]"
+            :rules="[requireField]"
             class="col q-ml-md"
           />
         </div>
@@ -88,7 +87,7 @@
             :options="OptionEducationLevelTH"
             v-model="store.form.thaiDegree"
             :label="t('degree') + ' *'"
-            :rules="[requireField, onlyAlphabet]"
+            :rules="[requireField]"
             class="col"
           />
           <q-select
@@ -97,7 +96,7 @@
             v-model="store.form.engDegree"
             :options="OptionEducationLevelEN"
             :label="t('engDegree') + ' *'"
-            :rules="[requireField, onlyAlphabet]"
+            :rules="[requireField]"
             class="col q-ml-md"
           />
         </div>
@@ -160,13 +159,7 @@ import { computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGlobalStore } from 'src/stores/global';
 import DialogForm from 'src/components/DialogForm.vue';
-import {
-  onlyAlphabet,
-  onlyEnglish,
-  onlyThai,
-  requireField,
-  ruleGradeFormat,
-} from 'src/utils/field-rules';
+import { requireField, ruleGradeFormat } from 'src/utils/field-rules';
 import { useI18n } from 'vue-i18n';
 import type { Branch } from 'src/types/branch';
 import type { Curriculum } from 'src/types/curriculum';

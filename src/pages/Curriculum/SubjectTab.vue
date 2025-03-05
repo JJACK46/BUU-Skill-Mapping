@@ -57,7 +57,7 @@
           outlined
           dense
           label="Thai Name *"
-          :rules="[requireField, onlyThai]"
+          :rules="[requireField]"
         />
         <q-input
           class="col"
@@ -66,7 +66,7 @@
           outlined
           dense
           label="Eng Name *"
-          :rules="[requireField, onlyEnglish]"
+          :rules="[requireField]"
         />
       </div>
 
@@ -135,9 +135,7 @@
     </template>
   </q-table>
   <!-- CLOs Dialog -->
-  <q-dialog
-    v-model="dialogCloTable"
-  >
+  <q-dialog v-model="dialogCloTable">
     <CloDialog
       v-model="dialogCloTable"
       :subject="store.getListSubjects[store.rowIndex]!"
@@ -151,7 +149,7 @@
     imports
 */
 import { useGlobalStore } from 'src/stores/global';
-import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
+import { requireField } from 'src/utils/field-rules';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DialogForm from 'src/components/DialogForm.vue';

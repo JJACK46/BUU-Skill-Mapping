@@ -2,13 +2,13 @@ import type { ValidationRule } from 'quasar';
 
 export const requireField: ValidationRule = (val: string) =>
   !!val || 'Field is required';
-export const onlyAlphabet: ValidationRule = (val: string) =>
-  !!val.match(/^[A-Za-z\u0E00-\u0E7F\s]+$/) || 'Only alphabet is allowed';
+// export const onlyAlphabet: ValidationRule = (val: string) =>
+//   !!val.match(/^[A-Za-z\u0E00-\u0E7F\s]+$/) || 'Only alphabet is allowed';
 
-export const onlyEnglish: ValidationRule = (val: string) =>
-  !!val.match(/^[A-Za-z\s]+$/) || 'Only English alphabet is allowed';
-export const onlyThai: ValidationRule = (val: string) =>
-  !!val.match(/^[\u0E00-\u0E7F\s]+$/) || 'Only Thai alphabet is allowed';
+// export const onlyEnglish: ValidationRule = (val: string) =>
+//   !!val.match(/^[A-Za-z\s]+$/) || 'Only English alphabet is allowed';
+// export const onlyThai: ValidationRule = (val: string) =>
+//   !!val.match(/^[\u0E00-\u0E7F\s]+$/) || 'Only Thai alphabet is allowed';
 
 function validateGradeFormat(val: string) {
   // Regex to match numbers from 1.00 to 4.00 with exactly two decimal places

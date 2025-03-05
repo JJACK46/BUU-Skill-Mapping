@@ -54,9 +54,7 @@
       :json="store.form"
     >
       <div class="row q-gutter-y-md">
-        <FieldBranchOptions
-          v-model="store.form.branchId"
-        />
+        <FieldBranchOptions v-model="store.form.branchId" />
         <q-input
           outlined
           dense
@@ -73,7 +71,7 @@
           label="Thai Name"
           clearable
           class="col-12"
-          :rules="[requireField, onlyThai]"
+          :rules="[requireField]"
           dense
         />
         <q-input
@@ -82,7 +80,7 @@
           v-model="store.form.engName"
           label="English Name"
           class="col-12"
-          :rules="[requireField, onlyEnglish]"
+          :rules="[requireField]"
           clearable
         />
         <q-input
@@ -159,7 +157,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useInstructorStore } from 'src/stores/instructor';
 import DialogForm from 'src/components/DialogForm.vue';
-import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
+import { requireField } from 'src/utils/field-rules';
 import { AcademicRank } from 'src/data/academic_rank';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';

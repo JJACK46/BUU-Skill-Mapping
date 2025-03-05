@@ -53,7 +53,7 @@
         :options="OptionEducationLevelTH"
         v-model="store.form.thaiDegree"
         :label="t('degree') + ' *'"
-        :rules="[requireField, onlyAlphabet]"
+        :rules="[requireField]"
       />
       <q-select
         dense
@@ -61,7 +61,7 @@
         v-model="store.form.engDegree"
         :options="OptionEducationLevelEN"
         :label="t('engDegree') + ' *'"
-        :rules="[requireField, onlyAlphabet]"
+        :rules="[requireField]"
       />
       <q-input
         dense
@@ -97,7 +97,6 @@
 
 <script lang="ts" setup>
 import {
-  onlyAlphabet,
   requireField,
   ruleGradeFormat,
 } from 'src/utils/field-rules';

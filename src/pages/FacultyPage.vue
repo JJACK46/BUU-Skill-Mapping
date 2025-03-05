@@ -114,14 +114,14 @@
             dense
             :label="t('name')"
             v-model="store.formFaculty.thaiName"
-            :rules="[requireField, onlyThai]"
+            :rules="[requireField]"
           />
           <q-input
             outlined
             dense
             :label="t('engName')"
             v-model="store.formFaculty.engName"
-            :rules="[requireField, onlyEnglish]"
+            :rules="[requireField]"
           />
           <q-input
             outlined
@@ -158,14 +158,14 @@
             dense
             :label="t('name')"
             v-model="store.formBranch.thaiName"
-            :rules="[requireField, onlyThai]"
+            :rules="[requireField]"
           />
           <q-input
             outlined
             dense
             :label="t('engName')"
             v-model="store.formBranch.engName"
-            :rules="[requireField, onlyEnglish]"
+            :rules="[requireField]"
           />
           <q-input
             outlined
@@ -205,7 +205,7 @@ import ContextMenu from 'src/components/ContextMenu.vue';
 import DialogForm from 'src/components/DialogForm.vue';
 import MainHeader from 'src/components/PageHeader.vue';
 import { useFacultyStore } from 'src/stores/faculty-branch';
-import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
+import { requireField } from 'src/utils/field-rules';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 

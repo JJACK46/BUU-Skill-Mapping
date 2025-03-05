@@ -31,14 +31,14 @@
             outlined
             dense
             label="Name *"
-            :rules="[requireField, onlyThai]"
+            :rules="[requireField]"
           />
           <q-input
             v-model="store.form.engName"
             outlined
             dense
             label="Eng Name *"
-            :rules="[requireField, onlyEnglish]"
+            :rules="[requireField]"
           />
         </q-tab-panel>
       </q-tab-panels>
@@ -95,7 +95,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import DialogForm from 'src/components/DialogForm.vue';
 import { useLessonStore } from 'src/stores/lesson';
-import { onlyEnglish, onlyThai, requireField } from 'src/utils/field-rules';
+import { requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
 
