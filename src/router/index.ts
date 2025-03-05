@@ -46,9 +46,6 @@ export default route(function (/* { store, ssrContext } */) {
       auth.loadUserFromSession();
       const { getAccessToken } = auth;
       const userRole = auth.getRole;
-      if (!userRole) {
-        throw new Error('User role not found');
-      }
 
       // Bypass now
       // const isAuthenticated = true;
@@ -92,7 +89,7 @@ export default route(function (/* { store, ssrContext } */) {
       };
 
       // Redirect only if userRole exists and current path is not already correct
-      const redirectPath = rolePaths[userRole];
+      const redirectPath = rolePaths[userRole!];
       if (redirectPath && !path.startsWith(`/${userRole}`)) {
         return next(redirectPath);
       }
