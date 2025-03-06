@@ -3,7 +3,7 @@ import { publicRoutes } from './publicRoutes';
 import { adminRoutes } from './adminRoutes';
 import { studentRoutes } from './studentRoutes';
 import { instructorRoutes } from './instructorRoutes';
-import { coordinatorRoutes } from './coordinatorRouts';
+import { coordinatorRoutes } from './coordinatorRoutes';
 import { curriculumRoutes } from './curriculumRoutes';
 
 const routes: RouteRecordRaw[] = [

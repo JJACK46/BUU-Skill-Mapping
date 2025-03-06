@@ -26,6 +26,18 @@ export const publicRoutes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/transcript',
+    component: () => import('layouts/FullLayout.vue'),
+    meta: { public: true },
+    children: [
+      {
+        path: ':code',
+        name: 'Student Transcript',
+        component: () => import('src/pages/TranscriptPage.vue'),
+      },
+    ],
+  },
+  {
     path: '/about',
     component: () => import('src/layouts/FullLayout.vue'),
     meta: { public: true },
@@ -37,17 +49,4 @@ export const publicRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-  // {
-  //   path: '/curriculum',
-  //   component: () => import('layouts/CurriculumLayout.vue'),
-  //   meta: {public: true},
-  //   children: [
-  //     {
-  //       path: ':id',
-  //       name: 'Curriculum Detail',
-  //       component: () =>
-  //         import('src/pages/Curriculum/CurriculumDetailPage.vue'),
-  //     },
-  //   ],
-  // },
 ];

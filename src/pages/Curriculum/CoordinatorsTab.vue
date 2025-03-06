@@ -45,10 +45,8 @@
   </q-table>
   <!-- Dialog Assign Instructor -->
   <q-dialog v-model="store.dialogState">
-    <q-card class="q-pa-lg" style="min-width: 60%">
-      <div class="text-h5 text-weight-medium q-py-md text-primary">
-        Instructors from current branch
-      </div>
+    <q-card class="q-pa-lg" style="min-width: 70%">
+      <div class="text-h5 text-weight-medium q-py-md text-primary">Users</div>
       <q-separator class="full-width bg-primary q-mb-md" style="height: 2px" />
       <q-table
         flat
@@ -66,13 +64,13 @@
           </q-td>
         </template>
         <template #body-cell-actions="props">
-          <q-td>
+          <q-td style="min-width: 150px">
             <q-btn
               size="md"
               unelevated
-              class="q-mr-sm"
               color="primary"
               icon="add"
+              padding="xs"
               :label="t('assign')"
               @click="
                 store.assignInstructor({

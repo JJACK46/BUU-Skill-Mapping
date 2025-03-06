@@ -44,43 +44,43 @@ export default route(function (/* { store, ssrContext } */) {
     try {
       const auth = useAuthStore();
       auth.loadUserFromSession();
-      const { getAccessToken } = auth;
       const userRole = auth.getRole;
 
       // Bypass now
       // const isAuthenticated = true;
       // const userRole = EnumUserRole.ADMIN;
 
-      // Handle '/' route, first order
+      // * Handle public routes first
+      if (isPublic && path !== '/') {
+        return next(); // Allow access to public routes
+      }
+
+      // * Handle '/' route, first order
       if (path === '/') {
         const redirectPath = userRole ? `/${userRole}/dashboard` : '/landing';
         return next(redirectPath);
       }
 
+      // * for curriculum layout 
       if (path.startsWith('/curr')) {
         return next();
       }
 
-      // Handle public routes first
-      if (isPublic && !getAccessToken) {
-        return next(); // Allow access to public routes
-      }
-
-      // Redirect authenticated users away from the login page
+      // * Redirect authenticated users away from the login page
       if (path === '/login' && userRole) {
         return next('/');
       }
 
-      // Redirect unauthenticated users from protected routes
+      // * Redirect unauthenticated users from protected routes
       if (!isPublic && !userRole) {
         return next('/login');
       }
 
-      // Redirect users lacking the required role
+      // * Redirect users lacking the required role
       if (requiredRole && (!userRole || userRole !== requiredRole)) {
         return next('/forbidden');
       }
-      // Redirect depend on role
+      // * Redirect depend on role
       const rolePaths = {
         [EnumUserRole.ADMIN]: `/${EnumUserRole.ADMIN}${path}`,
         [EnumUserRole.COORDINATOR]: `/${EnumUserRole.COORDINATOR}${path}`,
@@ -88,23 +88,23 @@ export default route(function (/* { store, ssrContext } */) {
         [EnumUserRole.STUDENT]: `/${EnumUserRole.STUDENT}${path}`,
       };
 
-      // Redirect only if userRole exists and current path is not already correct
+      // * Redirect only if userRole exists and current path is not already correct
       const redirectPath = rolePaths[userRole!];
       if (redirectPath && !path.startsWith(`/${userRole}`)) {
         return next(redirectPath);
       }
 
-      // Proceed to the route
+      // * Proceed to the route
       next();
     } catch (error) {
       console.error('Error during route guard execution:', error);
 
-      // Ensure not to redirect to `/error` if already there
+      // * Ensure not to redirect to `/error` if already there
       if (path !== '/error') {
         return next('/error');
       }
 
-      // Proceed to `/error` route without recursion
+      // * Proceed to `/error` route without recursion
       next();
     }
   });
