@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Dialog, Notify, type QTableProps, type QTableColumn } from 'quasar';
+import { Dialog, Notify, type QTableProps } from 'quasar';
 import type { FilterModel } from 'src/types/filter';
 import { useRouter } from 'vue-router';
 import { convertToPageParams, defaultPagination } from 'src/utils/pagination';
@@ -9,7 +9,6 @@ import { useCurriculumStore } from 'src/stores/curriculum';
 import { nextTick } from 'vue';
 
 type TitleForm = 'New Subject' | 'Edit Subject';
-
 export const useSubjectStore = defineStore('subject', {
   state: () => ({
     dialogState: false,
@@ -29,64 +28,17 @@ export const useSubjectStore = defineStore('subject', {
     subjectCodeLabel: '',
     total: 0,
     foundExistSubject: false,
-    subjectColumns: <QTableColumn[]>[
-      {
-        name: 'number',
-        label: 'No.',
-        field: () => {},
-        align: 'left',
-        sortable: true,
-      },
-      {
-        name: 'code',
-        label: 'Code',
-        field: (row) => row.code,
-        align: 'left',
-        sortable: true,
-      },
-      {
-        name: 'thaiName',
-        label: 'Name',
-        field: (row) => row.thaiName,
-        align: 'left',
-      },
-      {
-        name: 'engName',
-        label: 'English Name',
-        field: (row) => row.engName,
-        align: 'left',
-      },
-      {
-        name: 'credit',
-        label: 'Credit',
-        field: (row) => row.credit,
-        align: 'left',
-      },
-      {
-        name: 'type',
-        label: 'Type',
-        field: (row) => row.type,
-        align: 'left',
-      },
-      {
-        name: 'actions',
-        label: 'Actions',
-        field: '',
-        align: 'left',
-      },
-    ],
   }),
   getters: {
     getDialogTitle: (s) => s.titleForm,
-    getListSubjects: (s) => s.subjects ,
+    getListSubjects: (s) => s.subjects,
     getSubjectCodeLabel: (s) => s.subjectCodeLabel,
   },
   actions: {
     async checkSubjectCode(subjectCode: string) {
       if (subjectCode.length === 8) {
-        const existSubject = (await SubjectService.findExistSubjectCode(
-          subjectCode,
-        ));
+        const existSubject =
+          await SubjectService.findExistSubjectCode(subjectCode);
         if (existSubject) {
           this.subjectCodeLabel = 'Found the exist subject';
           this.foundExistSubject = true;
@@ -114,9 +66,13 @@ export const useSubjectStore = defineStore('subject', {
     },
     async fetchAllInCurr() {
       try {
-        const filter = {
-          curriculumCode: this.curr.getCode,
-        };
+        const currCode = this.router.currentRoute.value.params.code;
+        this.filterModel.curriculumCode = currCode as unknown as string;
+        const filter = convertToPageParams(
+          this.pagination,
+          this.search,
+          this.filterModel,
+        );
 
         const { data, total } = await SubjectService.getAll(filter);
 

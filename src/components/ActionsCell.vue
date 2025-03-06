@@ -1,5 +1,6 @@
 <template>
-  <q-td>
+  <q-td class="q-gutter-x-xs" style="min-width: 100px">
+    <slot name="prefix"></slot>
     <q-btn
       flat
       dense
@@ -14,7 +15,6 @@
       round
       color="grey-8"
       icon="delete"
-      class="q-ml-sm"
       @click="$emit('handleDelete')"
     />
   </q-td>

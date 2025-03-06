@@ -60,9 +60,9 @@
   "engName": "English Name",
   "abbrev": "Abbreviation",
   "description": "Description",
-  "thaiDescription": "Description",
-  "engDescription": "รายละเอียดภาษาอังกฤษ",
-  "englishDescription": "รายละเอียดภาษาอังกฤษ",
+  "thaiDescription": "Description (TH)",
+  "engDescription": "Description (ENG)",
+  "englishDescription": "Description (ENG)",
   "curriculum": "Curriculum",
   "credit": "Credit",
   "degree": "Degree",
@@ -113,5 +113,6 @@
   "Edit Branch": "Edit Branch",
   "Coordinators of Curriculum": "Coordinators of Curriculum",
   "assign": "Assign",
-  "PLOs": "PLOs"
+  "PLOs": "PLOs",
+  "type": "Type"
 }

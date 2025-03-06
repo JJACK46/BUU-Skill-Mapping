@@ -31,6 +31,8 @@ export const usePloStore = defineStore('plo', {
   },
   actions: {
     async fetchAll(): Promise<DataResponse<PLO>> {
+      const currCode = this.router.currentRoute.value.params.code;
+      this.filterModel.curriculumCode = currCode as unknown as string;
       const data = await PlosService.getAll(
         convertToPageParams(this.pagination, this.search, this.filterModel),
       );

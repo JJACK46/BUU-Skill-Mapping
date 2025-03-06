@@ -99,7 +99,7 @@
     :rows="store.getListSubjects"
     row-key="code"
     :loading="global.getLoadingState"
-    :columns="store.subjectColumns"
+    :columns="subjectColumns"
     @update:pagination="store.fetchAllInCurr"
   >
     <template #body-cell-number="props">
@@ -108,30 +108,21 @@
       </q-td>
     </template>
     <template #body-cell-actions="props">
-      <q-td class="q-gutter-x-sm" style="min-width: 100px">
-        <q-btn
-          label="CLOs"
-          padding="none"
-          color="blue"
-          unelevated
-          style="width: 50px"
-          @click="handleOpenCloDialogTable(props.rowIndex)"
-        ></q-btn>
-        <q-btn
-          icon="edit"
-          padding="none"
-          flat
-          color="grey-8"
-          @click="store.handleEdit(props.row)"
-        ></q-btn>
-        <q-btn
-          icon="delete"
-          padding="none"
-          color="grey-8"
-          flat
-          @click="store.handleDelete(props.row.id)"
-        ></q-btn>
-      </q-td>
+      <ActionsCell
+        @handle-edit="store.handleEdit(props.row)"
+        @handle-delete="store.handleDelete(props.row.id)"
+      >
+        <template #prefix>
+          <q-btn
+            label="CLOs"
+            padding="none"
+            color="blue"
+            unelevated
+            style="width: 50px"
+            @click="handleOpenCloDialogTable(props.rowIndex)"
+          ></q-btn>
+        </template>
+      </ActionsCell>
     </template>
   </q-table>
   <!-- CLOs Dialog -->
@@ -157,6 +148,8 @@ import { OptionSubjectType } from 'src/data/subject_type';
 import CloDialog from './CloDialog.vue';
 import { useSubjectStore } from 'src/stores/subject';
 import FieldChecker from 'src/components/FieldChecker.vue';
+import ActionsCell from 'src/components/ActionsCell.vue';
+import type { QTableColumn } from 'quasar';
 /*
     states
 */
@@ -164,6 +157,53 @@ const dialogCloTable = ref<boolean>(false);
 const { t } = useI18n();
 const global = useGlobalStore();
 const store = useSubjectStore();
+
+const subjectColumns = <QTableColumn[]>[
+  {
+    name: 'number',
+    label: t('no.'),
+    field: () => {},
+    align: 'left',
+    sortable: true,
+  },
+  {
+    name: 'code',
+    label: t('code'),
+    field: (row) => row.code,
+    align: 'left',
+    sortable: true,
+  },
+  {
+    name: 'thaiName',
+    label: t('name'),
+    field: (row) => row.thaiName,
+    align: 'left',
+  },
+  {
+    name: 'engName',
+    label: t('engName'),
+    field: (row) => row.engName,
+    align: 'left',
+  },
+  {
+    name: 'credit',
+    label: t('credit'),
+    field: (row) => row.credit,
+    align: 'left',
+  },
+  {
+    name: 'type',
+    label: t('type'),
+    field: (row) => row.type,
+    align: 'left',
+  },
+  {
+    name: 'actions',
+    label: t('actions'),
+    field: '',
+    align: 'left',
+  },
+];
 
 const handleOpenCloDialogTable = (indexCS: number) => {
   store.rowIndex = indexCS;

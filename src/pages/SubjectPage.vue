@@ -69,20 +69,10 @@
       </template>
 
       <template #body-cell-actions="props">
-        <q-td class="q-gutter-x-sm" style="min-width: 100px">
-          <q-btn
-            icon="edit"
-            padding="none"
-            flat
-            @click="store.handleOpenDialog(props.row)"
-          ></q-btn>
-          <q-btn
-            icon="delete"
-            padding="none"
-            flat
-            @click="store.removeSubject(props.row.id)"
-          ></q-btn>
-        </q-td>
+        <ActionsCell
+          @handle-delete="store.removeSubject(props.row.id)"
+          @handle-edit="store.handleOpenDialog(props.row)"
+        />
       </template>
     </q-table>
   </q-page>
@@ -98,6 +88,7 @@ import { useLessonStore } from 'src/stores/lesson';
 import { requireField } from 'src/utils/field-rules';
 import { useGlobalStore } from 'src/stores/global';
 import MainHeader from 'src/components/PageHeader.vue';
+import ActionsCell from 'src/components/ActionsCell.vue';
 
 const global = useGlobalStore();
 const route = useRoute();

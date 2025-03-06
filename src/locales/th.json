@@ -62,7 +62,7 @@
   "engName": "ชื่อภาษาอังกฤษ",
   "abbrev": "ตัวย่อ",
   "description": "รายละเอียด",
-  "thaiDescription": "รายละเอียด",
+  "thaiDescription": "รายละเอียด (TH)",
   "curriculum": "หลักสูตร",
   "credit": "หน่วยกิต",
   "degree": "ระดับ",
@@ -100,8 +100,8 @@
   "subjectCode": "รหัสวิชา",
   "details": "รายละเอียด",
   "specialists": "ความชำนาญ",
-  "englishDescription": "รายละเอียดภาษาอังกฤษ",
-  "engDescription": "รายละเอียดภาษาอังกฤษ",
+  "englishDescription": "รายละเอียด (ENG)",
+  "engDescription": "รายละเอียด (ENG)",
   "addCoordinators": "เพิ่มผู้รับผิดชอบหลักสูตร",
   "newCurriculum": "หลักสูตรใหม่",
   "createCurriculum": "สร้างหลักสูตรใหม่",
@@ -115,5 +115,6 @@
   "Edit Branch": "แก้ไขสาขา",
   "Coordinators of Curriculum": "ผู้รับผิดชอบหลักสูตร",
   "assign": "มอบหมาย",
-  "PLOs": "PLOs"
+  "PLOs": "PLOs",
+  "type": "ประเภท"
 }
