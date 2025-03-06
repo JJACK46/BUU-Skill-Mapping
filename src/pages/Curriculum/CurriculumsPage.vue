@@ -24,22 +24,10 @@
         </q-td>
       </template>
       <template #body-cell-actions="props">
-        <q-td>
-          <q-btn
-            flat
-            dense
-            round
-            color="grey-8"
-            icon="edit"
-            @click="handleEditBtn(props.row)" />
-          <q-btn
-            flat
-            dense
-            round
-            color="grey-8"
-            icon="delete"
-            @click="store.handleDelete(props.row.id)"
-        /></q-td>
+        <ActionsCell
+          @handle-edit="handleEditBtn(props.row)"
+          @handle-delete="store.handleDelete(props.row.id)"
+        />
       </template>
     </q-table>
     <!-- Dialog -->
@@ -169,6 +157,7 @@ import {
 } from 'src/data/education_level';
 import FieldChecker from 'src/components/FieldChecker.vue';
 import FieldBranchOptions from 'src/components/FieldBranchOptions.vue';
+import ActionsCell from 'src/components/ActionsCell.vue';
 
 const { t } = useI18n();
 const global = useGlobalStore();

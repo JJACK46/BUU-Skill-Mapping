@@ -8,6 +8,7 @@ import {
   defaultPagination,
 } from 'src/utils/pagination';
 import { useCurriculumStore } from './curriculum';
+import type { FilterModel } from 'src/types/filter';
 
 export type TitleFormSkill =
   | 'New Skill'
@@ -30,6 +31,7 @@ export const useSkillStore = defineStore('skill', {
     qNotify: Notify,
     onlyHaveSubs: true,
     curr: useCurriculumStore(),
+    filterModel: {} as FilterModel,
   }),
   getters: {
     getTitleForm: (state) => state.titleForm,
@@ -43,15 +45,17 @@ export const useSkillStore = defineStore('skill', {
   actions: {
     // independent skill
     async fetchAll() {
+      const currCode = this.router.currentRoute.value.params.code;
+      this.filterModel.curriculumCode = currCode as unknown as string;
       const { data, total } = await SkillService.getAll(
-        convertToPageParams(this.pagination, this.search),
+        convertToPageParams(this.pagination, this.search, this.filterModel),
       );
       if (total > 0) {
         this.skills = JSON.parse(JSON.stringify(data));
         this.totalSkills = total;
       }
     },
-    async fetchDataInCurr(){
+    async fetchDataInCurr() {
       const code = this.curr.getCode;
       const { data, total } = await SkillService.getSkillByCurr(code);
       if (total > 0) {

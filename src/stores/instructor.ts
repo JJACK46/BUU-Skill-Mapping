@@ -61,13 +61,11 @@ export const useInstructorStore = defineStore('instructor', {
       this.pagination!.rowsNumber = total || 0;
     },
     async fetchRowsInCurr(pag?: QTableProps['pagination']) {
+      const currCode = this.router.currentRoute.value.params.code;
+      this.filterModel.curriculumCode = currCode as unknown as string;
       this.pagination = pag || defaultPagination;
-      await nextTick(); // Wait for the curr store to update
-      const filter: Partial<FilterModel> = {
-        curriculumCode: this.curr.getCode,
-      };
       const { data, total } = await InstructorService.getAll(
-        convertToPageParams(this.pagination, this.search, filter),
+        convertToPageParams(this.pagination, this.search, this.filterModel),
       );
       if (data) {
         this.listItem = JSON.parse(JSON.stringify(data));
