@@ -116,5 +116,7 @@
   "Coordinators of Curriculum": "ผู้รับผิดชอบหลักสูตร",
   "assign": "มอบหมาย",
   "PLOs": "PLOs",
-  "type": "ประเภท"
+  "type": "ประเภท",
+  "email": "อีเมล",
+  "position": "ตำแหน่ง"
 }

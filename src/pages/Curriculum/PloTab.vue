@@ -103,21 +103,21 @@ const store = usePloStore();
 const columns = ref<QTableColumn[]>([
   {
     name: 'number',
-    label: 'No.',
+    label: t('no'),
     field: 'no',
     align: 'left',
     style: 'width: 60px',
   },
   {
     name: 'name',
-    label: 'Name',
+    label: t('name'),
     field: 'name',
     align: 'left',
     style: 'width: 150px',
   },
   {
     name: 'thaiDescription',
-    label: 'Thai Description',
+    label: t('thaiDescription'),
     field: 'thaiDescription',
     align: 'left',
     style:
@@ -125,7 +125,7 @@ const columns = ref<QTableColumn[]>([
   },
   {
     name: 'engDescription',
-    label: 'English Description',
+    label: t('engDescription'),
     field: 'engDescription',
     align: 'left',
     style:
@@ -133,14 +133,14 @@ const columns = ref<QTableColumn[]>([
   },
   {
     name: 'type',
-    label: 'Type',
+    label: t('type'),
     field: 'type',
     align: 'left',
     style: 'width: 120px',
   },
   {
     name: 'actions',
-    label: 'Actions',
+    label: t('actions'),
     field: '',
     align: 'left',
     style: 'width: 120px',

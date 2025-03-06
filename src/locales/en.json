@@ -114,5 +114,7 @@
   "Coordinators of Curriculum": "Coordinators of Curriculum",
   "assign": "Assign",
   "PLOs": "PLOs",
-  "type": "Type"
+  "type": "Type",
+  "email": "Email",
+  "position": "position"
 }
