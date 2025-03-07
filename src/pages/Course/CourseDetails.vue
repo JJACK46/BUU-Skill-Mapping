@@ -25,10 +25,14 @@
           <q-td>{{ props.rowIndex + 1 }}</q-td>
         </template>
         <template #body-cell-actions>
-          <ActionsCell
-            @handle-edit="toggleDialogClo()"
-            @handle-delete="() => {}"
-          />
+          <q-td>
+            <q-btn
+              unelevated
+              @click="toggleDialogClo()"
+              color="primary"
+              :label="t('update')"
+            ></q-btn>
+          </q-td>
         </template>
       </q-table>
     </q-card>
@@ -38,12 +42,45 @@
       title="Update Score"
       @save="() => {}"
       width="60%"
-      @vue:unmounted="store.$reset"
     >
       <q-table :rows="mockStudents" :columns="columnsScores" flat>
-        <template #top>
-          <div class="text-primary text-weight-medium text-h5 q-pb-lg">
+        <template #top-left>
+          <div class="text-primary text-weight-medium text-h5">
             CLO / Skill
+          </div></template
+        >
+        <template #top-right>
+          <div class="q-gutter-x-sm row">
+            <q-input :label="t('search')" v-model="store.search" outlined dense>
+              <template #prepend>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+            <q-btn
+              @click="toggleDialogImport()"
+              color="primary"
+              unelevated
+              :label="t('import')"
+            ></q-btn>
+            <q-dialog v-model="dialogImport">
+              <q-card style="width: 70%">
+                <q-card-section class="row justify-between">
+                  <div class="text-h6 text-weight-medium text-primary">
+                    {{ t('import') }}
+                  </div>
+                  <q-btn
+                    fab-mini
+                    flat
+                    padding="none"
+                    icon="close"
+                    @click="dialogImport = false"
+                  />
+                </q-card-section>
+                <q-card-section>
+                  <TableSheetJS @download-template="downloadTemplateForStudents"/>
+                </q-card-section>
+              </q-card>
+            </q-dialog>
           </div>
         </template>
         <template #body-cell-number="props">
@@ -59,12 +96,8 @@
             />
           </q-td>
         </template>
-        <template #body-cell-actions>
-          <ActionsCell
-            @handle-edit="() => {}"
-            @handle-delete="() => {}"
-          /> </template
-      ></q-table>
+        ></q-table
+      >
     </DialogForm>
     <!-- Table -->
   </q-page>
@@ -74,16 +107,18 @@
 // import DialogForm from 'src/components/DialogForm.vue';
 // import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useMeta, type QTableColumn } from 'quasar';
-import ActionsCell from 'src/components/ActionsCell.vue';
 import DialogForm from 'src/components/DialogForm.vue';
+import TableSheetJS from 'src/components/TableSheetJS.vue';
 import { useCourseStore } from 'src/stores/course';
 import type { Clo } from 'src/types/clo';
 import type { Skill } from 'src/types/skill';
+import { downloadTemplateForStudents } from 'src/utils/file-template';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const store = useCourseStore();
 const dialogClo = ref(false);
+const dialogImport = ref(false);
 // const sheet = ref();
 // const filterStudent = ref();
 // const route = useRoute();
@@ -159,7 +194,7 @@ const mockCloRow: CloRow[] = [
   {
     clo: {
       id: 1,
-      name: 'CLO 1',
+      name: 'CLO 2',
     },
     skill: {
       id: 1,
@@ -170,7 +205,7 @@ const mockCloRow: CloRow[] = [
   {
     clo: {
       id: 1,
-      name: 'CLO 1',
+      name: 'CLO 3',
     },
     skill: {
       id: 1,
@@ -206,6 +241,9 @@ const mockStudents = ref<ScoreRow[]>([
 
 const toggleDialogClo = () => {
   dialogClo.value = !dialogClo.value;
+};
+const toggleDialogImport = () => {
+  dialogImport.value = !dialogImport.value;
 };
 
 onMounted(() => {

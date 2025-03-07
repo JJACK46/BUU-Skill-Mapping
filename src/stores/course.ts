@@ -33,6 +33,7 @@ interface CourseState {
   form: Partial<Course>;
   courses: Course[];
   dialogState: boolean;
+  search: string;
 }
 
 export const useCourseStore = defineStore('course', {
@@ -40,6 +41,7 @@ export const useCourseStore = defineStore('course', {
     form: {},
     courses: [],
     dialogState: false,
+    search: '',
   }),
 
   getters: {
@@ -59,20 +61,19 @@ export const useCourseStore = defineStore('course', {
       // this.courses = response.data;
       this.courses = mockCourses;
 
-      this.form = mockCourses[0] ?? {};
+      this.form = mockCourses[0];
     },
 
     async removeOne(id: string) {
       await CourseService.removeOne(id);
-      window.location.reload();
     },
 
     setCourseId(id: number) {
       // Fixed: Use `form` instead of `course`
       this.form.id = id;
     },
-    resetForm(){
-      this.form = {}
-    }
+    resetForm() {
+      this.form = {};
+    },
   },
 });
