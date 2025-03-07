@@ -5,28 +5,59 @@
         v-model:searchText="filterCourse"
         @open-dialog="handleOpenDialog"
       />
-      <q-separator class="q-my-md" />
-      <section class="q-gutter-lg row">
-        <div v-for="(course, index) in store.courses" :key="index" class="cursor-pointer" >
-          <CustomCard
-            :head-text="course.subject.thaiName || ''"
-            :sub-text="course.subject.engName || ''"
-            @click="handleViewCourse(course.id)"
-          >
-          </CustomCard>
+      <section v-if="store.courses">
+        <div id="available">
+          <div class="text-primary q-mb-md text-weight-bold text-h5">
+            Available Course
+          </div>
+          <div class="text-weight-medium q-mb-md">2025 / 2</div>
+          <div class="q-gutter-lg q-mb-md row">
+            <div
+              v-for="(course, index) in store.courses"
+              :key="index"
+              class="cursor-pointer"
+            >
+              <CustomCard
+                :head-text="course.subject.thaiName || ''"
+                :sub-text="course.subject.engName || ''"
+                @click="handleViewCourse(course.id)"
+              >
+              </CustomCard>
+            </div>
+          </div>
+        </div>
+        <q-separator class="q-my-lg" />
+        q
+        <div id="archive">
+          <div class="text-grey-6 q-mb-md text-weight-bold text-h5">
+            Archived Course
+          </div>
+          <div class="text-weight-medium q-mb-md">2025 / 2</div>
+          <div class="q-gutter-lg q-mb-md row">
+            <div
+              v-for="(course, index) in store.courses"
+              :key="index"
+              class="cursor-pointer"
+            >
+              <CustomCard
+                :head-text="course.subject.thaiName || ''"
+                :sub-text="course.subject.engName || ''"
+                @click="handleViewCourse(course.id)"
+              >
+              </CustomCard>
+            </div>
+          </div>
         </div>
       </section>
-      <q-card
+      <section
         class="q-mt-lg"
-        flat
-        bordered
         v-if="!store.courses || store.courses.length === 0"
       >
-        <q-card-section class="text-body2 text-center"> No Data </q-card-section>
-      </q-card>
+        <div>class="text-body2 text-center"</div>
+      </section>
     </div>
     <!-- Course ID page -->
-    <router-view/>
+    <router-view />
   </q-page>
 </template>
 
