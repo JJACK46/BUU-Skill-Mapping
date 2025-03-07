@@ -116,5 +116,11 @@
   "PLOs": "PLOs",
   "type": "Type",
   "email": "Email",
-  "position": "position"
+  "position": "position",
+  "newCourse": "New Course",
+  "semester": "Semester",
+  "firstSemester": "First Semester",
+  "secondSemester": "Second Semester",
+  "summerSemester": "Summer Semester",
+  "academicYear": "Academic Year"
 }

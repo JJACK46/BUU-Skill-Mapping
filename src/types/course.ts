@@ -6,7 +6,9 @@ export type Course = {
   active: boolean;
   subject: Partial<Subject>;
   instructors?: Partial<Instructor>[];
-}
+  semester: 'first' | 'second' | 'summer';
+  year: number;
+};
 // export interface CourseEnrollment {
 //   id?: string;
 //   course: Partial<Course>;

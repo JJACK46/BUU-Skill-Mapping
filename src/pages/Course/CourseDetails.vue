@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page>
     <q-breadcrumbs>
       <q-breadcrumbs-el label="Courses" to="/courses" />
       <q-breadcrumbs-el :label="`${store.getCourseId}`" />
@@ -38,6 +38,7 @@
       title="Update Score"
       @save="() => {}"
       width="60%"
+      @vue:unmounted="store.$reset"
     >
       <q-table :rows="mockStudents" :columns="columnsScores" flat>
         <template #top>

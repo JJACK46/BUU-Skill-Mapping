@@ -118,5 +118,11 @@
   "PLOs": "PLOs",
   "type": "ประเภท",
   "email": "อีเมล",
-  "position": "ตำแหน่ง"
+  "position": "ตำแหน่ง",
+  "newCourse": "เปิดคอร์ส",
+  "semester": "ภาคการศึกษา",
+  "firstSemester": "ภาคการศึกษาต้น",
+  "secondSemester": "ภาคการศึกษาปลาย",
+  "summerSemester": "ภาคฤดูร้อน",
+  "academicYear": "ปีการศึกษา"
 }

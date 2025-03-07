@@ -7,6 +7,8 @@ const mockCourses: Course[] = [
   {
     id: 1,
     active: true,
+    semester: 'second',
+    year: 2025,
     subject: {
       id: 1,
       thaiName: 'Subject 1',
@@ -16,6 +18,8 @@ const mockCourses: Course[] = [
   {
     id: 2,
     active: true,
+    semester: 'second',
+    year: 2025,
     subject: {
       id: 2,
       thaiName: 'Subject 2',
@@ -67,5 +71,8 @@ export const useCourseStore = defineStore('course', {
       // Fixed: Use `form` instead of `course`
       this.form.id = id;
     },
+    resetForm(){
+      this.form = {}
+    }
   },
 });

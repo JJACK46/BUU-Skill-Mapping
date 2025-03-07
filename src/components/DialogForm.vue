@@ -5,6 +5,7 @@
     transition-show="fade"
     v-model="dialogState"
     :full-width="fullWidth"
+    @hide.prevent="[$emit('hide'), (dialogState = false)]"
   >
     <q-card
       class="dialog-form"
@@ -97,7 +98,7 @@ const toggleJSONview = () => {
 };
 
 // Emits
-const emits = defineEmits<{ (e: 'save'): void }>();
+const emits = defineEmits<{ (e: 'save'): void; (e: 'hide'): void }>();
 
 // State
 const dialogState = defineModel<boolean>({ default: false });
@@ -120,7 +121,7 @@ const validateForm = async () => {
 };
 
 const handleSave = async () => {
-  await validateForm()
+  await validateForm();
   if (isFormValid.value) {
     emits('save');
   }

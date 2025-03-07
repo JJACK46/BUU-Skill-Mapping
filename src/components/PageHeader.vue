@@ -42,8 +42,8 @@
       <q-btn
         @click="$emit('openDialog')"
         color="primary"
-        :label="t('add')"
-        style="width: 80px"
+        :label="computedLabelAdd"
+        style="min-width: 80px"
         unelevated
       >
       </q-btn>
@@ -70,18 +70,19 @@
 </template>
 
 <script lang="ts" setup>
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FilterBtn from './FilterButton.vue';
 import type { FilterModel } from 'src/types/filter';
 
 const { t } = useI18n();
 
-defineProps<{
+const props = defineProps<{
   importBtn?: true;
   exportBtn?: true;
   labelSearch?: string;
   hideFilter?: true;
+  labelAdd?: string;
 }>();
 
 const emit = defineEmits<{
@@ -95,6 +96,8 @@ const searchText = defineModel('searchText', { default: '' });
 const filterModel = defineModel<Partial<FilterModel>>('filterModel', {
   default: {} as FilterModel,
 });
+
+const computedLabelAdd = computed(() => props.labelAdd || t('add'));
 
 // auto fetch data again after search empty
 watch(

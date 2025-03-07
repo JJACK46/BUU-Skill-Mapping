@@ -18,7 +18,7 @@ const initForm: Curriculum = {
   period: 0,
   minimumGrade: '',
   coordinators: [],
-  subjects: [],
+  lessons: [],
 };
 
 export const useCurriculumStore = defineStore('curriculum', {
@@ -44,8 +44,8 @@ export const useCurriculumStore = defineStore('curriculum', {
       return c.form.skills?.map((skill, index) => ({ ...skill, index })) || [];
     },
     getCurriculum: (c) => c.form,
-    getListSubject: (c) => c.form.courseSpecs?.flatMap((c) => c.lesson) || [],
-    getListCourseSpec: (c) => c.form.courseSpecs,
+    getListSubject: (c) => c.form.subjects?.flatMap((c) => c.lesson) || [],
+    getListCourseSpec: (c) => c.form.subjects,
     getBranchThaiName: (c) => c.form.branch?.thaiName || '',
   },
   actions: {

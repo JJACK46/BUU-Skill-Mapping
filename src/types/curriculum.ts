@@ -18,8 +18,8 @@ export interface Curriculum {
   minimumGrade: string; //decimal point for DTO
   coordinators: Coordinator[];
   plos?: PLO[];
-  subjects: Lesson[];
-  courseSpecs?: Subject[];
+  lessons: Lesson[];
+  subjects?: Subject[];
   branch?: Branch;
   skills?: Skill[];
 }

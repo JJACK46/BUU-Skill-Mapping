@@ -17,7 +17,7 @@ export class CurriculumService {
   }
 
   static async createOne(obj: Partial<Curriculum>) {
-    delete obj.subjects
+    delete obj.lessons
     delete obj.coordinators
     const res = await api.post(this.path, obj);
     return res.status;
@@ -26,7 +26,7 @@ export class CurriculumService {
   static async updateOne(obj: Partial<Curriculum>) {
     // dto validation
     delete obj.plos;
-    delete obj.subjects;
+    delete obj.lessons;
     delete obj.branch;
     delete obj.skills;
     delete obj.coordinators;
